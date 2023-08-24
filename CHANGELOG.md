@@ -1,0 +1,21 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.2.0] - 2023-08-24
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Initial version of ingredient module.
+- [Marek Kurańda](https://github.com/mjkuranda): `GET /ingredients` endpoint to return all ingredients.
+- [Marek Kurańda](https://github.com/mjkuranda): Initial version of `POST /ingredients/create` endpoint.
+
+## [1.1.0] - 2023-08-24
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `GET /meals` endpoint to return all meals.
+- [Marek Kurańda](https://github.com/mjkuranda): `GET /meals/:id` endpoint to return specific meal.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /meals/create` endpoint to create a new meal.
+- [Marek Kurańda](https://github.com/mjkuranda): Connection to the MongoDB database.
+
+## [1.0.0] - 2023-08-19
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Initial version of NestJS app.
