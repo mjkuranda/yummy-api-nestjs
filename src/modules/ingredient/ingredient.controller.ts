@@ -15,9 +15,9 @@ export class IngredientController {
     @HttpCode(200)
     @UsePipes(ValidationPipe)
     public async createIngredient(@Body() body: CreateIngredientDto) {
-        // return await this.ingredientService.create(body);
-        return {
-            data: body
-        }
+        return await this.ingredientService.create(body);
+        // return {
+        //     data: body
+        // }
     }
 }
