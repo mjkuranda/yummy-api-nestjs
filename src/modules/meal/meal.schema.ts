@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import {IngredientSchema} from "../ingredient/ingredient.schema";
 
 export const MealSchema = new mongoose.Schema({
     author: {
@@ -11,8 +12,11 @@ export const MealSchema = new mongoose.Schema({
         type: String
     },
     ingredients: {
-        type: [String],
-        required: true
+        type: [Object],
+        required: true,
+        properties: {
+            ...IngredientSchema
+        }
     },
     posted: {
         type: Number,
