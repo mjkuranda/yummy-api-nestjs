@@ -13,8 +13,6 @@ export class MealService {
     ) {}
 
     async create(createMealDto: MealDocument): Promise<MealDocument> {
-        console.log(createMealDto);
-
         const createdMeal = new this.mealModel(createMealDto);
 
         const title = createMealDto.title;

@@ -21,6 +21,12 @@ export class IngredientService {
     }
 
     async create(createIngredientDto: CreateIngredientDto) {
+        const createdIngredient = new this.ingredientModel(createIngredientDto);
 
+        console.log(
+            `IngredientService/create: New ingredient "${createIngredientDto.name}" has been added.`,
+        );
+
+        return createdIngredient.save();
     }
 }
