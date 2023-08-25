@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { MealDocument } from './meal.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
-import { GetQueryResult } from "../../common/interfaces";
+import { GetQueryResult } from '../../common/interfaces';
 
 @Injectable()
 export class MealService {
@@ -23,7 +23,7 @@ export class MealService {
         const message = `New meal "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription}.`;
         const data = await createdMeal.save() as MealDocument;
 
-        console.info(`MealService/create:`, message);
+        console.info('MealService/create:', message);
 
         return {
             data,
@@ -69,7 +69,7 @@ export class MealService {
         const meals = (await this.mealModel.find()) as MealDocument[];
         const message = `Found ${meals.length} meals.`;
 
-        console.info(`MealService/findAll:`, message);
+        console.info('MealService/findAll:', message);
 
         return {
             data: meals,

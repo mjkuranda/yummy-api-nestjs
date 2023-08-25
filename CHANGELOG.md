@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.4.0] - 2023-08-25
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `GetQueryResult` as data structure after each request.
+- [Marek Kurańda](https://github.com/mjkuranda): New eslint rule: `object-curly-spacing`.
 
 ## [1.3.0] - 2023-08-24
 ### Added
