@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import {IngredientSchema} from "../ingredient/ingredient.schema";
+import {IngredientSchema} from '../ingredient/ingredient.schema';
 
 export const MealSchema = new mongoose.Schema({
     author: {

@@ -1,5 +1,5 @@
 import {IsMongoId, IsNotEmpty, Length} from 'class-validator';
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export class IngredientDto {
     @IsMongoId()

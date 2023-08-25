@@ -1,5 +1,5 @@
 import {ArrayMinSize, IsArray, IsNotEmpty, Length} from 'class-validator';
-import {IngredientDto} from "../ingredient/ingredient.dto";
+import {IngredientDto} from '../ingredient/ingredient.dto';
 
 export class CreateMealDto {
     @IsNotEmpty({ message: 'Meal should have an author' })
