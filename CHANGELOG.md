@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2023-08-26
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /users/login` to log in with some credentials.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /users/create` to register a new user.
+
 ## [1.5.0] - 2023-08-26
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Basic version of `README` file.
