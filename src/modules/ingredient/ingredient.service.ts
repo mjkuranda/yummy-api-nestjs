@@ -4,7 +4,7 @@ import { models } from '../../constants/models.constant';
 import { Model } from 'mongoose';
 import { IngredientDocument } from './ingredient.interface';
 import { CreateIngredientDto } from './ingredient.dto';
-import { GetQueryResult } from '../../common/interfaces';
+import { QueryResult } from '../../common/interfaces';
 
 @Injectable()
 export class IngredientService {
@@ -13,7 +13,7 @@ export class IngredientService {
         private ingredientModel: Model<IngredientDocument>,
     ) {}
 
-    async findAll(): Promise<GetQueryResult<IngredientDocument>> {
+    async findAll(): Promise<QueryResult<IngredientDocument>> {
         const ingredients = (await this.ingredientModel.find()) as IngredientDocument[];
         const message = `Found ${ingredients.length} meals.`;
 
@@ -26,7 +26,7 @@ export class IngredientService {
         };
     }
 
-    async create(createIngredientDto: CreateIngredientDto): Promise<GetQueryResult<IngredientDocument>> {
+    async create(createIngredientDto: CreateIngredientDto): Promise<QueryResult<IngredientDocument>> {
         const createdIngredient = new this.ingredientModel(createIngredientDto);
         const data = await createdIngredient.save() as IngredientDocument;
         const message = `New ingredient "${createIngredientDto.name}" has been added.`;

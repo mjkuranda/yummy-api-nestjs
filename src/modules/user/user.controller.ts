@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { CreateUserDto, UserLoginDto } from './user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import {QueryResult} from "../../common/interfaces";
 
 const users = [
     {
@@ -26,15 +27,21 @@ export class UserController {
         @Body() loginBody: UserLoginDto,
         @Headers() headers,
         @Response({ passthrough: true }) res
-    ) {
+    ): Promise<QueryResult<{ login: string; password: string; }>> {
         const user = users.find(user => user.login === loginBody.login);
 
         if (!user) {
-            return '400 - credentials';
+            return {
+                message: 'Incorrect credentials',
+                statusCode: 400
+            };
         }
 
         if (!await bcrypt.compare(loginBody.password, user.password)) {
-            return '400 - credentials 2';
+            return {
+                message: 'Incorrect credentials',
+                statusCode: 400
+            }
         }
 
         const jwt = await this.jwtService.signAsync(loginBody);
@@ -42,7 +49,9 @@ export class UserController {
         res.cookie('jwt', jwt, { httpOnly: true });
 
         return {
-            message: 'success'
+            data: user,
+            message: 'Successfully logged in',
+            statusCode: 200
         }
     }
 

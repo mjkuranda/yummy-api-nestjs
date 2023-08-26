@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { MealDocument } from './meal.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
-import { GetQueryResult } from '../../common/interfaces';
+import { QueryResult } from '../../common/interfaces';
 
 @Injectable()
 export class MealService {
@@ -12,7 +12,7 @@ export class MealService {
     private mealModel: Model<MealDocument>,
     ) {}
 
-    async create(createMealDto: MealDocument): Promise<GetQueryResult<MealDocument>> {
+    async create(createMealDto: MealDocument): Promise<QueryResult<MealDocument>> {
         const createdMeal = new this.mealModel(createMealDto);
 
         const title = createMealDto.title;
@@ -32,7 +32,7 @@ export class MealService {
         };
     }
 
-    async find(id: string): Promise<GetQueryResult<MealDocument>> {
+    async find(id: string): Promise<QueryResult<MealDocument>> {
         if (!Types.ObjectId.isValid(id)) {
             const message = `Provided "${id}" that is not a correct MongoDB id.`;
             console.error('MealService/find:', message);
@@ -65,7 +65,7 @@ export class MealService {
         };
     }
 
-    async findAll(): Promise<GetQueryResult<MealDocument>> {
+    async findAll(): Promise<QueryResult<MealDocument>> {
         const meals = (await this.mealModel.find()) as MealDocument[];
         const message = `Found ${meals.length} meals.`;
 
