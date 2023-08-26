@@ -8,11 +8,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { Model } from 'mongoose';
 
-const users = [];
-
-// TODO: Remove users
-// TODO: Check if exist user during creating
-
 @Injectable()
 export class UserService {
 
@@ -22,7 +17,7 @@ export class UserService {
         private readonly jwtService: JwtService) {}
 
     async getUsers(): Promise<UserDocument[]> {
-        return Promise.resolve(users);
+        return (await this.userModel.find()) as UserDocument[];
     }
 
     async getUser(login: string): Promise<UserDocument | null> {
@@ -55,9 +50,9 @@ export class UserService {
             }
         }
 
-        const jwt = await this.jwtService.signAsync(login);
+        const jwt = await this.jwtService.signAsync(login, { secret: process.env.ACCESS_TOKEN_SECRET });
         res.cookie('jwt', jwt, { httpOnly: true });
-        const message = 'Successfully logged in';
+        const message = `User "${login}" has been successfully logged in`;
 
         console.info('UserService/loginUser:', message);
 
@@ -69,6 +64,16 @@ export class UserService {
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<QueryResult<UserDocument>> {
+        if (await this.getUser(createUserDto.login)) {
+            const message = `User with "${createUserDto.login}" login has already exists`;
+            console.error('UserService/createUser:', message);
+
+            return {
+                message,
+                statusCode: 400
+            }
+        }
+
         const hashedPassword = await this.getHashedPassword(createUserDto.password);
         const createdUser = new this.userModel({
             login: createUserDto.login,
@@ -76,8 +81,6 @@ export class UserService {
         });
         const data = await createdUser.save() as UserDocument;
         const message = `Created user "${data.login}" with id "${data._id}"`;
-
-        users.push(createdUser);
 
         console.info('UserService/createUser:', message);
 
