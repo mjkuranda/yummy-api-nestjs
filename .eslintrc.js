@@ -28,6 +28,7 @@ module.exports = {
         }],
         "quotes": [1, "single"],
         "@typescript-eslint/quotes": [ 1, "single", { "allowTemplateLiterals": true } ],
-        "object-curly-spacing": ["error", "always", { "objectsInObjects": false }]
+        "object-curly-spacing": ["error", "always", { "objectsInObjects": false }],
+        "newline-before-return": "error"
     },
 };

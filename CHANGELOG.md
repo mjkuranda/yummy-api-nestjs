@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /users/login` to log in with some credentials.
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /users/create` to register a new user.
+- [Marek Kurańda](https://github.com/mjkuranda): New eslint rule: `newline-before-return`.
 
 ## [1.5.0] - 2023-08-26
 ### Added

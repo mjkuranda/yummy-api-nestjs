@@ -48,7 +48,7 @@ export class UserService {
         if (!await bcrypt.compare(password, user.password)) {
             const message = 'Incorrect credentials';
             console.error('UserService/loginUser:', message);
-
+            
             return {
                 message,
                 statusCode: 400
