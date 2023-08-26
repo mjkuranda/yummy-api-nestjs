@@ -3,18 +3,7 @@ import { UserService } from './user.service';
 import { CreateUserDto, UserLoginDto } from './user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import {QueryResult} from "../../common/interfaces";
-
-const users = [
-    {
-        login: 'Test',
-        password: '123' // 123
-    },
-    {
-        login: 'Test2',
-        password: '456' // 456
-    }
-];
+import { QueryResult } from '../../common/interfaces';
 
 @Controller('users')
 export class UserController {
@@ -28,11 +17,11 @@ export class UserController {
         @Headers() headers,
         @Response({ passthrough: true }) res
     ): Promise<QueryResult<{ login: string; password: string; }>> {
-        const user = users.find(user => user.login === loginBody.login);
+        const user = (await this.userService.getUsers()).find(user => user.login === loginBody.login);
 
         if (!user) {
             return {
-                message: 'Incorrect credentials',
+                message: 'User does not exist',
                 statusCode: 400
             };
         }
@@ -57,13 +46,6 @@ export class UserController {
 
     @Post('/create')
     public async register(@Body() createUserDto: CreateUserDto) {
-        const hashedPassword = await this.userService.getHashedPassword(createUserDto.password);
-
-        await this.userService.createUser(createUserDto);
-
-        users.push({
-            login: createUserDto.login,
-            password: hashedPassword
-        });
+        return await this.userService.createUser(createUserDto);
     }
 }
