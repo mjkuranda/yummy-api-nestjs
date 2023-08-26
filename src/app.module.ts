@@ -5,8 +5,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getMongooseUri } from './utils';
 import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { UserModule } from './modules/user/user.module';
-import { UserController } from './modules/user/user.controller';
-import { UserService } from './modules/user/user.service';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -26,7 +24,7 @@ import { JwtModule } from '@nestjs/jwt';
         MealModule,
         UserModule
     ],
-    controllers: [UserController],
-    providers: [UserService],
+    controllers: [],
+    providers: [],
 })
 export class AppModule {}

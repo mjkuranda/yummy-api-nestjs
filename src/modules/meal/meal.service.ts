@@ -7,10 +7,9 @@ import { QueryResult } from '../../common/interfaces';
 
 @Injectable()
 export class MealService {
-    constructor(
-    @InjectModel(models.MEAL_MODEL)
-    private mealModel: Model<MealDocument>,
-    ) {}
+
+    constructor(@InjectModel(models.MEAL_MODEL)
+                private mealModel: Model<MealDocument>) {}
 
     async create(createMealDto: MealDocument): Promise<QueryResult<MealDocument>> {
         const createdMeal = new this.mealModel(createMealDto);
