@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
-import {IngredientSchema} from './ingredient.schema';
-import {IngredientController} from './ingredient.controller';
-import {IngredientService} from './ingredient.service';
+import { IngredientSchema } from './ingredient.schema';
+import { IngredientController } from './ingredient.controller';
+import { IngredientService } from './ingredient.service';
 
 @Module({
     imports: [

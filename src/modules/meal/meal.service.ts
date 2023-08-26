@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { MealDocument } from './meal.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
-import { EmptyDocument } from '../../common/types';
+import { GetQueryResult } from '../../common/interfaces';
 
 @Injectable()
 export class MealService {
@@ -12,7 +12,7 @@ export class MealService {
     private mealModel: Model<MealDocument>,
     ) {}
 
-    async create(createMealDto: MealDocument): Promise<MealDocument> {
+    async create(createMealDto: MealDocument): Promise<GetQueryResult<MealDocument>> {
         const createdMeal = new this.mealModel(createMealDto);
 
         const title = createMealDto.title;
@@ -20,41 +20,61 @@ export class MealService {
         const imageUrlDescription = createMealDto
             ? `"${createMealDto.imageUrl}" image url`
             : 'no image';
+        const message = `New meal "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription}.`;
+        const data = await createdMeal.save() as MealDocument;
 
-        console.log(
-            `MealService/create: New meal "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription}.`,
-        );
+        console.info('MealService/create:', message);
 
-        return createdMeal.save();
+        return {
+            data,
+            message,
+            statusCode: 201
+        };
     }
 
-    async find(id: string): Promise<MealDocument | EmptyDocument> {
+    async find(id: string): Promise<GetQueryResult<MealDocument>> {
         if (!Types.ObjectId.isValid(id)) {
-            console.error(
-                `MealService/find: Provided "${id}" that is not a correct MongoDB id.`,
-            );
+            const message = `Provided "${id}" that is not a correct MongoDB id.`;
+            console.error('MealService/find:', message);
 
-            return {};
+            return {
+                message,
+                statusCode: 400
+            };
         }
 
         const meal = await this.mealModel.findById(id);
 
         if (meal === null) {
-            console.error(`MealService/find: Cannot find a meal with "${id}" id.`);
+            const message = `Cannot find a meal with "${id}" id.`;
+            console.error('MealService/find:', message);
 
-            return {};
+            return {
+                message,
+                statusCode: 404
+            };
         }
 
-        console.info(`MealService/find: Found meal with "${id}" id.`);
+        const message = `Found meal with "${id}" id.`;
+        console.info('MealService/find:', message);
 
-        return meal;
+        return {
+            data: meal as MealDocument,
+            message,
+            statusCode: 200
+        };
     }
 
-    async findAll(): Promise<MealDocument[]> {
+    async findAll(): Promise<GetQueryResult<MealDocument>> {
         const meals = (await this.mealModel.find()) as MealDocument[];
+        const message = `Found ${meals.length} meals.`;
 
-        console.info(`MealService/findAll: Found ${meals.length} meals.`);
+        console.info('MealService/findAll:', message);
 
-        return meals;
+        return {
+            data: meals,
+            message,
+            statusCode: 200
+        };
     }
 }

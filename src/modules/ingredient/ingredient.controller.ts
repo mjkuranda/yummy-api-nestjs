@@ -1,6 +1,6 @@
-import {Body, Controller, Get, HttpCode, Post, UsePipes, ValidationPipe} from '@nestjs/common';
-import {IngredientService} from './ingredient.service';
-import {CreateIngredientDto} from "./ingredient.dto";
+import { Body, Controller, Get, HttpCode, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { IngredientService } from './ingredient.service';
+import { CreateIngredientDto } from './ingredient.dto';
 
 @Controller('ingredients')
 export class IngredientController {

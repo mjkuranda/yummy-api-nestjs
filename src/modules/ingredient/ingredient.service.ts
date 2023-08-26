@@ -1,9 +1,10 @@
-import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {models} from '../../constants/models.constant';
-import {Model} from 'mongoose';
-import {IngredientDocument} from './ingredient.interface';
-import {CreateIngredientDto} from './ingredient.dto';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { models } from '../../constants/models.constant';
+import { Model } from 'mongoose';
+import { IngredientDocument } from './ingredient.interface';
+import { CreateIngredientDto } from './ingredient.dto';
+import { GetQueryResult } from '../../common/interfaces';
 
 @Injectable()
 export class IngredientService {
@@ -12,21 +13,30 @@ export class IngredientService {
         private ingredientModel: Model<IngredientDocument>,
     ) {}
 
-    async findAll(): Promise<CreateIngredientDto[]> {
+    async findAll(): Promise<GetQueryResult<IngredientDocument>> {
         const ingredients = (await this.ingredientModel.find()) as IngredientDocument[];
+        const message = `Found ${ingredients.length} meals.`;
 
-        console.info(`IngredientService/findAll: Found ${ingredients.length} meals.`);
+        console.info('IngredientService/findAll:', message);
 
-        return ingredients;
+        return {
+            data: ingredients,
+            message,
+            statusCode: 200
+        };
     }
 
-    async create(createIngredientDto: CreateIngredientDto) {
+    async create(createIngredientDto: CreateIngredientDto): Promise<GetQueryResult<IngredientDocument>> {
         const createdIngredient = new this.ingredientModel(createIngredientDto);
+        const data = await createdIngredient.save() as IngredientDocument;
+        const message = `New ingredient "${createIngredientDto.name}" has been added.`;
 
-        console.log(
-            `IngredientService/create: New ingredient "${createIngredientDto.name}" has been added.`,
-        );
+        console.info('IngredientService/create:', message);
 
-        return createdIngredient.save();
+        return {
+            data,
+            message,
+            statusCode: 201
+        };
     }
 }
