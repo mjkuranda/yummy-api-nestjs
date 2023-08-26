@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Headers, Response } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserLoginDto } from './user.dto';
+import { CreateUserDto, UserLoginDto } from './user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
@@ -25,24 +25,36 @@ export class UserController {
     public async login(
         @Body() loginBody: UserLoginDto,
         @Headers() headers,
-        @Response({passthrough: true}) res
+        @Response({ passthrough: true }) res
     ) {
-        const user = users.find(user => user.password === loginBody.password);
+        const user = users.find(user => user.login === loginBody.login);
 
         if (!user) {
             return '400 - credentials';
         }
 
-        if (!await bcrypt.compare(user.password, loginBody.password)) {
+        if (!await bcrypt.compare(loginBody.password, user.password)) {
             return '400 - credentials 2';
         }
 
         const jwt = await this.jwtService.signAsync(loginBody);
 
-        res.cookie('jwt', jwt, {httpOnly: true});
+        res.cookie('jwt', jwt, { httpOnly: true });
 
         return {
             message: 'success'
         }
+    }
+
+    @Post('/create')
+    public async register(@Body() createUserDto: CreateUserDto) {
+        const hashedPassword = await this.userService.getHashedPassword(createUserDto.password);
+
+        await this.userService.createUser(createUserDto);
+
+        users.push({
+            login: createUserDto.login,
+            password: hashedPassword
+        });
     }
 }
