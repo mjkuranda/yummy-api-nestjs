@@ -5,7 +5,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getMongooseUri } from './utils';
 import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { UserModule } from './modules/user/user.module';
-import { JwtModule } from '@nestjs/jwt';
 
 @Module({
     imports: [
@@ -19,7 +18,6 @@ import { JwtModule } from '@nestjs/jwt';
             }),
             inject: [ConfigService],
         }),
-        JwtModule.register({ secret: process.env.ACCESS_TOKEN_SECRET }),
         IngredientModule,
         MealModule,
         UserModule

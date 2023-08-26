@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /users/login` to log in with some credentials.
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /users/create` to register a new user.
 - [Marek Kurańda](https://github.com/mjkuranda): New eslint rule: `newline-before-return`.
+- [Marek Kurańda](https://github.com/mjkuranda): Only logged-in users can create a new meal.
 
 ## [1.5.0] - 2023-08-26
 ### Added
