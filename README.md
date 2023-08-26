@@ -6,6 +6,7 @@ Technologies:
 * Nest.js
 * TypeScript
 * MongoDB
+* JWT
 
 ## API
 * `GET /meals` - returns all meals from the database

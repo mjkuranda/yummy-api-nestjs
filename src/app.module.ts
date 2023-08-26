@@ -4,6 +4,10 @@ import { MealModule } from './modules/meal/meal.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getMongooseUri } from './utils';
 import { IngredientModule } from './modules/ingredient/ingredient.module';
+import { UserModule } from './modules/user/user.module';
+import { UserController } from './modules/user/user.controller';
+import { UserService } from './modules/user/user.service';
+import {JwtModule} from "@nestjs/jwt";
 
 @Module({
     imports: [
@@ -17,10 +21,12 @@ import { IngredientModule } from './modules/ingredient/ingredient.module';
             }),
             inject: [ConfigService],
         }),
+        JwtModule.register({ secret: process.env.ACCESS_TOKEN_SECRET }),
         IngredientModule,
-        MealModule
+        MealModule,
+        UserModule
     ],
-    controllers: [],
-    providers: [],
+    controllers: [UserController],
+    providers: [UserService],
 })
 export class AppModule {}
