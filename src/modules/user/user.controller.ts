@@ -7,11 +7,11 @@ import * as bcrypt from 'bcrypt';
 const users = [
     {
         login: 'Test',
-        password: '123'
+        password: '123' // 123
     },
     {
         login: 'Test2',
-        password: '456'
+        password: '456' // 456
     }
 ];
 
