@@ -14,6 +14,11 @@ export class UserController {
         return await this.userService.loginUser(loginBody, res);
     }
 
+    @Post('/logout')
+    public async logout(@Response({ passthrough: true }) res): Promise<QueryResult<UserDocument>> {
+        return await this.userService.logoutUser(res);
+    }
+
     @Post('/create')
     public async register(@Body() createUserDto: CreateUserDto) {
         return await this.userService.createUser(createUserDto);

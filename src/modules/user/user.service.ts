@@ -63,6 +63,15 @@ export class UserService {
         }
     }
 
+    async logoutUser(res): Promise<QueryResult<UserDocument>> {
+        res.clearCookie('jwt');
+        
+        return {
+            message: 'You have been successfully logged out',
+            statusCode: 200
+        }
+    }
+
     async createUser(createUserDto: CreateUserDto): Promise<QueryResult<UserDocument>> {
         if (await this.getUser(createUserDto.login)) {
             const message = `User with "${createUserDto.login}" login has already exists`;
