@@ -47,7 +47,7 @@ export class IngredientService {
 
         if (!user) {
             const message = 'This user does not exist. You cannot add a new meal.';
-            console.error('MealService/create:', message);
+            console.error('IngredientService/create:', message);
 
             return {
                 message,
