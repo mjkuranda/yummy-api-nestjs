@@ -1,6 +1,7 @@
-import { Body, Controller, Get, HttpCode, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, UsePipes, ValidationPipe, Req } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
 import { CreateIngredientDto } from './ingredient.dto';
+import { Request } from 'express';
 
 @Controller('ingredients')
 export class IngredientController {
@@ -14,7 +15,9 @@ export class IngredientController {
     @Post('/create')
     @HttpCode(200)
     @UsePipes(ValidationPipe)
-    public async createIngredient(@Body() body: CreateIngredientDto) {
-        return await this.ingredientService.create(body);
+    public async createIngredient(@Req() req: Request, @Body() body: CreateIngredientDto) {
+        const { jwt } = req.cookies;
+        
+        return await this.ingredientService.create(body, jwt);
     }
 }
