@@ -5,7 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getMongooseUri } from './utils';
 import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { UserModule } from './modules/user/user.module';
-import { AuthModule } from './modules/auth/auth.module';
+import { JwtManagerModule } from './modules/jwt-manager/jwt-manager.module';
 
 @Module({
     imports: [
@@ -22,7 +22,7 @@ import { AuthModule } from './modules/auth/auth.module';
         IngredientModule,
         MealModule,
         UserModule,
-        AuthModule
+        JwtManagerModule
     ],
     controllers: [],
     providers: [],

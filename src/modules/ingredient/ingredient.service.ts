@@ -30,7 +30,7 @@ export class IngredientService {
     }
 
     async create(createIngredientDto: CreateIngredientDto, jwtCookie: string): Promise<QueryResult<IngredientDocument>> {
-        const authorizationResult = this.authService.decode(jwtCookie);
+        const authorizationResult = await this.authService.getAnalysis(jwtCookie);
 
         if (!authorizationResult.isAuthenticated) {
             const { message, statusCode } = authorizationResult;

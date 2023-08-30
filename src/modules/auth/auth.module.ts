@@ -1,23 +1,21 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
 import { UserService } from '../user/user.service';
-import { UserModule } from '../user/user.module';
+import { MongooseModule } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { UserSchema } from '../user/user.schema';
-import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
     imports: [
         MongooseModule.forFeature([
-            { name: models.USER_MODEL, schema: UserSchema }
+            { name: models.USER_MODEL, schema: UserSchema },
         ]),
-        JwtModule.register({ secret: process.env.ACCESS_TOKEN_SECRET }),
-        UserModule
+        JwtManagerModule
     ],
     controllers: [AuthController],
-    providers: [AuthService, JwtService, UserService],
-    exports: [AuthService, JwtService, UserService]
+    providers: [AuthService, UserService],
+    exports: [AuthService, UserService]
 })
 export class AuthModule {}

@@ -15,7 +15,7 @@ export class MealService {
                 private readonly authService: AuthService) {}
 
     async create(createMealDto: CreateMealDto, jwtCookie: string): Promise<QueryResult<MealDocument>> {
-        const authorizationResult = this.authService.decode(jwtCookie);
+        const authorizationResult = await this.authService.getAnalysis(jwtCookie);
 
         if (!authorizationResult.isAuthenticated) {
             const { message, statusCode } = authorizationResult;

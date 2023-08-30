@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { AuthResult } from './auth.interface';
 import { UserService } from '../user/user.service';
+import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 
 @Injectable()
 export class AuthService {
 
-    constructor(private readonly jwtService: JwtService,
+    constructor(private readonly jwtManagerService: JwtManagerService,
                 private readonly userService: UserService) {
     }
 
-    decode(jwtCookie: string): AuthResult {
+    public async getAnalysis(jwtCookie: string): Promise<AuthResult> {
         if (!jwtCookie) {
             return {
                 message: 'You are not authorized to execute this action. Please, log in first.',
@@ -18,8 +18,8 @@ export class AuthService {
             }
         }
 
-        const userName = this.decodeUserData(jwtCookie);
-        const user = this.userService.getUser(userName);
+        const userName = this.jwtManagerService.decodeUserData(jwtCookie);
+        const user = await this.userService.getUser(userName);
 
         if (!user) {
             return {
@@ -31,13 +31,10 @@ export class AuthService {
         // TODO: doesn't have capability, so not authorized
 
         return {
+            user,
             message: 'You are authorized to execute this action.',
             statusCode: 200,
             isAuthenticated: true
         }
-    }
-
-    private decodeUserData(jwtCookie: string): string {
-        return this.jwtService.decode(jwtCookie) as string;
     }
 }

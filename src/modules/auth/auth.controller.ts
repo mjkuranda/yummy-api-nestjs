@@ -8,7 +8,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {
     }
 
-    decode(jwtCookie: string): AuthResult {
-        return this.authService.decode(jwtCookie);
+    async decode(jwtCookie: string): Promise<AuthResult> {
+        return await this.authService.getAnalysis(jwtCookie);
     }
 }

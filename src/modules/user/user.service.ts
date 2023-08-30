@@ -3,10 +3,10 @@ import { CreateUserDto, UserLoginDto } from './user.dto';
 import * as bcrypt from 'bcrypt';
 import { QueryResult } from '../../common/interfaces';
 import { UserDocument } from './user.interface';
-import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { Model } from 'mongoose';
+import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 
 @Injectable()
 export class UserService {
@@ -14,7 +14,8 @@ export class UserService {
     constructor(
         @InjectModel(models.USER_MODEL)
         private userModel: Model<UserDocument>,
-        private readonly jwtService: JwtService) {}
+        private readonly jwtManagerService: JwtManagerService
+    ) {}
 
     async getUsers(): Promise<UserDocument[]> {
         return (await this.userModel.find()) as UserDocument[];
@@ -50,7 +51,7 @@ export class UserService {
             }
         }
 
-        const jwt = await this.jwtService.signAsync(login, { secret: process.env.ACCESS_TOKEN_SECRET });
+        const jwt = await this.jwtManagerService.encodeUserData({ login });
         res.cookie('jwt', jwt, { httpOnly: true });
         const message = `User "${login}" has been successfully logged in`;
 
