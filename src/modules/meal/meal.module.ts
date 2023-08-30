@@ -4,8 +4,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MealSchema } from './meal.schema';
 import { MealController } from './meal.controller';
 import { models } from '../../constants/models.constant';
-import { JwtModule } from '@nestjs/jwt';
-import { UserModule } from '../user/user.module';
+import { AuthModule } from '../auth/auth.module';
+import { AuthService } from '../auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { UserSchema } from '../user/user.schema';
 
@@ -15,10 +16,9 @@ import { UserSchema } from '../user/user.schema';
             { name: models.MEAL_MODEL, schema: MealSchema },
             { name: models.USER_MODEL, schema: UserSchema }
         ]),
-        JwtModule.register({ secret: process.env.ACCESS_TOKEN_SECRET }),
-        UserModule
+        AuthModule
     ],
     controllers: [MealController],
-    providers: [MealService, UserService],
+    providers: [MealService, AuthService, JwtService, UserService],
 })
 export class MealModule {}

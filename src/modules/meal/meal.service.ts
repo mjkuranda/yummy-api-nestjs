@@ -4,39 +4,49 @@ import { MealDocument } from './meal.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { QueryResult } from '../../common/interfaces';
-import { JwtService } from '@nestjs/jwt';
 import { CreateMealDto } from './meal.dto';
-import { UserService } from '../user/user.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class MealService {
 
     constructor(@InjectModel(models.MEAL_MODEL)
                 private mealModel: Model<MealDocument>,
-                private readonly jwtService: JwtService,
-                private readonly userService: UserService) {}
+                private readonly authService: AuthService) {}
 
     async create(createMealDto: CreateMealDto, jwtCookie: string): Promise<QueryResult<MealDocument>> {
-        if (!jwtCookie) {
-            const message = 'You are not authorized to create a new meal. Please, log in first.';
+        // if (!jwtCookie) {
+        //     const message = 'You are not authorized to create a new meal. Please, log in first.';
+        //     console.error('MealService/create:', message);
+        //
+        //     return {
+        //         message,
+        //         statusCode: 403
+        //     }
+        // }
+        //
+        // const userName = this.jwtService.decode(jwtCookie) as string;
+        // const user = await this.userService.getUser(userName);
+        //
+        // if (!user) {
+        //     const message = 'This user does not exist. You cannot add a new meal.';
+        //     console.error('MealService/create:', message);
+        //
+        //     return {
+        //         message,
+        //         statusCode: 400
+        //     }
+        // }
+
+        const authorizationResult = this.authService.decode(jwtCookie);
+
+        if (!authorizationResult.isAuthenticated) {
+            const { message, statusCode } = authorizationResult;
             console.error('MealService/create:', message);
 
             return {
                 message,
-                statusCode: 403
-            }
-        }
-
-        const userName = this.jwtService.decode(jwtCookie) as string;
-        const user = await this.userService.getUser(userName);
-
-        if (!user) {
-            const message = 'This user does not exist. You cannot add a new meal.';
-            console.error('MealService/create:', message);
-
-            return {
-                message,
-                statusCode: 400
+                statusCode
             }
         }
 

@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getMongooseUri } from './utils';
 import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
     imports: [
@@ -20,7 +21,8 @@ import { UserModule } from './modules/user/user.module';
         }),
         IngredientModule,
         MealModule,
-        UserModule
+        UserModule,
+        AuthModule
     ],
     controllers: [],
     providers: [],
