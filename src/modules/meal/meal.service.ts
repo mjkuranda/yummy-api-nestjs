@@ -15,29 +15,6 @@ export class MealService {
                 private readonly authService: AuthService) {}
 
     async create(createMealDto: CreateMealDto, jwtCookie: string): Promise<QueryResult<MealDocument>> {
-        // if (!jwtCookie) {
-        //     const message = 'You are not authorized to create a new meal. Please, log in first.';
-        //     console.error('MealService/create:', message);
-        //
-        //     return {
-        //         message,
-        //         statusCode: 403
-        //     }
-        // }
-        //
-        // const userName = this.jwtService.decode(jwtCookie) as string;
-        // const user = await this.userService.getUser(userName);
-        //
-        // if (!user) {
-        //     const message = 'This user does not exist. You cannot add a new meal.';
-        //     console.error('MealService/create:', message);
-        //
-        //     return {
-        //         message,
-        //         statusCode: 400
-        //     }
-        // }
-
         const authorizationResult = this.authService.decode(jwtCookie);
 
         if (!authorizationResult.isAuthenticated) {
