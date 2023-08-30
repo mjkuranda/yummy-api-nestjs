@@ -62,6 +62,6 @@ However, if you want to connect with MongoDB Atlas, you need these variables:
 You need to change version in `package.json` and add a record to the `CHANGELOG.md`.
 
 To create a new module, you need to use:
-- `nest g mo <module_name>` to create a new module.
-- `nest g co <controller_name> <module_name>` to create a new controller.
-- `nest g s <service_name> <module_name>` to create a new service.
+- `nest g mo modules/<module_name>` to create a new module.
+- `nest g co modules/<module_name>` to create a new controller.
+- `nest g s modules/<module_name>` to create a new service.
