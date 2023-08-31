@@ -17,8 +17,12 @@ export class MealController {
     }
 
     @Post('/create')
-    public async createMeal(@Body() body: CreateMealDto, @Request() req) {
+    public async createMeal(@Request() req) {
         const { jwt } = req.cookies;
+
+        const body: CreateMealDto = {
+            ...req.body
+        };
         
         return await this.mealService.create(body, jwt);
     }
