@@ -26,7 +26,7 @@ export class AuthorizeMiddleware implements NestMiddleware {
         req.body = {
             ...req.body,
             author: authorizationResult.user.login,
-            postedTime: new Date().getTime()
+            posted: new Date().getTime()
         };
 
         next();

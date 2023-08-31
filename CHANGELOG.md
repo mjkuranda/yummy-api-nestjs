@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `AuthModule` to authenticate users.
 - [Marek Kurańda](https://github.com/mjkuranda): Middleware for authorizing users.
+- [Marek Kurańda](https://github.com/mjkuranda): Meal author name is given from logged-in username. 
+
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): Validation of `imageUrl` in meal DTO.
 
 ## [1.7.0] - 2023-08-29
 ### Changed
