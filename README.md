@@ -18,11 +18,11 @@ Technologies:
   "description": "The best meal ever",
   "name": "Meal name",
   "ingredients": [
-    Ingredient1,
-    Ingredient2,
-    ...
+    "ingredient-id-1",
+    "ingredient-id-2",
+    "ingredient-id-x"
   ],
-  "imageUrl"?: "...",
+  "imageUrl": "https://some.domain/path/to/resource/image.ext",
   "type": "SOUP"
 }
 ```
@@ -31,7 +31,8 @@ Technologies:
 * `POST /ingredients/create` - creates a new ingredient and saves its to the database. You need to provide following data:
 ```json
 {
-  "name": "Ingredient name"
+  "name": "Ingredient name",
+  "category": "Category name"
 }
 ```
 
