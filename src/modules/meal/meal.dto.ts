@@ -1,4 +1,4 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, Length } from 'class-validator';
+import { ArrayMinSize, IsArray, IsNotEmpty, IsOptional, Length } from 'class-validator';
 import { IngredientDto } from '../ingredient/ingredient.dto';
 
 export class CreateMealDto {
@@ -10,6 +10,7 @@ export class CreateMealDto {
     @Length(3, 16)
     readonly description: string;
 
+    @IsOptional()
     @Length(3, 16)
     readonly imageUrl: string;
 

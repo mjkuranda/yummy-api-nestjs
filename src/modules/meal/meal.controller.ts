@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { MealService } from './meal.service';
 import { CreateMealDto } from './meal.dto';
 
@@ -17,9 +17,7 @@ export class MealController {
     }
 
     @Post('/create')
-    public async createMeal(@Body() body: CreateMealDto, @Request() req) {
-        const { jwt } = req.cookies;
-        
-        return await this.mealService.create(body, jwt);
+    public async createMeal(@Body() body: CreateMealDto) {
+        return await this.mealService.create(body);
     }
 }
