@@ -1,5 +1,4 @@
 import { ArrayMinSize, IsArray, IsNotEmpty, IsOptional, Length } from 'class-validator';
-import { IngredientDto } from '../ingredient/ingredient.dto';
 
 export class CreateMealDto {
     @IsNotEmpty({ message: 'Meal should have an author' })
@@ -16,7 +15,7 @@ export class CreateMealDto {
 
     @IsArray()
     @ArrayMinSize(1)
-    readonly ingredients: IngredientDto[];
+    readonly ingredients: string[];
 
     @IsNotEmpty({ message: 'Meal should have a posted time' })
     readonly posted: number;
