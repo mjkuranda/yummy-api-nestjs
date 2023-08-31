@@ -5,28 +5,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { QueryResult } from '../../common/interfaces';
 import { CreateMealDto } from './meal.dto';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class MealService {
 
     constructor(@InjectModel(models.MEAL_MODEL)
-                private mealModel: Model<MealDocument>,
-                private readonly authService: AuthService) {}
+                private mealModel: Model<MealDocument>) {}
 
-    async create(createMealDto: CreateMealDto, jwtCookie: string): Promise<QueryResult<MealDocument>> {
-        const authorizationResult = await this.authService.getAnalysis(jwtCookie);
-
-        if (!authorizationResult.isAuthenticated) {
-            const { message, statusCode } = authorizationResult;
-            console.error('MealService/create:', message);
-
-            return {
-                message,
-                statusCode
-            }
-        }
-
+    async create(createMealDto: CreateMealDto): Promise<QueryResult<MealDocument>> {
         const createdMeal = new this.mealModel(createMealDto);
 
         const title = createMealDto.title;

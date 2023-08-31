@@ -1,12 +1,10 @@
-import { Body, Controller, Get, Param, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { MealService } from './meal.service';
 import { CreateMealDto } from './meal.dto';
-import { AuthService } from '../auth/auth.service';
 
 @Controller('meals')
 export class MealController {
-    constructor(private readonly mealService: MealService,
-                private readonly authService: AuthService) {}
+    constructor(private readonly mealService: MealService) {}
 
     @Get()
     public async getMeals() {
@@ -19,22 +17,7 @@ export class MealController {
     }
 
     @Post('/create')
-    public async createMeal(@Request() req) {
-        const { jwt } = req.cookies;
-        const authorizationResult = await this.authService.getAnalysis(jwt);
-
-        if (!authorizationResult.isAuthenticated) {
-            // error
-            return;
-        }
-
-        console.log('creating meal');
-
-        const body: CreateMealDto = {
-            ...req.body,
-            author: authorizationResult.user.login
-        };
-        
-        return await this.mealService.create(body, jwt);
+    public async createMeal(@Body() body: CreateMealDto) {
+        return await this.mealService.create(body);
     }
 }

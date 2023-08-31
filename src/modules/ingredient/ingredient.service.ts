@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import { IngredientDocument } from './ingredient.interface';
 import { CreateIngredientDto } from './ingredient.dto';
 import { QueryResult } from '../../common/interfaces';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class IngredientService {
@@ -13,7 +12,6 @@ export class IngredientService {
     constructor(
         @InjectModel(models.INGREDIENT_MODEL)
         private ingredientModel: Model<IngredientDocument>,
-        private readonly authService: AuthService
     ) {}
 
     async findAll(): Promise<QueryResult<IngredientDocument>> {
@@ -29,19 +27,7 @@ export class IngredientService {
         };
     }
 
-    async create(createIngredientDto: CreateIngredientDto, jwtCookie: string): Promise<QueryResult<IngredientDocument>> {
-        const authorizationResult = await this.authService.getAnalysis(jwtCookie);
-
-        if (!authorizationResult.isAuthenticated) {
-            const { message, statusCode } = authorizationResult;
-            console.error('IngredientService/create:', message);
-
-            return {
-                message,
-                statusCode
-            }
-        }
-
+    async create(createIngredientDto: CreateIngredientDto): Promise<QueryResult<IngredientDocument>> {
         const createdIngredient = new this.ingredientModel(createIngredientDto);
         const data = await createdIngredient.save() as IngredientDocument;
         const message = `New ingredient "${createIngredientDto.name}" has been added.`;

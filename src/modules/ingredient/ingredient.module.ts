@@ -4,14 +4,12 @@ import { models } from '../../constants/models.constant';
 import { IngredientSchema } from './ingredient.schema';
 import { IngredientController } from './ingredient.controller';
 import { IngredientService } from './ingredient.service';
-import { AuthModule } from '../auth/auth.module';
 
 @Module({
     imports: [
         MongooseModule.forFeature([
             { name: models.INGREDIENT_MODEL, schema: IngredientSchema }
-        ]),
-        AuthModule
+        ])
     ],
     controllers: [IngredientController],
     providers: [IngredientService],

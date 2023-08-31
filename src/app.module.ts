@@ -6,6 +6,7 @@ import { getMongooseUri } from './utils';
 import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthorizeMiddleware } from './middleware/authorize.middleware';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
     imports: [
@@ -21,7 +22,8 @@ import { AuthorizeMiddleware } from './middleware/authorize.middleware';
         }),
         IngredientModule,
         MealModule,
-        UserModule
+        UserModule,
+        AuthModule
     ],
     controllers: [],
     providers: [],
