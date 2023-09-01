@@ -9,7 +9,6 @@ export class AuthorizeMiddleware implements NestMiddleware {
 
     async use(req: Request, res: Response, next: NextFunction) {
         const { jwt } = req.cookies;
-
         const authorizedUser = await this.authService.getAuthorizedUser(jwt);
 
         // Modify body
