@@ -10,22 +10,12 @@ export class AuthorizeMiddleware implements NestMiddleware {
     async use(req: Request, res: Response, next: NextFunction) {
         const { jwt } = req.cookies;
 
-        const authorizationResult = await this.authService.getAnalysis(jwt);
-
-        if (!authorizationResult.isAuthenticated) {
-            const { message, statusCode } = authorizationResult;
-            console.error('AuthorizeMiddleware/use:', message);
-
-            return {
-                message,
-                statusCode
-            };
-        }
+        const authorizedUser = await this.authService.getAuthorizedUser(jwt);
 
         // Modify body
         req.body = {
             ...req.body,
-            author: authorizationResult.user.login,
+            author: authorizedUser.login,
             posted: new Date().getTime()
         };
 

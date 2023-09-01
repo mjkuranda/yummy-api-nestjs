@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { AuthResult } from './auth.interface';
 import { UserService } from '../user/user.service';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
+import { NotFoundException } from '../../exceptions/not-found.exception';
+import { BadRequestException } from '../../exceptions/bad-request.exception';
+import { UserDocument } from '../user/user.interface';
 
 @Injectable()
 export class AuthService {
@@ -10,31 +12,20 @@ export class AuthService {
                 private readonly userService: UserService) {
     }
 
-    public async getAnalysis(jwtCookie: string): Promise<AuthResult> {
+    public async getAuthorizedUser(jwtCookie: string): Promise<UserDocument> {
         if (!jwtCookie) {
-            return {
-                message: 'You are not authorized to execute this action. Please, log in first.',
-                statusCode: 400
-            }
+            throw new BadRequestException('You are not authorized to execute this action. Please, log in first.', 'AuthService/getAuthorizedUser');
         }
 
         const userName = this.jwtManagerService.decodeUserData(jwtCookie);
         const user = await this.userService.getUser(userName);
 
         if (!user) {
-            return {
-                message: 'This user does not exist.',
-                statusCode: 404
-            }
+            throw new NotFoundException('This user does not exist.', 'AuthService/getAuthorizedUser');
         }
 
         // TODO: doesn't have capability, so not authorized
 
-        return {
-            user,
-            message: 'You are authorized to execute this action.',
-            statusCode: 200,
-            isAuthenticated: true
-        }
+        return user;
     }
 }
