@@ -5,6 +5,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { QueryResult } from '../../common/interfaces';
 import { CreateMealDto } from './meal.dto';
+import { BadRequestException } from '../../exceptions/bad-request.exception';
+import { NotFoundException } from '../../exceptions/not-found.exception';
 
 @Injectable()
 export class MealService {
@@ -33,30 +35,26 @@ export class MealService {
     }
 
     async find(id: string): Promise<QueryResult<MealDocument>> {
+        const  context = 'MealService/find:';
+
         if (!Types.ObjectId.isValid(id)) {
             const message = `Provided "${id}" that is not a correct MongoDB id.`;
-            console.error('MealService/find:', message);
+            console.error(context, message);
 
-            return {
-                message,
-                statusCode: 400
-            };
+            throw new BadRequestException(context, message);
         }
 
         const meal = await this.mealModel.findById(id);
 
         if (meal === null) {
             const message = `Cannot find a meal with "${id}" id.`;
-            console.error('MealService/find:', message);
+            console.error(context, message);
 
-            return {
-                message,
-                statusCode: 404
-            };
+            throw new NotFoundException(context, message);
         }
 
         const message = `Found meal with "${id}" id.`;
-        console.info('MealService/find:', message);
+        console.info(context, message);
 
         return {
             data: meal as MealDocument,

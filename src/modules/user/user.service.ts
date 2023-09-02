@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { Model } from 'mongoose';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
+import { BadRequestException } from '../../exceptions/bad-request.exception';
 
 @Injectable()
 export class UserService {
@@ -29,33 +30,28 @@ export class UserService {
 
     async loginUser(userLoginDto: UserLoginDto, res): Promise<QueryResult<UserDocument>> {
         const { login, password } = userLoginDto;
+        const context = 'UserService/loginUser:';
         const user = await this.getUser(login);
 
         if (!user) {
             const message = 'User does not exist';
-            console.error('UserService/loginUser:', message);
+            console.error(context, message);
 
-            return {
-                message,
-                statusCode: 400
-            };
+            throw new BadRequestException(context, message);
         }
 
         if (!await bcrypt.compare(password, user.password)) {
             const message = 'Incorrect credentials';
-            console.error('UserService/loginUser:', message);
+            console.error(context, message);
             
-            return {
-                message,
-                statusCode: 400
-            }
+            throw new BadRequestException(context, message);
         }
 
         const jwt = await this.jwtManagerService.encodeUserData({ login });
         res.cookie('jwt', jwt, { httpOnly: true });
         const message = `User "${login}" has been successfully logged in`;
 
-        console.info('UserService/loginUser:', message);
+        console.info(context, message);
 
         return {
             data: user,
@@ -74,14 +70,13 @@ export class UserService {
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<QueryResult<UserDocument>> {
+        const context = 'UserService/createUser:';
+
         if (await this.getUser(createUserDto.login)) {
             const message = `User with "${createUserDto.login}" login has already exists`;
-            console.error('UserService/createUser:', message);
+            console.error(context, message);
 
-            return {
-                message,
-                statusCode: 400
-            }
+            throw new BadRequestException(context, message);
         }
 
         const hashedPassword = await this.getHashedPassword(createUserDto.password);
@@ -92,7 +87,7 @@ export class UserService {
         const data = await createdUser.save() as UserDocument;
         const message = `Created user "${data.login}" with id "${data._id}"`;
 
-        console.info('UserService/createUser:', message);
+        console.info(context, message);
 
         return {
             data,
