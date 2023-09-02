@@ -4,7 +4,7 @@ import { AbstractException } from './abstract.exception';
 
 export class NotFoundException extends AbstractException {
 
-    constructor(message: string, context: ContextString) {
-        super(message, context, HttpStatus.NOT_FOUND);
+    constructor(context: ContextString, message: string) {
+        super(context, message, HttpStatus.NOT_FOUND);
     }
 }

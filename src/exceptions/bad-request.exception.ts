@@ -4,7 +4,7 @@ import { AbstractException } from './abstract.exception';
 
 export class BadRequestException extends AbstractException {
 
-    constructor(message: string, context: ContextString) {
-        super(message, context, HttpStatus.BAD_REQUEST);
+    constructor(context: ContextString, message: string) {
+        super(context, message, HttpStatus.BAD_REQUEST);
     }
 }

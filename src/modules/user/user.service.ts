@@ -37,14 +37,14 @@ export class UserService {
             const message = 'User does not exist';
             console.error(context, message);
 
-            throw new BadRequestException(message, context);
+            throw new BadRequestException(context, message);
         }
 
         if (!await bcrypt.compare(password, user.password)) {
             const message = 'Incorrect credentials';
             console.error(context, message);
             
-            throw new BadRequestException(message, context);
+            throw new BadRequestException(context, message);
         }
 
         const jwt = await this.jwtManagerService.encodeUserData({ login });
@@ -76,7 +76,7 @@ export class UserService {
             const message = `User with "${createUserDto.login}" login has already exists`;
             console.error(context, message);
 
-            throw new BadRequestException(message, context);
+            throw new BadRequestException(context, message);
         }
 
         const hashedPassword = await this.getHashedPassword(createUserDto.password);

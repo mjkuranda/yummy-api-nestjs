@@ -13,15 +13,23 @@ export class AuthService {
     }
 
     public async getAuthorizedUser(jwtCookie: string): Promise<UserDocument> {
+        const context = 'AuthService/getAuthorizedUser';
+
         if (!jwtCookie) {
-            throw new BadRequestException('You are not authorized to execute this action. Please, log in first.', 'AuthService/getAuthorizedUser');
+            const message = 'You are not authorized to execute this action. Please, log in first.';
+            console.error(context, message);
+
+            throw new BadRequestException(context, message);
         }
 
         const userName = this.jwtManagerService.decodeUserData(jwtCookie);
         const user = await this.userService.getUser(userName);
 
         if (!user) {
-            throw new NotFoundException('This user does not exist.', 'AuthService/getAuthorizedUser');
+            const message = 'This user does not exist.';
+            console.error(context, message);
+
+            throw new NotFoundException(context, message);
         }
 
         // TODO: doesn't have capability, so not authorized

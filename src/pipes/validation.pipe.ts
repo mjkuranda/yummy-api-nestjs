@@ -19,7 +19,7 @@ export class ValidationPipe implements PipeTransform<any> {
             const message = errors.join('');
             console.error(context, message);
 
-            throw new BadRequestException(message, context);
+            throw new BadRequestException(context, message);
         }
 
         return value;

@@ -41,7 +41,7 @@ export class MealService {
             const message = `Provided "${id}" that is not a correct MongoDB id.`;
             console.error(context, message);
 
-            throw new BadRequestException(message, context);
+            throw new BadRequestException(context, message);
         }
 
         const meal = await this.mealModel.findById(id);
@@ -50,7 +50,7 @@ export class MealService {
             const message = `Cannot find a meal with "${id}" id.`;
             console.error(context, message);
 
-            throw new NotFoundException(message, context);
+            throw new NotFoundException(context, message);
         }
 
         const message = `Found meal with "${id}" id.`;
