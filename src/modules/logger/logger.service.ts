@@ -3,6 +3,8 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger, transports } from 'winston';
 import { FileTransportInstance } from 'winston/lib/winston/transports';
 import * as moment from 'moment';
+import { ContextString } from '../../common/types';
+import { LOGGER_FOR_ALL, LOGGER_FORMAT } from './logger.factory';
 
 @Injectable()
 export class LoggerService {
@@ -14,14 +16,25 @@ export class LoggerService {
     constructor(@Inject(WINSTON_MODULE_PROVIDER)
                 private logger: Logger) {
         this.updateFileTransport();
+        this.info('LoggerService/constructor', 'LoggerService is ready and starts logging.');
     }
 
-    public log(level, message): void {
+    public info(context: ContextString, message: string): void {
         if (this.shouldCreateNewFileTransport()) {
             this.updateFileTransport();
         }
 
-        this.logger.log(level, message);
+        const logMessage = this.getLogMessage(context, message);
+        this.logger.info(logMessage);
+    }
+
+    public error(context: ContextString, message: string): void {
+        if (this.shouldCreateNewFileTransport()) {
+            this.updateFileTransport();
+        }
+
+        const logMessage = this.getLogMessage(context, message);
+        this.logger.error(logMessage);
     }
 
     private updateFileTransport(): void {
@@ -36,12 +49,20 @@ export class LoggerService {
     private getFileTransport(): FileTransportInstance {
         this.currentDate = moment().format('YYYY-MM-DD');
 
-        return new transports.File({ level: 'error', filename: `logs/${this.currentDate}.log` })
+        return new transports.File({
+            level: LOGGER_FOR_ALL,
+            filename: `logs/${this.currentDate}.log`,
+            format: LOGGER_FORMAT
+        });
     }
 
     private shouldCreateNewFileTransport(): boolean {
         const date = moment().format('YYYY-MM-DD');
 
         return date !== this.currentDate;
+    }
+
+    private getLogMessage(context: ContextString, message: string): string {
+        return `${context}: ${message}`;
     }
 }

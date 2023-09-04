@@ -37,12 +37,11 @@ export class MealService {
     }
 
     async find(id: string): Promise<QueryResult<MealDocument>> {
-        const  context = 'MealService/find:';
+        const context = 'MealService/find';
 
         if (!Types.ObjectId.isValid(id)) {
             const message = `Provided "${id}" that is not a correct MongoDB id.`;
-            console.error(context, message);
-            this.loggerService.log('error', message);
+            this.loggerService.error(context, message);
 
             throw new BadRequestException(context, message);
         }
@@ -51,13 +50,13 @@ export class MealService {
 
         if (!meal) {
             const message = `Cannot find a meal with "${id}" id.`;
-            console.error(context, message);
+            this.loggerService.error(context, message);
 
             throw new NotFoundException(context, message);
         }
 
         const message = `Found meal with "${id}" id.`;
-        console.info(context, message);
+        this.loggerService.info(context, message);
 
         return {
             data: meal as MealDocument,
