@@ -13,8 +13,10 @@ export class LoggerService {
 
     private currentDate: string;
 
-    constructor(@Inject(WINSTON_MODULE_PROVIDER)
-                private logger: Logger) {
+    constructor(
+        @Inject(WINSTON_MODULE_PROVIDER)
+        private readonly logger: Logger
+    ) {
         this.updateFileTransport();
         this.info('LoggerService/constructor', 'LoggerService is ready and starts logging.');
     }
