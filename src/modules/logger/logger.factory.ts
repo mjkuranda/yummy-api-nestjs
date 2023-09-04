@@ -1,6 +1,10 @@
 import { format, transports } from 'winston';
+import * as moment from 'moment/moment';
 
 export const LOGGER_FORMAT = format.combine(
+    // format.colorize({
+    //     all: true
+    // }),
     format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss'
     }),
@@ -16,9 +20,14 @@ export const loggerConsoleFactory = () => {
     })
 };
 
-export const loggerFileFactory = () => {
+export const loggerFileFactory = (currentDate?: string) => {
+    if (!currentDate) {
+        currentDate = moment().format('YYYY-MM-DD');
+    }
+
     return new transports.File({
         level: LOGGER_FOR_ALL,
-        format: LOGGER_FORMAT
+        format: LOGGER_FORMAT,
+        filename: `logs/${currentDate}.log`
     })
 };

@@ -4,7 +4,7 @@ import { Logger, transports } from 'winston';
 import { FileTransportInstance } from 'winston/lib/winston/transports';
 import * as moment from 'moment';
 import { ContextString } from '../../common/types';
-import { LOGGER_FOR_ALL, LOGGER_FORMAT } from './logger.factory';
+import { LOGGER_FOR_ALL, LOGGER_FORMAT, loggerFileFactory } from './logger.factory';
 
 @Injectable()
 export class LoggerService {
@@ -49,11 +49,7 @@ export class LoggerService {
     private getFileTransport(): FileTransportInstance {
         this.currentDate = moment().format('YYYY-MM-DD');
 
-        return new transports.File({
-            level: LOGGER_FOR_ALL,
-            filename: `logs/${this.currentDate}.log`,
-            format: LOGGER_FORMAT
-        });
+        return loggerFileFactory(this.currentDate);
     }
 
     private shouldCreateNewFileTransport(): boolean {
