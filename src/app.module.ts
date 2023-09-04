@@ -7,6 +7,7 @@ import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthorizeMiddleware } from './middleware/authorize.middleware';
 import { AuthModule } from './modules/auth/auth.module';
+import { LoggerModule } from './modules/logger/logger.module';
 
 @Module({
     imports: [
@@ -20,6 +21,7 @@ import { AuthModule } from './modules/auth/auth.module';
             }),
             inject: [ConfigService],
         }),
+        LoggerModule,
         IngredientModule,
         MealModule,
         UserModule,
