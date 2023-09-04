@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.11.0] - 2023-09-04
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Logger messages to the others modules.
+- [Marek Kurańda](https://github.com/mjkuranda): ESLint rule - `@typescript-eslint/semi`.
 
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): ESLint rule `no-console` disallow all console messages.
