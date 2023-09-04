@@ -33,6 +33,7 @@ module.exports = {
         // "padding-line-between-statements": ["error", { blankLine: "always", prev: "*", next: "return" }]
         "no-console": ["error"],
         "semi": "off",
-        "@typescript-eslint/semi": "error"
+        "@typescript-eslint/semi": "error",
+        "no-trailing-spaces": "error"
     },
 };
