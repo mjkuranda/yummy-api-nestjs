@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger, transports } from 'winston';
+import { Logger } from 'winston';
 import { FileTransportInstance } from 'winston/lib/winston/transports';
 import * as moment from 'moment';
 import { ContextString } from '../../common/types';
-import { LOGGER_FOR_ALL, LOGGER_FORMAT, loggerFileFactory } from './logger.factory';
+import { loggerFileFactory } from './logger.factory';
 
 @Injectable()
 export class LoggerService {
