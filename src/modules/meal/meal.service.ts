@@ -7,12 +7,14 @@ import { QueryResult } from '../../common/interfaces';
 import { CreateMealDto } from './meal.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class MealService {
 
     constructor(@InjectModel(models.MEAL_MODEL)
-                private mealModel: Model<MealDocument>) {}
+                private mealModel: Model<MealDocument>,
+                private loggerService: LoggerService) {}
 
     async create(createMealDto: CreateMealDto): Promise<QueryResult<MealDocument>> {
         const createdMeal = new this.mealModel(createMealDto);
@@ -40,6 +42,7 @@ export class MealService {
         if (!Types.ObjectId.isValid(id)) {
             const message = `Provided "${id}" that is not a correct MongoDB id.`;
             console.error(context, message);
+            this.loggerService.log('error', message);
 
             throw new BadRequestException(context, message);
         }
