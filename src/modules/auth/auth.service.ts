@@ -4,12 +4,14 @@ import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { UserDocument } from '../user/user.interface';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class AuthService {
 
     constructor(private readonly jwtManagerService: JwtManagerService,
-                private readonly userService: UserService) {
+                private readonly userService: UserService,
+                private readonly loggerService: LoggerService) {
     }
 
     public async getAuthorizedUser(jwtCookie: string): Promise<UserDocument> {
@@ -17,7 +19,7 @@ export class AuthService {
 
         if (!jwtCookie) {
             const message = 'You are not authorized to execute this action. Please, log in first.';
-            console.error(context, message);
+            this.loggerService.error(context, message);
 
             throw new BadRequestException(context, message);
         }
@@ -27,7 +29,7 @@ export class AuthService {
 
         if (!user) {
             const message = 'This user does not exist.';
-            console.error(context, message);
+            this.loggerService.error(context, message);
 
             throw new NotFoundException(context, message);
         }

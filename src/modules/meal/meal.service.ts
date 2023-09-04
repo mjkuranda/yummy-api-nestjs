@@ -12,9 +12,11 @@ import { LoggerService } from '../logger/logger.service';
 @Injectable()
 export class MealService {
 
-    constructor(@InjectModel(models.MEAL_MODEL)
-                private mealModel: Model<MealDocument>,
-                private loggerService: LoggerService) {}
+    constructor(
+        @InjectModel(models.MEAL_MODEL)
+        private mealModel: Model<MealDocument>,
+        private loggerService: LoggerService
+    ) {}
 
     async create(createMealDto: CreateMealDto): Promise<QueryResult<MealDocument>> {
         const createdMeal = new this.mealModel(createMealDto);
@@ -27,7 +29,7 @@ export class MealService {
         const message = `New meal "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription}.`;
         const data = await createdMeal.save() as MealDocument;
 
-        console.info('MealService/create:', message);
+        this.loggerService.info('MealService/create:', message);
 
         return {
             data,
@@ -69,7 +71,7 @@ export class MealService {
         const meals = (await this.mealModel.find()) as MealDocument[];
         const message = `Found ${meals.length} meals.`;
 
-        console.info('MealService/findAll:', message);
+        this.loggerService.info('MealService/findAll', message);
 
         return {
             data: meals,

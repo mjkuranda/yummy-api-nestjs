@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2023-09-04
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Logger messages to the others modules.
+- [Marek Kurańda](https://github.com/mjkuranda): ESLint rule - `@typescript-eslint/semi`.
+- [Marek Kurańda](https://github.com/mjkuranda): ESLint rule - `no-trailing-spaces`.
+- [Marek Kurańda](https://github.com/mjkuranda): ESLint rule - `keyword-spacing`.
+- [Marek Kurańda](https://github.com/mjkuranda): ESLint rule - `space-before-blocks`.
+- [Marek Kurańda](https://github.com/mjkuranda): ESLint rule - `space-before-function-paren` set as `never`.
+
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): ESLint rule `no-console` disallow all console messages.
+
+### Removed
+- [Marek Kurańda](https://github.com/mjkuranda): Logging from global validation pipe.
+
 ## [1.10.0] - 2023-09-04
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Winston logger and its wrapper - `LoggerModule`.

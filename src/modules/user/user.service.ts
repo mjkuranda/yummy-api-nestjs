@@ -8,6 +8,7 @@ import { models } from '../../constants/models.constant';
 import { Model } from 'mongoose';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,8 @@ export class UserService {
     constructor(
         @InjectModel(models.USER_MODEL)
         private userModel: Model<UserDocument>,
-        private readonly jwtManagerService: JwtManagerService
+        private readonly jwtManagerService: JwtManagerService,
+        private readonly loggerService: LoggerService
     ) {}
 
     async getUsers(): Promise<UserDocument[]> {
@@ -35,38 +37,37 @@ export class UserService {
 
         if (!user) {
             const message = 'User does not exist';
-            console.error(context, message);
+            this.loggerService.error(context, message);
 
             throw new BadRequestException(context, message);
         }
 
         if (!await bcrypt.compare(password, user.password)) {
             const message = 'Incorrect credentials';
-            console.error(context, message);
-            
+            this.loggerService.error(context, message);
+
             throw new BadRequestException(context, message);
         }
 
         const jwt = await this.jwtManagerService.encodeUserData({ login });
         res.cookie('jwt', jwt, { httpOnly: true });
         const message = `User "${login}" has been successfully logged in`;
-
-        console.info(context, message);
+        this.loggerService.info(context, message);
 
         return {
             data: user,
             message,
             statusCode: 200
-        }
+        };
     }
 
     async logoutUser(res): Promise<QueryResult<UserDocument>> {
         res.clearCookie('jwt');
-        
+
         return {
             message: 'You have been successfully logged out',
             statusCode: 200
-        }
+        };
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<QueryResult<UserDocument>> {
@@ -74,7 +75,7 @@ export class UserService {
 
         if (await this.getUser(createUserDto.login)) {
             const message = `User with "${createUserDto.login}" login has already exists`;
-            console.error(context, message);
+            this.loggerService.error(context, message);
 
             throw new BadRequestException(context, message);
         }
@@ -87,7 +88,7 @@ export class UserService {
         const data = await createdUser.save() as UserDocument;
         const message = `Created user "${data.login}" with id "${data._id}"`;
 
-        console.info(context, message);
+        this.loggerService.info(context, message);
 
         return {
             data,

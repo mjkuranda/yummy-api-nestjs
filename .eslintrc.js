@@ -31,6 +31,13 @@ module.exports = {
         "object-curly-spacing": ["error", "always", { "objectsInObjects": false }],
         "newline-before-return": "error",
         // "padding-line-between-statements": ["error", { blankLine: "always", prev: "*", next: "return" }]
-        "no-console": ["error", { allow: ["info", "warn", "error"] }]
+        "no-console": ["error"],
+        "semi": "off",
+        "@typescript-eslint/semi": "error",
+        "no-trailing-spaces": "error",
+        // "space-after-keywords": "error"
+        "keyword-spacing": ["error", { "before": true }],
+        "space-before-blocks": "error",
+        "space-before-function-paren": ["error", "never"]
     },
 };
