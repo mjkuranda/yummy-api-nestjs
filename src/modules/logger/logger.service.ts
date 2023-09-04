@@ -13,18 +13,13 @@ export class LoggerService {
 
     constructor(@Inject(WINSTON_MODULE_PROVIDER)
                 private logger: Logger) {
-        console.log('PRE', logger.transports.length);
         this.updateFileTransport();
-        console.log('POST', logger.transports.length);
     }
 
     public log(level, message): void {
-        console.log('XXX', this.logger.transports.length);
         if (this.shouldCreateNewFileTransport()) {
             this.updateFileTransport();
         }
-
-        console.log(this.logger.transports.length);
 
         this.logger.log(level, message);
     }
