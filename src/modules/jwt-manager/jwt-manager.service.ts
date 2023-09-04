@@ -10,7 +10,7 @@ export class JwtManagerService {
     public async encodeUserData(userDataPayload: UserDataPayload): Promise<string> {
         const { login } = userDataPayload;
 
-        return await this.jwtService.signAsync(login, { secret: process.env.ACCESS_TOKEN_SECRET })
+        return await this.jwtService.signAsync(login, { secret: process.env.ACCESS_TOKEN_SECRET });
     }
 
     public decodeUserData(jwtCookie: string): string {

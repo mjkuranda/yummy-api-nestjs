@@ -45,30 +45,29 @@ export class UserService {
         if (!await bcrypt.compare(password, user.password)) {
             const message = 'Incorrect credentials';
             this.loggerService.error(context, message);
-            
+
             throw new BadRequestException(context, message);
         }
 
         const jwt = await this.jwtManagerService.encodeUserData({ login });
         res.cookie('jwt', jwt, { httpOnly: true });
         const message = `User "${login}" has been successfully logged in`;
-
         this.loggerService.info(context, message);
 
         return {
             data: user,
             message,
             statusCode: 200
-        }
+        };
     }
 
     async logoutUser(res): Promise<QueryResult<UserDocument>> {
         res.clearCookie('jwt');
-        
+
         return {
             message: 'You have been successfully logged out',
             statusCode: 200
-        }
+        };
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<QueryResult<UserDocument>> {

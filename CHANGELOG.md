@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): Logger messages to the others modules.
 - [Marek Kurańda](https://github.com/mjkuranda): ESLint rule - `@typescript-eslint/semi`.
 - [Marek Kurańda](https://github.com/mjkuranda): ESLint rule - `no-trailing-spaces`.
+- [Marek Kurańda](https://github.com/mjkuranda): ESLint rule - `space-after-keywords`.
 
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): ESLint rule `no-console` disallow all console messages.

@@ -7,7 +7,7 @@ import { ValidationPipe } from './pipes/validation.pipe';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.use(cookieParser());
-    app.useGlobalFilters(new HttpExceptionFilter())
+    app.useGlobalFilters(new HttpExceptionFilter());
     app.useGlobalPipes(new ValidationPipe());
     await app.listen(3000);
 }

@@ -32,7 +32,7 @@ export const loggerConsoleFactory = () => {
     return new transports.Console({
         level: LOGGER_FOR_ALL,
         format: LOGGER_COLORIZED_FORMAT
-    })
+    });
 };
 
 export const loggerFileFactory = (currentDate?: string) => {
@@ -44,5 +44,5 @@ export const loggerFileFactory = (currentDate?: string) => {
         level: LOGGER_FOR_ALL,
         format: LOGGER_PLAIN_FORMAT,
         filename: `logs/${currentDate}.log`
-    })
+    });
 };

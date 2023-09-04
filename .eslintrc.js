@@ -34,6 +34,7 @@ module.exports = {
         "no-console": ["error"],
         "semi": "off",
         "@typescript-eslint/semi": "error",
-        "no-trailing-spaces": "error"
+        "no-trailing-spaces": "error",
+        "space-after-keywords": "error"
     },
 };
