@@ -35,6 +35,9 @@ module.exports = {
         "semi": "off",
         "@typescript-eslint/semi": "error",
         "no-trailing-spaces": "error",
-        "space-after-keywords": "error"
+        // "space-after-keywords": "error"
+        "keyword-spacing": ["error", { "before": true }],
+        "space-before-blocks": "error",
+        "space-before-function-paren": ["error", "never"]
     },
 };

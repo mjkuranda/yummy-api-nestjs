@@ -4,7 +4,7 @@ import { JwtManagerService } from './jwt-manager.service';
 describe('JwtManagerService', () => {
     let service: JwtManagerService;
 
-    beforeEach(async () => {
+    beforeEach(async() => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [JwtManagerService],
         }).compile();
