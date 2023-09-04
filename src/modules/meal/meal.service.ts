@@ -49,7 +49,7 @@ export class MealService {
 
         const meal = await this.mealModel.findById(id);
 
-        if (meal === null) {
+        if (!meal) {
             const message = `Cannot find a meal with "${id}" id.`;
             console.error(context, message);
 

@@ -25,6 +25,10 @@ export class LoggerService {
     }
 
     private updateFileTransport(): void {
+        if (this.loggerTransport) {
+            this.logger.remove(this.loggerTransport);
+        }
+
         this.loggerTransport = this.getFileTransport();
         this.logger.add(this.loggerTransport);
     }
