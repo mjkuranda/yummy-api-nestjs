@@ -10,6 +10,9 @@ import { LoggerService } from '../logger/logger.service';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { of } from 'rxjs';
 
+// https://betterprogramming.pub/testing-controllers-in-nestjs-and-mongo-with-jest-63e1b208503c
+// https://stackoverflow.com/questions/74110962/please-make-sure-that-the-argument-databaseconnection-at-index-0-is-available
+
 describe('AuthService', () => {
     let service: AuthService;
     let model: Model<UserDocument>;
@@ -54,6 +57,20 @@ describe('AuthService', () => {
         }).compile();
 
         service = module.get<AuthService>(AuthService) as AuthService;
+    });
+
+    afterAll(async() => {
+        await mongoConnection.dropDatabase();
+        await mongoConnection.close();
+        await mongod.stop();
+    });
+
+    afterEach(async() => {
+        const collections = mongoConnection.collections;
+        for (const key in collections) {
+            const collection = collections[key];
+            await collection.deleteMany({});
+        }
     });
 
     it('should be defined', () => {
