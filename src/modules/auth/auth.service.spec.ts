@@ -19,8 +19,6 @@ describe('AuthService', () => {
     let mongod: MongoMemoryServer;
     let mongoConnection: Connection;
 
-    const mockAuthService = {};
-
     beforeEach(async() => {
         mongod = await MongoMemoryServer.create();
         const uri = mongod.getUri();
@@ -75,5 +73,19 @@ describe('AuthService', () => {
 
     it('should be defined', () => {
         expect(service).toBeDefined();
+    });
+
+    const mockAuthService = {
+        getAuthorizedUser: jest.fn()
+    };
+
+    const mockUser = {
+        _id: '64e9f765d4e60ba693641aa1',
+        login: 'Test',
+        password: '$2b$12$r.ea/uOV1ZE6XWinWC8RY.l08EjrAQMx2shhcZwwrc1TIj8nAddry' // 123
+    } as UserDocument & { _id: string };
+
+    it('should get authorized user', async() => {
+        jest.spyOn(model, 'getAuthorizedUser').mockResolvedValue(mockUser);
     });
 });
