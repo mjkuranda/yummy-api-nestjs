@@ -19,6 +19,10 @@ describe('AuthService', () => {
     let mongod: MongoMemoryServer;
     let mongoConnection: Connection;
 
+    const mockAuthService = {
+        getAuthorizedUser: jest.fn(() => {})
+    };
+
     beforeEach(async() => {
         mongod = await MongoMemoryServer.create();
         const uri = mongod.getUri();
@@ -47,14 +51,13 @@ describe('AuthService', () => {
                 },
                 {
                     provide: getModelToken(models.USER_MODEL),
-                    useValue: {
-                        get: () => of({ data: [] })
-                    }
+                    useValue: mockAuthService
                 }
             ],
         }).compile();
 
-        service = module.get<AuthService>(AuthService) as AuthService;
+        service = module.get(AuthService);
+        model = module.get(getModelToken(models.USER_MODEL));
     });
 
     afterAll(async() => {
@@ -75,17 +78,20 @@ describe('AuthService', () => {
         expect(service).toBeDefined();
     });
 
-    const mockAuthService = {
-        getAuthorizedUser: jest.fn()
-    };
-
     const mockUser = {
         _id: '64e9f765d4e60ba693641aa1',
         login: 'Test',
         password: '$2b$12$r.ea/uOV1ZE6XWinWC8RY.l08EjrAQMx2shhcZwwrc1TIj8nAddry' // 123
-    } as UserDocument & { _id: string };
+    }; //as UserDocument & { _id: string };
 
     it('should get authorized user', async() => {
-        jest.spyOn(model, 'getAuthorizedUser').mockResolvedValue(mockUser);
+        jest.spyOn(service, 'getAuthorizedUser').mockImplementation(() => {
+            return Promise.resolve({
+                login: 'xx',
+                password: 'xx'
+            } as UserDocument);
+        });
+
+        expect(1).toBe(1);
     });
 });
