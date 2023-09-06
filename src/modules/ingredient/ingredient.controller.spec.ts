@@ -30,6 +30,7 @@ describe('IngredientController', () => {
 
     const mockIngredientService = {
         findAll: jest.fn().mockResolvedValueOnce(mockIngredients),
+        create: jest.fn()
     };
 
     beforeEach(async() => {
@@ -90,5 +91,19 @@ describe('IngredientController', () => {
 
         expect(service.findAll).toHaveBeenCalled();
         expect(result).toBe(mockIngredients);
+    });
+
+    it('should create a new ingredient', async() => {
+        const newIngredient = {
+            name: 'Awesome ingredient',
+            category: 'Some category'
+        };
+        const mockIngredient = { ...newIngredient };
+        mockIngredientService.create = jest.fn().mockResolvedValueOnce(mockIngredient);
+
+        const result = await service.create(newIngredient);
+
+        expect(service.create).toHaveBeenCalled();
+        expect(result).toBe(mockIngredient);
     });
 });
