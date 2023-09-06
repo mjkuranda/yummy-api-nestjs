@@ -78,20 +78,21 @@ describe('AuthService', () => {
         expect(service).toBeDefined();
     });
 
-    const mockUser = {
-        _id: '64e9f765d4e60ba693641aa1',
-        login: 'Test',
-        password: '$2b$12$r.ea/uOV1ZE6XWinWC8RY.l08EjrAQMx2shhcZwwrc1TIj8nAddry' // 123
-    }; //as UserDocument & { _id: string };
-
     it('should get authorized user', async() => {
-        jest.spyOn(service, 'getAuthorizedUser').mockImplementation(() => {
-            return Promise.resolve({
-                login: 'xx',
-                password: 'xx'
-            } as UserDocument);
-        });
+        // Given
+        const jwtCookie = 'eyJhbGciOiJIUzI1NiJ9.QWFh.8SkYoAsthYk2cx4xrLFuRleIBOxAaqthAWCBs71aA6A';
+        const mockUser = {
+            _id: '64e9f765d4e60ba693641aa1',
+            login: 'Test',
+            password: '$2b$12$r.ea/uOV1ZE6XWinWC8RY.l08EjrAQMx2shhcZwwrc1TIj8nAddry' // 123
+        } as UserDocument & { _id: string };
 
-        expect(1).toBe(1);
+        // When
+        jest.spyOn(service, 'getAuthorizedUser').mockResolvedValue(mockUser);
+        const authorizedUser = await service.getAuthorizedUser(jwtCookie);
+
+        // Then
+        expect(service.getAuthorizedUser).toHaveBeenCalledWith(jwtCookie);
+        expect(authorizedUser).toBe(mockUser);
     });
 });

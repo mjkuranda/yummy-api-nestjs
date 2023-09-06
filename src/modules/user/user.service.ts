@@ -32,7 +32,7 @@ export class UserService {
 
     async loginUser(userLoginDto: UserLoginDto, res): Promise<QueryResult<UserDocument>> {
         const { login, password } = userLoginDto;
-        const context = 'UserService/loginUser:';
+        const context = 'UserService/loginUser';
         const user = await this.getUser(login);
 
         if (!user) {
