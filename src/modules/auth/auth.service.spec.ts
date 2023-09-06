@@ -9,6 +9,7 @@ import { UserService } from '../user/user.service';
 import { LoggerService } from '../logger/logger.service';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { of } from 'rxjs';
+import { JwtService } from '@nestjs/jwt';
 
 // https://betterprogramming.pub/testing-controllers-in-nestjs-and-mongo-with-jest-63e1b208503c
 // https://stackoverflow.com/questions/74110962/please-make-sure-that-the-argument-databaseconnection-at-index-0-is-available
@@ -32,16 +33,22 @@ describe('AuthService', () => {
             providers: [
                 AuthService,
                 {
+                    provide: JwtService,
+                    useClass: JwtService
+                },
+                {
                     provide: JwtManagerService,
-                    useValue: {
-                        get: () => of({ data: [] })
-                    }
+                    // useValue: {
+                    //     get: () => of({ data: [] })
+                    // }
+                    useClass: JwtManagerService
                 },
                 {
                     provide: UserService,
-                    useValue: {
-                        get: () => of({ data: [] })
-                    }
+                    // useValue: {
+                    //     get: () => of({ data: [] })
+                    // }
+                    useClass: UserService
                 },
                 {
                     provide: LoggerService,
@@ -49,6 +56,10 @@ describe('AuthService', () => {
                         get: () => of({ data: [] })
                     }
                 },
+                // {
+                //     provide: 'userModel',
+                //     useClass: Model<UserDocument>
+                // },
                 {
                     provide: getModelToken(models.USER_MODEL),
                     useValue: mockAuthService
@@ -85,7 +96,7 @@ describe('AuthService', () => {
             _id: '64e9f765d4e60ba693641aa1',
             login: 'Test',
             password: '$2b$12$r.ea/uOV1ZE6XWinWC8RY.l08EjrAQMx2shhcZwwrc1TIj8nAddry' // 123
-        } as UserDocument & { _id: string };
+        } as UserDocument;
 
         // When
         jest.spyOn(service, 'getAuthorizedUser').mockResolvedValue(mockUser);
@@ -95,4 +106,18 @@ describe('AuthService', () => {
         expect(service.getAuthorizedUser).toHaveBeenCalledWith(jwtCookie);
         expect(authorizedUser).toBe(mockUser);
     });
+
+    // it('should throw not found exception when user has not found', async() => {
+    //     // Given
+    //     const jwtCookie = 'bad cookie';
+    //
+    //     // When
+    //     // jest.spyOn(service, 'getAuthorizedUser').mockReturnValue(Promise.resolve<boolean>(false));
+    //     const result = await service.getAuthorizedUser(jwtCookie);
+    //
+    //     console.log(result);
+    //
+    //     // Then
+    //     await expect(service.getAuthorizedUser(jwtCookie)).rejects.toThrow(NotFoundException);
+    // });
 });
