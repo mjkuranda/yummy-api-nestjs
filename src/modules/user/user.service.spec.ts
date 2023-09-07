@@ -70,7 +70,7 @@ describe('UserService', () => {
 
             const result = await service.getUser(mockUser.login);
 
-            expect(model.findOne).toHaveBeenCalledWith(mockUser.login);
+            expect(model.findOne).toHaveBeenCalledWith({ login: mockUser.login });
             expect(result).toBe(mockUser);
         });
     });
