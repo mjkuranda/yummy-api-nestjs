@@ -44,7 +44,7 @@ export class UserService {
             const message = 'User does not exist';
             this.loggerService.error(context, message);
 
-            throw new BadRequestException(context, message);
+            throw new NotFoundException(context, message);
         }
 
         if (!await this.areSameHashedPasswords(password, user.password)) {
