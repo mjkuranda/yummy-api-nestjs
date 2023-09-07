@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { of } from 'rxjs';
 import { LoggerService } from '../logger/logger.service';
+import { CreateUserDto } from './user.dto';
 
 describe('UserService', () => {
     let service: UserService;
@@ -23,7 +24,8 @@ describe('UserService', () => {
     const mockUserService = {
         findOne: jest.fn(),
         getUser: jest.fn(),
-        areSameHashedPasswords: jest.fn()
+        areSameHashedPasswords: jest.fn(),
+        create: jest.fn()
     };
 
     beforeEach(async() => {
@@ -61,34 +63,51 @@ describe('UserService', () => {
         expect(service).toBeDefined();
     });
 
-    describe('getUser', () => {
-        it('should return user', async() => {
-            jest.spyOn(model, 'findOne').mockResolvedValueOnce(mockUser);
+    it('should return user', async() => {
+        jest.spyOn(model, 'findOne').mockResolvedValueOnce(mockUser);
 
-            const result = await service.getUser(mockUser.login);
+        const result = await service.getUser(mockUser.login);
 
-            expect(model.findOne).toHaveBeenCalledWith(mockUser.login);
-            expect(result).toBe(mockUser);
-        });
+        expect(model.findOne).toHaveBeenCalledWith(mockUser.login);
+        expect(result).toBe(mockUser);
+    });
 
-        it('should log in user', async() => {
-            const mockCookie = 'some.jwt.cookie';
-            const mockUserDto = {
-                login: 'Aaa',
-                password: '123'
-            };
-            const mockRes = {
-                cookie: jest.fn()
-            };
-            jest.spyOn(service, 'getUser').mockResolvedValueOnce(mockUser);
-            jest.spyOn(service, 'areSameHashedPasswords').mockResolvedValueOnce(true);
-            jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
-            jest.spyOn(loggerService, 'info').mockImplementation(() => {});
+    it('should log in user', async() => {
+        const mockCookie = 'some.jwt.cookie';
+        const mockUserDto = {
+            login: 'Aaa',
+            password: '123'
+        };
+        const mockRes = {
+            cookie: jest.fn()
+        };
+        jest.spyOn(service, 'getUser').mockResolvedValueOnce(mockUser);
+        jest.spyOn(service, 'areSameHashedPasswords').mockResolvedValueOnce(true);
+        jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
+        jest.spyOn(loggerService, 'info').mockImplementation(() => {});
 
-            const result = await service.loginUser(mockUserDto, mockRes);
-            console.log(result);
+        const result = await service.loginUser(mockUserDto, mockRes);
 
-            expect(1).toBe(1);
-        });
+        expect(result.statusCode).toBe(200);
+    });
+
+    it('should create a new user', async() => {
+        const mockUserDto: CreateUserDto = {
+            login: 'Login',
+            password: '123'
+        };
+        const mockHashedPassword = 'hashed password';
+        const createdUser = {
+            login: mockUserDto.login,
+            password: mockHashedPassword,
+        } as any;
+
+        jest.spyOn(service, 'getUser').mockResolvedValueOnce(null);
+        jest.spyOn(service, 'getHashedPassword').mockResolvedValueOnce(mockHashedPassword);
+        jest.spyOn(model, 'create').mockResolvedValue(createdUser);
+
+        const result = await service.createUser(mockUserDto);
+
+        expect(result.statusCode).toBe(201);
     });
 });

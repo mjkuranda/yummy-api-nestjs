@@ -86,17 +86,16 @@ export class UserService {
         }
 
         const hashedPassword = await this.getHashedPassword(createUserDto.password);
-        const createdUser = new this.userModel({
+        const newUser = await this.userModel.create({
             login: createUserDto.login,
             password: hashedPassword
-        });
-        const data = await createdUser.save() as UserDocument;
-        const message = `Created user "${data.login}" with id "${data._id}"`;
+        }) as UserDocument;
+        const message = `Created user "${newUser.login}" with id "${newUser._id}"`;
 
         this.loggerService.info(context, message);
 
         return {
-            data,
+            data: newUser,
             message,
             statusCode: 201
         };
