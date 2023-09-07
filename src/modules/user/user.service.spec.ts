@@ -64,35 +64,38 @@ describe('UserService', () => {
         expect(service).toBeDefined();
     });
 
-    it('should return user', async() => {
-        jest.spyOn(model, 'findOne').mockResolvedValueOnce(mockUser);
+    describe('getUser', () => {
+        it('should return user', async() => {
+            jest.spyOn(model, 'findOne').mockResolvedValueOnce(mockUser);
 
-        const result = await service.getUser(mockUser.login);
+            const result = await service.getUser(mockUser.login);
 
-        expect(model.findOne).toHaveBeenCalledWith(mockUser.login);
-        expect(result).toBe(mockUser);
+            expect(model.findOne).toHaveBeenCalledWith(mockUser.login);
+            expect(result).toBe(mockUser);
+        });
     });
 
-    it('should log in user', async() => {
-        const mockCookie = 'some.jwt.cookie';
-        const mockUserDto = {
-            login: 'Aaa',
-            password: '123'
-        };
-        const mockRes = {
-            cookie: jest.fn()
-        };
-        jest.spyOn(service, 'getUser').mockResolvedValueOnce(mockUser);
-        jest.spyOn(service, 'areSameHashedPasswords').mockResolvedValueOnce(true);
-        jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
-        jest.spyOn(loggerService, 'info').mockImplementation(() => {});
+    describe('loginUser', () => {
+        it('should log in user', async() => {
+            const mockCookie = 'some.jwt.cookie';
+            const mockUserDto = {
+                login: 'Aaa',
+                password: '123'
+            };
+            const mockRes = {
+                cookie: jest.fn()
+            };
+            jest.spyOn(service, 'getUser').mockResolvedValueOnce(mockUser);
+            jest.spyOn(service, 'areSameHashedPasswords').mockResolvedValueOnce(true);
+            jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
 
-        const result = await service.loginUser(mockUserDto, mockRes);
+            const result = await service.loginUser(mockUserDto, mockRes);
 
-        expect(result.statusCode).toBe(200);
+            expect(result.statusCode).toBe(200);
+        });
     });
 
-    describe('UserService/createUser', () => {
+    describe('createUser', () => {
         const mockUserDto: CreateUserDto = {
             login: 'Login',
             password: '123'
