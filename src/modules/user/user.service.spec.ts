@@ -15,7 +15,6 @@ describe('UserService', () => {
     let service: UserService;
     let model: Model<UserDocument>;
     let jwtManagerService: JwtManagerService;
-    let loggerService: LoggerService;
 
     const mockUser = {
         login: 'Aaa',
@@ -58,7 +57,6 @@ describe('UserService', () => {
         service = module.get(UserService);
         model = module.get(getModelToken(models.USER_MODEL));
         jwtManagerService = module.get(JwtManagerService);
-        loggerService = module.get(LoggerService);
     });
 
     it('should be defined', () => {
