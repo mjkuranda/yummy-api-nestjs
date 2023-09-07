@@ -6,9 +6,9 @@ import { UserDocument } from './user.interface';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
-import { of } from 'rxjs';
 import { LoggerService } from '../logger/logger.service';
 import { CreateUserDto } from './user.dto';
+import { BadRequestException } from '../../exceptions/bad-request.exception';
 
 describe('UserService', () => {
     let service: UserService;
@@ -47,7 +47,8 @@ describe('UserService', () => {
                 {
                     provide: LoggerService,
                     useValue: {
-                        info: () => {}
+                        info: () => {},
+                        error: () => {}
                     }
                 }
             ],
@@ -91,23 +92,37 @@ describe('UserService', () => {
         expect(result.statusCode).toBe(200);
     });
 
-    it('should create a new user', async() => {
+    describe('UserService/createUser', () => {
         const mockUserDto: CreateUserDto = {
             login: 'Login',
             password: '123'
         };
-        const mockHashedPassword = 'hashed password';
-        const createdUser = {
-            login: mockUserDto.login,
-            password: mockHashedPassword,
-        } as any;
 
-        jest.spyOn(service, 'getUser').mockResolvedValueOnce(null);
-        jest.spyOn(service, 'getHashedPassword').mockResolvedValueOnce(mockHashedPassword);
-        jest.spyOn(model, 'create').mockResolvedValue(createdUser);
+        it('should create a new user', async() => {
+            const mockHashedPassword = 'hashed password';
+            const createdUser = {
+                login: mockUserDto.login,
+                password: mockHashedPassword,
+            } as any;
 
-        const result = await service.createUser(mockUserDto);
+            jest.spyOn(service, 'getUser').mockResolvedValueOnce(null);
+            jest.spyOn(service, 'getHashedPassword').mockResolvedValueOnce(mockHashedPassword);
+            jest.spyOn(model, 'create').mockResolvedValue(createdUser);
 
-        expect(result.statusCode).toBe(201);
+            const result = await service.createUser(mockUserDto);
+
+            expect(result.statusCode).toBe(201);
+        });
+
+        it('should throw an error when the user exist', async() => {
+            const mockExistingUser = {
+                login: mockUserDto.login,
+                password: 'some password'
+            } as any;
+
+            jest.spyOn(service, 'getUser').mockResolvedValueOnce(mockExistingUser);
+
+            await expect(service.createUser(mockUserDto)).rejects.toThrow(BadRequestException);
+        });
     });
 });
