@@ -106,7 +106,7 @@ export class UserService {
         return await bcrypt.hash(password, 12);
     }
 
-    private async areSameHashedPasswords(password: string, hashedPassword: string): Promise<boolean> {
+    async areSameHashedPasswords(password: string, hashedPassword: string): Promise<boolean> {
         return await bcrypt.compare(password, hashedPassword);
     }
 }

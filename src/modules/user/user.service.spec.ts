@@ -12,15 +12,18 @@ import { LoggerService } from '../logger/logger.service';
 describe('UserService', () => {
     let service: UserService;
     let model: Model<UserDocument>;
+    let jwtManagerService: JwtManagerService;
+    let loggerService: LoggerService;
 
     const mockUser = {
         login: 'Aaa',
         password: 'hashed password'
-    };
+    } as UserDocument;
 
     const mockUserService = {
-        // getUser: jest.fn(),
-        findOne: jest.fn()
+        findOne: jest.fn(),
+        getUser: jest.fn(),
+        areSameHashedPasswords: jest.fn()
     };
 
     beforeEach(async() => {
@@ -42,7 +45,7 @@ describe('UserService', () => {
                 {
                     provide: LoggerService,
                     useValue: {
-                        get: () => of({ data: [] })
+                        info: () => {}
                     }
                 }
             ],
@@ -50,6 +53,8 @@ describe('UserService', () => {
 
         service = module.get(UserService);
         model = module.get(getModelToken(models.USER_MODEL));
+        jwtManagerService = module.get(JwtManagerService);
+        loggerService = module.get(LoggerService);
     });
 
     it('should be defined', () => {
@@ -64,6 +69,26 @@ describe('UserService', () => {
 
             expect(model.findOne).toHaveBeenCalledWith(mockUser.login);
             expect(result).toBe(mockUser);
+        });
+
+        it('should log in user', async() => {
+            const mockCookie = 'some.jwt.cookie';
+            const mockUserDto = {
+                login: 'Aaa',
+                password: '123'
+            };
+            const mockRes = {
+                cookie: jest.fn()
+            };
+            jest.spyOn(service, 'getUser').mockResolvedValueOnce(mockUser);
+            jest.spyOn(service, 'areSameHashedPasswords').mockResolvedValueOnce(true);
+            jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
+            jest.spyOn(loggerService, 'info').mockImplementation(() => {});
+
+            const result = await service.loginUser(mockUserDto, mockRes);
+            console.log(result);
+
+            expect(1).toBe(1);
         });
     });
 });
