@@ -9,6 +9,7 @@ import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { LoggerService } from '../logger/logger.service';
 import { CreateUserDto } from './user.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
+import { NotFoundException } from '../../exceptions/not-found.exception';
 
 describe('UserService', () => {
     let service: UserService;
@@ -28,7 +29,7 @@ describe('UserService', () => {
         create: jest.fn()
     };
 
-    beforeEach(async() => {
+    beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 UserService,
@@ -65,7 +66,7 @@ describe('UserService', () => {
     });
 
     describe('getUser', () => {
-        it('should return user', async() => {
+        it('should return user', async () => {
             jest.spyOn(model, 'findOne').mockResolvedValueOnce(mockUser);
 
             const result = await service.getUser(mockUser.login);
@@ -73,10 +74,18 @@ describe('UserService', () => {
             expect(model.findOne).toHaveBeenCalledWith({ login: mockUser.login });
             expect(result).toBe(mockUser);
         });
+
+        it('should throw an error when user not found', async () => {
+            jest.spyOn(model, 'findOne').mockResolvedValueOnce(null);
+
+            const givenNonExistingLogin = 'Non existing user name';
+
+            await expect(service.getUser(givenNonExistingLogin)).rejects.toThrow(NotFoundException);
+        });
     });
 
     describe('loginUser', () => {
-        it('should log in user', async() => {
+        it('should log in user', async () => {
             const mockCookie = 'some.jwt.cookie';
             const mockUserDto = {
                 login: 'Aaa',
@@ -101,7 +110,7 @@ describe('UserService', () => {
             password: '123'
         };
 
-        it('should create a new user', async() => {
+        it('should create a new user', async () => {
             const mockHashedPassword = 'hashed password';
             const createdUser = {
                 login: mockUserDto.login,
@@ -117,7 +126,7 @@ describe('UserService', () => {
             expect(result.statusCode).toBe(201);
         });
 
-        it('should throw an error when the user exist', async() => {
+        it('should throw an error when the user exist', async () => {
             const mockExistingUser = {
                 login: mockUserDto.login,
                 password: 'some password'
