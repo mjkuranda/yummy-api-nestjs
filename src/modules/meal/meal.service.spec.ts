@@ -13,7 +13,8 @@ describe('MealService', () => {
     let mealModel: Model<MealDocument>;
 
     const mockMealService = {
-        create: jest.fn()
+        create: jest.fn(),
+        find: jest.fn()
     };
 
     beforeEach(async () => {
@@ -74,6 +75,24 @@ describe('MealService', () => {
             const result = await mealService.create(mockMealDto);
 
             expect(result.statusCode).toBe(201);
+        });
+    });
+
+    describe('find', () => {});
+
+    describe('findAll', () => {
+        it('should find all meals', async () => {
+            const mockMeals = [
+                { name: 'Meal 1' },
+                { name: 'Meal 2' }
+            ] as any[];
+            jest.spyOn(mealModel, 'find').mockResolvedValue(mockMeals);
+
+            const result = await mealService.findAll();
+            const meals = result.data as MealDocument[];
+
+            expect(result.statusCode).toBe(200);
+            expect(meals.length).toBe(mockMeals.length);
         });
     });
 });
