@@ -36,14 +36,14 @@ export class UserService {
         const user = await this.getUser(login);
 
         if (!user) {
-            const message = 'User does not exist';
+            const message = `User ${login} does not exist`;
             this.loggerService.error(context, message);
 
             throw new NotFoundException(context, message);
         }
 
         if (!await this.areSameHashedPasswords(password, user.password)) {
-            const message = 'Incorrect credentials';
+            const message = `Incorrect credentials for user ${login}`;
             this.loggerService.error(context, message);
 
             throw new BadRequestException(context, message);
