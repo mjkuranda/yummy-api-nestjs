@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -15,7 +14,6 @@ import { UserModule } from '../user/user.module';
         UserModule,
         JwtManagerModule
     ],
-    controllers: [AuthController],
     providers: [AuthService],
     exports: [AuthService]
 })

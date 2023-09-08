@@ -38,6 +38,10 @@ module.exports = {
         // "space-after-keywords": "error"
         "keyword-spacing": ["error", { "before": true }],
         "space-before-blocks": "error",
-        "space-before-function-paren": ["error", "never"]
+        "space-before-function-paren": ["error", {
+            "anonymous": "never",
+            "named": "never",
+            "asyncArrow": "always"
+        }]
     },
 };

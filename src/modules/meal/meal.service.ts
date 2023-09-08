@@ -1,4 +1,4 @@
-import { Model, Types } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { MealDocument } from './meal.interface';
 import { InjectModel } from '@nestjs/mongoose';
@@ -19,7 +19,7 @@ export class MealService {
     ) {}
 
     async create(createMealDto: CreateMealDto): Promise<QueryResult<MealDocument>> {
-        const createdMeal = new this.mealModel(createMealDto);
+        const createdMeal = await this.mealModel.create(createMealDto) as MealDocument;
 
         const title = createMealDto.title;
         const ingredientCount = createMealDto.ingredients.length;
@@ -27,12 +27,11 @@ export class MealService {
             ? `"${createMealDto.imageUrl}" image url`
             : 'no image';
         const message = `New meal "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription}.`;
-        const data = await createdMeal.save() as MealDocument;
 
         this.loggerService.info('MealService/create:', message);
 
         return {
-            data,
+            data: createdMeal,
             message,
             statusCode: 201
         };
@@ -41,7 +40,7 @@ export class MealService {
     async find(id: string): Promise<QueryResult<MealDocument>> {
         const context = 'MealService/find';
 
-        if (!Types.ObjectId.isValid(id)) {
+        if (!isValidObjectId(id)) {
             const message = `Provided "${id}" that is not a correct MongoDB id.`;
             this.loggerService.error(context, message);
 

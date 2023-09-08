@@ -30,14 +30,13 @@ export class IngredientService {
     }
 
     async create(createIngredientDto: CreateIngredientDto): Promise<QueryResult<IngredientDocument>> {
-        const createdIngredient = new this.ingredientModel(createIngredientDto);
-        const data = await createdIngredient.save() as IngredientDocument;
+        const createdIngredient = await this.ingredientModel.create(createIngredientDto) as IngredientDocument;
         const message = `New ingredient "${createIngredientDto.name}" has been added.`;
 
         this.loggerService.info('IngredientService/create:', message);
 
         return {
-            data,
+            data: createdIngredient,
             message,
             statusCode: 201
         };

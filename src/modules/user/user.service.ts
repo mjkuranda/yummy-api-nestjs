@@ -9,6 +9,7 @@ import { Model } from 'mongoose';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { LoggerService } from '../logger/logger.service';
+import { NotFoundException } from '../../exceptions/not-found.exception';
 
 @Injectable()
 export class UserService {
@@ -24,25 +25,29 @@ export class UserService {
         return (await this.userModel.find()) as UserDocument[];
     }
 
-    async getUser(login: string): Promise<UserDocument | null> {
-        const users = await this.getUsers();
+    async getUser(login: string): Promise<UserDocument> {
+        const user = await this.userModel.findOne({ login });
 
-        return users.find(user => user.login === login);
+        if (!user) {
+            throw new NotFoundException('UserService/getUser', 'User does not found');
+        }
+
+        return user;
     }
 
     async loginUser(userLoginDto: UserLoginDto, res): Promise<QueryResult<UserDocument>> {
         const { login, password } = userLoginDto;
-        const context = 'UserService/loginUser:';
+        const context = 'UserService/loginUser';
         const user = await this.getUser(login);
 
         if (!user) {
             const message = 'User does not exist';
             this.loggerService.error(context, message);
 
-            throw new BadRequestException(context, message);
+            throw new NotFoundException(context, message);
         }
 
-        if (!await bcrypt.compare(password, user.password)) {
+        if (!await this.areSameHashedPasswords(password, user.password)) {
             const message = 'Incorrect credentials';
             this.loggerService.error(context, message);
 
@@ -81,17 +86,16 @@ export class UserService {
         }
 
         const hashedPassword = await this.getHashedPassword(createUserDto.password);
-        const createdUser = new this.userModel({
+        const newUser = await this.userModel.create({
             login: createUserDto.login,
             password: hashedPassword
-        });
-        const data = await createdUser.save() as UserDocument;
-        const message = `Created user "${data.login}" with id "${data._id}"`;
+        }) as UserDocument;
+        const message = `Created user "${newUser.login}" with id "${newUser._id}"`;
 
         this.loggerService.info(context, message);
 
         return {
-            data,
+            data: newUser,
             message,
             statusCode: 201
         };
@@ -99,5 +103,9 @@ export class UserService {
 
     async getHashedPassword(password: string): Promise<string> {
         return await bcrypt.hash(password, 12);
+    }
+
+    async areSameHashedPasswords(password: string, hashedPassword: string): Promise<boolean> {
+        return await bcrypt.compare(password, hashedPassword);
     }
 }
