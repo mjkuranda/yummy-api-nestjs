@@ -33,7 +33,7 @@ describe('IngredientController', () => {
         create: jest.fn()
     };
 
-    beforeEach(async() => {
+    beforeEach(async () => {
         mongod = await MongoMemoryServer.create();
         const uri = mongod.getUri();
         mongoConnection = (await connect(uri)).connection;
@@ -68,13 +68,13 @@ describe('IngredientController', () => {
         model = module.get(getModelToken(models.USER_MODEL));
     });
 
-    afterAll(async() => {
+    afterAll(async () => {
         await mongoConnection.dropDatabase();
         await mongoConnection.close();
         await mongod.stop();
     });
 
-    afterEach(async() => {
+    afterEach(async () => {
         const collections = mongoConnection.collections;
         for (const key in collections) {
             const collection = collections[key];
@@ -86,14 +86,14 @@ describe('IngredientController', () => {
         expect(controller).toBeDefined();
     });
 
-    it('should get all ingredients', async() => {
+    it('should get all ingredients', async () => {
         const result = await controller.getIngredients();
 
         expect(service.findAll).toHaveBeenCalled();
         expect(result).toBe(mockIngredients);
     });
 
-    it('should create a new ingredient', async() => {
+    it('should create a new ingredient', async () => {
         const newIngredient = {
             name: 'Awesome ingredient',
             category: 'Some category'

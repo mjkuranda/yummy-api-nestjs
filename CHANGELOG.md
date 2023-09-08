@@ -3,9 +3,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0] - 2023-09-08
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): Service methods return only document objects.
+
+### Removed
+- [Marek Kurańda](https://github.com/mjkuranda): `QueryResult` interface.
+
 ## [1.12.0] - 2023-09-05
 ### Added
-- [Marek Kurańda](https://github.com/mjkuranda): REMOVE RECORD >>>> Basic tests for `AuthService`.
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `UserService`.
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `MealService`.
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `IngredientService`.

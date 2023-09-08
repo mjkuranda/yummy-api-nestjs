@@ -53,6 +53,7 @@ describe('MealService', () => {
 
     it('should be defined', () => {
         expect(mealService).toBeDefined();
+        expect(mealModel).toBeDefined();
     });
 
     describe('create', () => {
@@ -78,7 +79,7 @@ describe('MealService', () => {
 
             const result = await mealService.create(mockMealDto);
 
-            expect(result.statusCode).toBe(201);
+            expect(result).toBe(mockMeal);
         });
     });
 
@@ -109,9 +110,8 @@ describe('MealService', () => {
 
             const result = await mealService.find(mockId);
 
-            expect(result.data).toBe(mockMeal);
+            expect(result).toBe(mockMeal);
             expect(mealModel.findById).toHaveBeenCalledWith(mockId);
-            expect(result.statusCode).toBe(200);
         });
     });
 
@@ -124,10 +124,8 @@ describe('MealService', () => {
             jest.spyOn(mealModel, 'find').mockResolvedValue(mockMeals);
 
             const result = await mealService.findAll();
-            const meals = result.data as MealDocument[];
 
-            expect(result.statusCode).toBe(200);
-            expect(meals.length).toBe(mockMeals.length);
+            expect(result).toBe(mockMeals);
         });
     });
 });

@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { MealDocument } from './meal.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
-import { QueryResult } from '../../common/interfaces';
 import { CreateMealDto } from './meal.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
@@ -18,7 +17,7 @@ export class MealService {
         private loggerService: LoggerService
     ) {}
 
-    async create(createMealDto: CreateMealDto): Promise<QueryResult<MealDocument>> {
+    async create(createMealDto: CreateMealDto): Promise<MealDocument> {
         const createdMeal = await this.mealModel.create(createMealDto) as MealDocument;
 
         const title = createMealDto.title;
@@ -30,14 +29,10 @@ export class MealService {
 
         this.loggerService.info('MealService/create:', message);
 
-        return {
-            data: createdMeal,
-            message,
-            statusCode: 201
-        };
+        return createdMeal;
     }
 
-    async find(id: string): Promise<QueryResult<MealDocument>> {
+    async find(id: string): Promise<MealDocument> {
         const context = 'MealService/find';
 
         if (!isValidObjectId(id)) {
@@ -47,7 +42,7 @@ export class MealService {
             throw new BadRequestException(context, message);
         }
 
-        const meal = await this.mealModel.findById(id);
+        const meal = await this.mealModel.findById(id) as MealDocument;
 
         if (!meal) {
             const message = `Cannot find a meal with "${id}" id.`;
@@ -59,23 +54,15 @@ export class MealService {
         const message = `Found meal with "${id}" id.`;
         this.loggerService.info(context, message);
 
-        return {
-            data: meal as MealDocument,
-            message,
-            statusCode: 200
-        };
+        return meal;
     }
 
-    async findAll(): Promise<QueryResult<MealDocument>> {
+    async findAll(): Promise<MealDocument[]> {
         const meals = (await this.mealModel.find()) as MealDocument[];
         const message = `Found ${meals.length} meals.`;
 
         this.loggerService.info('MealService/findAll', message);
 
-        return {
-            data: meals,
-            message,
-            statusCode: 200
-        };
+        return meals;
     }
 }

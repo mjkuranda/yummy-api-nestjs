@@ -7,6 +7,7 @@ Technologies:
 * TypeScript
 * MongoDB
 * JWT
+* Jest
 
 ## API
 * `GET /meals` - returns all meals from the database

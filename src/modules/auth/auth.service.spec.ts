@@ -12,6 +12,7 @@ import { NotFoundException } from '../../exceptions/not-found.exception';
 
 // https://betterprogramming.pub/testing-controllers-in-nestjs-and-mongo-with-jest-63e1b208503c
 // https://stackoverflow.com/questions/74110962/please-make-sure-that-the-argument-databaseconnection-at-index-0-is-available
+// https://wanago.io/2020/07/13/api-nestjs-testing-services-controllers-integration-tests/
 
 describe('AuthService', () => {
     let authService: AuthService;
@@ -61,6 +62,9 @@ describe('AuthService', () => {
 
     it('should be defined', () => {
         expect(authService).toBeDefined();
+        expect(jwtManagerService).toBeDefined();
+        expect(userService).toBeDefined();
+        expect(userModel).toBeDefined();
     });
 
     describe('getAuthorizedUser', () => {

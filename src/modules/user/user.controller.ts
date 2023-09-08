@@ -1,8 +1,6 @@
-import { Body, Controller, Post, Response } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Response } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UserLoginDto } from './user.dto';
-import { QueryResult } from '../../common/interfaces';
-import { UserDocument } from './user.interface';
 
 @Controller('users')
 export class UserController {
@@ -10,16 +8,19 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Post('/login')
-    public async login(@Body() loginBody: UserLoginDto, @Response({ passthrough: true }) res): Promise<QueryResult<UserDocument>> {
+    @HttpCode(200)
+    public async login(@Body() loginBody: UserLoginDto, @Response({ passthrough: true }) res) {
         return await this.userService.loginUser(loginBody, res);
     }
 
     @Post('/logout')
-    public async logout(@Response({ passthrough: true }) res): Promise<QueryResult<UserDocument>> {
+    @HttpCode(200)
+    public async logout(@Response({ passthrough: true }) res) {
         return await this.userService.logoutUser(res);
     }
 
     @Post('/create')
+    @HttpCode(201)
     public async register(@Body() createUserDto: CreateUserDto) {
         return await this.userService.createUser(createUserDto);
     }

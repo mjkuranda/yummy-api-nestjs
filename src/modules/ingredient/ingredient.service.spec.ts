@@ -24,14 +24,6 @@ describe('IngredientService', () => {
                     provide: getModelToken(models.INGREDIENT_MODEL),
                     useValue: mockIngredientService
                 },
-                // {
-                //     provide: JwtService,
-                //     useClass: JwtService
-                // },
-                // {
-                //     provide: JwtManagerService,
-                //     useClass: JwtManagerService
-                // },
                 {
                     provide: LoggerService,
                     useValue: {
@@ -48,6 +40,7 @@ describe('IngredientService', () => {
 
     it('should be defined', () => {
         expect(ingredientService).toBeDefined();
+        expect(ingredientModel).toBeDefined();
     });
 
     describe('create', () => {
@@ -70,7 +63,7 @@ describe('IngredientService', () => {
 
             const result = await ingredientService.create(mockIngredientDto);
 
-            expect(result.statusCode).toBe(201);
+            expect(result).toBe(mockIngredient);
         });
     });
 
@@ -83,10 +76,8 @@ describe('IngredientService', () => {
             jest.spyOn(ingredientModel, 'find').mockResolvedValue(mockIngredients);
 
             const result = await ingredientService.findAll();
-            const meals = result.data as IngredientDocument[];
 
-            expect(result.statusCode).toBe(200);
-            expect(meals.length).toBe(mockIngredients.length);
+            expect(result).toBe(mockIngredients);
         });
     });
 });

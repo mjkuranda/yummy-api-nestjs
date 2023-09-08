@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto, UserLoginDto } from './user.dto';
 import * as bcrypt from 'bcrypt';
-import { QueryResult } from '../../common/interfaces';
 import { UserDocument } from './user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
@@ -21,10 +20,6 @@ export class UserService {
         private readonly loggerService: LoggerService
     ) {}
 
-    async getUsers(): Promise<UserDocument[]> {
-        return (await this.userModel.find()) as UserDocument[];
-    }
-
     async getUser(login: string): Promise<UserDocument> {
         const user = await this.userModel.findOne({ login });
 
@@ -35,20 +30,20 @@ export class UserService {
         return user;
     }
 
-    async loginUser(userLoginDto: UserLoginDto, res): Promise<QueryResult<UserDocument>> {
+    async loginUser(userLoginDto: UserLoginDto, res): Promise<UserDocument> {
         const { login, password } = userLoginDto;
         const context = 'UserService/loginUser';
         const user = await this.getUser(login);
 
         if (!user) {
-            const message = 'User does not exist';
+            const message = `User ${login} does not exist`;
             this.loggerService.error(context, message);
 
             throw new NotFoundException(context, message);
         }
 
         if (!await this.areSameHashedPasswords(password, user.password)) {
-            const message = 'Incorrect credentials';
+            const message = `Incorrect credentials for user ${login}`;
             this.loggerService.error(context, message);
 
             throw new BadRequestException(context, message);
@@ -59,23 +54,16 @@ export class UserService {
         const message = `User "${login}" has been successfully logged in`;
         this.loggerService.info(context, message);
 
-        return {
-            data: user,
-            message,
-            statusCode: 200
-        };
+        return user;
     }
 
-    async logoutUser(res): Promise<QueryResult<UserDocument>> {
+    async logoutUser(res): Promise<null> {
         res.clearCookie('jwt');
 
-        return {
-            message: 'You have been successfully logged out',
-            statusCode: 200
-        };
+        return null;
     }
 
-    async createUser(createUserDto: CreateUserDto): Promise<QueryResult<UserDocument>> {
+    async createUser(createUserDto: CreateUserDto): Promise<UserDocument> {
         const context = 'UserService/createUser:';
 
         if (await this.getUser(createUserDto.login)) {
@@ -94,11 +82,7 @@ export class UserService {
 
         this.loggerService.info(context, message);
 
-        return {
-            data: newUser,
-            message,
-            statusCode: 201
-        };
+        return newUser;
     }
 
     async getHashedPassword(password: string): Promise<string> {
