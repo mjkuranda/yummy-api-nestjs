@@ -70,7 +70,7 @@ describe('IngredientService', () => {
 
             const result = await ingredientService.create(mockIngredientDto);
 
-            expect(result.statusCode).toBe(201);
+            expect(result).toBe(mockIngredient);
         });
     });
 
@@ -83,10 +83,8 @@ describe('IngredientService', () => {
             jest.spyOn(ingredientModel, 'find').mockResolvedValue(mockIngredients);
 
             const result = await ingredientService.findAll();
-            const meals = result.data as IngredientDocument[];
 
-            expect(result.statusCode).toBe(200);
-            expect(meals.length).toBe(mockIngredients.length);
+            expect(result).toBe(mockIngredients);
         });
     });
 });
