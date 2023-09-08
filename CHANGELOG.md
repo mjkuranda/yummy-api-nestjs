@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `UserService`.
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `MealService`.
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `IngredientService`.
+- [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `AuthService`.
 
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): `space-before-function-parens` allows space after `async` keyword.
