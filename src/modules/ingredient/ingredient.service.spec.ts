@@ -24,14 +24,6 @@ describe('IngredientService', () => {
                     provide: getModelToken(models.INGREDIENT_MODEL),
                     useValue: mockIngredientService
                 },
-                // {
-                //     provide: JwtService,
-                //     useClass: JwtService
-                // },
-                // {
-                //     provide: JwtManagerService,
-                //     useClass: JwtManagerService
-                // },
                 {
                     provide: LoggerService,
                     useValue: {
