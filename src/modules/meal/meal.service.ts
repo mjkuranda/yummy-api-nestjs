@@ -1,4 +1,4 @@
-import { Model, Types } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { MealDocument } from './meal.interface';
 import { InjectModel } from '@nestjs/mongoose';
@@ -40,7 +40,7 @@ export class MealService {
     async find(id: string): Promise<QueryResult<MealDocument>> {
         const context = 'MealService/find';
 
-        if (!Types.ObjectId.isValid(id)) {
+        if (!isValidObjectId(id)) {
             const message = `Provided "${id}" that is not a correct MongoDB id.`;
             this.loggerService.error(context, message);
 
