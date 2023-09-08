@@ -62,6 +62,9 @@ describe('AuthService', () => {
 
     it('should be defined', () => {
         expect(authService).toBeDefined();
+        expect(jwtManagerService).toBeDefined();
+        expect(userService).toBeDefined();
+        expect(userModel).toBeDefined();
     });
 
     describe('getAuthorizedUser', () => {

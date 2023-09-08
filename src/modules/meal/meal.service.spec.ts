@@ -53,6 +53,7 @@ describe('MealService', () => {
 
     it('should be defined', () => {
         expect(mealService).toBeDefined();
+        expect(mealModel).toBeDefined();
     });
 
     describe('create', () => {

@@ -40,6 +40,7 @@ describe('IngredientService', () => {
 
     it('should be defined', () => {
         expect(ingredientService).toBeDefined();
+        expect(ingredientModel).toBeDefined();
     });
 
     describe('create', () => {

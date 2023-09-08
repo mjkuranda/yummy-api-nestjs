@@ -12,8 +12,8 @@ import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 
 describe('UserService', () => {
-    let service: UserService;
-    let model: Model<UserDocument>;
+    let userService: UserService;
+    let userModel: Model<UserDocument>;
     let jwtManagerService: JwtManagerService;
 
     const mockUser = {
@@ -54,31 +54,33 @@ describe('UserService', () => {
             ],
         }).compile();
 
-        service = module.get(UserService);
-        model = module.get(getModelToken(models.USER_MODEL));
+        userService = module.get(UserService);
+        userModel = module.get(getModelToken(models.USER_MODEL));
         jwtManagerService = module.get(JwtManagerService);
     });
 
     it('should be defined', () => {
-        expect(service).toBeDefined();
+        expect(userService).toBeDefined();
+        expect(userModel).toBeDefined();
+        expect(jwtManagerService).toBeDefined();
     });
 
     describe('getUser', () => {
         it('should return user', async () => {
-            jest.spyOn(model, 'findOne').mockResolvedValueOnce(mockUser);
+            jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(mockUser);
 
-            const result = await service.getUser(mockUser.login);
+            const result = await userService.getUser(mockUser.login);
 
-            expect(model.findOne).toHaveBeenCalledWith({ login: mockUser.login });
+            expect(userModel.findOne).toHaveBeenCalledWith({ login: mockUser.login });
             expect(result).toBe(mockUser);
         });
 
         it('should throw an error when user not found', async () => {
-            jest.spyOn(model, 'findOne').mockResolvedValueOnce(null);
+            jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(null);
 
             const givenNonExistingLogin = 'Non existing user name';
 
-            await expect(service.getUser(givenNonExistingLogin)).rejects.toThrow(NotFoundException);
+            await expect(userService.getUser(givenNonExistingLogin)).rejects.toThrow(NotFoundException);
         });
     });
 
@@ -98,19 +100,19 @@ describe('UserService', () => {
 
         it('should log in user', async () => {
             const mockCookie = 'some.jwt.cookie';
-            jest.spyOn(service, 'getUser').mockResolvedValueOnce(mockUser);
-            jest.spyOn(service, 'areSameHashedPasswords').mockResolvedValueOnce(true);
+            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(mockUser);
+            jest.spyOn(userService, 'areSameHashedPasswords').mockResolvedValueOnce(true);
             jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
 
-            const result = await service.loginUser(mockUserDto, mockRes);
+            const result = await userService.loginUser(mockUserDto, mockRes);
 
             expect(result).toBe(mockUser);
         });
 
         it('should throw an error when user does not exist', async () => {
-            jest.spyOn(service, 'getUser').mockResolvedValueOnce(null);
+            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(null);
 
-            await expect(service.loginUser(mockUserDto, mockRes)).rejects.toThrow(NotFoundException);
+            await expect(userService.loginUser(mockUserDto, mockRes)).rejects.toThrow(NotFoundException);
         });
 
         it('should throw an error when user found but passwords do not match', async () => {
@@ -119,9 +121,9 @@ describe('UserService', () => {
                 password: '456'
             };
 
-            jest.spyOn(service, 'getUser').mockResolvedValueOnce(mockUser);
+            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(mockUser);
 
-            await expect(service.loginUser(mockUserDto, mockRes)).rejects.toThrow(BadRequestException);
+            await expect(userService.loginUser(mockUserDto, mockRes)).rejects.toThrow(BadRequestException);
         });
     });
 
@@ -138,11 +140,11 @@ describe('UserService', () => {
                 password: mockHashedPassword,
             } as any;
 
-            jest.spyOn(service, 'getUser').mockResolvedValueOnce(null);
-            jest.spyOn(service, 'getHashedPassword').mockResolvedValueOnce(mockHashedPassword);
-            jest.spyOn(model, 'create').mockResolvedValue(mockCreatedUser);
+            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(null);
+            jest.spyOn(userService, 'getHashedPassword').mockResolvedValueOnce(mockHashedPassword);
+            jest.spyOn(userModel, 'create').mockResolvedValue(mockCreatedUser);
 
-            const result = await service.createUser(mockUserDto);
+            const result = await userService.createUser(mockUserDto);
 
             expect(result).toBe(mockCreatedUser);
         });
@@ -153,9 +155,9 @@ describe('UserService', () => {
                 password: 'some password'
             } as any;
 
-            jest.spyOn(service, 'getUser').mockResolvedValueOnce(mockExistingUser);
+            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(mockExistingUser);
 
-            await expect(service.createUser(mockUserDto)).rejects.toThrow(BadRequestException);
+            await expect(userService.createUser(mockUserDto)).rejects.toThrow(BadRequestException);
         });
     });
 });
