@@ -104,7 +104,7 @@ describe('UserService', () => {
 
             const result = await service.loginUser(mockUserDto, mockRes);
 
-            expect(result.statusCode).toBe(200);
+            expect(result).toBe(mockUser);
         });
 
         it('should throw an error when user does not exist', async () => {
@@ -133,18 +133,18 @@ describe('UserService', () => {
 
         it('should create a new user', async () => {
             const mockHashedPassword = 'hashed password';
-            const createdUser = {
+            const mockCreatedUser = {
                 login: mockUserDto.login,
                 password: mockHashedPassword,
             } as any;
 
             jest.spyOn(service, 'getUser').mockResolvedValueOnce(null);
             jest.spyOn(service, 'getHashedPassword').mockResolvedValueOnce(mockHashedPassword);
-            jest.spyOn(model, 'create').mockResolvedValue(createdUser);
+            jest.spyOn(model, 'create').mockResolvedValue(mockCreatedUser);
 
             const result = await service.createUser(mockUserDto);
 
-            expect(result.statusCode).toBe(201);
+            expect(result).toBe(mockCreatedUser);
         });
 
         it('should throw an error when the user exist', async () => {
