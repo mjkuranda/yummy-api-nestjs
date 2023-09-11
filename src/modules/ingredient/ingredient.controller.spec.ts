@@ -59,7 +59,11 @@ describe('IngredientController', () => {
                         info: jest.fn(),
                         error: jest.fn()
                     }
-                }
+                },
+                // {
+                //     provide: REDIS_CLIENT,
+                //     useValue: {}
+                // }
             ]
         }).compile();
 

@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { LoggerService } from '../logger/logger.service';
 import { IngredientDocument } from './ingredient.interface';
 import { IngredientService } from './ingredient.service';
+import { RedisService } from '../redis/redis.service';
 
 describe('IngredientService', () => {
     let ingredientService: IngredientService;
@@ -29,6 +30,13 @@ describe('IngredientService', () => {
                     useValue: {
                         info: () => {},
                         error: () => {}
+                    }
+                },
+                {
+                    provide: RedisService,
+                    useValue: {
+                        get: () => null,
+                        set: () => {}
                     }
                 }
             ],

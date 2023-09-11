@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0] - 2023-09-11
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Integration with Redis cache.
+- [Marek Kurańda](https://github.com/mjkuranda): Redis can cache any data for only 1 hour.
+- [Marek Kurańda](https://github.com/mjkuranda): `GET /ingredients` can cache and return cached ingredients.
+
 ## [1.13.0] - 2023-09-08
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): Service methods return only document objects.
