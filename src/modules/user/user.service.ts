@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto, UserLoginDto } from './user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserDocument } from './user.interface';
@@ -9,13 +9,14 @@ import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { LoggerService } from '../logger/logger.service';
 import { NotFoundException } from '../../exceptions/not-found.exception';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class UserService {
 
     constructor(
-        @InjectModel(models.USER_MODEL)
-        private userModel: Model<UserDocument>,
+        @InjectModel(models.USER_MODEL) private userModel: Model<UserDocument>,
+        @Inject('REDIS_CLIENT') private readonly redis: Redis,
         private readonly jwtManagerService: JwtManagerService,
         private readonly loggerService: LoggerService
     ) {}

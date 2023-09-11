@@ -10,6 +10,7 @@ import { LoggerService } from '../logger/logger.service';
 import { CreateUserDto } from './user.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
+import { REDIS_CLIENT } from '../redis/redis.provider';
 
 describe('UserService', () => {
     let userService: UserService;
@@ -50,6 +51,10 @@ describe('UserService', () => {
                         info: () => {},
                         error: () => {}
                     }
+                },
+                {
+                    provide: REDIS_CLIENT,
+                    useValue: {}
                 }
             ],
         }).compile();

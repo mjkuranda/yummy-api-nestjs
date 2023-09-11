@@ -8,6 +8,7 @@ Technologies:
 * MongoDB
 * JWT
 * Jest
+* Redis
 
 ## API
 * `GET /meals` - returns all meals from the database
@@ -59,6 +60,10 @@ However, if you want to connect with MongoDB Atlas, you need these variables:
 - `DB_USER` (MongoDB user)
 - `DB_PASS` (password for MongoDB)
 - `PROD=true`
+
+To connect with Redis, you need:
+- `REDIS_HOSTNAME` (default is `localhost`)
+- `REDIS_PORT` (default is `6379`)
 
 ## Development
 You need to change version in `package.json` and add a record to the `CHANGELOG.md`.
