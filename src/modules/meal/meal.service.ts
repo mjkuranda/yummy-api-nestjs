@@ -7,6 +7,7 @@ import { CreateMealDto } from './meal.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { LoggerService } from '../logger/logger.service';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class MealService {
@@ -14,6 +15,7 @@ export class MealService {
     constructor(
         @InjectModel(models.MEAL_MODEL)
         private mealModel: Model<MealDocument>,
+        private redisService: RedisService,
         private loggerService: LoggerService
     ) {}
 
@@ -25,9 +27,13 @@ export class MealService {
         const imageUrlDescription = createMealDto
             ? `"${createMealDto.imageUrl}" image url`
             : 'no image';
+        const context = 'MealService/create';
         const message = `New meal "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription}.`;
 
-        this.loggerService.info('MealService/create:', message);
+        this.loggerService.info(context, message);
+
+        await this.redisService.set<MealDocument>(createdMeal, 'meal');
+        this.loggerService.info(context, `Cached a new meal with ${createdMeal._id} id.`);
 
         return createdMeal;
     }
@@ -42,6 +48,15 @@ export class MealService {
             throw new BadRequestException(context, message);
         }
 
+        const key = this.redisService.encodeKey({ _id: id }, 'meal');
+        const cachedMeal = await this.redisService.get<MealDocument>(key) as MealDocument;
+
+        if (cachedMeal) {
+            this.loggerService.info(context, `Fetched a meal with "${cachedMeal._id}" id from cache.`);
+
+            return cachedMeal;
+        }
+
         const meal = await this.mealModel.findById(id) as MealDocument;
 
         if (!meal) {
@@ -51,8 +66,10 @@ export class MealService {
             throw new NotFoundException(context, message);
         }
 
-        const message = `Found meal with "${id}" id.`;
-        this.loggerService.info(context, message);
+        this.loggerService.info(context, `Found meal with "${id}" id.`);
+
+        await this.redisService.set<MealDocument>(meal, 'meal');
+        this.loggerService.info(context, `Cached a meal with "${meal._id}" id.`);
 
         return meal;
     }

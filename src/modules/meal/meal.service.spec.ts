@@ -10,10 +10,12 @@ import { MealService } from './meal.service';
 import { MealDocument } from './meal.interface';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
+import { RedisService } from '../redis/redis.service';
 
 describe('MealService', () => {
     let mealService: MealService;
     let mealModel: Model<MealDocument>;
+    let redisService: RedisService;
 
     const mockMealService = {
         create: jest.fn(),
@@ -43,17 +45,27 @@ describe('MealService', () => {
                         info: () => {},
                         error: () => {}
                     }
+                },
+                {
+                    provide: RedisService,
+                    useValue: {
+                        get: jest.fn(),
+                        set: jest.fn(),
+                        encodeKey: jest.fn()
+                    }
                 }
             ],
         }).compile();
 
         mealService = module.get(MealService);
         mealModel = module.get(getModelToken(models.MEAL_MODEL));
+        redisService = module.get(RedisService);
     });
 
     it('should be defined', () => {
         expect(mealService).toBeDefined();
         expect(mealModel).toBeDefined();
+        expect(redisService).toBeDefined();
     });
 
     describe('create', () => {
@@ -74,12 +86,14 @@ describe('MealService', () => {
             };
         });
 
-        it('should create a new meal', async () => {
+        it('should create a new meal and save to cache', async () => {
             jest.spyOn(mealModel, 'create').mockResolvedValue(mockMeal);
 
             const result = await mealService.create(mockMealDto);
 
             expect(result).toBe(mockMeal);
+            expect(redisService.set).toHaveBeenCalled();
+            expect(redisService.set).toHaveBeenCalledWith(mockMeal, 'meal');
         });
     });
 
@@ -94,24 +108,33 @@ describe('MealService', () => {
 
         it('should throw an error when meal with provided id not found', async () => {
             const mockId = '64e9f765d4e60ba693641aa1';
+            const mockCachedMeal = null;
+            jest.spyOn(redisService, 'get').mockReturnValueOnce(mockCachedMeal);
             jest.spyOn(mealModel, 'findById').mockReturnValueOnce(null);
 
             await expect(mealService.find(mockId)).rejects.toThrow(NotFoundException);
+            expect(redisService.get).toHaveBeenCalled();
+            expect(redisService.get).toReturnWith(mockCachedMeal);
             expect(mealModel.findById).toHaveBeenCalledWith(mockId);
         });
 
-        it('should find a specific meal', async () => {
+        it('should find a specific meal when cache is empty and save to the cache', async () => {
             const mockId = '64e9f765d4e60ba693641aa1';
+            const mockCachedMeal = null;
             const mockMeal = {
                 _id: mockId,
                 name: 'Meal name'
             } as any;
+            jest.spyOn(redisService, 'get').mockReturnValueOnce(mockCachedMeal);
             jest.spyOn(mealModel, 'findById').mockReturnValueOnce(mockMeal);
 
             const result = await mealService.find(mockId);
 
             expect(result).toBe(mockMeal);
+            expect(redisService.get).toHaveBeenCalled();
+            expect(redisService.get).toReturnWith(mockCachedMeal);
             expect(mealModel.findById).toHaveBeenCalledWith(mockId);
+            expect(redisService.set).toHaveBeenCalled();
         });
     });
 

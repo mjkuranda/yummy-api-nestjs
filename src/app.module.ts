@@ -16,7 +16,7 @@ import { LoggerModule } from './modules/logger/logger.module';
         }),
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
-            useFactory: async() => ({
+            useFactory: async () => ({
                 uri: getMongooseUri(),
             }),
             inject: [ConfigService],
