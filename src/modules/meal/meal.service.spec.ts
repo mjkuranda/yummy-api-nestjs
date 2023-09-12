@@ -115,7 +115,7 @@ describe('MealService', () => {
             expect(mealModel.findById).toHaveBeenCalledWith(mockId);
         });
 
-        it('should find a specific meal when cache is empty', async () => {
+        it('should find a specific meal when cache is empty and save to the cache', async () => {
             const mockId = '64e9f765d4e60ba693641aa1';
             const mockCachedMeal = null;
             const mockMeal = {
@@ -131,6 +131,7 @@ describe('MealService', () => {
             expect(redisService.get).toHaveBeenCalled();
             expect(redisService.get).toReturnWith(mockCachedMeal);
             expect(mealModel.findById).toHaveBeenCalledWith(mockId);
+            expect(redisService.set).toHaveBeenCalled();
         });
     });
 

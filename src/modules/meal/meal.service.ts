@@ -66,8 +66,10 @@ export class MealService {
             throw new NotFoundException(context, message);
         }
 
-        const message = `Found meal with "${id}" id.`;
-        this.loggerService.info(context, message);
+        this.loggerService.info(context, `Found meal with "${id}" id.`);
+
+        await this.redisService.set<MealDocument>(meal, 'meal');
+        this.loggerService.info(context, `Cached a meal with "${meal._id}" id.`);
 
         return meal;
     }

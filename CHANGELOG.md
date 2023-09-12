@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): Integration with Redis cache.
 - [Marek Kurańda](https://github.com/mjkuranda): Redis can cache any data for only 1 hour.
 - [Marek Kurańda](https://github.com/mjkuranda): `GET /ingredients` can cache and return cached ingredients.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /meals/create` can cache a new meal.
+- [Marek Kurańda](https://github.com/mjkuranda): `GET /meals` can cache a found meal.
 
 ## [1.13.0] - 2023-09-08
 ### Changed
