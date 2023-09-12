@@ -48,6 +48,15 @@ export class MealService {
             throw new BadRequestException(context, message);
         }
 
+        const key = this.redisService.encodeKey({ _id: id }, 'meal');
+        const cachedMeal = await this.redisService.get<MealDocument>(key) as MealDocument;
+
+        if (cachedMeal) {
+            this.loggerService.info(context, `Fetched a meal with "${cachedMeal._id}" id from cache.`);
+
+            return cachedMeal;
+        }
+
         const meal = await this.mealModel.findById(id) as MealDocument;
 
         if (!meal) {

@@ -23,10 +23,20 @@ export class RedisService {
         return `${documentType}:${documentData._id}`;
     }
 
-    async get<Document>(key: RedisKeyType): Promise<Document[]> {
+    async get<Document>(key: RedisKeyType): Promise<Document[] | Document | null> {
         const rawData = await this.redisClient.get(key);
 
-        return JSON.parse(rawData) as unknown as Document[];
+        if (rawData) {
+            return null;
+        }
+
+        const parsed = JSON.parse(rawData);
+
+        if (Array.isArray(parsed)) {
+            return parsed as unknown as Document[];
+        }
+
+        return parsed as unknown as Document;
     }
 
     async set<Document>(documentData: Document | Document[], documentType: DocumentType): Promise<void> {

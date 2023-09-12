@@ -50,7 +50,8 @@ describe('MealService', () => {
                     provide: RedisService,
                     useValue: {
                         get: jest.fn(),
-                        set: jest.fn()
+                        set: jest.fn(),
+                        encodeKey: jest.fn()
                     }
                 }
             ],
@@ -107,6 +108,8 @@ describe('MealService', () => {
 
         it('should throw an error when meal with provided id not found', async () => {
             const mockId = '64e9f765d4e60ba693641aa1';
+            jest.spyOn(redisService, 'encodeKey').mockReturnValueOnce('some key');
+            jest.spyOn(redisService, 'get').mockReturnValueOnce(null);
             jest.spyOn(mealModel, 'findById').mockReturnValueOnce(null);
 
             await expect(mealService.find(mockId)).rejects.toThrow(NotFoundException);
