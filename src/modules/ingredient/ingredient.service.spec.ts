@@ -51,6 +51,7 @@ describe('IngredientService', () => {
     it('should be defined', () => {
         expect(ingredientService).toBeDefined();
         expect(ingredientModel).toBeDefined();
+        expect(redisService).toBeDefined();
     });
 
     describe('create', () => {

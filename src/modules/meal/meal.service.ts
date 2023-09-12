@@ -7,6 +7,7 @@ import { CreateMealDto } from './meal.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { LoggerService } from '../logger/logger.service';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class MealService {
@@ -14,6 +15,7 @@ export class MealService {
     constructor(
         @InjectModel(models.MEAL_MODEL)
         private mealModel: Model<MealDocument>,
+        private redisService: RedisService,
         private loggerService: LoggerService
     ) {}
 
@@ -25,9 +27,13 @@ export class MealService {
         const imageUrlDescription = createMealDto
             ? `"${createMealDto.imageUrl}" image url`
             : 'no image';
+        const context = 'MealService/create';
         const message = `New meal "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription}.`;
 
-        this.loggerService.info('MealService/create:', message);
+        this.loggerService.info(context, message);
+
+        await this.redisService.set<MealDocument>(createdMeal, 'meal');
+        this.loggerService.info(context, `Cached a new meal with ${createdMeal._id} id.`);
 
         return createdMeal;
     }

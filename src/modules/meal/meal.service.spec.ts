@@ -10,10 +10,12 @@ import { MealService } from './meal.service';
 import { MealDocument } from './meal.interface';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
+import { RedisService } from '../redis/redis.service';
 
 describe('MealService', () => {
     let mealService: MealService;
     let mealModel: Model<MealDocument>;
+    let redisService: RedisService;
 
     const mockMealService = {
         create: jest.fn(),
@@ -43,17 +45,26 @@ describe('MealService', () => {
                         info: () => {},
                         error: () => {}
                     }
+                },
+                {
+                    provide: RedisService,
+                    useValue: {
+                        get: jest.fn(),
+                        set: jest.fn()
+                    }
                 }
             ],
         }).compile();
 
         mealService = module.get(MealService);
         mealModel = module.get(getModelToken(models.MEAL_MODEL));
+        redisService = module.get(RedisService);
     });
 
     it('should be defined', () => {
         expect(mealService).toBeDefined();
         expect(mealModel).toBeDefined();
+        expect(redisService).toBeDefined();
     });
 
     describe('create', () => {
@@ -74,12 +85,14 @@ describe('MealService', () => {
             };
         });
 
-        it('should create a new meal', async () => {
+        it('should create a new meal and save to cache', async () => {
             jest.spyOn(mealModel, 'create').mockResolvedValue(mockMeal);
 
             const result = await mealService.create(mockMealDto);
 
             expect(result).toBe(mockMeal);
+            expect(redisService.set).toHaveBeenCalled();
+            expect(redisService.set).toHaveBeenCalledWith(mockMeal, 'meal');
         });
     });
 
