@@ -17,7 +17,7 @@ export class IngredientService {
     ) {}
 
     async findAll(): Promise<IngredientDocument[]> {
-        const cachedIngredients = await this.redisService.get<IngredientDocument>('ingredients');
+        const cachedIngredients = await this.redisService.get<IngredientDocument>('ingredients') as IngredientDocument[];
         const context = 'IngredientService/findAll';
 
         if (cachedIngredients) {
