@@ -108,7 +108,6 @@ describe('MealService', () => {
 
         it('should throw an error when meal with provided id not found', async () => {
             const mockId = '64e9f765d4e60ba693641aa1';
-            jest.spyOn(redisService, 'encodeKey').mockReturnValueOnce('some key');
             jest.spyOn(redisService, 'get').mockReturnValueOnce(null);
             jest.spyOn(mealModel, 'findById').mockReturnValueOnce(null);
 
@@ -116,17 +115,21 @@ describe('MealService', () => {
             expect(mealModel.findById).toHaveBeenCalledWith(mockId);
         });
 
-        it('should find a specific meal', async () => {
+        it('should find a specific meal when cache is empty', async () => {
             const mockId = '64e9f765d4e60ba693641aa1';
+            const mockCachedMeal = null;
             const mockMeal = {
                 _id: mockId,
                 name: 'Meal name'
             } as any;
+            jest.spyOn(redisService, 'get').mockReturnValueOnce(mockCachedMeal);
             jest.spyOn(mealModel, 'findById').mockReturnValueOnce(mockMeal);
 
             const result = await mealService.find(mockId);
 
             expect(result).toBe(mockMeal);
+            expect(redisService.get).toHaveBeenCalled();
+            expect(redisService.get).toReturnWith(mockCachedMeal);
             expect(mealModel.findById).toHaveBeenCalledWith(mockId);
         });
     });
