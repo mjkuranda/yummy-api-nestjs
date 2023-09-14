@@ -5,7 +5,9 @@ export class UserDto {
     readonly login: string;
     readonly password: string;
     readonly isAdmin?: boolean;
-    readonly capabilities?: Record<CapabilityType, boolean>;
+    readonly capabilities?: {
+        [key: CapabilityType]: boolean;
+    };
 }
 
 export class UserLoginDto {

@@ -7,10 +7,11 @@ import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { LoggerService } from '../logger/logger.service';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UserDto } from './user.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { REDIS_CLIENT } from '../redis/redis.constants';
+import { CapabilityType } from './user.types';
 
 describe('UserService', () => {
     let userService: UserService;
@@ -26,7 +27,8 @@ describe('UserService', () => {
         findOne: jest.fn(),
         getUser: jest.fn(),
         areSameHashedPasswords: jest.fn(),
-        create: jest.fn()
+        create: jest.fn(),
+        updateOne: jest.fn()
     };
 
     beforeEach(async () => {
@@ -169,9 +171,86 @@ describe('UserService', () => {
     });
 
     describe('grantPermission', () => {
+        let mockUser: UserDto;
+        let mockAdminUser: UserDto;
+
+        beforeAll(() => {
+            mockUser = {
+                _id: 'xxx-xxx',
+                login: 'xxx',
+                password: 'yyy'
+            };
+            mockAdminUser = {
+                _id: 'yyy-yyy',
+                login: 'admin',
+                password: 'admin',
+                isAdmin: true
+            };
+        });
+
         it('should grant a new permission to user by admin', async () => {
-            // const
-            expect(1).toBe(1);
+            const mockCapability: CapabilityType = 'canAdd';
+
+            const result = await userService.grantPermission(mockUser, mockAdminUser, mockCapability);
+
+            expect(result).toBe(true);
+        });
+
+        it('should not grant a new permission when user has already had it', async () => {
+            const mockCapability: CapabilityType = 'canAdd';
+            const mockUserWithCapability: UserDto = {
+                ...mockUser,
+                capabilities: {
+                    [mockCapability]: true
+                }
+            };
+
+            const result = await userService.grantPermission(mockUserWithCapability, mockAdminUser, mockCapability);
+
+            expect(result).toBe(false);
+        });
+    });
+
+    describe('denyPermission', () => {
+        let mockUser: UserDto;
+        let mockAdminUser: UserDto;
+
+        beforeAll(() => {
+            mockUser = {
+                _id: 'xxx-xxx',
+                login: 'xxx',
+                password: 'yyy',
+                capabilities: {
+                    canAdd: true
+                }
+            };
+            mockAdminUser = {
+                _id: 'yyy-yyy',
+                login: 'admin',
+                password: 'admin',
+                isAdmin: true
+            };
+        });
+
+        it('should deny new permission to user by admin', async () => {
+            const mockCapability: CapabilityType = 'canAdd';
+
+            const result = await userService.denyPermission(mockUser, mockAdminUser, mockCapability);
+
+            expect(result).toBe(true);
+        });
+
+        it('should not deny permission when user has not already had it', async () => {
+            const mockCapability: CapabilityType = 'canAdd';
+            const mockUserWithNoCapability: UserDto = {
+                _id: 'xxx',
+                login: 'xxx',
+                password: 'xxx'
+            };
+
+            const result = await userService.denyPermission(mockUserWithNoCapability, mockAdminUser, mockCapability);
+
+            expect(result).toBe(false);
         });
     });
 });

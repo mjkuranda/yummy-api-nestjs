@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto, UserLoginDto } from './user.dto';
+import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserDocument } from './user.interface';
 import { InjectModel } from '@nestjs/mongoose';
@@ -89,16 +89,16 @@ export class UserService {
         return await bcrypt.compare(password, hashedPassword);
     }
 
-    async grantPermission(user: UserDocument, byUser: UserDocument, capability: CapabilityType): Promise<boolean> {
-        const context = 'UserService/grant';
+    async grantPermission(user: UserDto, byUser: UserDto, capability: CapabilityType): Promise<boolean> {
+        const context = 'UserService/grantPermission';
 
         if (user.capabilities && user.capabilities[capability]) {
             this.loggerService.info(context, `User "${user.login}" has provided capability.`);
 
-            return true;
+            return false;
         }
 
-        const result = await this.userModel.updateOne(
+        await this.userModel.updateOne(
             {
                 _id: user._id,
                 login: user.login
@@ -112,31 +112,24 @@ export class UserService {
                 }
             }
         );
-
-        if (!result.acknowledged) {
-            this.loggerService.error(context, `Failed action to grant a new permission to ${user.login} user.`);
-
-            return false;
-        }
-
         this.loggerService.info(context, `User "${byUser.login}" has granted permission "${capability}" to "${user.login}" user.`);
 
         return true;
     }
 
-    async denyPermission(user: UserDocument, byUser: UserDocument, capability: CapabilityType): Promise<boolean> {
-        const context = 'UserService/grant';
+    async denyPermission(user: UserDto, byUser: UserDto, capability: CapabilityType): Promise<boolean> {
+        const context = 'UserService/denyPermission';
 
         if (!user.capabilities || !user.capabilities[capability]) {
             this.loggerService.info(context, `User "${user.login}" has not provided capability.`);
 
-            return true;
+            return false;
         }
 
         const newCapabilities = user.capabilities;
         delete newCapabilities[capability];
 
-        const result = await this.userModel.updateOne(
+        await this.userModel.updateOne(
             {
                 _id: user._id,
                 login: user.login
@@ -147,13 +140,6 @@ export class UserService {
                 }
             }
         );
-
-        if (!result.acknowledged) {
-            this.loggerService.error(context, `Failed action to deny a permission to ${user.login} user.`);
-
-            return false;
-        }
-
         this.loggerService.info(context, `User "${byUser.login}" has denied permission "${capability}" to "${user.login}" user.`);
 
         return true;
