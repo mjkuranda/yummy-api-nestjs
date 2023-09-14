@@ -29,7 +29,7 @@ export class UserController {
     @Post('/:login/grant/:capability')
     @HttpCode(200)
     public async grantPermission(@Body() body, @Param('login') login: string, @Param('capability') capability: CapabilityType) {
-        const forUser = await this.userService.getUser(login) as UserDto;
+        const forUser = await this.userService.getUser(login) as unknown as UserDto;
         const { authenticatedUser } = body;
 
         return await this.userService.grantPermission(forUser, authenticatedUser, capability);
