@@ -10,6 +10,7 @@ import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { LoggerService } from '../logger/logger.service';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { Redis } from 'ioredis';
+import { CapabilityType } from './user.types';
 
 @Injectable()
 export class UserService {
@@ -22,13 +23,7 @@ export class UserService {
     ) {}
 
     async getUser(login: string): Promise<UserDocument> {
-        const user = await this.userModel.findOne({ login });
-
-        if (!user) {
-            throw new NotFoundException('UserService/getUser', 'User does not found');
-        }
-
-        return user;
+        return await this.userModel.findOne({ login });
     }
 
     async loginUser(userLoginDto: UserLoginDto, res): Promise<UserDocument> {
@@ -65,7 +60,7 @@ export class UserService {
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<UserDocument> {
-        const context = 'UserService/createUser:';
+        const context = 'UserService/createUser';
 
         if (await this.getUser(createUserDto.login)) {
             const message = `User with "${createUserDto.login}" login has already exists`;
@@ -92,5 +87,40 @@ export class UserService {
 
     async areSameHashedPasswords(password: string, hashedPassword: string): Promise<boolean> {
         return await bcrypt.compare(password, hashedPassword);
+    }
+
+    async grantPermission(user: UserDocument, byUser: UserDocument, capability: CapabilityType): Promise<boolean> {
+        const context = 'UserService/grant';
+
+        if (user.capabilities && user.capabilities[capability]) {
+            this.loggerService.info(context, `User "${user.login}" has provided capability.`);
+
+            return true;
+        }
+
+        const result = await this.userModel.updateOne(
+            {
+                _id: user._id,
+                login: user.login
+            },
+            {
+                $set: {
+                    capabilities: {
+                        ...user.capabilities,
+                        [capability]: true
+                    }
+                }
+            }
+        );
+
+        if (!result.acknowledged) {
+            this.loggerService.error(context, `Failed action to grand a new permission to ${user.login} user.`);
+
+            return false;
+        }
+
+        this.loggerService.info(context, `User ${byUser.login} has granted permission "${capability}" to "${user.login}" user.`);
+
+        return true;
     }
 }

@@ -8,6 +8,8 @@ import { UserModule } from './modules/user/user.module';
 import { AuthorizeMiddleware } from './middleware/authorize.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { LoggerModule } from './modules/logger/logger.module';
+import { AuthenticateUserMiddleware } from './middleware/authenticate.user.middleware';
+import { AuthorizeUserMiddleware } from './middleware/authorize-user-middleware';
 
 @Module({
     imports: [
@@ -38,6 +40,18 @@ export class AppModule implements NestModule {
             .forRoutes(
                 { path: '/meals/create', method: RequestMethod.POST },
                 { path: '/ingredients/create', method: RequestMethod.POST }
+            );
+        consumer
+            .apply(AuthenticateUserMiddleware)
+            .forRoutes(
+                { path: '/users/grand/:permissionType', method: RequestMethod.POST },
+                { path: '/users/deny/:permissionType', method: RequestMethod.POST }
+            );
+        consumer
+            .apply(AuthorizeUserMiddleware)
+            .forRoutes(
+                { path: '/users/grand/:permissionType', method: RequestMethod.POST },
+                { path: '/users/deny/:permissionType', method: RequestMethod.POST }
             );
     }
 }

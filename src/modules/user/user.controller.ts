@@ -1,6 +1,7 @@
-import { Body, Controller, HttpCode, Post, Response } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Response, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UserLoginDto } from './user.dto';
+import { CapabilityType } from './user.types';
 
 @Controller('users')
 export class UserController {
@@ -23,5 +24,14 @@ export class UserController {
     @HttpCode(201)
     public async register(@Body() createUserDto: CreateUserDto) {
         return await this.userService.createUser(createUserDto);
+    }
+
+    @Post('/:login/grant/:capability')
+    @HttpCode(200)
+    public async grantPermission(@Body() body, @Param('login') login: string, @Param('capability') capability: CapabilityType) {
+        const forUser = await this.userService.getUser(login);
+        const { authenticatedUser } = body;
+
+        return await this.userService.grantPermission(forUser, authenticatedUser, capability);
     }
 }
