@@ -34,4 +34,13 @@ export class UserController {
 
         return await this.userService.grantPermission(forUser, authenticatedUser, capability);
     }
+
+    @Post('/:login/deny/:capability')
+    @HttpCode(200)
+    public async denyPermission(@Body() body, @Param('login') login: string, @Param('capability') capability: CapabilityType) {
+        const forUser = await this.userService.getUser(login);
+        const { authenticatedUser } = body;
+
+        return await this.userService.denyPermission(forUser, authenticatedUser, capability);
+    }
 }

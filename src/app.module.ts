@@ -44,14 +44,14 @@ export class AppModule implements NestModule {
         consumer
             .apply(AuthenticateUserMiddleware)
             .forRoutes(
-                { path: '/users/grand/:permissionType', method: RequestMethod.POST },
-                { path: '/users/deny/:permissionType', method: RequestMethod.POST }
+                { path: '/users/:login/grant/:permissionType', method: RequestMethod.POST },
+                { path: '/users/:login/deny/:permissionType', method: RequestMethod.POST }
             );
         consumer
             .apply(AuthorizeUserMiddleware)
             .forRoutes(
-                { path: '/users/grand/:permissionType', method: RequestMethod.POST },
-                { path: '/users/deny/:permissionType', method: RequestMethod.POST }
+                { path: '/users/:login/grant/:permissionType', method: RequestMethod.POST },
+                { path: '/users/:login/deny/:permissionType', method: RequestMethod.POST }
             );
     }
 }

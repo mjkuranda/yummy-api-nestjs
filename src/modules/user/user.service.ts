@@ -114,12 +114,47 @@ export class UserService {
         );
 
         if (!result.acknowledged) {
-            this.loggerService.error(context, `Failed action to grand a new permission to ${user.login} user.`);
+            this.loggerService.error(context, `Failed action to grant a new permission to ${user.login} user.`);
 
             return false;
         }
 
-        this.loggerService.info(context, `User ${byUser.login} has granted permission "${capability}" to "${user.login}" user.`);
+        this.loggerService.info(context, `User "${byUser.login}" has granted permission "${capability}" to "${user.login}" user.`);
+
+        return true;
+    }
+
+    async denyPermission(user: UserDocument, byUser: UserDocument, capability: CapabilityType): Promise<boolean> {
+        const context = 'UserService/grant';
+
+        if (!user.capabilities || !user.capabilities[capability]) {
+            this.loggerService.info(context, `User "${user.login}" has not provided capability.`);
+
+            return true;
+        }
+
+        const newCapabilities = user.capabilities;
+        delete newCapabilities[capability];
+
+        const result = await this.userModel.updateOne(
+            {
+                _id: user._id,
+                login: user.login
+            },
+            {
+                $set: {
+                    capabilities: newCapabilities
+                }
+            }
+        );
+
+        if (!result.acknowledged) {
+            this.loggerService.error(context, `Failed action to deny a permission to ${user.login} user.`);
+
+            return false;
+        }
+
+        this.loggerService.info(context, `User "${byUser.login}" has denied permission "${capability}" to "${user.login}" user.`);
 
         return true;
     }
