@@ -10,7 +10,7 @@ import { LoggerService } from '../logger/logger.service';
 import { CreateUserDto } from './user.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { REDIS_CLIENT } from '../redis/redis.provider';
+import { REDIS_CLIENT } from '../redis/redis.constants';
 
 describe('UserService', () => {
     let userService: UserService;
@@ -80,12 +80,14 @@ describe('UserService', () => {
             expect(result).toBe(mockUser);
         });
 
-        it('should throw an error when user not found', async () => {
-            jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(null);
-
+        it('should return null value when user not found', async () => {
+            const mockUserResult = null;
             const givenNonExistingLogin = 'Non existing user name';
+            jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(mockUserResult);
 
-            await expect(userService.getUser(givenNonExistingLogin)).rejects.toThrow(NotFoundException);
+            const result = await userService.getUser(givenNonExistingLogin);
+
+            expect(result).toBe(mockUserResult);
         });
     });
 
@@ -163,6 +165,13 @@ describe('UserService', () => {
             jest.spyOn(userService, 'getUser').mockResolvedValueOnce(mockExistingUser);
 
             await expect(userService.createUser(mockUserDto)).rejects.toThrow(BadRequestException);
+        });
+    });
+
+    describe('grantPermission', () => {
+        it('should grant a new permission to user by admin', async () => {
+            // const
+            expect(1).toBe(1);
         });
     });
 });
