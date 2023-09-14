@@ -23,7 +23,7 @@ export class UserService {
     ) {}
 
     async getUser(login: string): Promise<UserDocument> {
-        return await this.userModel.findOne({ login });
+        return this.userModel.findOne({ login });
     }
 
     async loginUser(userLoginDto: UserLoginDto, res): Promise<UserDocument> {
@@ -91,6 +91,13 @@ export class UserService {
 
     async grantPermission(user: UserDto, byUser: UserDto, capability: CapabilityType): Promise<boolean> {
         const context = 'UserService/grantPermission';
+
+        if (!user) {
+            const message = 'Failed action to grant a permission. User with provided login does not exist.';
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
 
         if (user.capabilities && user.capabilities[capability]) {
             this.loggerService.info(context, `User "${user.login}" has provided capability.`);

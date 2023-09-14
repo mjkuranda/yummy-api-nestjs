@@ -38,7 +38,7 @@ export class UserController {
     @Post('/:login/deny/:capability')
     @HttpCode(200)
     public async denyPermission(@Body() body, @Param('login') login: string, @Param('capability') capability: CapabilityType) {
-        const forUser = await this.userService.getUser(login) as UserDto;
+        const forUser = await this.userService.getUser(login) as unknown as UserDto;
         const { authenticatedUser } = body;
 
         return await this.userService.denyPermission(forUser, authenticatedUser, capability);

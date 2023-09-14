@@ -197,15 +197,16 @@ describe('UserService', () => {
         });
 
         it('should not grant a new permission when user has already had it', async () => {
-            const mockCapability: CapabilityType = 'canAdd';
             const mockUserWithCapability: UserDto = {
                 ...mockUser,
                 capabilities: {
-                    [mockCapability]: true
+                    'canAdd': true,
+                    'canEdit': false,
+                    'canRemove': false
                 }
             };
 
-            const result = await userService.grantPermission(mockUserWithCapability, mockAdminUser, mockCapability);
+            const result = await userService.grantPermission(mockUserWithCapability, mockAdminUser, 'canAdd');
 
             expect(result).toBe(false);
         });
@@ -221,7 +222,9 @@ describe('UserService', () => {
                 login: 'xxx',
                 password: 'yyy',
                 capabilities: {
-                    canAdd: true
+                    canAdd: true,
+                    canEdit: false,
+                    canRemove: false
                 }
             };
             mockAdminUser = {

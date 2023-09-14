@@ -8,7 +8,7 @@ import { UserModule } from './modules/user/user.module';
 import { AuthorizeMiddleware } from './middleware/authorize.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { LoggerModule } from './modules/logger/logger.module';
-import { AuthenticateUserMiddleware } from './middleware/authenticate.user.middleware';
+import { AuthenticateUserMiddleware } from './middleware/authenticate-user.middleware';
 import { AuthorizeUserMiddleware } from './middleware/authorize-user-middleware';
 
 @Module({
@@ -44,14 +44,14 @@ export class AppModule implements NestModule {
         consumer
             .apply(AuthenticateUserMiddleware)
             .forRoutes(
-                { path: '/users/:login/grant/:permissionType', method: RequestMethod.POST },
-                { path: '/users/:login/deny/:permissionType', method: RequestMethod.POST }
+                { path: '/users/:login/grant/:capability', method: RequestMethod.POST },
+                { path: '/users/:login/deny/:capability', method: RequestMethod.POST }
             );
         consumer
             .apply(AuthorizeUserMiddleware)
             .forRoutes(
-                { path: '/users/:login/grant/:permissionType', method: RequestMethod.POST },
-                { path: '/users/:login/deny/:permissionType', method: RequestMethod.POST }
+                { path: '/users/:login/grant/:capability', method: RequestMethod.POST },
+                { path: '/users/:login/deny/:capability', method: RequestMethod.POST }
             );
     }
 }
