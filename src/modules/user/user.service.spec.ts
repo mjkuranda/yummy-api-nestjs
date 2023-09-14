@@ -210,6 +210,13 @@ describe('UserService', () => {
 
             expect(result).toBe(false);
         });
+
+        it('should throw an error when user has not found', async () => {
+            const mockUser = null;
+            const capability = 'canAdd';
+
+            await expect(userService.grantPermission(mockUser, mockAdminUser, capability)).rejects.toThrow(BadRequestException);
+        });
     });
 
     describe('denyPermission', () => {
@@ -254,6 +261,13 @@ describe('UserService', () => {
             const result = await userService.denyPermission(mockUserWithNoCapability, mockAdminUser, mockCapability);
 
             expect(result).toBe(false);
+        });
+
+        it('should throw an error when user has not found', async () => {
+            const mockUser = null;
+            const capability = 'canAdd';
+
+            await expect(userService.denyPermission(mockUser, mockAdminUser, capability)).rejects.toThrow(BadRequestException);
         });
     });
 });

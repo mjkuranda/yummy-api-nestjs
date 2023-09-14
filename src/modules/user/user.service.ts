@@ -127,6 +127,13 @@ export class UserService {
     async denyPermission(user: UserDto, byUser: UserDto, capability: CapabilityType): Promise<boolean> {
         const context = 'UserService/denyPermission';
 
+        if (!user) {
+            const message = 'Failed action to deny a permission. User with provided login does not exist.';
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
         if (!user.capabilities || !user.capabilities[capability]) {
             this.loggerService.info(context, `User "${user.login}" has not provided capability.`);
 
