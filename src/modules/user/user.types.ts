@@ -1,0 +1,1 @@
+export type CapabilityType = 'canAdd' | 'canEdit' | 'canRemove';

@@ -9,6 +9,7 @@ import { UserService } from '../user/user.service';
 import { LoggerService } from '../logger/logger.service';
 import { JwtService } from '@nestjs/jwt';
 import { NotFoundException } from '../../exceptions/not-found.exception';
+import { REDIS_CLIENT } from '../redis/redis.constants';
 
 // https://betterprogramming.pub/testing-controllers-in-nestjs-and-mongo-with-jest-63e1b208503c
 // https://stackoverflow.com/questions/74110962/please-make-sure-that-the-argument-databaseconnection-at-index-0-is-available
@@ -50,6 +51,10 @@ describe('AuthService', () => {
                 {
                     provide: getModelToken(models.USER_MODEL),
                     useValue: mockAuthService
+                },
+                {
+                    provide: REDIS_CLIENT,
+                    useValue: {}
                 }
             ],
         }).compile();

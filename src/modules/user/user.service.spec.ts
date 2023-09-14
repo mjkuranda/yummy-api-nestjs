@@ -7,10 +7,11 @@ import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { LoggerService } from '../logger/logger.service';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UserDto } from './user.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { REDIS_CLIENT } from '../redis/redis.provider';
+import { REDIS_CLIENT } from '../redis/redis.constants';
+import { CapabilityType } from './user.types';
 
 describe('UserService', () => {
     let userService: UserService;
@@ -26,7 +27,8 @@ describe('UserService', () => {
         findOne: jest.fn(),
         getUser: jest.fn(),
         areSameHashedPasswords: jest.fn(),
-        create: jest.fn()
+        create: jest.fn(),
+        updateOne: jest.fn()
     };
 
     beforeEach(async () => {
@@ -80,12 +82,14 @@ describe('UserService', () => {
             expect(result).toBe(mockUser);
         });
 
-        it('should throw an error when user not found', async () => {
-            jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(null);
-
+        it('should return null value when user not found', async () => {
+            const mockUserResult = null;
             const givenNonExistingLogin = 'Non existing user name';
+            jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(mockUserResult);
 
-            await expect(userService.getUser(givenNonExistingLogin)).rejects.toThrow(NotFoundException);
+            const result = await userService.getUser(givenNonExistingLogin);
+
+            expect(result).toBe(mockUserResult);
         });
     });
 
@@ -163,6 +167,107 @@ describe('UserService', () => {
             jest.spyOn(userService, 'getUser').mockResolvedValueOnce(mockExistingUser);
 
             await expect(userService.createUser(mockUserDto)).rejects.toThrow(BadRequestException);
+        });
+    });
+
+    describe('grantPermission', () => {
+        let mockUser: UserDto;
+        let mockAdminUser: UserDto;
+
+        beforeAll(() => {
+            mockUser = {
+                _id: 'xxx-xxx',
+                login: 'xxx',
+                password: 'yyy'
+            };
+            mockAdminUser = {
+                _id: 'yyy-yyy',
+                login: 'admin',
+                password: 'admin',
+                isAdmin: true
+            };
+        });
+
+        it('should grant a new permission to user by admin', async () => {
+            const mockCapability: CapabilityType = 'canAdd';
+
+            const result = await userService.grantPermission(mockUser, mockAdminUser, mockCapability);
+
+            expect(result).toBe(true);
+        });
+
+        it('should not grant a new permission when user has already had it', async () => {
+            const mockUserWithCapability: UserDto = {
+                ...mockUser,
+                capabilities: {
+                    'canAdd': true,
+                    'canEdit': false,
+                    'canRemove': false
+                }
+            };
+
+            const result = await userService.grantPermission(mockUserWithCapability, mockAdminUser, 'canAdd');
+
+            expect(result).toBe(false);
+        });
+
+        it('should throw an error when user has not found', async () => {
+            const mockUser = null;
+            const capability = 'canAdd';
+
+            await expect(userService.grantPermission(mockUser, mockAdminUser, capability)).rejects.toThrow(BadRequestException);
+        });
+    });
+
+    describe('denyPermission', () => {
+        let mockUser: UserDto;
+        let mockAdminUser: UserDto;
+
+        beforeAll(() => {
+            mockUser = {
+                _id: 'xxx-xxx',
+                login: 'xxx',
+                password: 'yyy',
+                capabilities: {
+                    canAdd: true,
+                    canEdit: false,
+                    canRemove: false
+                }
+            };
+            mockAdminUser = {
+                _id: 'yyy-yyy',
+                login: 'admin',
+                password: 'admin',
+                isAdmin: true
+            };
+        });
+
+        it('should deny new permission to user by admin', async () => {
+            const mockCapability: CapabilityType = 'canAdd';
+
+            const result = await userService.denyPermission(mockUser, mockAdminUser, mockCapability);
+
+            expect(result).toBe(true);
+        });
+
+        it('should not deny permission when user has not already had it', async () => {
+            const mockCapability: CapabilityType = 'canAdd';
+            const mockUserWithNoCapability: UserDto = {
+                _id: 'xxx',
+                login: 'xxx',
+                password: 'xxx'
+            };
+
+            const result = await userService.denyPermission(mockUserWithNoCapability, mockAdminUser, mockCapability);
+
+            expect(result).toBe(false);
+        });
+
+        it('should throw an error when user has not found', async () => {
+            const mockUser = null;
+            const capability = 'canAdd';
+
+            await expect(userService.denyPermission(mockUser, mockAdminUser, capability)).rejects.toThrow(BadRequestException);
         });
     });
 });

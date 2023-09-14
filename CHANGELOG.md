@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.0] - 2023-09-14
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /users/:login/grant/:capability` endpoint to add new permissions to users by admin user.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /users/:login/deny/:capability` endpoint to remove permissions to users by admin user.
+
 ## [1.14.0] - 2023-09-11
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Integration with Redis cache.

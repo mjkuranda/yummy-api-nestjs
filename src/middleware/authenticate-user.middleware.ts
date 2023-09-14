@@ -3,20 +3,17 @@ import { Request, Response, NextFunction } from 'express';
 import { AuthService } from '../modules/auth/auth.service';
 
 @Injectable()
-export class AuthorizeMiddleware implements NestMiddleware {
+export class AuthenticateUserMiddleware implements NestMiddleware {
 
     constructor(private readonly authService: AuthService) {}
 
     async use(req: Request, res: Response, next: NextFunction) {
         const { jwt } = req.cookies;
-        const authorizedUser = await this.authService.getAuthorizedUser(jwt);
+        const authenticatedUser = await this.authService.getAuthorizedUser(jwt);
 
-        // Modify body
         req.body = {
             ...req.body,
-            user: authorizedUser,
-            author: authorizedUser.login,
-            posted: new Date().getTime()
+            authenticatedUser
         };
 
         next();
