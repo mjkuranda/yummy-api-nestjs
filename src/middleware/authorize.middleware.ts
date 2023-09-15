@@ -13,11 +13,22 @@ export class AuthorizeMiddleware implements NestMiddleware {
 
         // Modify body
         req.body = {
-            ...req.body,
-            user: authorizedUser,
-            author: authorizedUser.login,
-            posted: new Date().getTime()
+            data: {
+                ...req.body
+            },
+            user: authorizedUser
         };
+
+        if (req.path === '/meals/create') {
+            req.body = {
+                ...req.body,
+                data: {
+                    ...req.body.data,
+                    author: authorizedUser.login,
+                    posted: new Date().getTime()
+                }
+            };
+        }
 
         next();
     }
