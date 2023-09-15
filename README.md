@@ -13,7 +13,7 @@ Technologies:
 ## API
 * `GET /meals` - returns all meals from the database
 * `GET /meals/:id` - returns a specific meal defined by id parameter. It saves to the cache, if it does not exist there. Each request checks the cache.
-* `POST /meals/create` - creates a new meal and saves its to the database and cache. You need to provide following data:
+* `POST /meals/create` - creates a new meal and saves its to the database, marking as soft added. You need to provide following data:
 ```json
 {
   "author": "Author",
@@ -28,6 +28,18 @@ Technologies:
   "type": "SOUP"
 }
 ```
+* `PUT /meals/:id` - updates (edits) a meal and marks as soft edited. Provide following data, where each property is optional:
+```json
+{
+  "description": "New description",
+  "ingredients": [
+    "ingredient-id-2",
+    "ingredient-id-x"
+  ],
+  "imgUrl": "https://host.com/new-img-url"
+}
+```
+* `DELETE /meals/:id` - deletes a meal. It marks meal as soft deleted.
 
 * `GET /ingredients/` - returns all ingredients from the database. It saves to the cache. Each request checks, if there exist ingredient and return them, if they exist.
 * `POST /ingredients/create` - creates a new ingredient and saves its to the database. You need to provide following data:

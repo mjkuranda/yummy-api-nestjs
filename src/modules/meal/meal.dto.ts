@@ -28,3 +28,9 @@ export class CreateMealDto {
     @Length(3, 16)
     readonly type: string;
 }
+
+export class MealEditDto {
+    readonly description?: string;
+    readonly imageUrl?: string;
+    readonly ingredients?: string[];
+}

@@ -22,6 +22,15 @@ export const MealSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    softAdded: {
+        type: Boolean
+    },
+    softDeleted: {
+        type: Boolean
+    },
+    softEdited: {
+        type: Object
+    },
     title: {
         type: String,
         required: true

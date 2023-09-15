@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { MealDocument } from './meal.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
-import { CreateMealDto } from './meal.dto';
+import { CreateMealDto, MealEditDto } from './meal.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { LoggerService } from '../logger/logger.service';
@@ -20,7 +20,7 @@ export class MealService {
     ) {}
 
     async create(createMealDto: CreateMealDto): Promise<MealDocument> {
-        const createdMeal = await this.mealModel.create(createMealDto) as MealDocument;
+        const createdMeal = await this.mealModel.create({ ...createMealDto, softAdded: true }) as MealDocument;
 
         const title = createMealDto.title;
         const ingredientCount = createMealDto.ingredients.length;
@@ -81,5 +81,61 @@ export class MealService {
         this.loggerService.info('MealService/findAll', message);
 
         return meals;
+    }
+
+    async delete(id: string): Promise<void> {
+        const context = 'MealService/delete';
+
+        if (!isValidObjectId(id)) {
+            const message = `Provided "${id}" that is not a correct MongoDB id.`;
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
+        const meal = await this.mealModel.findById(id) as MealDocument;
+
+        if (!meal) {
+            const message = `Cannot find a meal with "${id}" id.`;
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        await this.redisService.unset<MealDocument>(meal, 'meal');
+        await this.mealModel.updateOne({ _id: meal._id }, {
+            $set: {
+                softDeleted: true
+            }
+        });
+        this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been marked as soft deleted.`);
+    }
+
+    async edit(id: string, mealEditDto: MealEditDto): Promise<void> {
+        const context = 'MealService/edit';
+
+        if (!isValidObjectId(id)) {
+            const message = `Provided "${id}" that is not a correct MongoDB id.`;
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
+        const meal = await this.mealModel.findById(id) as MealDocument;
+
+        if (!meal) {
+            const message = `Cannot find a meal with "${id}" id.`;
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        await this.redisService.unset<MealDocument>(meal, 'meal');
+        await this.mealModel.updateOne({ _id: meal._id }, {
+            $set: {
+                softEdited: mealEditDto
+            }
+        });
+        this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been marked as soft deleted.`);
     }
 }

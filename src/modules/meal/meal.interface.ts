@@ -8,4 +8,7 @@ export interface MealDocument extends Document {
   readonly posted: number;
   readonly title: string;
   readonly type: string;
+  readonly softAdded?: boolean;
+  readonly softDeleted?: boolean;
+  readonly softEdited?: MealDocument;
 }

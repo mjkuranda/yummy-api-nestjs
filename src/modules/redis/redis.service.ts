@@ -46,4 +46,10 @@ export class RedisService {
         await this.redisClient.set(key, value);
         await this.redisClient.expire(key, REDIS_TTL);
     }
+
+    async unset<Document>(documentData: Document | Document[], documentType: DocumentType): Promise<void> {
+        const key = this.encodeKey(documentData, documentType);
+
+        await this.redisClient.del(key);
+    }
 }
