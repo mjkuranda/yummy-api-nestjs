@@ -87,6 +87,7 @@ describe('MealService', () => {
             };
             mockMeal = {
                 ...mockMealDto,
+                softAdded: true,
                 _id: '123456789'
             };
         });
@@ -136,7 +137,7 @@ describe('MealService', () => {
     });
 
     describe('edit', () => {
-        it('should confirm editing meal', async () => {
+        it('should edit a meal', async () => {
             const mockId = 'xxx';
             const mockMeal = {
                 _id: mockId,
@@ -151,9 +152,8 @@ describe('MealService', () => {
                 ingredients: ['x']
             };
             const mockEditedMeal = {
-                _id: mockId,
-                title: 'XXX',
-                ...editedMealDto
+                mockMeal,
+                softEdited: editedMealDto
             } as any;
 
             jest.spyOn(mongoose, 'isValidObjectId')
@@ -197,12 +197,11 @@ describe('MealService', () => {
             jest.spyOn(mongoose, 'isValidObjectId')
                 .mockReturnValueOnce(true);
             jest.spyOn(mealModel, 'findById')
-                .mockReturnValueOnce(mockMeal)
-                .mockReturnValueOnce(mockEditedMeal);
+                .mockReturnValueOnce(mockMeal);
 
             const result = await mealService.confirmEditing(mockId, mockUser);
 
-            expect(result).toBe(mockEditedMeal);
+            expect(result).toStrictEqual(mockEditedMeal);
             expect(redisService.set).toHaveBeenCalled();
             expect(redisService.set).toHaveBeenCalledWith(mockEditedMeal, 'meal');
         });
