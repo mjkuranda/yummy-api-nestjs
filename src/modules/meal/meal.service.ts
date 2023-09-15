@@ -205,6 +205,13 @@ export class MealService {
         const cachedMeal = await this.redisService.get<MealDocument>(key) as MealDocument;
 
         if (cachedMeal) {
+            if (cachedMeal.softDeleted) {
+                const message = `Cannot find a meal with "${id}" id.`;
+                this.loggerService.error(context, message);
+
+                throw new NotFoundException(context, message);
+            }
+
             this.loggerService.info(context, `Fetched a meal with "${cachedMeal._id}" id from cache.`);
 
             return cachedMeal;
@@ -226,7 +233,7 @@ export class MealService {
     }
 
     async findAll(): Promise<MealDocument[]> {
-        const meals = (await this.mealModel.find()) as MealDocument[];
+        const meals = (await this.mealModel.find({ softDeleted: { $exists: false }})) as MealDocument[];
         const message = `Found ${meals.length} meals.`;
 
         this.loggerService.info('MealService/findAll', message);
