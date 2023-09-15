@@ -24,15 +24,39 @@ export class MealController {
         return await this.mealService.create(body);
     }
 
-    @Delete(':id')
+    @Delete('/:id')
     @HttpCode(204)
     public async deleteMeal(@Param('id') id: string) {
         return await this.mealService.delete(id);
     }
 
-    @Put(':id')
+    @Put('/:id')
     @HttpCode(200)
     public async updateMeal(@Param('id') id: string, @Body() body: MealEditDto) {
         return await this.mealService.edit(id, body);
+    }
+
+    @Post('/:id/create')
+    @HttpCode(200)
+    public async confirmCreatingMeal(@Param('id') id: string, @Body() body) {
+        const { authenticatedUser } = body;
+
+        return await this.mealService.confirmCreating(id, authenticatedUser);
+    }
+
+    @Post('/:id/edit')
+    @HttpCode(200)
+    public async confirmEditingMeal(@Param('id') id: string, @Body() body) {
+        const { authenticatedUser } = body;
+
+        return await this.mealService.confirmEditing(id, authenticatedUser);
+    }
+
+    @Post('/:id/delete')
+    @HttpCode(200)
+    public async confirmDeletingMeal(@Param('id') id: string, @Body() body) {
+        const { authenticatedUser } = body;
+
+        return await this.mealService.confirmDeleting(id, authenticatedUser);
     }
 }

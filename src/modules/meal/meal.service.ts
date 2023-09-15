@@ -8,6 +8,7 @@ import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { LoggerService } from '../logger/logger.service';
 import { RedisService } from '../redis/redis.service';
+import { UserDto } from '../user/user.dto';
 
 @Injectable()
 export class MealService {
@@ -67,9 +68,6 @@ export class MealService {
         }
 
         this.loggerService.info(context, `Found meal with "${id}" id.`);
-
-        await this.redisService.set<MealDocument>(meal, 'meal');
-        this.loggerService.info(context, `Cached a meal with "${meal._id}" id.`);
 
         return meal;
     }
@@ -137,5 +135,98 @@ export class MealService {
             }
         });
         this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been marked as soft deleted.`);
+    }
+
+    async confirmCreating(id: string, user: UserDto): Promise<MealDocument> {
+        const context = 'MealService/confirmCreating';
+
+        if (!isValidObjectId(id)) {
+            const message = `Provided "${id}" that is not a correct MongoDB id.`;
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
+        const meal = await this.mealModel.findById(id) as MealDocument;
+
+        if (!meal) {
+            const message = `Cannot find a meal with "${id}" id.`;
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        await this.mealModel.updateOne({ _id: meal._id }, {
+            $unset: {
+                softAdded: true
+            }
+        });
+        const addedMeal = await this.mealModel.findById(meal._id) as MealDocument;
+        await this.redisService.set<MealDocument>(addedMeal, 'meal');
+        this.loggerService.info(context, `Cached a meal with "${meal._id}" id.`);
+
+        this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been confirmed adding by "${user.login}" user.`);
+
+        return addedMeal;
+    }
+
+    async confirmEditing(id: string, user: UserDto): Promise<MealDocument> {
+        const context = 'MealService/confirmEditing';
+
+        if (!isValidObjectId(id)) {
+            const message = `Provided "${id}" that is not a correct MongoDB id.`;
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
+        const meal = await this.mealModel.findById(id) as MealDocument;
+
+        if (!meal) {
+            const message = `Cannot find a meal with "${id}" id.`;
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        await this.mealModel.updateOne({ _id: meal._id }, {
+            $unset: {
+                softEdited: true
+            }
+        });
+        const updatedMeal = await this.mealModel.findById(meal._id) as MealDocument;
+        await this.redisService.set<MealDocument>(updatedMeal, 'meal');
+        this.loggerService.info(context, `Cached a meal with "${meal._id}" id.`);
+
+        this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been confirmed editing by "${user.login}" user.`);
+
+        return updatedMeal;
+    }
+
+    async confirmDeleting(id: string, user: UserDto): Promise<null> {
+        const context = 'MealService/confirmDeleting';
+
+        if (!isValidObjectId(id)) {
+            const message = `Provided "${id}" that is not a correct MongoDB id.`;
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
+        const meal = await this.mealModel.findById(id) as MealDocument;
+
+        if (!meal) {
+            const message = `Cannot find a meal with "${id}" id.`;
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        await this.mealModel.deleteOne({ _id: meal._id });
+        const deletedMeal = await this.mealModel.findById(meal._id);
+
+        this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been confirmed deleting by "${user.login}" user.`);
+
+        return deletedMeal;
     }
 }
