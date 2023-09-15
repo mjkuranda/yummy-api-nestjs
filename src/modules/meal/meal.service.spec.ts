@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
@@ -11,6 +11,7 @@ import { MealDocument } from './meal.interface';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { RedisService } from '../redis/redis.service';
+import { UserDto } from '../user/user.dto';
 
 describe('MealService', () => {
     let mealService: MealService;
@@ -20,7 +21,8 @@ describe('MealService', () => {
     const mockMealService = {
         create: jest.fn(),
         find: jest.fn(),
-        findById: jest.fn()
+        findById: jest.fn(),
+        updateOne: jest.fn()
     };
 
     beforeEach(async () => {
@@ -86,14 +88,47 @@ describe('MealService', () => {
             };
         });
 
-        it('should create a new meal and save to cache', async () => {
+        it('should create a new meal', async () => {
             jest.spyOn(mealModel, 'create').mockResolvedValue(mockMeal);
 
             const result = await mealService.create(mockMealDto);
 
             expect(result).toBe(mockMeal);
+        });
+    });
+
+    describe('confirmCreating', () => {
+        it('should confirm created meal and save to the cache', async () => {
+            const mockId = 'xxx';
+            const mockMeal = {
+                _id: mockId,
+                title: 'XXX',
+                description: 'Lorem ipsum',
+                author: 'X',
+                ingredients: ['x', 'y', 'z'],
+                softAdded: true
+            } as any;
+            const mockAddedMeal = {
+                ...mockMeal,
+                softAdded: undefined
+            } as any;
+            const mockUser = {
+                _id: 'uuu',
+                login: 'user',
+                password: 'xxx',
+            } as UserDto;
+
+            jest.spyOn(mongoose, 'isValidObjectId')
+                .mockReturnValueOnce(true);
+            jest.spyOn(mealModel, 'findById')
+                .mockReturnValueOnce(mockMeal)
+                .mockReturnValueOnce(mockAddedMeal);
+
+            const result = await mealService.confirmCreating(mockId, mockUser);
+
+            expect(result).toBe(mockAddedMeal);
             expect(redisService.set).toHaveBeenCalled();
-            expect(redisService.set).toHaveBeenCalledWith(mockMeal, 'meal');
+            expect(redisService.set).toHaveBeenCalledWith(mockAddedMeal, 'meal');
         });
     });
 

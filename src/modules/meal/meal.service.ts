@@ -33,9 +33,6 @@ export class MealService {
 
         this.loggerService.info(context, message);
 
-        await this.redisService.set<MealDocument>(createdMeal, 'meal');
-        this.loggerService.info(context, `Cached a new meal with ${createdMeal._id} id.`);
-
         return createdMeal;
     }
 
@@ -68,6 +65,7 @@ export class MealService {
         }
 
         this.loggerService.info(context, `Found meal with "${id}" id.`);
+        await this.redisService.set(meal, 'meal');
 
         return meal;
     }
@@ -203,7 +201,7 @@ export class MealService {
         return updatedMeal;
     }
 
-    async confirmDeleting(id: string, user: UserDto): Promise<null> {
+    async confirmDeleting(id: string, user: UserDto): Promise<MealDocument | null> {
         const context = 'MealService/confirmDeleting';
 
         if (!isValidObjectId(id)) {
@@ -223,7 +221,7 @@ export class MealService {
         }
 
         await this.mealModel.deleteOne({ _id: meal._id });
-        const deletedMeal = await this.mealModel.findById(meal._id);
+        const deletedMeal = await this.mealModel.findById(meal._id) as MealDocument;
 
         this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been confirmed deleting by "${user.login}" user.`);
 
