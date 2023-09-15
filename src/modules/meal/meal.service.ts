@@ -107,7 +107,7 @@ export class MealService {
         this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been marked as soft deleted.`);
     }
 
-    async edit(id: string, mealEditDto: MealEditDto): Promise<void> {
+    async edit(id: string, mealEditDto: MealEditDto): Promise<MealDocument> {
         const context = 'MealService/edit';
 
         if (!isValidObjectId(id)) {
@@ -126,13 +126,16 @@ export class MealService {
             throw new NotFoundException(context, message);
         }
 
-        await this.redisService.unset<MealDocument>(meal, 'meal');
         await this.mealModel.updateOne({ _id: meal._id }, {
             $set: {
                 softEdited: mealEditDto
             }
         });
+        const editedMeal = await this.mealModel.findById(meal._id) as MealDocument;
+        await this.redisService.set<MealDocument>(editedMeal, 'meal');
         this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been marked as soft deleted.`);
+
+        return editedMeal;
     }
 
     async confirmCreating(id: string, user: UserDto): Promise<MealDocument> {

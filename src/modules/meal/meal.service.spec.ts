@@ -134,6 +134,41 @@ describe('MealService', () => {
         });
     });
 
+    describe('edit', () => {
+        it('should confirm editing meal and update cache', async () => {
+            const mockId = 'xxx';
+            const mockMeal = {
+                _id: mockId,
+                title: 'XXX',
+                description: 'Lorem ipsum',
+                author: 'X',
+                ingredients: ['x', 'y', 'z']
+            } as any;
+            const editedMealDto = {
+                description: 'Lorem ipsum 2',
+                author: 'X',
+                ingredients: ['x']
+            };
+            const mockEditedMeal = {
+                _id: mockId,
+                title: 'XXX',
+                ...editedMealDto
+            } as any;
+
+            jest.spyOn(mongoose, 'isValidObjectId')
+                .mockReturnValueOnce(true);
+            jest.spyOn(mealModel, 'findById')
+                .mockReturnValueOnce(mockMeal)
+                .mockReturnValueOnce(mockEditedMeal);
+
+            const result = await mealService.edit(mockId, editedMealDto);
+
+            expect(result).toBe(mockEditedMeal);
+            expect(redisService.set).toHaveBeenCalled();
+            expect(redisService.set).toHaveBeenCalledWith(mockEditedMeal, 'meal');
+        });
+    });
+
     describe('confirmEditing', () => {
         it('should confirm editing meal and update cache', async () => {
             const mockId = 'xxx';
