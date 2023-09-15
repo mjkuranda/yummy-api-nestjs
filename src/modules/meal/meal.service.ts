@@ -187,11 +187,7 @@ export class MealService {
             throw new NotFoundException(context, message);
         }
 
-        await this.mealModel.updateOne({ _id: meal._id }, {
-            $unset: {
-                softEdited: true
-            }
-        });
+        await this.mealModel.replaceOne({ _id: meal._id }, { ...meal.softEdited });
         const updatedMeal = await this.mealModel.findById(meal._id) as MealDocument;
         await this.redisService.set<MealDocument>(updatedMeal, 'meal');
         this.loggerService.info(context, `Cached a meal with "${meal._id}" id.`);
