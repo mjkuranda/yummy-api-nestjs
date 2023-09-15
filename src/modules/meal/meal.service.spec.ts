@@ -55,6 +55,7 @@ describe('MealService', () => {
                     useValue: {
                         get: jest.fn(),
                         set: jest.fn(),
+                        unset: jest.fn(),
                         encodeKey: jest.fn()
                     }
                 }
@@ -135,7 +136,7 @@ describe('MealService', () => {
     });
 
     describe('edit', () => {
-        it('should confirm editing meal and update cache', async () => {
+        it('should confirm editing meal', async () => {
             const mockId = 'xxx';
             const mockMeal = {
                 _id: mockId,
@@ -164,8 +165,6 @@ describe('MealService', () => {
             const result = await mealService.edit(mockId, editedMealDto);
 
             expect(result).toBe(mockEditedMeal);
-            expect(redisService.set).toHaveBeenCalled();
-            expect(redisService.set).toHaveBeenCalledWith(mockEditedMeal, 'meal');
         });
     });
 
@@ -206,6 +205,35 @@ describe('MealService', () => {
             expect(result).toBe(mockEditedMeal);
             expect(redisService.set).toHaveBeenCalled();
             expect(redisService.set).toHaveBeenCalledWith(mockEditedMeal, 'meal');
+        });
+    });
+
+    describe('delete', () => {
+        it('should soft delete a meal and remove from cache', async () => {
+            const mockId = 'xxx';
+            const mockMeal = {
+                _id: mockId,
+                title: 'XXX',
+                description: 'Lorem ipsum',
+                author: 'X',
+                ingredients: ['x', 'y', 'z']
+            } as any;
+            const mockDeletedMeal = {
+                ...mockMeal,
+                softDeleted: true
+            } as any;
+
+            jest.spyOn(mongoose, 'isValidObjectId')
+                .mockReturnValueOnce(true);
+            jest.spyOn(mealModel, 'findById')
+                .mockReturnValueOnce(mockMeal)
+                .mockReturnValueOnce(mockDeletedMeal);
+
+            const result = await mealService.delete(mockId);
+
+            expect(result).toBe(mockDeletedMeal);
+            expect(redisService.unset).toHaveBeenCalled();
+            expect(redisService.unset).toHaveBeenCalledWith(mockMeal, 'meal');
         });
     });
 

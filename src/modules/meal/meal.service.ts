@@ -79,7 +79,7 @@ export class MealService {
         return meals;
     }
 
-    async delete(id: string): Promise<void> {
+    async delete(id: string): Promise<MealDocument> {
         const context = 'MealService/delete';
 
         if (!isValidObjectId(id)) {
@@ -104,7 +104,10 @@ export class MealService {
                 softDeleted: true
             }
         });
+        const deletedMeal = await this.mealModel.findById(meal._id) as MealDocument;
         this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been marked as soft deleted.`);
+
+        return deletedMeal;
     }
 
     async edit(id: string, mealEditDto: MealEditDto): Promise<MealDocument> {
@@ -132,7 +135,6 @@ export class MealService {
             }
         });
         const editedMeal = await this.mealModel.findById(meal._id) as MealDocument;
-        await this.redisService.set<MealDocument>(editedMeal, 'meal');
         this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been marked as soft deleted.`);
 
         return editedMeal;
