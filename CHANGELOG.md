@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.0] - 2023-09-15
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `PUT /meals/:id` endpoint to edit a meal.
+- [Marek Kurańda](https://github.com/mjkuranda): `DELETE /meals/:id` endpoint to delete a meal.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /meals/:id/create` endpoint to confirm adding a new meal.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /meals/:id/edit` endpoint to confirm edition of meal.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /meals/:id/delete` endpoint to permanently delete a meal.
+
 ## [1.15.0] - 2023-09-14
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /users/:login/grant/:capability` endpoint to add new permissions to users by admin user.
