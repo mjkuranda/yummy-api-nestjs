@@ -217,7 +217,11 @@ export class MealService {
             return cachedMeal;
         }
 
-        const meal = await this.mealModel.findById(id) as MealDocument;
+        const meal = await this.mealModel.findOne({
+            _id: id,
+            softAdded: { $exists: false },
+            softDeleted: { $exists: false }
+        }) as MealDocument;
 
         if (!meal) {
             const message = `Cannot find a meal with "${id}" id.`;
@@ -226,8 +230,9 @@ export class MealService {
             throw new NotFoundException(context, message);
         }
 
-        this.loggerService.info(context, `Found meal with "${id}" id.`);
+        this.loggerService.info(context, `Found meal with "${id}" (titled: "${meal.title}") id.`);
         await this.redisService.set(meal, 'meal');
+        this.loggerService.info(context, `Cached a meal with "${id}" (titled: "${meal.title}") id.`);
 
         return meal;
     }
