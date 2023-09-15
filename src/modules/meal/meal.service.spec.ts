@@ -23,7 +23,8 @@ describe('MealService', () => {
         find: jest.fn(),
         findById: jest.fn(),
         updateOne: jest.fn(),
-        replaceOne: jest.fn()
+        replaceOne: jest.fn(),
+        deleteOne: jest.fn()
     };
 
     beforeEach(async () => {
@@ -134,7 +135,7 @@ describe('MealService', () => {
     });
 
     describe('confirmEditing', () => {
-        it('should confirm edited meal and update cache', async () => {
+        it('should confirm editing meal and update cache', async () => {
             const mockId = 'xxx';
             const mockMeal = {
                 _id: mockId,
@@ -170,6 +171,36 @@ describe('MealService', () => {
             expect(result).toBe(mockEditedMeal);
             expect(redisService.set).toHaveBeenCalled();
             expect(redisService.set).toHaveBeenCalledWith(mockEditedMeal, 'meal');
+        });
+    });
+
+    describe('confirmDeleting', () => {
+        it('should confirm deleting meal', async () => {
+            const mockId = 'xxx';
+            const mockMeal = {
+                _id: mockId,
+                title: 'XXX',
+                description: 'Lorem ipsum',
+                author: 'X',
+                ingredients: ['x', 'y', 'z'],
+                softDeleted: true
+            } as any;
+            const mockDeletedMeal = null;
+            const mockUser = {
+                _id: 'uuu',
+                login: 'user',
+                password: 'xxx',
+            } as UserDto;
+
+            jest.spyOn(mongoose, 'isValidObjectId')
+                .mockReturnValueOnce(true);
+            jest.spyOn(mealModel, 'findById')
+                .mockReturnValueOnce(mockMeal)
+                .mockReturnValueOnce(mockDeletedMeal);
+
+            const result = await mealService.confirmDeleting(mockId, mockUser);
+
+            expect(result).toBe(mockDeletedMeal);
         });
     });
 
