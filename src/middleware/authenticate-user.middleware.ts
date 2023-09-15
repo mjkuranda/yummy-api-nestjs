@@ -12,7 +12,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
         const authenticatedUser = await this.authService.getAuthorizedUser(jwt);
 
         req.body = {
-            ...req.body,
+            data: { ...req.body },
             authenticatedUser
         };
 

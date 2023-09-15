@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `GET /meals` returns all meals except meals containing `softDeleted` flag.
 - [Marek Kurańda](https://github.com/mjkuranda): `GET /meals/:id` returns a meal if it does not contain `softDeleted` flag.
 
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): Endpoints request body. Data was put into `data` property.
+
 ## [1.15.0] - 2023-09-14
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /users/:login/grant/:capability` endpoint to add new permissions to users by admin user.

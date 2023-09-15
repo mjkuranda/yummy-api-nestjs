@@ -1,4 +1,6 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, IsOptional, Length } from 'class-validator';
+import { ArrayMinSize, IsArray, IsNotEmpty, IsObject, IsOptional, Length, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { UserDto } from '../user/user.dto';
 
 export class CreateMealDto {
     @IsNotEmpty({ message: 'Meal should have an author' })
@@ -29,8 +31,28 @@ export class CreateMealDto {
     readonly type: string;
 }
 
+export class CreateMealBodyDto {
+    @Type(() => CreateMealDto)
+    @ValidateNested({ each: true })
+    readonly data: CreateMealDto;
+
+    @Type(() => UserDto)
+    @ValidateNested({ each: true })
+    readonly authenticatedUser: UserDto;
+}
+
 export class MealEditDto {
     readonly description?: string;
     readonly imageUrl?: string;
     readonly ingredients?: string[];
+}
+
+export class EditMealBodyDto {
+    @Type(() => MealEditDto)
+    @ValidateNested({ each: true })
+    readonly data: MealEditDto;
+
+    @Type(() => UserDto)
+    @ValidateNested({ each: true })
+    readonly authenticatedUser: UserDto;
 }

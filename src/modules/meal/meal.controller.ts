@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
 import { MealService } from './meal.service';
-import { CreateMealDto, MealEditDto } from './meal.dto';
+import { CreateMealBodyDto, CreateMealDto, EditMealBodyDto, MealEditDto } from './meal.dto';
 
 @Controller('meals')
 export class MealController {
@@ -20,8 +20,10 @@ export class MealController {
 
     @Post('/create')
     @HttpCode(201)
-    public async createMeal(@Body() body: CreateMealDto) {
-        return await this.mealService.create(body);
+    public async createMeal(@Body() body: CreateMealBodyDto) {
+        const { data } = body;
+
+        return await this.mealService.create(data);
     }
 
     @Delete('/:id')
@@ -32,8 +34,10 @@ export class MealController {
 
     @Put('/:id')
     @HttpCode(200)
-    public async updateMeal(@Param('id') id: string, @Body() body: MealEditDto) {
-        return await this.mealService.edit(id, body);
+    public async updateMeal(@Param('id') id: string, @Body() body: EditMealBodyDto) {
+        const { data } = body;
+
+        return await this.mealService.edit(id, data);
     }
 
     @Post('/:id/create')

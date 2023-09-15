@@ -178,15 +178,15 @@ describe('MealService', () => {
                 author: 'X',
                 ingredients: ['x', 'y', 'z'],
                 softEdited: {
-                    _id: mockId,
-                    title: 'XXX',
-                    description: 'Lorem ipsum 2',
-                    author: 'X',
-                    ingredients: ['x']
+                    description: 'Lorem ipsum 2'
                 }
             } as any;
             const mockEditedMeal = {
-                ...mockMeal.softEdited
+                _id: mockId,
+                title: 'XXX',
+                description: 'Lorem ipsum 2',
+                author: 'X',
+                ingredients: ['x', 'y', 'z']
             } as any;
             const mockUser = {
                 _id: 'uuu',
@@ -197,7 +197,8 @@ describe('MealService', () => {
             jest.spyOn(mongoose, 'isValidObjectId')
                 .mockReturnValueOnce(true);
             jest.spyOn(mealModel, 'findById')
-                .mockReturnValueOnce(mockMeal);
+                .mockReturnValueOnce(mockMeal)
+                .mockReturnValueOnce(mockEditedMeal);
 
             const result = await mealService.confirmEditing(mockId, mockUser);
 
