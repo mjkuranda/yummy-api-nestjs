@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): Payload for creating meal endpoint in `README` file.
+- [Marek Kurańda](https://github.com/mjkuranda): Meal unit tests.
+
+### Removed
+- [Marek Kurańda](https://github.com/mjkuranda): Ingredient controller tests.
+
 
 ## [1.16.0] - 2023-09-15
 ### Added

@@ -21,6 +21,7 @@ describe('MealService', () => {
     const mockMealService = {
         create: jest.fn(),
         find: jest.fn(),
+        findOne: jest.fn(),
         findById: jest.fn(),
         updateOne: jest.fn(),
         replaceOne: jest.fn(),
@@ -278,14 +279,19 @@ describe('MealService', () => {
 
         it('should throw an error when meal with provided id not found', async () => {
             const mockId = '64e9f765d4e60ba693641aa1';
+            const mockFilter = {
+                _id: mockId,
+                softAdded: { $exists: false },
+                softDeleted: { $exists: false }
+            };
             const mockCachedMeal = null;
             jest.spyOn(redisService, 'get').mockReturnValueOnce(mockCachedMeal);
-            jest.spyOn(mealModel, 'findById').mockReturnValueOnce(null);
+            jest.spyOn(mealModel, 'findOne').mockReturnValueOnce(null);
 
             await expect(mealService.find(mockId)).rejects.toThrow(NotFoundException);
             expect(redisService.get).toHaveBeenCalled();
             expect(redisService.get).toReturnWith(mockCachedMeal);
-            expect(mealModel.findById).toHaveBeenCalledWith(mockId);
+            expect(mealModel.findOne).toHaveBeenCalledWith(mockFilter);
         });
 
         it('should find a specific meal when cache is empty and save to the cache', async () => {
@@ -295,15 +301,20 @@ describe('MealService', () => {
                 _id: mockId,
                 name: 'Meal name'
             } as any;
+            const mockFilter = {
+                _id: mockId,
+                softAdded: { $exists: false },
+                softDeleted: { $exists: false }
+            };
             jest.spyOn(redisService, 'get').mockReturnValueOnce(mockCachedMeal);
-            jest.spyOn(mealModel, 'findById').mockReturnValueOnce(mockMeal);
+            jest.spyOn(mealModel, 'findOne').mockReturnValueOnce(mockMeal);
 
             const result = await mealService.find(mockId);
 
             expect(result).toBe(mockMeal);
             expect(redisService.get).toHaveBeenCalled();
             expect(redisService.get).toReturnWith(mockCachedMeal);
-            expect(mealModel.findById).toHaveBeenCalledWith(mockId);
+            expect(mealModel.findOne).toHaveBeenCalledWith(mockFilter);
             expect(redisService.set).toHaveBeenCalled();
         });
     });

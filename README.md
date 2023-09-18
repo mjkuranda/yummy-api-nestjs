@@ -93,6 +93,12 @@ To connect with Redis, you need:
 
 ## Development
 You need to change version in `package.json` and add a record to the `CHANGELOG.md`.
+Before creating a pull request, you need to execute following commands:
+```shell
+npm run lint:fix
+npm run test
+npm run test:e2e
+```
 
 To create a new module, you need to use:
 - `nest g mo modules/<module_name>` to create a new module.
