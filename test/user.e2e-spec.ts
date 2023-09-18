@@ -26,7 +26,9 @@ describe('UserController (e2e)', () => {
                 cookies[key] = value;
             });
 
-        return cookies[cookieName];
+        return cookies[cookieName] !== ''
+            ? cookies[cookieName]
+            : undefined;
     };
     const mockUserService = {
         findOne: jest.fn(),
@@ -127,6 +129,17 @@ describe('UserController (e2e)', () => {
                 const jwtCookie = getCookie(res, 'jwt');
 
                 expect(jwtCookie).toBe(mockJwtToken);
+            });
+    });
+
+    it('/users/logout (POST)', () => {
+        return request(app.getHttpServer())
+            .post('/users/logout')
+            .expect(200)
+            .then(res => {
+                const jwtCookie = getCookie(res, 'jwt');
+
+                expect(jwtCookie).toBeUndefined();
             });
     });
 });
