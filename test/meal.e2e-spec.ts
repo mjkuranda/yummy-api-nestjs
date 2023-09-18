@@ -133,4 +133,48 @@ describe('UserController (e2e)', () => {
                 .expect(404);
         });
     });
+
+    describe('/meals/create (POST)', () => {
+        it('should add a new meal when user is logged-in', () => {
+            const mockRequestBody = {
+                title: 'Title',
+                description: 'Lorem ipsum',
+                ingredients: ['123', '456'],
+                type: 'some type'
+            } as any;
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'user',
+                password: 'hashed'
+            } as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+
+            return request(app.getHttpServer())
+                .post('/meals/create')
+                .set('Cookie', ['jwt=token'])
+                .set('Accept', 'application/json')
+                .send(mockRequestBody)
+                .expect(201);
+        });
+
+        it('should throw an error, when user is not logged-in', () => {
+            const mockRequestBody = {
+                title: 'Title',
+                description: 'Lorem ipsum',
+                ingredients: ['123', '456'],
+                type: 'some type'
+            } as any;
+
+            return request(app.getHttpServer())
+                .post('/meals/create')
+                .set('Cookie', [])
+                .set('Accept', 'application/json')
+                .send(mockRequestBody)
+                .expect(400)
+                .expect(res => {
+                    expect(res.body.message).toBe('You are not authorized to execute this action. Please, log in first.');
+                });
+        });
+    });
 });
