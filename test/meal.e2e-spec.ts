@@ -177,4 +177,14 @@ describe('UserController (e2e)', () => {
                 });
         });
     });
+
+    // TODO: PUT /meals/:id
+
+    // TODO: DELETE /meals/:id
+
+    // TODO: POST /meals/:id/create
+
+    // TODO: POST /meals/:id/edit
+
+    // TODO: POST /meals/:id/delete
 });

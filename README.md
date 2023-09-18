@@ -93,7 +93,7 @@ To connect with Redis, you need:
 
 ## Development
 You need to change version in `package.json` and add a record to the `CHANGELOG.md`.
-Before creating a pull request, you need to execute following commands:
+Before creating a pull request, you need to execute following commands, with success result:
 ```shell
 npm run lint:fix
 npm run test
