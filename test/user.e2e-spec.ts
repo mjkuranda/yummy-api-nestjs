@@ -138,7 +138,36 @@ describe('UserController (e2e)', () => {
                 .expect(expectedResult);
         });
 
-        // false when user already owns this permission
+        it('should not grant permission when user already owns this permission', () => {
+            const mockRequestLogin = 'USER';
+            const mockRequestCapability = 'canAdd';
+            const mockAdminUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'XNAME',
+                password: 'hashed',
+                isAdmin: true
+            } as any;
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddc',
+                login: 'some user',
+                password: 'hashed',
+                capabilities: {
+                    [mockRequestCapability]: true
+                }
+            } as any;
+
+            const expectedStatusCode = 200;
+            const expectedResult = 'false';
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
+            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+
+            return request(app.getHttpServer())
+                .post(`/users/${mockRequestLogin}/grant/${mockRequestCapability}`)
+                .set('Cookie', ['jwt=token'])
+                .expect(expectedStatusCode)
+                .expect(expectedResult);
+        });
 
         // throw ForbiddenException when user is not an admin
 
