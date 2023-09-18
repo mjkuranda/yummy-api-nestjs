@@ -10,6 +10,7 @@ import { AppModule } from '../src/app.module';
 import { Model } from 'mongoose';
 import { UserDocument } from '../src/modules/user/user.interface';
 import * as cookieParser from 'cookie-parser';
+import { LoggerService } from '../src/modules/logger/logger.service';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -35,7 +36,9 @@ describe('UserController (e2e)', () => {
     beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
             imports: [AppModule],
-        }).compile();
+        })
+            .overrideProvider(LoggerService).useValue({ info: () => {}, error: () => {} })
+            .compile();
 
         app = moduleRef.createNestApplication();
         app.use(cookieParser());
@@ -169,7 +172,29 @@ describe('UserController (e2e)', () => {
                 .expect(expectedResult);
         });
 
-        // throw ForbiddenException when user is not an admin
+        it('throw ForbiddenException when user is not an admin', () => {
+            const mockAdminUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'XNAME',
+                password: 'hashed',
+            } as any;
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddc',
+                login: 'some user',
+                password: 'hashed'
+            } as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
+            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+
+            return request(app.getHttpServer())
+                .post('/users/some-user/grant/some-capability')
+                .set('Cookie', ['jwt=token'])
+                .expect(403)
+                .then(res => {
+                    expect(res.body.message).toBe(`User "${mockAdminUser.login}" is not authorized to execute this action.`);
+                });
+        });
 
         // throw NotFoundException when user does not exist
     });
