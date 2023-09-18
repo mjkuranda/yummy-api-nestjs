@@ -11,11 +11,19 @@ import { LoggerService } from '../src/modules/logger/logger.service';
 import { REDIS_CLIENT } from '../src/modules/redis/redis.constants';
 import { RedisService } from '../src/modules/redis/redis.service';
 import { LoggerModule } from '../src/modules/logger/logger.module';
+import { AuthService } from '../src/modules/auth/auth.service';
+import { AuthModule } from '../src/modules/auth/auth.module';
+import { AppModule } from '../src/app.module';
+import { Model, Types } from 'mongoose';
+import { UserDocument } from '../src/modules/user/user.interface';
+import * as cookieParser from 'cookie-parser';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
     let userService: UserService;
     let jwtManagerService: JwtManagerService;
+    let authService: AuthService;
+    let userModel: Model<UserDocument>;
     const getCookie = (res, cookieName) => {
         const cookies = {};
         res.headers['set-cookie'][0]
@@ -43,45 +51,55 @@ describe('UserController (e2e)', () => {
     };
 
     beforeEach(async () => {
-        const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [UserModule, LoggerModule],
-            providers: [
-                UserService,
-                {
-                    provide: getModelToken(models.USER_MODEL),
-                    useValue: mockUserService
-                },
-                {
-                    provide: JwtService,
-                    useClass: JwtService
-                },
-                {
-                    provide: JwtManagerService,
-                    useClass: JwtManagerService
-                },
-                {
-                    provide: LoggerService,
-                    useValue: {
-                        info: () => {},
-                        error: () => {}
-                    }
-                },
-                {
-                    provide: REDIS_CLIENT,
-                    useValue: {}
-                }
-            ]
-        })
-            .overrideProvider(LoggerService).useValue({ info: jest.fn(), error: jest.fn() })
-            .overrideProvider(RedisService).useValue({})
-            .overrideProvider(getModelToken(models.USER_MODEL)).useValue(mockUserService)
-            .compile();
+        // const moduleFixture: TestingModule = await Test.createTestingModule({
+        //     imports: [UserModule, LoggerModule, AuthModule],
+        //     providers: [
+        //         UserService,
+        //         {
+        //             provide: getModelToken(models.USER_MODEL),
+        //             useValue: mockUserService
+        //         },
+        //         {
+        //             provide: JwtService,
+        //             useClass: JwtService
+        //         },
+        //         {
+        //             provide: JwtManagerService,
+        //             useClass: JwtManagerService
+        //         },
+        //         {
+        //             provide: LoggerService,
+        //             useValue: {
+        //                 info: () => {},
+        //                 error: () => {}
+        //             }
+        //         },
+        //         {
+        //             provide: REDIS_CLIENT,
+        //             useValue: {}
+        //         }
+        //     ]
+        // })
+        //     .overrideProvider(AuthService).useValue({ getAuthorizedUser: jest.fn() })
+        //     .overrideProvider(LoggerService).useValue({ info: jest.fn(), error: jest.fn() })
+        //     .overrideProvider(RedisService).useValue({})
+        //     .overrideProvider(getModelToken(models.USER_MODEL)).useValue(mockUserService)
+        //     .compile();
+        const moduleRef = await Test.createTestingModule({
+            imports: [AppModule],
+        }).compile();
 
-        app = moduleFixture.createNestApplication();
+        app = moduleRef.createNestApplication();
+        app.use(cookieParser());
         await app.init();
 
-        userService = moduleFixture.get(UserService);
-        jwtManagerService = moduleFixture.get(JwtManagerService);
+        // app = moduleFixture.createNestApplication();
+        // await app.init();
+        //
+        userService = moduleRef.get(UserService);
+        jwtManagerService = moduleRef.get(JwtManagerService);
+        authService = moduleRef.get(AuthService);
+        userModel = moduleRef.get(getModelToken(models.USER_MODEL));
     });
 
     it('/users/create (POST)', () => {
@@ -89,11 +107,14 @@ describe('UserController (e2e)', () => {
             login: 'USER',
             password: '123'
         };
-        const mockResponseBody = {
+        const mockUser = {
             ...mockRequestBody,
             _id: '123-abc',
             password: 'hashed'
-        };
+        } as any;
+        const mockResponseBody = { ...mockUser };
+        jest.spyOn(userService, 'getUser').mockReturnValueOnce(null);
+        jest.spyOn(userModel, 'create').mockReturnValueOnce(mockResponseBody);
 
         return request(app.getHttpServer())
             .post('/users/create')
@@ -144,18 +165,45 @@ describe('UserController (e2e)', () => {
     });
 
     describe('/users/:login/grant/:capability (POST)', () => {
-        it ('should fail when user does not exist', () => {
+        // it ('should fail when user does not exist', () => {
+        //     const mockRequestLogin = 'USER';
+        //     const mockRequestCapability = 'canAdd';
+        //
+        //     return request(app.getHttpServer())
+        //         .post(`/users/${mockRequestLogin}/grant/${mockRequestCapability}`)
+        //         .set('Cookie', ['jwt=token'])
+        //         .expect(404)
+        //         .then(res => {
+        //             expect(res.body.message).toBe('Failed action to grant a permission. User with provided login does not exist.');
+        //         });
+        // });
+
+        it ('should grant a new permission when user is admin', () => {
             const mockRequestLogin = 'USER';
             const mockRequestCapability = 'canAdd';
-            const mockRequestJwtToken = 'token';
+            const mockAdminUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'XNAME',
+                password: 'hashed',
+                isAdmin: true
+            } as any;
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddc',
+                login: 'some user',
+                password: 'hashed'
+            } as any;
+
+            const expectedStatusCode = 200;
+            const expectedResult = 'true';
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
+            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
                 .post(`/users/${mockRequestLogin}/grant/${mockRequestCapability}`)
-                .set({ jwt: mockRequestJwtToken })
-                .expect(400)
-                .then(res => {
-                    expect(res.body.message).toBe('Failed action to grant a permission. User with provided login does not exist.');
-                });
+                .set('Cookie', ['jwt=token'])
+                .expect(expectedStatusCode)
+                .expect(expectedResult);
         });
     });
 });

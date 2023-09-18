@@ -32,6 +32,8 @@ export class UserController {
         const forUser = await this.userService.getUser(login) as unknown as UserDto;
         const { authenticatedUser } = body;
 
+        console.log(forUser, authenticatedUser);
+
         return await this.userService.grantPermission(forUser, authenticatedUser, capability);
     }
 
