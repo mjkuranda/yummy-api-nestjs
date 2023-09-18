@@ -14,6 +14,20 @@ import { LoggerModule } from '../src/modules/logger/logger.module';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
+    let userService: UserService;
+    let jwtManagerService: JwtManagerService;
+    const getCookie = (res, cookieName) => {
+        const cookies = {};
+        res.headers['set-cookie'][0]
+            .split('; ')
+            .forEach(cookie => {
+                const [key, value] = cookie.split('=');
+
+                cookies[key] = value;
+            });
+
+        return cookies[cookieName];
+    };
     const mockUserService = {
         findOne: jest.fn(),
         getUser: jest.fn(),
@@ -63,6 +77,9 @@ describe('UserController (e2e)', () => {
 
         app = moduleFixture.createNestApplication();
         await app.init();
+
+        userService = moduleFixture.get(UserService);
+        jwtManagerService = moduleFixture.get(JwtManagerService);
     });
 
     it('/users/create (POST)', () => {
@@ -78,8 +95,38 @@ describe('UserController (e2e)', () => {
 
         return request(app.getHttpServer())
             .post('/users/create')
+            .set('Accept', 'application/json')
             .send(mockRequestBody)
             .expect(201)
             .expect(mockResponseBody);
+    });
+
+    it('/users/login (POST)', () => {
+        const mockRequestBody = {
+            login: 'USER',
+            password: '123'
+        };
+        const mockUser = {
+            ...mockRequestBody,
+            _id: '123-abc',
+            password: 'hashed'
+        } as any;
+        const mockJwtToken = 'token';
+        const mockResponseBody = { ...mockUser };
+        jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+        jest.spyOn(userService, 'areSameHashedPasswords').mockReturnValueOnce(Promise.resolve(true));
+        jest.spyOn(jwtManagerService, 'encodeUserData').mockReturnValueOnce(Promise.resolve(mockJwtToken));
+
+        return request(app.getHttpServer())
+            .post('/users/login')
+            .set('Accept', 'application/json')
+            .send(mockRequestBody)
+            .expect(200)
+            .expect(mockResponseBody)
+            .then(res => {
+                const jwtCookie = getCookie(res, 'jwt');
+
+                expect(jwtCookie).toBe(mockJwtToken);
+            });
     });
 });
