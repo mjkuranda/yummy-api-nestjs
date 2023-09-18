@@ -142,4 +142,20 @@ describe('UserController (e2e)', () => {
                 expect(jwtCookie).toBeUndefined();
             });
     });
+
+    describe('/users/:login/grant/:capability (POST)', () => {
+        it ('should fail when user does not exist', () => {
+            const mockRequestLogin = 'USER';
+            const mockRequestCapability = 'canAdd';
+            const mockRequestJwtToken = 'token';
+
+            return request(app.getHttpServer())
+                .post(`/users/${mockRequestLogin}/grant/${mockRequestCapability}`)
+                .set({ jwt: mockRequestJwtToken })
+                .expect(400)
+                .then(res => {
+                    expect(res.body.message).toBe('Failed action to grant a permission. User with provided login does not exist.');
+                });
+        });
+    });
 });
