@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.17.0] - 2023-09-18
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): E2E tests for `UserModule`.
+- [Marek Kurańda](https://github.com/mjkuranda): E2E tests for `MealModule`.
+- [Marek Kurańda](https://github.com/mjkuranda): Missing endpoints in `README` file.
+
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): Payload for creating meal endpoint in `README` file.
 
 ## [1.16.0] - 2023-09-15
 ### Added
