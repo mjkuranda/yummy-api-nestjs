@@ -66,10 +66,20 @@ describe('UserController (e2e)', () => {
     });
 
     it('/users/create (POST)', () => {
+        const mockRequestBody = {
+            login: 'USER',
+            password: '123'
+        };
+        const mockResponseBody = {
+            ...mockRequestBody,
+            _id: '123-abc',
+            password: 'hashed'
+        };
+
         return request(app.getHttpServer())
             .post('/users/create')
-            .send({ login: 'USER', password: '123' })
+            .send(mockRequestBody)
             .expect(201)
-            .expect('Hello World!');
+            .expect(mockResponseBody);
     });
 });
