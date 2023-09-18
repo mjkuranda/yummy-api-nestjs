@@ -131,7 +131,7 @@ export class UserService {
             const message = 'Failed action to deny a permission. User with provided login does not exist.';
             this.loggerService.error(context, message);
 
-            throw new BadRequestException(context, message);
+            throw new NotFoundException(context, message);
         }
 
         if (!user.capabilities || !user.capabilities[capability]) {

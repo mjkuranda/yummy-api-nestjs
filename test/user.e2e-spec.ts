@@ -220,4 +220,96 @@ describe('UserController (e2e)', () => {
                 .expect(404);
         });
     });
+
+    describe('/users/:login/deny/:capability (POST)', () => {
+        it ('should deny a permission when user is admin', () => {
+            const mockAdminUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'XNAME',
+                password: 'hashed',
+                isAdmin: true
+            } as any;
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddc',
+                login: 'some-user',
+                password: 'hashed',
+                capabilities: {
+                    canAdd: true
+                }
+            } as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
+            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+
+            return request(app.getHttpServer())
+                .post('/users/some-user/deny/canAdd')
+                .set('Cookie', ['jwt=token'])
+                .expect(200)
+                .expect('true');
+        });
+
+        it('should not deny permission when user does not own this permission', () => {
+            const mockAdminUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'XNAME',
+                password: 'hashed',
+                isAdmin: true
+            } as any;
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddc',
+                login: 'some user',
+                password: 'hashed'
+            } as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
+            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+
+            return request(app.getHttpServer())
+                .post('/users/some-user/deny/some-capability')
+                .set('Cookie', ['jwt=token'])
+                .expect(200)
+                .expect('false');
+        });
+
+        it('throw ForbiddenException when user is not an admin', () => {
+            const mockAdminUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'XNAME',
+                password: 'hashed',
+            } as any;
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddc',
+                login: 'some user',
+                password: 'hashed'
+            } as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
+            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+
+            return request(app.getHttpServer())
+                .post('/users/some-user/deny/some-capability')
+                .set('Cookie', ['jwt=token'])
+                .expect(403)
+                .then(res => {
+                    expect(res.body.message).toBe(`User "${mockAdminUser.login}" is not authorized to execute this action.`);
+                });
+        });
+
+        it('throw NotFoundException when user does not exist', () => {
+            const mockAdminUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'XNAME',
+                password: 'hashed',
+                isAdmin: true
+            } as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
+            jest.spyOn(userService, 'getUser').mockReturnValueOnce(null);
+
+            return request(app.getHttpServer())
+                .post('/users/some-user/deny/some-capability')
+                .set('Cookie', ['jwt=token'])
+                .expect(404);
+        });
+    });
 });
