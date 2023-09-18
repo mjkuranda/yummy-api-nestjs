@@ -215,7 +215,7 @@ describe('UserService', () => {
             const mockUser = null;
             const capability = 'canAdd';
 
-            await expect(userService.grantPermission(mockUser, mockAdminUser, capability)).rejects.toThrow(BadRequestException);
+            await expect(userService.grantPermission(mockUser, mockAdminUser, capability)).rejects.toThrow(NotFoundException);
         });
     });
 

@@ -32,12 +32,19 @@ describe('UserController (e2e)', () => {
             ? cookies[cookieName]
             : undefined;
     };
+    const mockUserModelProvider = {
+        create: () => {},
+        updateOne: () => {},
+        find: () => {},
+        findById: () => {}
+    };
 
     beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
             imports: [AppModule],
         })
             .overrideProvider(LoggerService).useValue({ info: () => {}, error: () => {} })
+            .overrideProvider(getModelToken(models.USER_MODEL)).useValue(mockUserModelProvider)
             .compile();
 
         app = moduleRef.createNestApplication();
@@ -196,6 +203,21 @@ describe('UserController (e2e)', () => {
                 });
         });
 
-        // throw NotFoundException when user does not exist
+        it('throw NotFoundException when user does not exist', () => {
+            const mockAdminUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'XNAME',
+                password: 'hashed',
+                isAdmin: true
+            } as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
+            jest.spyOn(userService, 'getUser').mockReturnValueOnce(null);
+
+            return request(app.getHttpServer())
+                .post('/users/some-user/grant/some-capability')
+                .set('Cookie', ['jwt=token'])
+                .expect(404);
+        });
     });
 });
