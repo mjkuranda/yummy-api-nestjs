@@ -216,7 +216,7 @@ describe('UserController (e2e)', () => {
             } as any;
 
             return request(app.getHttpServer())
-                .post('/meals/635981f6e40f61599e839ddf')
+                .put('/meals/635981f6e40f61599e839ddf')
                 .set('Cookie', [])
                 .set('Accept', 'application/json')
                 .send(mockRequestBody)
@@ -227,7 +227,34 @@ describe('UserController (e2e)', () => {
         });
     });
 
-    // TODO: DELETE /meals/:id
+    describe('/meals/:id (DELETE)', () => {
+        it('should mark as soft-deleted when user is logged-in', () => {
+            const mockUser = {
+                _id: '635981f6e40f61599e839aaa',
+                login: 'user',
+                password: 'hashed'
+            } as any;
+            const mockDeletedMeal = {} as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(mealService, 'delete').mockReturnValueOnce(mockDeletedMeal);
+
+            return request(app.getHttpServer())
+                .delete('/meals/635981f6e40f61599e839ddf')
+                .set('Cookie', ['jwt=token'])
+                .expect(204);
+        });
+
+        it('should throw an error, when user is not logged-in', () => {
+            return request(app.getHttpServer())
+                .delete('/meals/635981f6e40f61599e839ddf')
+                .set('Cookie', [])
+                .expect(400)
+                .expect(res => {
+                    expect(res.body.message).toBe('You are not authorized to execute this action. Please, log in first.');
+                });
+        });
+    });
 
     // TODO: POST /meals/:id/create
 
