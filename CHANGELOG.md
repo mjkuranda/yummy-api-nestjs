@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.17.0] - 2023-09-18
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): E2E tests for `UserModule`.
+- [Marek Kurańda](https://github.com/mjkuranda): E2E tests for `MealModule`.
+- [Marek Kurańda](https://github.com/mjkuranda): Missing endpoints in `README` file.
+- [Marek Kurańda](https://github.com/mjkuranda): ESLint rule - `arrow-spacing` before and after arrow function.
+
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): Payload for creating meal endpoint in `README` file.
+- [Marek Kurańda](https://github.com/mjkuranda): Meal unit tests.
+
+### Removed
+- [Marek Kurańda](https://github.com/mjkuranda): Ingredient controller tests.
+
+
 ## [1.16.0] - 2023-09-15
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `PUT /meals/:id` endpoint to edit a meal.
