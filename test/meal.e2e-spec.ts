@@ -256,7 +256,65 @@ describe('UserController (e2e)', () => {
         });
     });
 
-    // TODO: POST /meals/:id/create
+    describe('/meals/:id/create (POST)', () => {
+        it('should confirm adding a new meal when user is an admin', () => {
+            const mockUser = {
+                _id: '635981f6e40f61599e839aaa',
+                login: 'user',
+                password: 'hashed',
+                isAdmin: true
+            } as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(mealService, 'confirmCreating').mockReturnValueOnce({} as any);
+
+            return request(app.getHttpServer())
+                .post('/meals/635981f6e40f61599e839aaa/create')
+                .set('Cookie', ['jwt=token'])
+                .expect(200);
+        });
+
+        it('should confirm adding a new meal when user has canAdd capability', () => {
+            const mockUser = {
+                _id: '635981f6e40f61599e839aaa',
+                login: 'user',
+                password: 'hashed',
+                capabilities: {
+                    canAdd: true
+                }
+            } as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(mealService, 'confirmCreating').mockReturnValueOnce({} as any);
+
+            return request(app.getHttpServer())
+                .post('/meals/635981f6e40f61599e839aaa/create')
+                .set('Cookie', ['jwt=token'])
+                .expect(200);
+        });
+
+        it('should fail when user has not sufficient capabilities', () => {
+            const mockUser = {
+                _id: '635981f6e40f61599e839aaa',
+                login: 'user',
+                password: 'hashed'
+            } as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+
+            return request(app.getHttpServer())
+                .post('/meals/635981f6e40f61599e839aaa/create')
+                .set('Cookie', ['jwt=token'])
+                .expect(403);
+        });
+
+        it('should fail when you are not logged-in', () => {
+            return request(app.getHttpServer())
+                .post('/meals/635981f6e40f61599e839aaa/create')
+                .set('Cookie', [])
+                .expect(400);
+        });
+    });
 
     // TODO: POST /meals/:id/edit
 
