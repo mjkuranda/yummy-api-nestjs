@@ -9,6 +9,7 @@ Technologies:
 * JWT
 * Jest
 * Redis
+* SuperTest
 
 ## API
 * `GET /meals` - returns all meals from the database

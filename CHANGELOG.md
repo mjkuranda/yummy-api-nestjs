@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): E2E tests for `UserModule`.
 - [Marek Kurańda](https://github.com/mjkuranda): E2E tests for `MealModule`.
 - [Marek Kurańda](https://github.com/mjkuranda): Missing endpoints in `README` file.
+- [Marek Kurańda](https://github.com/mjkuranda): ESLint rule - `arrow-spacing` before and after arrow function.
 
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): Payload for creating meal endpoint in `README` file.

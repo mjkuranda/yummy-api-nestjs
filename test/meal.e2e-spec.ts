@@ -12,12 +12,14 @@ import * as cookieParser from 'cookie-parser';
 import * as request from 'supertest';
 import { MealDocument } from '../src/modules/meal/meal.interface';
 import { RedisModule } from '../src/modules/redis/redis.module';
+import { MealService } from '../src/modules/meal/meal.service';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
     let userService: UserService;
     let jwtManagerService: JwtManagerService;
     let authService: AuthService;
+    let mealService: MealService;
     let mealModel: Model<MealDocument>;
     const getCookie = (res, cookieName) => {
         const cookies = {};
@@ -66,6 +68,7 @@ describe('UserController (e2e)', () => {
         userService = moduleRef.get(UserService);
         jwtManagerService = moduleRef.get(JwtManagerService);
         authService = moduleRef.get(AuthService);
+        mealService = moduleRef.get(MealService);
         mealModel = moduleRef.get(getModelToken(models.MEAL_MODEL));
     });
 
@@ -178,7 +181,51 @@ describe('UserController (e2e)', () => {
         });
     });
 
-    // TODO: PUT /meals/:id
+    describe('/meals/:id (PUT)', () => {
+        it('should introduce edition when user is logged-in', () => {
+            const mockRequestBody = {
+                description: 'New lorem ipsum'
+            } as any;
+            const mockEditedMeal = {
+                description: mockRequestBody.description,
+                title: 'Abc',
+                ingredients: ['xxx'],
+                type: 'Some type'
+            } as any;
+            const mockUser = {
+                _id: '635981f6e40f61599e839aaa',
+                login: 'user',
+                password: 'hashed'
+            } as any;
+
+            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(mealService, 'edit').mockReturnValueOnce(mockEditedMeal);
+
+            return request(app.getHttpServer())
+                .put('/meals/635981f6e40f61599e839ddf')
+                .set('Cookie', ['jwt=token'])
+                .set('Accept', 'application/json')
+                .send(mockRequestBody)
+                .expect(200)
+                .expect(mockEditedMeal);
+        });
+
+        it('should throw an error, when user is not logged-in', () => {
+            const mockRequestBody = {
+                description: 'New lorem ipsum',
+            } as any;
+
+            return request(app.getHttpServer())
+                .post('/meals/635981f6e40f61599e839ddf')
+                .set('Cookie', [])
+                .set('Accept', 'application/json')
+                .send(mockRequestBody)
+                .expect(400)
+                .expect(res => {
+                    expect(res.body.message).toBe('You are not authorized to execute this action. Please, log in first.');
+                });
+        });
+    });
 
     // TODO: DELETE /meals/:id
 
