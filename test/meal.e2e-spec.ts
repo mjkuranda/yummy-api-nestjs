@@ -1,6 +1,4 @@
 import { INestApplication } from '@nestjs/common';
-import { UserService } from '../src/modules/user/user.service';
-import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
 import { AuthService } from '../src/modules/auth/auth.service';
 import { Model } from 'mongoose';
 import { Test } from '@nestjs/testing';
@@ -16,8 +14,6 @@ import { MealService } from '../src/modules/meal/meal.service';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
-    let userService: UserService;
-    let jwtManagerService: JwtManagerService;
     let authService: AuthService;
     let mealService: MealService;
     let mealModel: Model<MealDocument>;
@@ -65,8 +61,6 @@ describe('UserController (e2e)', () => {
         app.use(cookieParser());
         await app.init();
 
-        userService = moduleRef.get(UserService);
-        jwtManagerService = moduleRef.get(JwtManagerService);
         authService = moduleRef.get(AuthService);
         mealService = moduleRef.get(MealService);
         mealModel = moduleRef.get(getModelToken(models.MEAL_MODEL));
