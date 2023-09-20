@@ -11,6 +11,7 @@ import { LoggerService } from '../logger/logger.service';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { Redis } from 'ioredis';
 import { CapabilityType } from './user.types';
+import { MailManagerService } from '../mail-manager/mail-manager.service';
 
 @Injectable()
 export class UserService {
@@ -19,7 +20,8 @@ export class UserService {
         @InjectModel(models.USER_MODEL) private userModel: Model<UserDocument>,
         @Inject('REDIS_CLIENT') private readonly redis: Redis,
         private readonly jwtManagerService: JwtManagerService,
-        private readonly loggerService: LoggerService
+        private readonly loggerService: LoggerService,
+        private readonly mailManagerService: MailManagerService
     ) {}
 
     async getUser(login: string): Promise<UserDocument> {
@@ -69,13 +71,14 @@ export class UserService {
             throw new BadRequestException(context, message);
         }
 
+        await this.mailManagerService.sendVerificationMail(createUserDto.email);
         const hashedPassword = await this.getHashedPassword(createUserDto.password);
-        const newUser = await this.userModel.create({
-            login: createUserDto.login,
-            password: hashedPassword
-        }) as UserDocument;
+        // const newUser = await this.userModel.create({
+        //     login: createUserDto.login,
+        //     password: hashedPassword
+        // }) as UserDocument;
+        const newUser = { login: '', _id: 'x' } as UserDocument;
         const message = `Created user "${newUser.login}" with id "${newUser._id}"`;
-
         this.loggerService.info(context, message);
 
         return newUser;

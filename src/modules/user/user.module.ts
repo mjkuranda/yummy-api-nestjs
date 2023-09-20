@@ -6,6 +6,7 @@ import { models } from '../../constants/models.constant';
 import { UserSchema } from './user.schema';
 import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
 import { RedisModule } from '../redis/redis.module';
+import { MailManagerModule } from '../mail-manager/mail-manager.module';
 
 @Module({
     imports: [
@@ -13,7 +14,8 @@ import { RedisModule } from '../redis/redis.module';
             { name: models.USER_MODEL, schema: UserSchema },
         ]),
         JwtManagerModule,
-        RedisModule
+        RedisModule,
+        MailManagerModule
     ],
     controllers: [UserController],
     providers: [UserService],
