@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.18.0] - 2023-09-20
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): connection to the MSA and sending mails capability.
-- [Marek Kurańda](https://github.com/mjkuranda): `verified` property to `UserModel` defining time, when user confirm email, provided value as timestamp.
+- [Marek Kurańda](https://github.com/mjkuranda): user action model that contains info about action and what for user.
+- [Marek Kurańda](https://github.com/mjkuranda): `activated` property to `UserModel` defining time, when user confirm email, provided value as timestamp.
 
 ## [1.17.0] - 2023-09-18
 ### Added

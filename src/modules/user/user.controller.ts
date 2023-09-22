@@ -43,4 +43,10 @@ export class UserController {
 
         return await this.userService.denyPermission(forUser, authenticatedUser, capability);
     }
+
+    @Post('/activate/:userActionId')
+    @HttpCode(200)
+    public async activate(@Param('userActionId') userActionId: string) {
+        return await this.userService.activate(userActionId);
+    }
 }

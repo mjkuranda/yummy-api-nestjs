@@ -14,6 +14,7 @@ import { REDIS_CLIENT } from '../redis/redis.constants';
 import { CapabilityType } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserActionDocument } from '../../schemas/user-action.document';
+import * as mongoose from 'mongoose';
 
 describe('UserService', () => {
     let userService: UserService;
@@ -29,6 +30,7 @@ describe('UserService', () => {
     } as any as UserDocument;
 
     const mockUserService = {
+        findById: jest.fn(),
         findOne: jest.fn(),
         getUser: jest.fn(),
         areSameHashedPasswords: jest.fn(),
@@ -37,7 +39,9 @@ describe('UserService', () => {
     };
 
     const mockUserActionModel = {
-        create: jest.fn()
+        create: jest.fn(),
+        findById: jest.fn(),
+        deleteOne: jest.fn()
     };
 
     beforeEach(async () => {
@@ -307,6 +311,87 @@ describe('UserService', () => {
             const capability = 'canAdd';
 
             await expect(userService.denyPermission(mockUser, mockAdminUser, capability)).rejects.toThrow(NotFoundException);
+        });
+    });
+
+    describe('activate', () => {
+        it('should fail when activation token is invalid', async () => {
+            const mockInvalidId = 'invalid id';
+
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(false);
+
+            await expect(userService.activate(mockInvalidId)).rejects.toThrow(BadRequestException);
+        });
+
+        it('should fail when action for token has not found', async () => {
+            const mockValidId = 'some valid token';
+
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
+            jest.spyOn(userActionModel, 'findById').mockReturnValueOnce(null);
+
+            await expect(userService.activate(mockValidId)).rejects.toThrow(NotFoundException);
+        });
+
+        it('should fail when found action but user not found', async () => {
+            const mockValidId = 'some valid token';
+            const mockUserAction = {
+                _id: mockValidId,
+                userId: 'some user id',
+                type: 'activate'
+            } as any;
+
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
+            jest.spyOn(userActionModel, 'findById').mockReturnValueOnce(mockUserAction);
+            jest.spyOn(userModel, 'findById').mockReturnValueOnce(null);
+
+            await expect(userService.activate(mockValidId)).rejects.toThrow(BadRequestException);
+        });
+
+        it('should fail when user is already activated', async () => {
+            const mockValidId = 'some valid token';
+            const mockUserAction = {
+                _id: mockValidId,
+                userId: 'some user id',
+                type: 'activate'
+            } as any;
+            const mockUser = {
+                _id: mockUserAction.userId,
+                email: 'xxx',
+                login: 'x',
+                pass: 'hashed',
+                activated: 1
+            } as any;
+
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
+            jest.spyOn(userActionModel, 'findById').mockReturnValueOnce(mockUserAction);
+            jest.spyOn(userModel, 'findById').mockReturnValueOnce(mockUser);
+
+            const result = await userService.activate(mockValidId);
+
+            expect(result).toBeUndefined();
+        });
+
+        it('should activate a user', async () => {
+            const mockValidId = 'some valid token';
+            const mockUserAction = {
+                _id: mockValidId,
+                userId: 'some user id',
+                type: 'activate'
+            } as any;
+            const mockUser = {
+                _id: mockUserAction.userId,
+                email: 'xxx',
+                login: 'x',
+                pass: 'hashed'
+            } as any;
+
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
+            jest.spyOn(userActionModel, 'findById').mockReturnValueOnce(mockUserAction);
+            jest.spyOn(userModel, 'findById').mockReturnValueOnce(mockUser);
+
+            const result = await userService.activate(mockValidId);
+
+            expect(result).toBeUndefined();
         });
     });
 });

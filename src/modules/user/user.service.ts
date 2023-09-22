@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { UserDocument } from './user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { LoggerService } from '../logger/logger.service';
@@ -166,5 +166,50 @@ export class UserService {
         this.loggerService.info(context, `User "${byUser.login}" has denied permission "${capability}" to "${user.login}" user.`);
 
         return true;
+    }
+
+    async activate(userActionId: string): Promise<void> {
+        const context = 'UserService/activate';
+
+        if (!isValidObjectId(userActionId)) {
+            const message = 'Invalid activation token.';
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
+        const userAction = await this.userActionModel.findById(userActionId) as UserActionDocument;
+
+        if (!userAction) {
+            const message = `Not found any request with "${userActionId}" activation token.`;
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        const user = await this.userModel.findById(userAction.userId) as UserDocument;
+
+        if (!user) {
+            const message = `User with id "${userAction.userId}" does not exist, reported by "${userActionId}" request token for activation.`;
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
+        if (user.activated) {
+            const message = `User "${user._id}" has already activated.`;
+            this.loggerService.info(context, message);
+            await this.userActionModel.deleteOne({ _id: userActionId });
+
+            return;
+        }
+
+        await this.userActionModel.deleteOne({ _id: userActionId });
+        await this.userModel.updateOne({ _id: user._id }, {
+            $set: {
+                activated: new Date().getTime()
+            }
+        });
+        this.loggerService.info(context, `User "${user._id}" has been successfully activated!`);
     }
 }

@@ -314,4 +314,14 @@ describe('UserController (e2e)', () => {
                 .expect(404);
         });
     });
+
+    describe('/users/activate/:userActionId (POST)', () => {
+        it('should activate user', () => {
+            jest.spyOn(userService, 'activate').mockResolvedValueOnce(undefined);
+
+            return request(app.getHttpServer())
+                .post('/users/activate/635981f6e40f61599e839aaa')
+                .expect(200);
+        });
+    });
 });
