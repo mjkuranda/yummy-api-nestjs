@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `space-after-keywords` ESLint rule set to off.
 - [Marek Kurańda](https://github.com/mjkuranda): `no-explicit-any` ESLint rule set to off.
 
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): Only activated users can log in.
+
 ## [1.17.0] - 2023-09-18
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): E2E tests for `UserModule`.

@@ -13,6 +13,7 @@ import { Redis } from 'ioredis';
 import { CapabilityType } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserActionDocument } from '../../schemas/user-action.document';
+import { ForbiddenException } from '../../exceptions/forbidden-exception';
 
 @Injectable()
 export class UserService {
@@ -42,8 +43,11 @@ export class UserService {
             throw new NotFoundException(context, message);
         }
 
-        if (true) {
+        if (!user.activated) {
+            const message = `User "${user.login}" is not a valid account. You need to activate its first.`;
+            this.loggerService.error(context, message);
 
+            throw new ForbiddenException(context, message);
         }
 
         if (!await this.areSameHashedPasswords(password, user.password)) {

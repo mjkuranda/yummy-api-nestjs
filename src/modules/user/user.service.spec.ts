@@ -15,6 +15,7 @@ import { CapabilityType } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserActionDocument } from '../../schemas/user-action.document';
 import * as mongoose from 'mongoose';
+import { ForbiddenException } from '../../exceptions/forbidden-exception';
 
 describe('UserService', () => {
     let userService: UserService;
@@ -26,7 +27,8 @@ describe('UserService', () => {
     const mockUser = {
         email: 'xxx',
         login: 'Aaa',
-        password: 'hashed password'
+        password: 'hashed password',
+        activated: 1
     } as any as UserDocument;
 
     const mockUserService = {
@@ -144,6 +146,21 @@ describe('UserService', () => {
             expect(result).toBe(mockUser);
         });
 
+        it('should throw an error when user has not activated account', async () => {
+            const mockCookie = 'some.jwt.cookie';
+            const mockInactivatedUser = {
+                email: 'xxx',
+                login: 'Aaa',
+                password: 'hashed password'
+            } as any as UserDocument;
+
+            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(mockInactivatedUser);
+            jest.spyOn(userService, 'areSameHashedPasswords').mockResolvedValueOnce(true);
+            jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
+
+            await expect(userService.loginUser(mockUserDto, mockRes)).rejects.toThrow(ForbiddenException);
+        });
+
         it('should throw an error when user does not exist', async () => {
             jest.spyOn(userService, 'getUser').mockResolvedValueOnce(null);
 
@@ -153,7 +170,8 @@ describe('UserService', () => {
         it('should throw an error when user found but passwords do not match', async () => {
             mockUserDto = {
                 ...mockUserDto,
-                password: '456'
+                password: '456',
+                activated: 1
             };
 
             jest.spyOn(userService, 'getUser').mockResolvedValueOnce(mockUser);

@@ -89,7 +89,9 @@ describe('UserController (e2e)', () => {
         const mockUser = {
             ...mockRequestBody,
             _id: '123-abc',
-            password: 'hashed'
+            email: 'some email',
+            password: 'hashed',
+            activated: 1
         } as any;
         const mockJwtToken = 'token';
         const mockResponseBody = { ...mockUser };
