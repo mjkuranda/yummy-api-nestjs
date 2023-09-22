@@ -1,4 +1,4 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, IsObject, IsOptional, Length, ValidateNested } from 'class-validator';
+import { ArrayMinSize, IsArray, IsNotEmpty, IsOptional, Length, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UserDto } from '../user/user.dto';
 

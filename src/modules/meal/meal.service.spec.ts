@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
-import { isValidObjectId, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';

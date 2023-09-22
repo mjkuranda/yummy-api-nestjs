@@ -6,14 +6,18 @@ import { models } from '../../constants/models.constant';
 import { UserSchema } from './user.schema';
 import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
 import { RedisModule } from '../redis/redis.module';
+import { MailManagerModule } from '../mail-manager/mail-manager.module';
+import { UserActionSchema } from '../../schemas/user-action.schema';
 
 @Module({
     imports: [
         MongooseModule.forFeature([
             { name: models.USER_MODEL, schema: UserSchema },
+            { name: models.USER_ACTION_MODEL, schema: UserActionSchema }
         ]),
         JwtManagerModule,
-        RedisModule
+        RedisModule,
+        MailManagerModule
     ],
     controllers: [UserController],
     providers: [UserService],

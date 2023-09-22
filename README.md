@@ -56,13 +56,13 @@ Technologies:
 * `POST /users/create` - register a new user. You need to provide following data:
 ```json
 {
+  "email": "email.name@domain.com",
   "login": "userName",
   "password": "123"
 }
 ```
 
-* `POST /users/login` - log in a user. You need to provide following data:
-
+* `POST /users/login` - log in a user. Only activated users can log in. You need to provide following data:
 ```json
 {
   "login": "userName",
@@ -75,6 +75,8 @@ Technologies:
 * `POST /users/:login/grant/:capability` - grants a new permission to a user by admin. You need to have `jwt` token (you need to be logged-in) and you are an admin. `login` is user login whom you want to grant a permission. `capability` is value one of `canAdd`, `canEdit`, `canRemove`.
 
 * `POST /users/:login/deny/:capability` - denies a permission to a user by admin. You need to have `jwt` token (you need to be logged-in) and you are an admin. `login` is user login whom you want to deny a permission. `capability` is value one of `canAdd`, `canEdit`, `canRemove`.
+
+* `POST /users/activate/:userActionId` - activates a user. `userActionId` is activation code, sent in the mail message.
 
 ## Environmental variables
 
@@ -91,6 +93,12 @@ However, if you want to connect with MongoDB Atlas, you need these variables:
 To connect with Redis, you need:
 - `REDIS_HOSTNAME` (default is `localhost`)
 - `REDIS_PORT` (default is `6379`)
+
+To connect with MSA, you need:
+- `MAIL_USER` (mail address)
+- `MAIL_PASS` (password for mail address)
+- `MAIL_HOST` (smtp address)
+- `MAIL_PORT` (smtp port)
 
 ## Development
 You need to change version in `package.json` and add a record to the `CHANGELOG.md`.

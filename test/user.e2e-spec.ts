@@ -11,6 +11,7 @@ import { Model } from 'mongoose';
 import { UserDocument } from '../src/modules/user/user.interface';
 import * as cookieParser from 'cookie-parser';
 import { LoggerService } from '../src/modules/logger/logger.service';
+import { MailManagerService } from '../src/modules/mail-manager/mail-manager.service';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -45,6 +46,7 @@ describe('UserController (e2e)', () => {
         })
             .overrideProvider(LoggerService).useValue({ info: () => {}, error: () => {} })
             .overrideProvider(getModelToken(models.USER_MODEL)).useValue(mockUserModelProvider)
+            .overrideProvider(MailManagerService).useValue({ sendActivationMail: jest.fn((email, id) => {}) })
             .compile();
 
         app = moduleRef.createNestApplication();
@@ -87,7 +89,9 @@ describe('UserController (e2e)', () => {
         const mockUser = {
             ...mockRequestBody,
             _id: '123-abc',
-            password: 'hashed'
+            email: 'some email',
+            password: 'hashed',
+            activated: 1
         } as any;
         const mockJwtToken = 'token';
         const mockResponseBody = { ...mockUser };
@@ -310,6 +314,16 @@ describe('UserController (e2e)', () => {
                 .post('/users/some-user/deny/some-capability')
                 .set('Cookie', ['jwt=token'])
                 .expect(404);
+        });
+    });
+
+    describe('/users/activate/:userActionId (POST)', () => {
+        it('should activate user', () => {
+            jest.spyOn(userService, 'activate').mockResolvedValueOnce(undefined);
+
+            return request(app.getHttpServer())
+                .post('/users/activate/635981f6e40f61599e839aaa')
+                .expect(200);
         });
     });
 });

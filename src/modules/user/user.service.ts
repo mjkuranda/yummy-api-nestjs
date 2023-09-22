@@ -4,22 +4,27 @@ import * as bcrypt from 'bcrypt';
 import { UserDocument } from './user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { LoggerService } from '../logger/logger.service';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { Redis } from 'ioredis';
 import { CapabilityType } from './user.types';
+import { MailManagerService } from '../mail-manager/mail-manager.service';
+import { UserActionDocument } from '../../schemas/user-action.document';
+import { ForbiddenException } from '../../exceptions/forbidden-exception';
 
 @Injectable()
 export class UserService {
 
     constructor(
         @InjectModel(models.USER_MODEL) private userModel: Model<UserDocument>,
+        @InjectModel(models.USER_ACTION_MODEL) private readonly userActionModel: Model<UserActionDocument>,
         @Inject('REDIS_CLIENT') private readonly redis: Redis,
         private readonly jwtManagerService: JwtManagerService,
-        private readonly loggerService: LoggerService
+        private readonly loggerService: LoggerService,
+        private readonly mailManagerService: MailManagerService
     ) {}
 
     async getUser(login: string): Promise<UserDocument> {
@@ -36,6 +41,13 @@ export class UserService {
             this.loggerService.error(context, message);
 
             throw new NotFoundException(context, message);
+        }
+
+        if (!user.activated) {
+            const message = `User "${user.login}" is not a valid account. You need to activate its first.`;
+            this.loggerService.error(context, message);
+
+            throw new ForbiddenException(context, message);
         }
 
         if (!await this.areSameHashedPasswords(password, user.password)) {
@@ -71,11 +83,16 @@ export class UserService {
 
         const hashedPassword = await this.getHashedPassword(createUserDto.password);
         const newUser = await this.userModel.create({
+            email: createUserDto.email,
             login: createUserDto.login,
             password: hashedPassword
         }) as UserDocument;
-        const message = `Created user "${newUser.login}" with id "${newUser._id}"`;
-
+        const userActionRecord = await this.userActionModel.create({
+            userId: newUser._id,
+            type: 'activate'
+        }) as UserActionDocument;
+        await this.mailManagerService.sendActivationMail(newUser.email, userActionRecord._id);
+        const message = `Created user "${newUser.login}" with id "${newUser._id}". To activate its, use: "${userActionRecord._id}" activation code.`;
         this.loggerService.info(context, message);
 
         return newUser;
@@ -157,5 +174,50 @@ export class UserService {
         this.loggerService.info(context, `User "${byUser.login}" has denied permission "${capability}" to "${user.login}" user.`);
 
         return true;
+    }
+
+    async activate(userActionId: string): Promise<void> {
+        const context = 'UserService/activate';
+
+        if (!isValidObjectId(userActionId)) {
+            const message = 'Invalid activation token.';
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
+        const userAction = await this.userActionModel.findById(userActionId) as UserActionDocument;
+
+        if (!userAction) {
+            const message = `Not found any request with "${userActionId}" activation token.`;
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        const user = await this.userModel.findById(userAction.userId) as UserDocument;
+
+        if (!user) {
+            const message = `User with id "${userAction.userId}" does not exist, reported by "${userActionId}" request token for activation.`;
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
+        if (user.activated) {
+            const message = `User "${user._id}" has already activated.`;
+            this.loggerService.info(context, message);
+            await this.userActionModel.deleteOne({ _id: userActionId });
+
+            return;
+        }
+
+        await this.userActionModel.deleteOne({ _id: userActionId });
+        await this.userModel.updateOne({ _id: user._id }, {
+            $set: {
+                activated: new Date().getTime()
+            }
+        });
+        this.loggerService.info(context, `User "${user._id}" has been successfully activated!`);
     }
 }
