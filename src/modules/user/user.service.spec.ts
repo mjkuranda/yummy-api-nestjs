@@ -74,7 +74,7 @@ describe('UserService', () => {
                 {
                     provide: MailManagerService,
                     useValue: {
-                        sendVerificationMail: jest.fn().mockImplementation((email, id) => {})
+                        sendActivationMail: jest.fn().mockImplementation((email, id) => {})
                     }
                 }
             ],
