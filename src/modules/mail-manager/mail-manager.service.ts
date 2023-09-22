@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class MailManagerService {
 
-    constructor(private readonly mailerService: MailerService) {}
+    constructor(
+        private readonly mailerService: MailerService,
+        private readonly loggerService: LoggerService
+    ) {}
 
     async sendActivationMail(to: string, activationCode: string): Promise<void> {
         await this.sendMail(to, 'Verification', [
@@ -14,6 +18,8 @@ export class MailManagerService {
     }
 
     private async sendMail(to: string, subject: string, contentArr: string[]): Promise<void> {
+        const context = 'MailManagerService/sendMail';
+
         try {
             const result = await this.mailerService.sendMail({
                 to,
@@ -21,9 +27,10 @@ export class MailManagerService {
                 subject,
                 text: contentArr.join(';')
             });
-            console.log(result);
+
+            this.loggerService.info(context, result);
         } catch (err) {
-            console.log(err);
+            this.loggerService.error(context, err);
         }
     }
 }

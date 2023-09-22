@@ -10,6 +10,8 @@ import { LoggerService } from '../logger/logger.service';
 import { JwtService } from '@nestjs/jwt';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { REDIS_CLIENT } from '../redis/redis.constants';
+import { UserActionDocument } from '../../schemas/user-action.document';
+import { MailManagerService } from '../mail-manager/mail-manager.service';
 
 // https://betterprogramming.pub/testing-controllers-in-nestjs-and-mongo-with-jest-63e1b208503c
 // https://stackoverflow.com/questions/74110962/please-make-sure-that-the-argument-databaseconnection-at-index-0-is-available
@@ -20,9 +22,17 @@ describe('AuthService', () => {
     let jwtManagerService: JwtManagerService;
     let userService: UserService;
     let userModel: Model<UserDocument>;
+    let userActionModel: Model<UserActionDocument>;
+    let mailManagerService: MailManagerService;
 
     const mockAuthService = {
         getAuthorizedUser: jest.fn(() => {})
+    };
+
+    const mockUserActionProvider = {};
+
+    const mockMailManagerProvider = {
+        sendActivationMail: (email, id) => {}
     };
 
     beforeEach(async () => {
@@ -53,8 +63,16 @@ describe('AuthService', () => {
                     useValue: mockAuthService
                 },
                 {
+                    provide: getModelToken(models.USER_ACTION_MODEL),
+                    useValue: mockUserActionProvider
+                },
+                {
                     provide: REDIS_CLIENT,
                     useValue: {}
+                },
+                {
+                    provide: MailManagerService,
+                    useValue: mockMailManagerProvider
                 }
             ],
         }).compile();
@@ -63,6 +81,8 @@ describe('AuthService', () => {
         jwtManagerService = module.get(JwtManagerService);
         userService = module.get(UserService);
         userModel = module.get(getModelToken(models.USER_MODEL));
+        userActionModel = module.get(getModelToken(models.USER_ACTION_MODEL));
+        mailManagerService = module.get(MailManagerService);
     });
 
     it('should be defined', () => {
@@ -70,6 +90,8 @@ describe('AuthService', () => {
         expect(jwtManagerService).toBeDefined();
         expect(userService).toBeDefined();
         expect(userModel).toBeDefined();
+        expect(userActionModel).toBeDefined();
+        expect(mailManagerService).toBeDefined();
     });
 
     describe('getAuthorizedUser', () => {

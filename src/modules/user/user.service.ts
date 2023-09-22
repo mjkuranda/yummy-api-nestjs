@@ -42,6 +42,10 @@ export class UserService {
             throw new NotFoundException(context, message);
         }
 
+        if (true) {
+
+        }
+
         if (!await this.areSameHashedPasswords(password, user.password)) {
             const message = `Incorrect credentials for user ${login}`;
             this.loggerService.error(context, message);
