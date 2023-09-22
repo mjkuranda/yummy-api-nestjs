@@ -62,8 +62,7 @@ Technologies:
 }
 ```
 
-* `POST /users/login` - log in a user. You need to provide following data:
-
+* `POST /users/login` - log in a user. Only activated users can log in. You need to provide following data:
 ```json
 {
   "login": "userName",
