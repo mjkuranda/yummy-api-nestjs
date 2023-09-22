@@ -2,6 +2,7 @@ import { Document } from 'mongoose';
 import { CapabilityType } from './user.types';
 
 export interface UserDocument extends Document {
+    readonly email: string;
     readonly login: string;
     readonly password: string;
     readonly isAdmin?: boolean;

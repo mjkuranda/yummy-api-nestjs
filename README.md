@@ -92,6 +92,12 @@ To connect with Redis, you need:
 - `REDIS_HOSTNAME` (default is `localhost`)
 - `REDIS_PORT` (default is `6379`)
 
+To connect with MSA, you need:
+- `MAIL_USER` (mail address)
+- `MAIL_PASS` (password for mail address)
+- `MAIL_HOST` (smtp address)
+- `MAIL_PORT` (smtp port)
+
 ## Development
 You need to change version in `package.json` and add a record to the `CHANGELOG.md`.
 Before creating a pull request, you need to execute following commands, with success result:

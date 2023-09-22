@@ -12,16 +12,21 @@ import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { REDIS_CLIENT } from '../redis/redis.constants';
 import { CapabilityType } from './user.types';
+import { MailManagerService } from '../mail-manager/mail-manager.service';
+import { UserActionDocument } from '../../schemas/user-action.document';
 
 describe('UserService', () => {
     let userService: UserService;
     let userModel: Model<UserDocument>;
+    let userActionModel: Model<UserActionDocument>;
     let jwtManagerService: JwtManagerService;
+    let mailManagerService: MailManagerService;
 
     const mockUser = {
+        email: 'xxx',
         login: 'Aaa',
         password: 'hashed password'
-    } as UserDocument;
+    } as any as UserDocument;
 
     const mockUserService = {
         findOne: jest.fn(),
@@ -31,6 +36,10 @@ describe('UserService', () => {
         updateOne: jest.fn()
     };
 
+    const mockUserActionModel = {
+        create: jest.fn()
+    };
+
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
@@ -38,6 +47,10 @@ describe('UserService', () => {
                 {
                     provide: getModelToken(models.USER_MODEL),
                     useValue: mockUserService
+                },
+                {
+                    provide: getModelToken(models.USER_ACTION_MODEL),
+                    useValue: mockUserActionModel
                 },
                 {
                     provide: JwtService,
@@ -57,13 +70,21 @@ describe('UserService', () => {
                 {
                     provide: REDIS_CLIENT,
                     useValue: {}
+                },
+                {
+                    provide: MailManagerService,
+                    useValue: {
+                        sendVerificationMail: jest.fn().mockImplementation((email, id) => {})
+                    }
                 }
             ],
         }).compile();
 
         userService = module.get(UserService);
         userModel = module.get(getModelToken(models.USER_MODEL));
+        userActionModel = module.get(getModelToken(models.USER_ACTION_MODEL));
         jwtManagerService = module.get(JwtManagerService);
+        mailManagerService = module.get(MailManagerService);
     });
 
     it('should be defined', () => {
@@ -99,6 +120,7 @@ describe('UserService', () => {
 
         beforeAll(() => {
             mockUserDto = {
+                email: 'xxx',
                 login: 'Aaa',
                 password: '123'
             };
@@ -138,6 +160,7 @@ describe('UserService', () => {
 
     describe('createUser', () => {
         const mockUserDto: CreateUserDto = {
+            email: 'xxx',
             login: 'Login',
             password: '123'
         };
@@ -145,21 +168,32 @@ describe('UserService', () => {
         it('should create a new user', async () => {
             const mockHashedPassword = 'hashed password';
             const mockCreatedUser = {
+                _id: 'userId',
+                email: mockUserDto.email,
                 login: mockUserDto.login,
                 password: mockHashedPassword,
+            } as any;
+            const mockUserAction = {
+                _id: 'actionId',
+                userId: 'userId',
+                type: 'activate'
             } as any;
 
             jest.spyOn(userService, 'getUser').mockResolvedValueOnce(null);
             jest.spyOn(userService, 'getHashedPassword').mockResolvedValueOnce(mockHashedPassword);
             jest.spyOn(userModel, 'create').mockResolvedValue(mockCreatedUser);
+            jest.spyOn(userActionModel, 'create').mockResolvedValueOnce(mockUserAction);
 
             const result = await userService.createUser(mockUserDto);
 
             expect(result).toBe(mockCreatedUser);
+            expect(userActionModel.create).toBeCalled();
+            expect(mailManagerService.sendActivationMail).toBeCalledWith(mockCreatedUser.email, mockUserAction._id);
         });
 
         it('should throw an error when the user exist', async () => {
             const mockExistingUser = {
+                email: 'xxx',
                 login: mockUserDto.login,
                 password: 'some password'
             } as any;
@@ -177,11 +211,13 @@ describe('UserService', () => {
         beforeAll(() => {
             mockUser = {
                 _id: 'xxx-xxx',
+                email: 'xxx',
                 login: 'xxx',
                 password: 'yyy'
             };
             mockAdminUser = {
                 _id: 'yyy-yyy',
+                email: 'yyy',
                 login: 'admin',
                 password: 'admin',
                 isAdmin: true
@@ -226,6 +262,7 @@ describe('UserService', () => {
         beforeAll(() => {
             mockUser = {
                 _id: 'xxx-xxx',
+                email: 'xxx',
                 login: 'xxx',
                 password: 'yyy',
                 capabilities: {
@@ -236,6 +273,7 @@ describe('UserService', () => {
             };
             mockAdminUser = {
                 _id: 'yyy-yyy',
+                email: 'yyy',
                 login: 'admin',
                 password: 'admin',
                 isAdmin: true
@@ -254,6 +292,7 @@ describe('UserService', () => {
             const mockCapability: CapabilityType = 'canAdd';
             const mockUserWithNoCapability: UserDto = {
                 _id: 'xxx',
+                email: 'xxx',
                 login: 'xxx',
                 password: 'xxx'
             };

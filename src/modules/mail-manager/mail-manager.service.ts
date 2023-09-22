@@ -6,8 +6,11 @@ export class MailManagerService {
 
     constructor(private readonly mailerService: MailerService) {}
 
-    async sendVerificationMail(to: string): Promise<void> {
-        await this.sendMail(to, 'Verification', ['This is test']);
+    async sendActivationMail(to: string, activationCode: string): Promise<void> {
+        await this.sendMail(to, 'Verification', [
+            'Thanks for your registration!',
+            `To activate your account, use this code: ${activationCode}.`
+        ]);
     }
 
     private async sendMail(to: string, subject: string, contentArr: string[]): Promise<void> {

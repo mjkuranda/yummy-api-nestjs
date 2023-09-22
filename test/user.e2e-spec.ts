@@ -11,6 +11,7 @@ import { Model } from 'mongoose';
 import { UserDocument } from '../src/modules/user/user.interface';
 import * as cookieParser from 'cookie-parser';
 import { LoggerService } from '../src/modules/logger/logger.service';
+import { MailManagerService } from '../src/modules/mail-manager/mail-manager.service';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -45,6 +46,7 @@ describe('UserController (e2e)', () => {
         })
             .overrideProvider(LoggerService).useValue({ info: () => {}, error: () => {} })
             .overrideProvider(getModelToken(models.USER_MODEL)).useValue(mockUserModelProvider)
+            .overrideProvider(MailManagerService).useValue({ sendActivationMail: jest.fn((email, id) => {}) })
             .compile();
 
         app = moduleRef.createNestApplication();

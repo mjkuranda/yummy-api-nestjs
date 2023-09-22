@@ -12,12 +12,14 @@ import { NotFoundException } from '../../exceptions/not-found.exception';
 import { Redis } from 'ioredis';
 import { CapabilityType } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
+import { UserActionDocument } from '../../schemas/user-action.document';
 
 @Injectable()
 export class UserService {
 
     constructor(
         @InjectModel(models.USER_MODEL) private userModel: Model<UserDocument>,
+        @InjectModel(models.USER_ACTION_MODEL) private readonly userActionModel: Model<UserActionDocument>,
         @Inject('REDIS_CLIENT') private readonly redis: Redis,
         private readonly jwtManagerService: JwtManagerService,
         private readonly loggerService: LoggerService,
@@ -71,14 +73,18 @@ export class UserService {
             throw new BadRequestException(context, message);
         }
 
-        await this.mailManagerService.sendVerificationMail(createUserDto.email);
         const hashedPassword = await this.getHashedPassword(createUserDto.password);
-        // const newUser = await this.userModel.create({
-        //     login: createUserDto.login,
-        //     password: hashedPassword
-        // }) as UserDocument;
-        const newUser = { login: '', _id: 'x' } as UserDocument;
-        const message = `Created user "${newUser.login}" with id "${newUser._id}"`;
+        const newUser = await this.userModel.create({
+            email: createUserDto.email,
+            login: createUserDto.login,
+            password: hashedPassword
+        }) as UserDocument;
+        const userActionRecord = await this.userActionModel.create({
+            userId: newUser._id,
+            type: 'activate'
+        }) as UserActionDocument;
+        await this.mailManagerService.sendActivationMail(newUser.email, userActionRecord._id);
+        const message = `Created user "${newUser.login}" with id "${newUser._id}". To activate its, use: "${userActionRecord._id}" activation code.`;
         this.loggerService.info(context, message);
 
         return newUser;
