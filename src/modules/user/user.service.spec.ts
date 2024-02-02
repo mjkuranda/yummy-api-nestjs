@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import { getModelToken } from '@nestjs/mongoose';
+import { getModelToken, MongooseModule } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { UserDocument } from './user.interface';
 import { Model } from 'mongoose';
@@ -16,6 +16,10 @@ import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserActionDocument } from '../../schemas/user-action.document';
 import * as mongoose from 'mongoose';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
+import { closeInMongodConnection, rootMongooseTestModule } from '../../utils/mongoose.test.module';
+import { UserSchema } from './user.schema';
+import { UserActionSchema } from '../../schemas/user-action.schema';
+import { MongodbMemoryTestModule } from '../../mongodb.memory.server.module';
 
 describe('UserService', () => {
     let userService: UserService;
@@ -24,40 +28,18 @@ describe('UserService', () => {
     let jwtManagerService: JwtManagerService;
     let mailManagerService: MailManagerService;
 
-    const mockUser = {
-        email: 'xxx',
-        login: 'Aaa',
-        password: 'hashed password',
-        activated: 1
-    } as any as UserDocument;
-
-    const mockUserService = {
-        findById: jest.fn(),
-        findOne: jest.fn(),
-        getUser: jest.fn(),
-        areSameHashedPasswords: jest.fn(),
-        create: jest.fn(),
-        updateOne: jest.fn()
-    };
-
-    const mockUserActionModel = {
-        create: jest.fn(),
-        findById: jest.fn(),
-        deleteOne: jest.fn()
-    };
-
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
+            imports: [
+                // rootMongooseTestModule(),
+                MongodbMemoryTestModule.forRoot(),
+                MongooseModule.forFeature([
+                    { name: models.USER_MODEL, schema: UserSchema },
+                    { name: models.USER_ACTION_MODEL, schema: UserActionSchema }
+                ]),
+            ],
             providers: [
                 UserService,
-                {
-                    provide: getModelToken(models.USER_MODEL),
-                    useValue: mockUserService
-                },
-                {
-                    provide: getModelToken(models.USER_ACTION_MODEL),
-                    useValue: mockUserActionModel
-                },
                 {
                     provide: JwtService,
                     useClass: JwtService
@@ -86,12 +68,81 @@ describe('UserService', () => {
             ],
         }).compile();
 
-        userService = module.get(UserService);
+        userService = module.get<UserService>(UserService);
         userModel = module.get(getModelToken(models.USER_MODEL));
         userActionModel = module.get(getModelToken(models.USER_ACTION_MODEL));
         jwtManagerService = module.get(JwtManagerService);
         mailManagerService = module.get(MailManagerService);
     });
+
+    const mockUser = {
+        email: 'xxx',
+        login: 'Aaa',
+        password: 'hashed password',
+        activated: 1
+    } as any as UserDocument;
+
+    const mockUserService = {
+        findById: jest.fn(),
+        findOne: jest.fn(),
+        getUser: jest.fn(),
+        areSameHashedPasswords: jest.fn(),
+        create: jest.fn(),
+        updateOne: jest.fn()
+    };
+
+    const mockUserActionModel = {
+        create: jest.fn(),
+        findById: jest.fn(),
+        deleteOne: jest.fn()
+    };
+
+    // beforeEach(async () => {
+    //     const module: TestingModule = await Test.createTestingModule({
+    //         providers: [
+    //             UserService,
+    //             {
+    //                 provide: getModelToken(models.USER_MODEL),
+    //                 useValue: mockUserService
+    //             },
+    //             {
+    //                 provide: getModelToken(models.USER_ACTION_MODEL),
+    //                 useValue: mockUserActionModel
+    //             },
+    //             {
+    //                 provide: JwtService,
+    //                 useClass: JwtService
+    //             },
+    //             {
+    //                 provide: JwtManagerService,
+    //                 useClass: JwtManagerService
+    //             },
+    //             {
+    //                 provide: LoggerService,
+    //                 useValue: {
+    //                     info: () => {},
+    //                     error: () => {}
+    //                 }
+    //             },
+    //             {
+    //                 provide: REDIS_CLIENT,
+    //                 useValue: {}
+    //             },
+    //             {
+    //                 provide: MailManagerService,
+    //                 useValue: {
+    //                     sendActivationMail: jest.fn().mockImplementation((email, id) => {})
+    //                 }
+    //             }
+    //         ],
+    //     }).compile();
+    //
+    //     userService = module.get(UserService);
+    //     userModel = module.get(getModelToken(models.USER_MODEL));
+    //     userActionModel = module.get(getModelToken(models.USER_ACTION_MODEL));
+    //     jwtManagerService = module.get(JwtManagerService);
+    //     mailManagerService = module.get(MailManagerService);
+    // });
 
     it('should be defined', () => {
         expect(userService).toBeDefined();
@@ -411,5 +462,9 @@ describe('UserService', () => {
 
             expect(result).toBeUndefined();
         });
+    });
+
+    afterEach(async () => {
+        await closeInMongodConnection();
     });
 });
