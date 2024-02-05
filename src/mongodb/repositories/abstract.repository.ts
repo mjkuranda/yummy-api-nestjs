@@ -1,6 +1,6 @@
 import { Document, FilterQuery, Model, UpdateQuery, UpdateWithAggregationPipeline } from 'mongoose';
 
-export abstract class AbstractRepository<T extends Document> {
+export abstract class AbstractRepository<T extends Document, CreateDataType> {
 
     protected constructor(protected readonly model: Model<T>) {}
 
@@ -16,7 +16,7 @@ export abstract class AbstractRepository<T extends Document> {
         return this.model.find(filterQuery);
     }
 
-    async create(createData: unknown): Promise<T> {
+    async create(createData: CreateDataType): Promise<T> {
         return this.model.create(createData);
     }
 

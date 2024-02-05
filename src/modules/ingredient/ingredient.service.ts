@@ -1,7 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { models } from '../../constants/models.constant';
-import { Model } from 'mongoose';
 import { IngredientDocument } from '../../mongodb/documents/ingredient.document';
 import { CreateIngredientDto } from './ingredient.dto';
 import { LoggerService } from '../logger/logger.service';
@@ -12,7 +9,6 @@ import { IngredientRepository } from '../../mongodb/repositories/ingredient.repo
 export class IngredientService {
 
     constructor(
-        // @InjectModel(models.INGREDIENT_MODEL) private ingredientModel: Model<IngredientDocument>,
         private readonly ingredientRepository: IngredientRepository,
         private readonly redisService: RedisService,
         private readonly loggerService: LoggerService
