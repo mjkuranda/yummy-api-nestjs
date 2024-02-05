@@ -82,6 +82,7 @@ Technologies:
 
 To set up this backend application, you need to define the following variables:
 To connect with local database, you need:
+- `DB_HOSTNAME` (hostname for MongoDB)
 - `DB_PORT` (port for MongoDB)
 - `DB_COLLECTION` (collection in the database)
 
