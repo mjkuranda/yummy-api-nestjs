@@ -1,16 +1,13 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { models } from '../../constants/models.constant';
-import { IngredientSchema } from './ingredient.schema';
+import { INGREDIENT_MODEL } from '../../constants/models.constant';
 import { IngredientController } from './ingredient.controller';
 import { IngredientService } from './ingredient.service';
 import { RedisModule } from '../redis/redis.module';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([
-            { name: models.INGREDIENT_MODEL, schema: IngredientSchema }
-        ]),
+        MongooseModule.forFeature([INGREDIENT_MODEL]),
         RedisModule
     ],
     controllers: [IngredientController],

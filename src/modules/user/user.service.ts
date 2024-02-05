@@ -15,13 +15,15 @@ import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserActionDocument } from '../../schemas/user-action.document';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { UserRepository } from '../../repositories/user.repository';
+import { UserActionRepository } from '../../repositories/user.action.repository';
 
 @Injectable()
 export class UserService {
 
     constructor(
         private readonly userRepository: UserRepository,
-        @InjectModel(models.USER_ACTION_MODEL) private readonly userActionModel: Model<UserActionDocument>,
+        private readonly userActionRepository: UserActionRepository,
+        // @InjectModel(models.USER_ACTION_MODEL) private readonly userActionModel: Model<UserActionDocument>,
         @Inject('REDIS_CLIENT') private readonly redis: Redis,
         private readonly jwtManagerService: JwtManagerService,
         private readonly loggerService: LoggerService,
@@ -84,7 +86,7 @@ export class UserService {
             login: createUserDto.login,
             password: hashedPassword
         }) as UserDocument;
-        const userActionRecord = await this.userActionModel.create({
+        const userActionRecord = await this.userActionRepository.create({
             userId: newUser._id,
             type: 'activate'
         }) as UserActionDocument;
@@ -183,7 +185,7 @@ export class UserService {
             throw new BadRequestException(context, message);
         }
 
-        const userAction = await this.userActionModel.findById(userActionId) as UserActionDocument;
+        const userAction = await this.userActionRepository.findById(userActionId) as UserActionDocument;
 
         if (!userAction) {
             const message = `Not found any request with "${userActionId}" activation token.`;
@@ -204,12 +206,12 @@ export class UserService {
         if (user.activated) {
             const message = `User "${user._id}" has already activated.`;
             this.loggerService.info(context, message);
-            await this.userActionModel.deleteOne({ _id: userActionId });
+            await this.userActionRepository.deleteOne({ _id: userActionId });
 
             return;
         }
 
-        await this.userActionModel.deleteOne({ _id: userActionId });
+        await this.userActionRepository.deleteOne({ _id: userActionId });
         await this.userRepository.updateOne({ _id: user._id }, {
             $set: {
                 activated: new Date().getTime()

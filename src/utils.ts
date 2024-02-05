@@ -3,5 +3,5 @@ export function getMongooseUri() {
         return `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@yummy.g9zlzc3.mongodb.net/?retryWrites=true&w=majority`;
     }
 
-    return `mongodb://localhost:${process.env.DB_PORT}/${process.env.DB_COLLECTION}`;
+    return `mongodb://${process.env.DB_HOSTNAME}:${process.env.DB_PORT}/${process.env.DB_COLLECTION}`;
 }

@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { UserService } from '../user/user.service';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { UserDocument } from '../user/user.interface';
 import { LoggerService } from '../logger/logger.service';
+import { UserRepository } from '../../repositories/user.repository';
 
 @Injectable()
 export class AuthService {
 
     constructor(private readonly jwtManagerService: JwtManagerService,
-                private readonly userService: UserService,
+                private readonly userRepository: UserRepository,
                 private readonly loggerService: LoggerService) {
     }
 
@@ -25,7 +25,7 @@ export class AuthService {
         }
 
         const userName = this.jwtManagerService.decodeUserData(jwtCookie);
-        const user = await this.userService.getUser(userName);
+        const user = await this.userRepository.findByLogin(userName);
 
         if (!user) {
             const message = 'This user does not exist.';

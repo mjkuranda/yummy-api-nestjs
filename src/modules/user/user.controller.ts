@@ -2,11 +2,13 @@ import { Body, Controller, HttpCode, Post, Response, Param } from '@nestjs/commo
 import { UserService } from './user.service';
 import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
 import { CapabilityType } from './user.types';
+import { UserRepository } from '../../repositories/user.repository';
 
 @Controller('users')
 export class UserController {
 
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService,
+                private readonly userRepository: UserRepository) {}
 
     @Post('/login')
     @HttpCode(200)
@@ -29,8 +31,10 @@ export class UserController {
     @Post('/:login/grant/:capability')
     @HttpCode(200)
     public async grantPermission(@Body() body, @Param('login') login: string, @Param('capability') capability: CapabilityType) {
-        const forUser = await this.userService.getUser(login) as unknown as UserDto;
+        const forUser = await this.userRepository.findByLogin(login) as unknown as UserDto;
         const { authenticatedUser } = body;
+
+        console.log(login, forUser, body);
 
         return await this.userService.grantPermission(forUser, authenticatedUser, capability);
     }
@@ -38,7 +42,7 @@ export class UserController {
     @Post('/:login/deny/:capability')
     @HttpCode(200)
     public async denyPermission(@Body() body, @Param('login') login: string, @Param('capability') capability: CapabilityType) {
-        const forUser = await this.userService.getUser(login) as unknown as UserDto;
+        const forUser = await this.userRepository.findByLogin(login) as unknown as UserDto;
         const { authenticatedUser } = body;
 
         return await this.userService.denyPermission(forUser, authenticatedUser, capability);
