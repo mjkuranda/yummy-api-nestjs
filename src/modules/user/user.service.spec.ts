@@ -16,10 +16,11 @@ import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserActionDocument } from '../../schemas/user-action.document';
 import * as mongoose from 'mongoose';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
+import { UserRepository } from '../../repositories/user.repository';
 
 describe('UserService', () => {
     let userService: UserService;
-    let userModel: Model<UserDocument>;
+    let userRepository: UserRepository;
     let userActionModel: Model<UserActionDocument>;
     let jwtManagerService: JwtManagerService;
     let mailManagerService: MailManagerService;
@@ -31,11 +32,10 @@ describe('UserService', () => {
         activated: 1
     } as any as UserDocument;
 
-    const mockUserService = {
+    const mockUserRepository = {
         findById: jest.fn(),
         findOne: jest.fn(),
-        getUser: jest.fn(),
-        areSameHashedPasswords: jest.fn(),
+        findByLogin: jest.fn(),
         create: jest.fn(),
         updateOne: jest.fn()
     };
@@ -51,8 +51,8 @@ describe('UserService', () => {
             providers: [
                 UserService,
                 {
-                    provide: getModelToken(models.USER_MODEL),
-                    useValue: mockUserService
+                    provide: UserRepository,
+                    useValue: mockUserRepository
                 },
                 {
                     provide: getModelToken(models.USER_ACTION_MODEL),
@@ -87,7 +87,7 @@ describe('UserService', () => {
         }).compile();
 
         userService = module.get(UserService);
-        userModel = module.get(getModelToken(models.USER_MODEL));
+        userRepository = module.get(UserRepository);
         userActionModel = module.get(getModelToken(models.USER_ACTION_MODEL));
         jwtManagerService = module.get(JwtManagerService);
         mailManagerService = module.get(MailManagerService);
@@ -95,29 +95,8 @@ describe('UserService', () => {
 
     it('should be defined', () => {
         expect(userService).toBeDefined();
-        expect(userModel).toBeDefined();
+        expect(userRepository).toBeDefined();
         expect(jwtManagerService).toBeDefined();
-    });
-
-    describe('getUser', () => {
-        it('should return user', async () => {
-            jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(mockUser);
-
-            const result = await userService.getUser(mockUser.login);
-
-            expect(userModel.findOne).toHaveBeenCalledWith({ login: mockUser.login });
-            expect(result).toBe(mockUser);
-        });
-
-        it('should return null value when user not found', async () => {
-            const mockUserResult = null;
-            const givenNonExistingLogin = 'Non existing user name';
-            jest.spyOn(userModel, 'findOne').mockResolvedValueOnce(mockUserResult);
-
-            const result = await userService.getUser(givenNonExistingLogin);
-
-            expect(result).toBe(mockUserResult);
-        });
     });
 
     describe('loginUser', () => {
@@ -137,7 +116,7 @@ describe('UserService', () => {
 
         it('should log in user', async () => {
             const mockCookie = 'some.jwt.cookie';
-            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(mockUser);
+            jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockUser);
             jest.spyOn(userService, 'areSameHashedPasswords').mockResolvedValueOnce(true);
             jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
 
@@ -154,7 +133,7 @@ describe('UserService', () => {
                 password: 'hashed password'
             } as any as UserDocument;
 
-            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(mockInactivatedUser);
+            jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockInactivatedUser);
             jest.spyOn(userService, 'areSameHashedPasswords').mockResolvedValueOnce(true);
             jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
 
@@ -162,7 +141,7 @@ describe('UserService', () => {
         });
 
         it('should throw an error when user does not exist', async () => {
-            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(null);
+            jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(null);
 
             await expect(userService.loginUser(mockUserDto, mockRes)).rejects.toThrow(NotFoundException);
         });
@@ -174,7 +153,7 @@ describe('UserService', () => {
                 activated: 1
             };
 
-            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(mockUser);
+            jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockUser);
 
             await expect(userService.loginUser(mockUserDto, mockRes)).rejects.toThrow(BadRequestException);
         });
@@ -201,9 +180,9 @@ describe('UserService', () => {
                 type: 'activate'
             } as any;
 
-            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(null);
+            jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(null);
             jest.spyOn(userService, 'getHashedPassword').mockResolvedValueOnce(mockHashedPassword);
-            jest.spyOn(userModel, 'create').mockResolvedValue(mockCreatedUser);
+            jest.spyOn(userRepository, 'create').mockResolvedValue(mockCreatedUser);
             jest.spyOn(userActionModel, 'create').mockResolvedValueOnce(mockUserAction);
 
             const result = await userService.createUser(mockUserDto);
@@ -220,7 +199,7 @@ describe('UserService', () => {
                 password: 'some password'
             } as any;
 
-            jest.spyOn(userService, 'getUser').mockResolvedValueOnce(mockExistingUser);
+            jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockExistingUser);
 
             await expect(userService.createUser(mockUserDto)).rejects.toThrow(BadRequestException);
         });
@@ -360,7 +339,7 @@ describe('UserService', () => {
 
             jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
             jest.spyOn(userActionModel, 'findById').mockReturnValueOnce(mockUserAction);
-            jest.spyOn(userModel, 'findById').mockReturnValueOnce(null);
+            jest.spyOn(userRepository, 'findById').mockReturnValueOnce(null);
 
             await expect(userService.activate(mockValidId)).rejects.toThrow(BadRequestException);
         });
@@ -382,7 +361,7 @@ describe('UserService', () => {
 
             jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
             jest.spyOn(userActionModel, 'findById').mockReturnValueOnce(mockUserAction);
-            jest.spyOn(userModel, 'findById').mockReturnValueOnce(mockUser);
+            jest.spyOn(userRepository, 'findById').mockReturnValueOnce(mockUser);
 
             const result = await userService.activate(mockValidId);
 
@@ -405,7 +384,7 @@ describe('UserService', () => {
 
             jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
             jest.spyOn(userActionModel, 'findById').mockReturnValueOnce(mockUserAction);
-            jest.spyOn(userModel, 'findById').mockReturnValueOnce(mockUser);
+            jest.spyOn(userRepository, 'findById').mockReturnValueOnce(mockUser);
 
             const result = await userService.activate(mockValidId);
 

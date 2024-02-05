@@ -14,12 +14,13 @@ import { CapabilityType } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserActionDocument } from '../../schemas/user-action.document';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
+import { UserRepository } from '../../repositories/user.repository';
 
 @Injectable()
 export class UserService {
 
     constructor(
-        @InjectModel(models.USER_MODEL) private userModel: Model<UserDocument>,
+        private readonly userRepository: UserRepository,
         @InjectModel(models.USER_ACTION_MODEL) private readonly userActionModel: Model<UserActionDocument>,
         @Inject('REDIS_CLIENT') private readonly redis: Redis,
         private readonly jwtManagerService: JwtManagerService,
@@ -27,14 +28,10 @@ export class UserService {
         private readonly mailManagerService: MailManagerService
     ) {}
 
-    async getUser(login: string): Promise<UserDocument> {
-        return this.userModel.findOne({ login });
-    }
-
     async loginUser(userLoginDto: UserLoginDto, res): Promise<UserDocument> {
         const { login, password } = userLoginDto;
         const context = 'UserService/loginUser';
-        const user = await this.getUser(login);
+        const user = await this.userRepository.findByLogin(login);
 
         if (!user) {
             const message = `User ${login} does not exist`;
@@ -74,7 +71,7 @@ export class UserService {
     async createUser(createUserDto: CreateUserDto): Promise<UserDocument> {
         const context = 'UserService/createUser';
 
-        if (await this.getUser(createUserDto.login)) {
+        if (await this.userRepository.findByLogin(createUserDto.login)) {
             const message = `User with "${createUserDto.login}" login has already exists`;
             this.loggerService.error(context, message);
 
@@ -82,7 +79,7 @@ export class UserService {
         }
 
         const hashedPassword = await this.getHashedPassword(createUserDto.password);
-        const newUser = await this.userModel.create({
+        const newUser = await this.userRepository.create({
             email: createUserDto.email,
             login: createUserDto.login,
             password: hashedPassword
@@ -122,7 +119,7 @@ export class UserService {
             return false;
         }
 
-        await this.userModel.updateOne(
+        await this.userRepository.updateOne(
             {
                 _id: user._id,
                 login: user.login
@@ -160,7 +157,7 @@ export class UserService {
         const newCapabilities = user.capabilities;
         delete newCapabilities[capability];
 
-        await this.userModel.updateOne(
+        await this.userRepository.updateOne(
             {
                 _id: user._id,
                 login: user.login
@@ -195,7 +192,7 @@ export class UserService {
             throw new NotFoundException(context, message);
         }
 
-        const user = await this.userModel.findById(userAction.userId) as UserDocument;
+        const user = await this.userRepository.findById(userAction.userId) as UserDocument;
 
         if (!user) {
             const message = `User with id "${userAction.userId}" does not exist, reported by "${userActionId}" request token for activation.`;
@@ -213,7 +210,7 @@ export class UserService {
         }
 
         await this.userActionModel.deleteOne({ _id: userActionId });
-        await this.userModel.updateOne({ _id: user._id }, {
+        await this.userRepository.updateOne({ _id: user._id }, {
             $set: {
                 activated: new Date().getTime()
             }
