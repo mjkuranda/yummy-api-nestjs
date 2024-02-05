@@ -1,26 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken } from '@nestjs/mongoose';
-import { models } from '../../constants/models.constant';
-import { Model } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { LoggerService } from '../logger/logger.service';
 import { MealService } from './meal.service';
-import { MealDocument } from '../../mongodb/documents/meal.document';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
+import { MealRepository } from '../../mongodb/repositories/meal.repository';
 
 describe('MealService', () => {
     let mealService: MealService;
-    let mealModel: Model<MealDocument>;
+    let mealRepository: MealRepository;
     let redisService: RedisService;
 
     const mockMealService = {
         create: jest.fn(),
-        find: jest.fn(),
+        findAll: jest.fn(),
         findOne: jest.fn(),
         findById: jest.fn(),
         updateOne: jest.fn(),
@@ -33,7 +30,7 @@ describe('MealService', () => {
             providers: [
                 MealService,
                 {
-                    provide: getModelToken(models.MEAL_MODEL),
+                    provide: MealRepository,
                     useValue: mockMealService
                 },
                 {
@@ -64,13 +61,13 @@ describe('MealService', () => {
         }).compile();
 
         mealService = module.get(MealService);
-        mealModel = module.get(getModelToken(models.MEAL_MODEL));
+        mealRepository = module.get(MealRepository);
         redisService = module.get(RedisService);
     });
 
     it('should be defined', () => {
         expect(mealService).toBeDefined();
-        expect(mealModel).toBeDefined();
+        expect(mealRepository).toBeDefined();
         expect(redisService).toBeDefined();
     });
 
@@ -94,7 +91,7 @@ describe('MealService', () => {
         });
 
         it('should create a new meal', async () => {
-            jest.spyOn(mealModel, 'create').mockResolvedValue(mockMeal);
+            jest.spyOn(mealRepository, 'create').mockResolvedValue(mockMeal);
 
             const result = await mealService.create(mockMealDto);
 
@@ -125,7 +122,7 @@ describe('MealService', () => {
 
             jest.spyOn(mongoose, 'isValidObjectId')
                 .mockReturnValueOnce(true);
-            jest.spyOn(mealModel, 'findById')
+            jest.spyOn(mealRepository, 'findById')
                 .mockReturnValueOnce(mockMeal)
                 .mockReturnValueOnce(mockAddedMeal);
 
@@ -159,7 +156,7 @@ describe('MealService', () => {
 
             jest.spyOn(mongoose, 'isValidObjectId')
                 .mockReturnValueOnce(true);
-            jest.spyOn(mealModel, 'findById')
+            jest.spyOn(mealRepository, 'findById')
                 .mockReturnValueOnce(mockMeal)
                 .mockReturnValueOnce(mockEditedMeal);
 
@@ -197,7 +194,7 @@ describe('MealService', () => {
 
             jest.spyOn(mongoose, 'isValidObjectId')
                 .mockReturnValueOnce(true);
-            jest.spyOn(mealModel, 'findById')
+            jest.spyOn(mealRepository, 'findById')
                 .mockReturnValueOnce(mockMeal)
                 .mockReturnValueOnce(mockEditedMeal);
 
@@ -226,7 +223,7 @@ describe('MealService', () => {
 
             jest.spyOn(mongoose, 'isValidObjectId')
                 .mockReturnValueOnce(true);
-            jest.spyOn(mealModel, 'findById')
+            jest.spyOn(mealRepository, 'findById')
                 .mockReturnValueOnce(mockMeal)
                 .mockReturnValueOnce(mockDeletedMeal);
 
@@ -258,7 +255,7 @@ describe('MealService', () => {
 
             jest.spyOn(mongoose, 'isValidObjectId')
                 .mockReturnValueOnce(true);
-            jest.spyOn(mealModel, 'findById')
+            jest.spyOn(mealRepository, 'findById')
                 .mockReturnValueOnce(mockMeal)
                 .mockReturnValueOnce(mockDeletedMeal);
 
@@ -286,12 +283,12 @@ describe('MealService', () => {
             };
             const mockCachedMeal = null;
             jest.spyOn(redisService, 'get').mockReturnValueOnce(mockCachedMeal);
-            jest.spyOn(mealModel, 'findOne').mockReturnValueOnce(null);
+            jest.spyOn(mealRepository, 'findOne').mockReturnValueOnce(null);
 
             await expect(mealService.find(mockId)).rejects.toThrow(NotFoundException);
             expect(redisService.get).toHaveBeenCalled();
             expect(redisService.get).toReturnWith(mockCachedMeal);
-            expect(mealModel.findOne).toHaveBeenCalledWith(mockFilter);
+            expect(mealRepository.findOne).toHaveBeenCalledWith(mockFilter);
         });
 
         it('should find a specific meal when cache is empty and save to the cache', async () => {
@@ -307,14 +304,14 @@ describe('MealService', () => {
                 softDeleted: { $exists: false }
             };
             jest.spyOn(redisService, 'get').mockReturnValueOnce(mockCachedMeal);
-            jest.spyOn(mealModel, 'findOne').mockReturnValueOnce(mockMeal);
+            jest.spyOn(mealRepository, 'findOne').mockReturnValueOnce(mockMeal);
 
             const result = await mealService.find(mockId);
 
             expect(result).toBe(mockMeal);
             expect(redisService.get).toHaveBeenCalled();
             expect(redisService.get).toReturnWith(mockCachedMeal);
-            expect(mealModel.findOne).toHaveBeenCalledWith(mockFilter);
+            expect(mealRepository.findOne).toHaveBeenCalledWith(mockFilter);
             expect(redisService.set).toHaveBeenCalled();
         });
     });
@@ -325,7 +322,7 @@ describe('MealService', () => {
                 { name: 'Meal 1' },
                 { name: 'Meal 2' }
             ] as any[];
-            jest.spyOn(mealModel, 'find').mockResolvedValue(mockMeals);
+            jest.spyOn(mealRepository, 'findAll').mockResolvedValue(mockMeals);
 
             const result = await mealService.findAll();
 
