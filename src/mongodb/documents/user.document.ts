@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { CapabilityType } from './user.types';
+import { CapabilityType } from '../../modules/user/user.types';
 
 export interface UserDocument extends Document {
     readonly email: string;

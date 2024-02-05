@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.19.0] - 2024-02-05
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Repository abstraction layer.
+- [Marek Kurańda](https://github.com/mjkuranda): `DB_HOSTNAME` variable to define hostname for database.
+
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): `interface` to `document` name.
+- [Marek Kurańda](https://github.com/mjkuranda): localisation of `documents`, `schemas` and `repositories` to `mongodb` directory.
+
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): E2E tests.
+
 ## [1.18.0] - 2023-09-20
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): connection to the MSA and sending mails capability.

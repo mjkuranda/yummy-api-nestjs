@@ -1,20 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken } from '@nestjs/mongoose';
-import { models } from '../../constants/models.constant';
-import { Model } from 'mongoose';
 import { LoggerService } from '../logger/logger.service';
-import { IngredientDocument } from './ingredient.interface';
 import { IngredientService } from './ingredient.service';
 import { RedisService } from '../redis/redis.service';
+import { IngredientRepository } from '../../mongodb/repositories/ingredient.repository';
 
 describe('IngredientService', () => {
     let ingredientService: IngredientService;
-    let ingredientModel: Model<IngredientDocument>;
+    let ingredientRepository: IngredientRepository;
     let redisService: RedisService;
 
     const mockIngredientService = {
         create: jest.fn(),
-        find: jest.fn(),
         findAll: jest.fn()
     };
 
@@ -23,7 +19,7 @@ describe('IngredientService', () => {
             providers: [
                 IngredientService,
                 {
-                    provide: getModelToken(models.INGREDIENT_MODEL),
+                    provide: IngredientRepository,
                     useValue: mockIngredientService
                 },
                 {
@@ -44,13 +40,13 @@ describe('IngredientService', () => {
         }).compile();
 
         ingredientService = module.get(IngredientService);
-        ingredientModel = module.get(getModelToken(models.INGREDIENT_MODEL));
+        ingredientRepository = module.get(IngredientRepository);
         redisService = module.get(RedisService);
     });
 
     it('should be defined', () => {
         expect(ingredientService).toBeDefined();
-        expect(ingredientModel).toBeDefined();
+        expect(ingredientRepository).toBeDefined();
         expect(redisService).toBeDefined();
     });
 
@@ -70,7 +66,7 @@ describe('IngredientService', () => {
         });
 
         it('should create a new ingredient', async () => {
-            jest.spyOn(ingredientModel, 'create').mockResolvedValue(mockIngredient);
+            jest.spyOn(ingredientRepository, 'create').mockResolvedValue(mockIngredient);
 
             const result = await ingredientService.create(mockIngredientDto);
 
@@ -84,7 +80,7 @@ describe('IngredientService', () => {
                 { name: 'Ingredient 1' },
                 { name: 'Ingredient 2' }
             ] as any[];
-            jest.spyOn(ingredientModel, 'find').mockResolvedValueOnce(mockIngredients);
+            jest.spyOn(ingredientRepository, 'findAll').mockResolvedValueOnce(mockIngredients);
 
             const result = await ingredientService.findAll();
 

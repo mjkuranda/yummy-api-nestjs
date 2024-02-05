@@ -20,7 +20,7 @@ import { AuthorizeUserActionMiddleware } from './middleware/authorize-user-actio
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
             useFactory: async () => ({
-                uri: getMongooseUri(),
+                uri: getMongooseUri()
             }),
             inject: [ConfigService],
         }),

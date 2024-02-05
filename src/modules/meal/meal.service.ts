@@ -1,27 +1,25 @@
-import { Model, isValidObjectId } from 'mongoose';
+import { isValidObjectId } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { MealDocument } from './meal.interface';
-import { InjectModel } from '@nestjs/mongoose';
-import { models } from '../../constants/models.constant';
+import { MealDocument } from '../../mongodb/documents/meal.document';
 import { CreateMealDto, MealEditDto } from './meal.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { LoggerService } from '../logger/logger.service';
 import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
+import { MealRepository } from '../../mongodb/repositories/meal.repository';
 
 @Injectable()
 export class MealService {
 
     constructor(
-        @InjectModel(models.MEAL_MODEL)
-        private mealModel: Model<MealDocument>,
+        private mealRepository: MealRepository,
         private redisService: RedisService,
         private loggerService: LoggerService
     ) {}
 
     async create(createMealDto: CreateMealDto): Promise<MealDocument> {
-        const createdMeal = await this.mealModel.create({ ...createMealDto, softAdded: true }) as MealDocument;
+        const createdMeal = await this.mealRepository.create({ ...createMealDto, softAdded: true }) as MealDocument;
 
         const title = createMealDto.title;
         const ingredientCount = createMealDto.ingredients.length;
@@ -46,7 +44,7 @@ export class MealService {
             throw new BadRequestException(context, message);
         }
 
-        const meal = await this.mealModel.findById(id) as MealDocument;
+        const meal = await this.mealRepository.findById(id) as MealDocument;
 
         if (!meal) {
             const message = `Cannot find a meal with "${id}" id.`;
@@ -55,12 +53,12 @@ export class MealService {
             throw new NotFoundException(context, message);
         }
 
-        await this.mealModel.updateOne({ _id: meal._id }, {
+        await this.mealRepository.updateOne({ _id: meal._id }, {
             $unset: {
                 softAdded: true
             }
         });
-        const addedMeal = await this.mealModel.findById(meal._id) as MealDocument;
+        const addedMeal = await this.mealRepository.findById(meal._id) as MealDocument;
         await this.redisService.set<MealDocument>(addedMeal, 'meal');
         this.loggerService.info(context, `Cached a meal with "${meal._id}" id.`);
 
@@ -79,7 +77,7 @@ export class MealService {
             throw new BadRequestException(context, message);
         }
 
-        const meal = await this.mealModel.findById(id) as MealDocument;
+        const meal = await this.mealRepository.findById(id) as MealDocument;
 
         if (!meal) {
             const message = `Cannot find a meal with "${id}" id.`;
@@ -88,12 +86,12 @@ export class MealService {
             throw new NotFoundException(context, message);
         }
 
-        await this.mealModel.updateOne({ _id: meal._id }, {
+        await this.mealRepository.updateOne({ _id: meal._id }, {
             $set: {
                 softEdited: mealEditDto
             }
         });
-        const editedMeal = await this.mealModel.findById(meal._id) as MealDocument;
+        const editedMeal = await this.mealRepository.findById(meal._id) as MealDocument;
         this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been edited.`);
 
         return editedMeal;
@@ -109,7 +107,7 @@ export class MealService {
             throw new BadRequestException(context, message);
         }
 
-        const meal = await this.mealModel.findById(id) as MealDocument;
+        const meal = await this.mealRepository.findById(id) as MealDocument;
 
         if (!meal) {
             const message = `Cannot find a meal with "${id}" id.`;
@@ -118,11 +116,11 @@ export class MealService {
             throw new NotFoundException(context, message);
         }
 
-        await this.mealModel.updateOne({ _id: id }, {
+        await this.mealRepository.updateOne({ _id: id }, {
             $unset: { softEdited: {}},
             $set: { ...meal.softEdited }
         });
-        const updatedMeal = await this.mealModel.findById(id) as MealDocument;
+        const updatedMeal = await this.mealRepository.findById(id) as MealDocument;
         await this.redisService.set<MealDocument>(updatedMeal, 'meal');
         this.loggerService.info(context, `Cached a meal with "${meal._id}" id.`);
 
@@ -141,7 +139,7 @@ export class MealService {
             throw new BadRequestException(context, message);
         }
 
-        const meal = await this.mealModel.findById(id) as MealDocument;
+        const meal = await this.mealRepository.findById(id) as MealDocument;
 
         if (!meal) {
             const message = `Cannot find a meal with "${id}" id.`;
@@ -151,12 +149,12 @@ export class MealService {
         }
 
         await this.redisService.unset<MealDocument>(meal, 'meal');
-        await this.mealModel.updateOne({ _id: meal._id }, {
+        await this.mealRepository.updateOne({ _id: meal._id }, {
             $set: {
                 softDeleted: true
             }
         });
-        const deletedMeal = await this.mealModel.findById(meal._id) as MealDocument;
+        const deletedMeal = await this.mealRepository.findById(meal._id) as MealDocument;
         this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been marked as soft deleted.`);
 
         return deletedMeal;
@@ -172,7 +170,7 @@ export class MealService {
             throw new BadRequestException(context, message);
         }
 
-        const meal = await this.mealModel.findById(id) as MealDocument;
+        const meal = await this.mealRepository.findById(id) as MealDocument;
 
         if (!meal) {
             const message = `Cannot find a meal with "${id}" id.`;
@@ -181,8 +179,8 @@ export class MealService {
             throw new NotFoundException(context, message);
         }
 
-        await this.mealModel.deleteOne({ _id: meal._id });
-        const deletedMeal = await this.mealModel.findById(meal._id) as MealDocument;
+        await this.mealRepository.deleteOne({ _id: meal._id });
+        const deletedMeal = await this.mealRepository.findById(meal._id) as MealDocument;
 
         this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been confirmed deleting by "${user.login}" user.`);
 
@@ -215,7 +213,7 @@ export class MealService {
             return cachedMeal;
         }
 
-        const meal = await this.mealModel.findOne({
+        const meal = await this.mealRepository.findOne({
             _id: id,
             softAdded: { $exists: false },
             softDeleted: { $exists: false }
@@ -236,7 +234,7 @@ export class MealService {
     }
 
     async findAll(): Promise<MealDocument[]> {
-        const meals = (await this.mealModel.find({ softDeleted: { $exists: false }})) as MealDocument[];
+        const meals = (await this.mealRepository.findAll({ softDeleted: { $exists: false }})) as MealDocument[];
         const message = `Found ${meals.length} meals.`;
 
         this.loggerService.info('MealService/findAll', message);

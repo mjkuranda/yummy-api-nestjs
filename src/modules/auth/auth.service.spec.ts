@@ -1,17 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { getModelToken } from '@nestjs/mongoose';
-import { models } from '../../constants/models.constant';
-import { Model } from 'mongoose';
-import { UserDocument } from '../user/user.interface';
+import { UserDocument } from '../../mongodb/documents/user.document';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { UserService } from '../user/user.service';
 import { LoggerService } from '../logger/logger.service';
 import { JwtService } from '@nestjs/jwt';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { REDIS_CLIENT } from '../redis/redis.constants';
-import { UserActionDocument } from '../../schemas/user-action.document';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
+import { UserRepository } from '../../mongodb/repositories/user.repository';
+import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
 
 // https://betterprogramming.pub/testing-controllers-in-nestjs-and-mongo-with-jest-63e1b208503c
 // https://stackoverflow.com/questions/74110962/please-make-sure-that-the-argument-databaseconnection-at-index-0-is-available
@@ -21,15 +19,9 @@ describe('AuthService', () => {
     let authService: AuthService;
     let jwtManagerService: JwtManagerService;
     let userService: UserService;
-    let userModel: Model<UserDocument>;
-    let userActionModel: Model<UserActionDocument>;
+    let userRepository: UserRepository;
+    let userActionRepository: UserActionRepository;
     let mailManagerService: MailManagerService;
-
-    const mockAuthService = {
-        getAuthorizedUser: jest.fn(() => {})
-    };
-
-    const mockUserActionProvider = {};
 
     const mockMailManagerProvider = {
         sendActivationMail: (email, id) => {}
@@ -59,12 +51,12 @@ describe('AuthService', () => {
                     }
                 },
                 {
-                    provide: getModelToken(models.USER_MODEL),
-                    useValue: mockAuthService
+                    provide: UserRepository,
+                    useValue: { findByLogin: () => {} }
                 },
                 {
-                    provide: getModelToken(models.USER_ACTION_MODEL),
-                    useValue: mockUserActionProvider
+                    provide: UserActionRepository,
+                    useValue: {}
                 },
                 {
                     provide: REDIS_CLIENT,
@@ -80,8 +72,8 @@ describe('AuthService', () => {
         authService = module.get(AuthService);
         jwtManagerService = module.get(JwtManagerService);
         userService = module.get(UserService);
-        userModel = module.get(getModelToken(models.USER_MODEL));
-        userActionModel = module.get(getModelToken(models.USER_ACTION_MODEL));
+        userRepository = module.get(UserRepository);
+        userActionRepository = module.get(UserActionRepository);
         mailManagerService = module.get(MailManagerService);
     });
 
@@ -89,8 +81,8 @@ describe('AuthService', () => {
         expect(authService).toBeDefined();
         expect(jwtManagerService).toBeDefined();
         expect(userService).toBeDefined();
-        expect(userModel).toBeDefined();
-        expect(userActionModel).toBeDefined();
+        expect(userRepository).toBeDefined();
+        expect(userActionRepository).toBeDefined();
         expect(mailManagerService).toBeDefined();
     });
 
@@ -119,7 +111,7 @@ describe('AuthService', () => {
 
             // When
             jest.spyOn(jwtManagerService, 'decodeUserData').mockReturnValueOnce('some user name');
-            jest.spyOn(userService, 'getUser').mockReturnValueOnce(null);
+            jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(null);
 
             // Then
             await expect(authService.getAuthorizedUser(jwtCookie)).rejects.toThrow(NotFoundException);

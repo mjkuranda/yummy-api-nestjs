@@ -2,23 +2,21 @@ import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { UserService } from '../src/modules/user/user.service';
-import { getModelToken } from '@nestjs/mongoose';
-import { models } from '../src/constants/models.constant';
 import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
 import { AuthService } from '../src/modules/auth/auth.service';
 import { AppModule } from '../src/app.module';
-import { Model } from 'mongoose';
-import { UserDocument } from '../src/modules/user/user.interface';
 import * as cookieParser from 'cookie-parser';
 import { LoggerService } from '../src/modules/logger/logger.service';
 import { MailManagerService } from '../src/modules/mail-manager/mail-manager.service';
+import { UserRepository } from '../src/mongodb/repositories/user.repository';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
     let userService: UserService;
+    let userRepository: UserRepository;
     let jwtManagerService: JwtManagerService;
     let authService: AuthService;
-    let userModel: Model<UserDocument>;
+
     const getCookie = (res, cookieName) => {
         const cookies = {};
         res.headers['set-cookie'][0]
@@ -37,7 +35,8 @@ describe('UserController (e2e)', () => {
         create: () => {},
         updateOne: () => {},
         find: () => {},
-        findById: () => {}
+        findById: () => {},
+        findByLogin: () => {}
     };
 
     beforeEach(async () => {
@@ -45,7 +44,7 @@ describe('UserController (e2e)', () => {
             imports: [AppModule],
         })
             .overrideProvider(LoggerService).useValue({ info: () => {}, error: () => {} })
-            .overrideProvider(getModelToken(models.USER_MODEL)).useValue(mockUserModelProvider)
+            .overrideProvider(UserRepository).useValue(mockUserModelProvider)
             .overrideProvider(MailManagerService).useValue({ sendActivationMail: jest.fn((email, id) => {}) })
             .compile();
 
@@ -54,9 +53,9 @@ describe('UserController (e2e)', () => {
         await app.init();
 
         userService = moduleRef.get(UserService);
+        userRepository = moduleRef.get(UserRepository);
         jwtManagerService = moduleRef.get(JwtManagerService);
         authService = moduleRef.get(AuthService);
-        userModel = moduleRef.get(getModelToken(models.USER_MODEL));
     });
 
     it('/users/create (POST)', () => {
@@ -70,8 +69,9 @@ describe('UserController (e2e)', () => {
             password: 'hashed'
         } as any;
         const mockResponseBody = { ...mockUser };
-        jest.spyOn(userService, 'getUser').mockReturnValueOnce(null);
-        jest.spyOn(userModel, 'create').mockReturnValueOnce(mockResponseBody);
+        jest.clearAllMocks();
+        jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(null);
+        jest.spyOn(userRepository, 'create').mockReturnValueOnce(mockResponseBody);
 
         return request(app.getHttpServer())
             .post('/users/create')
@@ -95,7 +95,8 @@ describe('UserController (e2e)', () => {
         } as any;
         const mockJwtToken = 'token';
         const mockResponseBody = { ...mockUser };
-        jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+        jest.clearAllMocks();
+        jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
         jest.spyOn(userService, 'areSameHashedPasswords').mockReturnValueOnce(Promise.resolve(true));
         jest.spyOn(jwtManagerService, 'encodeUserData').mockReturnValueOnce(Promise.resolve(mockJwtToken));
 
@@ -142,8 +143,9 @@ describe('UserController (e2e)', () => {
             const expectedStatusCode = 200;
             const expectedResult = 'true';
 
+            jest.clearAllMocks();
             jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
-            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
                 .post(`/users/${mockRequestLogin}/grant/${mockRequestCapability}`)
@@ -173,8 +175,9 @@ describe('UserController (e2e)', () => {
             const expectedStatusCode = 200;
             const expectedResult = 'false';
 
+            jest.clearAllMocks();
             jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
-            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
                 .post(`/users/${mockRequestLogin}/grant/${mockRequestCapability}`)
@@ -195,8 +198,9 @@ describe('UserController (e2e)', () => {
                 password: 'hashed'
             } as any;
 
+            jest.clearAllMocks();
             jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
-            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
                 .post('/users/some-user/grant/some-capability')
@@ -207,7 +211,7 @@ describe('UserController (e2e)', () => {
                 });
         });
 
-        it('throw NotFoundException when user does not exist', () => {
+        it('throw NotFoundException when user does not exist X', async () => {
             const mockAdminUser = {
                 _id: '635981f6e40f61599e839ddb',
                 login: 'XNAME',
@@ -215,13 +219,17 @@ describe('UserController (e2e)', () => {
                 isAdmin: true
             } as any;
 
+            jest.resetAllMocks();
+            jest.clearAllMocks();
+            jest.spyOn(userRepository, 'findByLogin').mockReturnValue(null);
             jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
-            jest.spyOn(userService, 'getUser').mockReturnValueOnce(null);
 
-            return request(app.getHttpServer())
-                .post('/users/some-user/grant/some-capability')
-                .set('Cookie', ['jwt=token'])
-                .expect(404);
+            const res = await request(app.getHttpServer())
+                .post('/users/XNAME2/grant/some-capability')
+                .set('Cookie', ['jwt=token']);
+
+            expect(userRepository.findByLogin).lastReturnedWith(null);
+            expect(res.statusCode).toEqual(404);
         });
     });
 
@@ -242,8 +250,9 @@ describe('UserController (e2e)', () => {
                 }
             } as any;
 
+            jest.clearAllMocks();
             jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
-            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
                 .post('/users/some-user/deny/canAdd')
@@ -265,8 +274,9 @@ describe('UserController (e2e)', () => {
                 password: 'hashed'
             } as any;
 
+            jest.clearAllMocks();
             jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
-            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
                 .post('/users/some-user/deny/some-capability')
@@ -287,8 +297,9 @@ describe('UserController (e2e)', () => {
                 password: 'hashed'
             } as any;
 
+            jest.clearAllMocks();
             jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
-            jest.spyOn(userService, 'getUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
                 .post('/users/some-user/deny/some-capability')
@@ -307,8 +318,10 @@ describe('UserController (e2e)', () => {
                 isAdmin: true
             } as any;
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockAdminUser);
-            jest.spyOn(userService, 'getUser').mockReturnValueOnce(null);
+            jest.resetAllMocks();
+            jest.clearAllMocks();
+            jest.spyOn(authService, 'getAuthorizedUser').mockResolvedValueOnce(mockAdminUser);
+            jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(null);
 
             return request(app.getHttpServer())
                 .post('/users/some-user/deny/some-capability')
@@ -319,6 +332,7 @@ describe('UserController (e2e)', () => {
 
     describe('/users/activate/:userActionId (POST)', () => {
         it('should activate user', () => {
+            jest.clearAllMocks();
             jest.spyOn(userService, 'activate').mockResolvedValueOnce(undefined);
 
             return request(app.getHttpServer())

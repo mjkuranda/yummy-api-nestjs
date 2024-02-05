@@ -1,19 +1,17 @@
 import { Module } from '@nestjs/common';
 import { MealService } from './meal.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MealSchema } from './meal.schema';
 import { MealController } from './meal.controller';
-import { models } from '../../constants/models.constant';
+import { MEAL_MODEL } from '../../constants/models.constant';
 import { RedisModule } from '../redis/redis.module';
+import { MealRepository } from '../../mongodb/repositories/meal.repository';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([
-            { name: models.MEAL_MODEL, schema: MealSchema },
-        ]),
+        MongooseModule.forFeature([MEAL_MODEL]),
         RedisModule
     ],
     controllers: [MealController],
-    providers: [MealService],
+    providers: [MealService, MealRepository],
 })
 export class MealModule {}
