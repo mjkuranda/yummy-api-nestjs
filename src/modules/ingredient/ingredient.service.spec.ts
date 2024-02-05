@@ -3,7 +3,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { Model } from 'mongoose';
 import { LoggerService } from '../logger/logger.service';
-import { IngredientDocument } from './ingredient.interface';
+import { IngredientDocument } from './ingredient.document';
 import { IngredientService } from './ingredient.service';
 import { RedisService } from '../redis/redis.service';
 

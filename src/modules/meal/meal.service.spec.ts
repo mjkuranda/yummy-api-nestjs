@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { LoggerService } from '../logger/logger.service';
 import { MealService } from './meal.service';
-import { MealDocument } from './meal.interface';
+import { MealDocument } from './meal.document';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { RedisService } from '../redis/redis.service';

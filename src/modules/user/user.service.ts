@@ -1,10 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
 import * as bcrypt from 'bcrypt';
-import { UserDocument } from './user.interface';
-import { InjectModel } from '@nestjs/mongoose';
-import { models } from '../../constants/models.constant';
-import { isValidObjectId, Model } from 'mongoose';
+import { UserDocument } from './user.document';
+import { isValidObjectId } from 'mongoose';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { LoggerService } from '../logger/logger.service';
@@ -23,7 +21,6 @@ export class UserService {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly userActionRepository: UserActionRepository,
-        // @InjectModel(models.USER_ACTION_MODEL) private readonly userActionModel: Model<UserActionDocument>,
         @Inject('REDIS_CLIENT') private readonly redis: Redis,
         private readonly jwtManagerService: JwtManagerService,
         private readonly loggerService: LoggerService,

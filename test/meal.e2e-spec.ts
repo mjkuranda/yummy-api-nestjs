@@ -8,7 +8,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { models } from '../src/constants/models.constant';
 import * as cookieParser from 'cookie-parser';
 import * as request from 'supertest';
-import { MealDocument } from '../src/modules/meal/meal.interface';
+import { MealDocument } from '../src/modules/meal/meal.document';
 import { RedisModule } from '../src/modules/redis/redis.module';
 import { MealService } from '../src/modules/meal/meal.service';
 

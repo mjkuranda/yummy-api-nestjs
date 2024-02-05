@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): Repository abstraction layer.
 - [Marek Kurańda](https://github.com/mjkuranda): `DB_HOSTNAME` variable to define hostname for database.
 
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): `interface` to `document` name.
+
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): E2E tests.
 

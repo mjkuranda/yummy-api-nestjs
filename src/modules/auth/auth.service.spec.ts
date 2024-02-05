@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UserDocument } from '../user/user.interface';
+import { UserDocument } from '../user/user.document';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { UserService } from '../user/user.service';
 import { LoggerService } from '../logger/logger.service';
@@ -72,10 +72,8 @@ describe('AuthService', () => {
         authService = module.get(AuthService);
         jwtManagerService = module.get(JwtManagerService);
         userService = module.get(UserService);
-        // userModel = module.get(getModelToken(models.USER_MODEL));
         userRepository = module.get(UserRepository);
         userActionRepository = module.get(UserActionRepository);
-        // userActionModel = module.get(getModelToken(models.USER_ACTION_MODEL));
         mailManagerService = module.get(MailManagerService);
     });
 
