@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, Post, Response, Param } from '@nestjs/commo
 import { UserService } from './user.service';
 import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
 import { CapabilityType } from './user.types';
-import { UserRepository } from '../../repositories/user.repository';
+import { UserRepository } from '../../mongodb/repositories/user.repository';
 
 @Controller('users')
 export class UserController {
@@ -33,8 +33,6 @@ export class UserController {
     public async grantPermission(@Body() body, @Param('login') login: string, @Param('capability') capability: CapabilityType) {
         const forUser = await this.userRepository.findByLogin(login) as unknown as UserDto;
         const { authenticatedUser } = body;
-
-        console.log(login, forUser, body);
 
         return await this.userService.grantPermission(forUser, authenticatedUser, capability);
     }

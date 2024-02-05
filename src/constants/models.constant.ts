@@ -1,7 +1,7 @@
-import { UserSchema } from '../modules/user/user.schema';
-import { UserActionSchema } from '../schemas/user-action.schema';
-import { MealSchema } from '../modules/meal/meal.schema';
-import { IngredientSchema } from '../modules/ingredient/ingredient.schema';
+import { UserSchema } from '../mongodb/schemas/user.schema';
+import { UserActionSchema } from '../mongodb/schemas/user-action.schema';
+import { MealSchema } from '../mongodb/schemas/meal.schema';
+import { IngredientSchema } from '../mongodb/schemas/ingredient.schema';
 
 export const models = {
     MEAL_MODEL: 'MEAL_MODEL',

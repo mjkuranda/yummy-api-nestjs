@@ -6,8 +6,8 @@ import { USER_ACTION_MODEL, USER_MODEL } from '../../constants/models.constant';
 import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
 import { RedisModule } from '../redis/redis.module';
 import { MailManagerModule } from '../mail-manager/mail-manager.module';
-import { UserRepository } from '../../repositories/user.repository';
-import { UserActionRepository } from '../../repositories/user.action.repository';
+import { UserRepository } from '../../mongodb/repositories/user.repository';
+import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
 
 @Module({
     imports: [

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import { UserDocument } from './user.document';
+import { UserDocument } from '../../mongodb/documents/user.document';
 import { JwtService } from '@nestjs/jwt';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { LoggerService } from '../logger/logger.service';
@@ -12,8 +12,8 @@ import { CapabilityType } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import * as mongoose from 'mongoose';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
-import { UserRepository } from '../../repositories/user.repository';
-import { UserActionRepository } from '../../repositories/user.action.repository';
+import { UserRepository } from '../../mongodb/repositories/user.repository';
+import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
 
 describe('UserService', () => {
     let userService: UserService;

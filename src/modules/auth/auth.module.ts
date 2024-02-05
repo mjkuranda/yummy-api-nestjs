@@ -3,8 +3,8 @@ import { AuthService } from './auth.service';
 import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { USER_ACTION_MODEL, USER_MODEL } from '../../constants/models.constant';
-import { UserRepository } from '../../repositories/user.repository';
-import { UserActionRepository } from '../../repositories/user.action.repository';
+import { UserRepository } from '../../mongodb/repositories/user.repository';
+import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
 
 @Module({
     imports: [

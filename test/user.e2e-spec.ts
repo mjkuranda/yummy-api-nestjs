@@ -8,7 +8,7 @@ import { AppModule } from '../src/app.module';
 import * as cookieParser from 'cookie-parser';
 import { LoggerService } from '../src/modules/logger/logger.service';
 import { MailManagerService } from '../src/modules/mail-manager/mail-manager.service';
-import { UserRepository } from '../src/repositories/user.repository';
+import { UserRepository } from '../src/mongodb/repositories/user.repository';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;

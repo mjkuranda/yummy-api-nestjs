@@ -1,6 +1,6 @@
 import { Model, isValidObjectId } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { MealDocument } from './meal.document';
+import { MealDocument } from '../../mongodb/documents/meal.document';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { CreateMealDto, MealEditDto } from './meal.dto';

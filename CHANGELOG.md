@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): `interface` to `document` name.
+- [Marek Kurańda](https://github.com/mjkuranda): localisation of `documents`, `schemas` and `repositories` to `mongodb` directory.
 
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): E2E tests.

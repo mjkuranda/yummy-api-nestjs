@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { Model } from 'mongoose';
-import { IngredientDocument } from './ingredient.document';
+import { IngredientDocument } from '../../mongodb/documents/ingredient.document';
 import { CreateIngredientDto } from './ingredient.dto';
 import { LoggerService } from '../logger/logger.service';
 import { RedisService } from '../redis/redis.service';

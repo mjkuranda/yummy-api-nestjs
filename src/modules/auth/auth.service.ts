@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
-import { UserDocument } from '../user/user.document';
+import { UserDocument } from '../../mongodb/documents/user.document';
 import { LoggerService } from '../logger/logger.service';
-import { UserRepository } from '../../repositories/user.repository';
+import { UserRepository } from '../../mongodb/repositories/user.repository';
 
 @Injectable()
 export class AuthService {

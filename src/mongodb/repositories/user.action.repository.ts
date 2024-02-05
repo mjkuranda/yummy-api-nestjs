@@ -1,8 +1,8 @@
 import { AbstractRepository } from './abstract.repository';
-import { UserActionDocument } from '../schemas/user-action.document';
+import { UserActionDocument } from '../documents/user-action.document';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { models } from '../constants/models.constant';
+import { models } from '../../constants/models.constant';
 
 export class UserActionRepository extends AbstractRepository<UserActionDocument> {
 

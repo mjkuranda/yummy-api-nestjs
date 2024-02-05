@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
 import * as bcrypt from 'bcrypt';
-import { UserDocument } from './user.document';
+import { UserDocument } from '../../mongodb/documents/user.document';
 import { isValidObjectId } from 'mongoose';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
@@ -10,10 +10,10 @@ import { NotFoundException } from '../../exceptions/not-found.exception';
 import { Redis } from 'ioredis';
 import { CapabilityType } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
-import { UserActionDocument } from '../../schemas/user-action.document';
+import { UserActionDocument } from '../../mongodb/documents/user-action.document';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
-import { UserRepository } from '../../repositories/user.repository';
-import { UserActionRepository } from '../../repositories/user.action.repository';
+import { UserRepository } from '../../mongodb/repositories/user.repository';
+import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
 
 @Injectable()
 export class UserService {
