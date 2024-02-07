@@ -1,8 +1,10 @@
-import { Body, Controller, HttpCode, Post, Response, Param } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Response, Param, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
 import { CapabilityType } from './user.types';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
+import { AuthenticationGuard } from '../../guards/authentication.guard';
+import { CapabilityGuard } from '../../guards/capability.guard';
 
 @Controller('users')
 export class UserController {
@@ -30,6 +32,7 @@ export class UserController {
 
     @Post('/:login/grant/:capability')
     @HttpCode(200)
+    @UseGuards(AuthenticationGuard, CapabilityGuard)
     public async grantPermission(@Body() body, @Param('login') login: string, @Param('capability') capability: CapabilityType) {
         const forUser = await this.userRepository.findByLogin(login) as unknown as UserDto;
         const { authenticatedUser } = body;
@@ -39,6 +42,7 @@ export class UserController {
 
     @Post('/:login/deny/:capability')
     @HttpCode(200)
+    @UseGuards(AuthenticationGuard, CapabilityGuard)
     public async denyPermission(@Body() body, @Param('login') login: string, @Param('capability') capability: CapabilityType) {
         const forUser = await this.userRepository.findByLogin(login) as unknown as UserDto;
         const { authenticatedUser } = body;

@@ -14,6 +14,7 @@ import { UserActionDocument } from '../../mongodb/documents/user-action.document
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
+import { HOUR, MINUTE } from '../../constants/times.constant';
 
 @Injectable()
 export class UserService {
@@ -53,8 +54,16 @@ export class UserService {
             throw new BadRequestException(context, message);
         }
 
-        const jwt = await this.jwtManagerService.encodeUserData({ login });
-        res.cookie('jwt', jwt, { httpOnly: true });
+        // @ts-ignore
+        const accessToken = await this.jwtManagerService.generateAccessToken({ login, isAdmin: user.isAdmin, capabilities: user.capabilities });
+        const refreshToken = await this.jwtManagerService.generateRefreshToken({ login });
+        res.cookie('accessToken', accessToken, { httpOnly: true });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true });
+        this.redis.set(`user:${login}:accessToken`, accessToken, 'EX', 5 * MINUTE);
+        this.redis.set(`user:${login}:refreshToken`, refreshToken, 'EX', HOUR);
+        // // @ts-ignore
+        // const jwt = await this.jwtManagerService.encodeUserData({ login, isAdmin: user.isAdmin, capabilities: user.capabilities });
+        // res.cookie('jwt', jwt, { httpOnly: true });
         const message = `User "${login}" has been successfully logged in`;
         this.loggerService.info(context, message);
 

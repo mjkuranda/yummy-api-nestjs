@@ -5,13 +5,16 @@ import { MealController } from './meal.controller';
 import { MEAL_MODEL } from '../../constants/models.constant';
 import { RedisModule } from '../redis/redis.module';
 import { MealRepository } from '../../mongodb/repositories/meal.repository';
+import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
+import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 
 @Module({
     imports: [
         MongooseModule.forFeature([MEAL_MODEL]),
-        RedisModule
+        RedisModule,
+        JwtManagerModule
     ],
     controllers: [MealController],
-    providers: [MealService, MealRepository],
+    providers: [MealService, MealRepository, JwtManagerService],
 })
 export class MealModule {}

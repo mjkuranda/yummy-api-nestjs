@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.20.0] - 2024-02-07
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Various guards.
+- [Marek Kurańda](https://github.com/mjkuranda): Time constants.
+
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): Authentication and Authorization using guards.
+
 ## [1.19.1] - 2024-02-05
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Information about `DB_HOSTNAME` in `README` file.
