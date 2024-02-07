@@ -15,3 +15,4 @@ import { UserActionRepository } from '../../mongodb/repositories/user.action.rep
     exports: [AuthService]
 })
 export class AuthModule {}
+// TODO: Remove it

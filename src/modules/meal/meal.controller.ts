@@ -33,14 +33,14 @@ export class MealController {
 
     @Delete('/:id')
     @HttpCode(204)
-    @UseGuards(AuthenticationGuard, DeletionGuard)
+    @UseGuards(AuthenticationGuard)
     public async deleteMeal(@Param('id') id: string) {
         return await this.mealService.delete(id);
     }
 
     @Put('/:id')
     @HttpCode(200)
-    @UseGuards(AuthenticationGuard, EditionGuard)
+    @UseGuards(AuthenticationGuard)
     public async updateMeal(@Param('id') id: string, @Body() body: EditMealBodyDto) {
         const { data } = body;
 

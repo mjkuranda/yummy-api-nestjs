@@ -39,12 +39,12 @@ export class RedisService {
         return parsed as unknown as Document;
     }
 
-    async set<Document>(documentData: Document | Document[], documentType: DocumentType): Promise<void> {
+    async set<Document>(documentData: Document | Document[], documentType: DocumentType, expiration: number = REDIS_TTL): Promise<void> {
         const key = this.encodeKey(documentData, documentType);
         const value = JSON.stringify(documentData);
 
         await this.redisClient.set(key, value);
-        await this.redisClient.expire(key, REDIS_TTL);
+        await this.redisClient.expire(key, expiration);
     }
 
     async unset<Document>(documentData: Document | Document[], documentType: DocumentType): Promise<void> {

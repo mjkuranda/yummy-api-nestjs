@@ -15,6 +15,7 @@ import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
 import { HOUR, MINUTE } from '../../constants/times.constant';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class UserService {
@@ -22,7 +23,8 @@ export class UserService {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly userActionRepository: UserActionRepository,
-        @Inject('REDIS_CLIENT') private readonly redis: Redis,
+        // @Inject('REDIS_CLIENT') private readonly redis: Redis,
+        private readonly redisService: RedisService,
         private readonly jwtManagerService: JwtManagerService,
         private readonly loggerService: LoggerService,
         private readonly mailManagerService: MailManagerService
@@ -59,8 +61,10 @@ export class UserService {
         const refreshToken = await this.jwtManagerService.generateRefreshToken({ login });
         res.cookie('accessToken', accessToken, { httpOnly: true });
         res.cookie('refreshToken', refreshToken, { httpOnly: true });
-        this.redis.set(`user:${login}:accessToken`, accessToken, 'EX', 5 * MINUTE);
-        this.redis.set(`user:${login}:refreshToken`, refreshToken, 'EX', HOUR);
+        // TODO !!!
+        // this.redisService.set<string>(`user:${login}:accessToken`, accessToken, 5 * MINUTE);
+        // this.redisService.set<string>(`user:${login}:refreshToken`, refreshToken, HOUR);
+
         // // @ts-ignore
         // const jwt = await this.jwtManagerService.encodeUserData({ login, isAdmin: user.isAdmin, capabilities: user.capabilities });
         // res.cookie('jwt', jwt, { httpOnly: true });

@@ -15,6 +15,7 @@ import { UserActionRepository } from '../../mongodb/repositories/user.action.rep
 // https://stackoverflow.com/questions/74110962/please-make-sure-that-the-argument-databaseconnection-at-index-0-is-available
 // https://wanago.io/2020/07/13/api-nestjs-testing-services-controllers-integration-tests/
 
+// TODO: Remove it
 describe('AuthService', () => {
     let authService: AuthService;
     let jwtManagerService: JwtManagerService;

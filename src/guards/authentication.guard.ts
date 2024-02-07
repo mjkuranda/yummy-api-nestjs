@@ -9,7 +9,7 @@ export class AuthenticationGuard implements CanActivate {
     constructor(private readonly jwtManagerService: JwtManagerService,
                 private readonly redisService: RedisService) {}
 
-    canActivate(executionContext: ExecutionContext): boolean {
+    async canActivate(executionContext: ExecutionContext): Promise<boolean> {
         const req = executionContext.switchToHttp().getRequest();
         const token = req.headers['authorization']?.split(' ')[1];
         const context = 'AuthenticationGuard/canActivate';
@@ -18,8 +18,8 @@ export class AuthenticationGuard implements CanActivate {
             throw new UnauthorizedException(context, 'Not provided accessToken.');
         }
 
-        const user = this.jwtManagerService.decodeUserData(token);
-        const cachedToken = this.redisService.get(`user:${user.login}`);
+        const user = await this.jwtManagerService.verifyAccessToken(token);
+        const cachedToken = await this.redisService.get(`user:${user.login}`);
 
         if (!cachedToken) {
             throw new UnauthorizedException(context, 'User accessToken expired.');
@@ -28,6 +28,13 @@ export class AuthenticationGuard implements CanActivate {
         if (token !== cachedToken) {
             throw new UnauthorizedException(context, 'Tokens are not matched.');
         }
+
+        req.body = {
+            data: {
+                ...req.body
+            },
+            authenticatedUser: user
+        };
 
         return true;
     }

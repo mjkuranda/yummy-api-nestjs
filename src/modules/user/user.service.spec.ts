@@ -14,14 +14,15 @@ import * as mongoose from 'mongoose';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
+import { RedisService } from '../redis/redis.service';
 
 describe('UserService', () => {
     let userService: UserService;
     let userRepository: UserRepository;
     let userActionRepository: UserActionRepository;
-    // let userActionModel: Model<UserActionDocument>;
     let jwtManagerService: JwtManagerService;
     let mailManagerService: MailManagerService;
+    let redisService: RedisService;
 
     const mockUser = {
         email: 'xxx',
@@ -44,6 +45,11 @@ describe('UserService', () => {
         findByLogin: jest.fn(),
         create: jest.fn(),
         deleteOne: jest.fn()
+    };
+
+    const mockRedisService = {
+        set: jest.fn(),
+        get: jest.fn()
     };
 
     beforeEach(async () => {
@@ -78,6 +84,10 @@ describe('UserService', () => {
                     useValue: {}
                 },
                 {
+                    provide: RedisService,
+                    useValue: mockRedisService
+                },
+                {
                     provide: MailManagerService,
                     useValue: {
                         sendActivationMail: jest.fn().mockImplementation((email, id) => {})
@@ -91,6 +101,7 @@ describe('UserService', () => {
         userActionRepository = module.get(UserActionRepository);
         jwtManagerService = module.get(JwtManagerService);
         mailManagerService = module.get(MailManagerService);
+        redisService = module.get(RedisService);
     });
 
     it('should be defined', () => {
@@ -118,7 +129,9 @@ describe('UserService', () => {
             const mockCookie = 'some.jwt.cookie';
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockUser);
             jest.spyOn(userService, 'areSameHashedPasswords').mockResolvedValueOnce(true);
-            jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
+            jest.spyOn(jwtManagerService, 'generateAccessToken').mockResolvedValue(mockCookie);
+            jest.spyOn(jwtManagerService, 'generateRefreshToken').mockResolvedValue(mockCookie);
+            jest.spyOn(redisService, 'set').mockResolvedValue();
 
             const result = await userService.loginUser(mockUserDto, mockRes);
 

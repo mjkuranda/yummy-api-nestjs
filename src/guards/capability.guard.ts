@@ -10,6 +10,6 @@ export class CapabilityGuard implements CanActivate {
         const user = req.body.authenticatedUser;
         const capability = req.params['capability'];
 
-        return user.isAdmin || Boolean(user.capabilities[capability]);
+        return user.isAdmin || Boolean(user.capabilities?.[capability]);
     }
 }

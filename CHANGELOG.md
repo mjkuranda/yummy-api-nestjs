@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): Authentication and Authorization using guards.
+- [Marek Kurańda](https://github.com/mjkuranda): Logging-in generates `accessToken` and `refreshToken`.
+- [Marek Kurańda](https://github.com/mjkuranda): Endpoints are guarded by checking `accessToken`.
+
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): E2E tests and unit tests.
 
 ## [1.19.1] - 2024-02-05
 ### Added
