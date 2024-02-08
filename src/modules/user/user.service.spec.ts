@@ -48,7 +48,8 @@ describe('UserService', () => {
 
     const mockRedisService = {
         set: jest.fn(),
-        get: jest.fn()
+        get: jest.fn(),
+        setTokens: jest.fn()
     };
 
     beforeEach(async () => {

@@ -2,6 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
 import { LoggerService } from '../logger/logger.service';
 import { REDIS_CLIENT, REDIS_TTL } from './redis.constants';
+import { TokenKey } from './redis.types';
+import { getAccessTokenKey, getRefreshTokenKey } from './redis.utils';
+import { MINUTE } from '../../constants/times.constant';
 
 type RedisKeyType = string | `${string}:${string}`;
 
@@ -43,13 +46,34 @@ export class RedisService {
         const key = this.encodeKey(documentData, documentType);
         const value = JSON.stringify(documentData);
 
-        await this.redisClient.set(key, value);
-        await this.redisClient.expire(key, expiration);
+        await this.redisClient.set(key, value, 'EX', expiration);
     }
 
     async unset<Document>(documentData: Document | Document[], documentType: DocumentType): Promise<void> {
         const key = this.encodeKey(documentData, documentType);
 
         await this.redisClient.del(key);
+    }
+
+    async setTokens(login: string, accessToken: string, refreshToken?: string): Promise<void> {
+        if (refreshToken) {
+            const refreshTokenKey: TokenKey = getRefreshTokenKey(login);
+            await this.redisClient.set(refreshTokenKey, refreshToken, 'EX', 5 * MINUTE);
+        }
+
+        const accessTokenKey: TokenKey = getAccessTokenKey(login);
+        await this.redisClient.set(accessTokenKey, accessToken, 'EX', MINUTE);
+    }
+
+    async getAccessToken(login: string): Promise<string> {
+        const key: TokenKey = getAccessTokenKey(login);
+
+        return this.redisClient.get(key);
+    }
+
+    async hasRefreshToken(login: string): Promise<boolean> {
+        const key: TokenKey = getAccessTokenKey(login);
+
+        return Boolean(this.redisClient.get(key));
     }
 }

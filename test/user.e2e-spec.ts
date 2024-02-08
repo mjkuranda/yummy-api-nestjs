@@ -48,7 +48,8 @@ describe('UserController (e2e)', () => {
 
     const mockRedisServiceProvider = {
         set: jest.fn().mockImplementation((x, y, z, v) => {}),
-        get: jest.fn().mockImplementation((x) => x)
+        get: jest.fn().mockImplementation((x) => x),
+        setTokens: jest.fn()
     };
 
     beforeEach(async () => {
@@ -113,6 +114,7 @@ describe('UserController (e2e)', () => {
         jest.spyOn(userService, 'areSameHashedPasswords').mockReturnValueOnce(Promise.resolve(true));
         jest.spyOn(jwtManagerService, 'generateAccessToken').mockReturnValueOnce(Promise.resolve(mockAccessToken));
         jest.spyOn(jwtManagerService, 'generateRefreshToken').mockReturnValueOnce(Promise.resolve(mockRefreshToken));
+        jest.spyOn(redisService, 'setTokens').mockResolvedValue();
 
         return request(app.getHttpServer())
             .post('/users/login')

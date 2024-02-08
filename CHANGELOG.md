@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Various guards.
 - [Marek Kurańda](https://github.com/mjkuranda): Time constants.
+- [Marek Kurańda](https://github.com/mjkuranda): Saving tokens to the redis - `accessToken` and `refreshToken` for 1 minute and 5 minutes respectively.
 
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): Authentication and Authorization using guards.

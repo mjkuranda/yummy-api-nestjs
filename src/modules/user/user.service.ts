@@ -57,15 +57,11 @@ export class UserService {
         // @ts-ignore
         const accessToken = await this.jwtManagerService.generateAccessToken({ login, isAdmin: user.isAdmin, capabilities: user.capabilities });
         const refreshToken = await this.jwtManagerService.generateRefreshToken({ login });
+
+        await this.redisService.setTokens(login, accessToken, refreshToken);
         res.cookie('accessToken', accessToken, { httpOnly: true });
         res.cookie('refreshToken', refreshToken, { httpOnly: true });
-        // TODO !!!
-        // this.redisService.set<string>(`user:${login}:accessToken`, accessToken, 5 * MINUTE);
-        // this.redisService.set<string>(`user:${login}:refreshToken`, refreshToken, HOUR);
 
-        // // @ts-ignore
-        // const jwt = await this.jwtManagerService.encodeUserData({ login, isAdmin: user.isAdmin, capabilities: user.capabilities });
-        // res.cookie('jwt', jwt, { httpOnly: true });
         const message = `User "${login}" has been successfully logged in`;
         this.loggerService.info(context, message);
 
