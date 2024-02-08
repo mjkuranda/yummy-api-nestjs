@@ -1,5 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
+import { Injectable } from '@nestjs/common';
+import { CreateUserDto, UserDto, UserLoginDto, UserTokens } from './user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserDocument } from '../../mongodb/documents/user.document';
 import { isValidObjectId } from 'mongoose';
@@ -7,14 +7,12 @@ import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { LoggerService } from '../logger/logger.service';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { Redis } from 'ioredis';
 import { CapabilityType } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserActionDocument } from '../../mongodb/documents/user-action.document';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
-import { HOUR, MINUTE } from '../../constants/times.constant';
 import { RedisService } from '../redis/redis.service';
 
 @Injectable()
@@ -30,7 +28,7 @@ export class UserService {
         private readonly mailManagerService: MailManagerService
     ) {}
 
-    async loginUser(userLoginDto: UserLoginDto, res): Promise<UserDocument> {
+    async loginUser(userLoginDto: UserLoginDto, res): Promise<UserTokens> {
         const { login, password } = userLoginDto;
         const context = 'UserService/loginUser';
         const user = await this.userRepository.findByLogin(login);
@@ -71,7 +69,7 @@ export class UserService {
         const message = `User "${login}" has been successfully logged in`;
         this.loggerService.info(context, message);
 
-        return user;
+        return { accessToken, refreshToken };
     }
 
     async logoutUser(res): Promise<null> {

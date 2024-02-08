@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): E2E tests and unit tests.
+- [Marek Kurańda](https://github.com/mjkuranda): Activation of the users, fixing user schema.
 
 ## [1.19.1] - 2024-02-05
 ### Added
