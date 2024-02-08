@@ -34,8 +34,6 @@ export class AuthService {
             throw new NotFoundException(context, message);
         }
 
-        // TODO: doesn't have capability, so not authorized
-
         return user;
     }
 }

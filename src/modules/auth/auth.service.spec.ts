@@ -10,12 +10,12 @@ import { REDIS_CLIENT } from '../redis/redis.constants';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
+import { RedisService } from '../redis/redis.service';
 
 // https://betterprogramming.pub/testing-controllers-in-nestjs-and-mongo-with-jest-63e1b208503c
 // https://stackoverflow.com/questions/74110962/please-make-sure-that-the-argument-databaseconnection-at-index-0-is-available
 // https://wanago.io/2020/07/13/api-nestjs-testing-services-controllers-integration-tests/
 
-// TODO: Remove it
 describe('AuthService', () => {
     let authService: AuthService;
     let jwtManagerService: JwtManagerService;
@@ -60,7 +60,7 @@ describe('AuthService', () => {
                     useValue: {}
                 },
                 {
-                    provide: REDIS_CLIENT,
+                    provide: RedisService,
                     useValue: {}
                 },
                 {
@@ -111,7 +111,7 @@ describe('AuthService', () => {
             const jwtCookie = 'some cookie';
 
             // When
-            jest.spyOn(jwtManagerService, 'decodeUserData').mockReturnValueOnce('some user name');
+            jest.spyOn(jwtManagerService, 'decodeUserData').mockReturnValueOnce({ login: 'some user login' });
             jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(null);
 
             // Then
