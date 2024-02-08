@@ -107,7 +107,7 @@ describe('UserController (e2e)', () => {
         } as any;
         const mockAccessToken = 'token';
         const mockRefreshToken = 'token2';
-        const mockResponseBody = { ...mockUser };
+        const mockResponseBody = { accessToken: mockAccessToken, refreshToken: mockRefreshToken };
         jest.clearAllMocks();
         jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
         jest.spyOn(userService, 'areSameHashedPasswords').mockReturnValueOnce(Promise.resolve(true));

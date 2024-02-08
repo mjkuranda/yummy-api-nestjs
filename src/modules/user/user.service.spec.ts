@@ -7,7 +7,6 @@ import { LoggerService } from '../logger/logger.service';
 import { CreateUserDto, UserDto } from './user.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { REDIS_CLIENT } from '../redis/redis.constants';
 import { CapabilityType } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import * as mongoose from 'mongoose';
@@ -80,10 +79,6 @@ describe('UserService', () => {
                     }
                 },
                 {
-                    provide: REDIS_CLIENT,
-                    useValue: {}
-                },
-                {
                     provide: RedisService,
                     useValue: mockRedisService
                 },
@@ -126,16 +121,20 @@ describe('UserService', () => {
         });
 
         it('should log in user', async () => {
-            const mockCookie = 'some.jwt.cookie';
+            const accessToken = 'token1';
+            const refreshToken = 'token2';
+
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockUser);
             jest.spyOn(userService, 'areSameHashedPasswords').mockResolvedValueOnce(true);
-            jest.spyOn(jwtManagerService, 'generateAccessToken').mockResolvedValue(mockCookie);
-            jest.spyOn(jwtManagerService, 'generateRefreshToken').mockResolvedValue(mockCookie);
+            jest.spyOn(jwtManagerService, 'generateAccessToken').mockResolvedValue(accessToken);
+            jest.spyOn(jwtManagerService, 'generateRefreshToken').mockResolvedValue(refreshToken);
             jest.spyOn(redisService, 'set').mockResolvedValue();
 
             const result = await userService.loginUser(mockUserDto, mockRes);
 
-            expect(result).toBe(mockUser);
+            expect(Object.keys(result).length).toBe(2);
+            expect(result.accessToken).toBe(accessToken);
+            expect(result.refreshToken).toBe(refreshToken);
         });
 
         it('should throw an error when user has not activated account', async () => {

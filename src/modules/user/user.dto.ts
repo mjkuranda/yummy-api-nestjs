@@ -19,3 +19,8 @@ export class CreateUserDto {
     readonly login: string;
     readonly password: string;
 }
+
+export class UserTokens {
+    readonly accessToken: string;
+    readonly refreshToken: string;
+}

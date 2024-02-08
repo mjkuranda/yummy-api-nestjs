@@ -5,7 +5,6 @@ import { AppModule } from '../src/app.module';
 import { LoggerService } from '../src/modules/logger/logger.service';
 import * as cookieParser from 'cookie-parser';
 import * as request from 'supertest';
-import { RedisModule } from '../src/modules/redis/redis.module';
 import { MealService } from '../src/modules/meal/meal.service';
 import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
 import { RedisService } from '../src/modules/redis/redis.service';
@@ -47,7 +46,8 @@ describe('UserController (e2e)', () => {
     const redisServiceProvider = {
         set: jest.fn(),
         get: jest.fn(),
-        del: jest.fn()
+        del: jest.fn(),
+        encodeKey: jest.fn()
     };
     const jwtManagerServiceProvider = {
         generateAccessToken: jest.fn(),
@@ -60,7 +60,7 @@ describe('UserController (e2e)', () => {
         })
             .overrideProvider(LoggerService).useValue(loggerServiceProvider)
             .overrideProvider(MealRepository).useValue(mockMealRepositoryProvider)
-            .overrideProvider(RedisModule).useValue(redisServiceProvider)
+            .overrideProvider(RedisService).useValue(redisServiceProvider)
             .overrideProvider(JwtManagerService).useValue(jwtManagerServiceProvider)
             .compile();
 
