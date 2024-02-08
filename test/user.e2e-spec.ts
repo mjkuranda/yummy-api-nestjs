@@ -19,13 +19,13 @@ describe('UserController (e2e)', () => {
 
     const getCookie = (res, cookieName) => {
         const cookies = {};
-        res.headers['set-cookie'][0]
-            .split('; ')
-            .forEach(cookie => {
-                const [key, value] = cookie.split('=');
 
-                cookies[key] = value;
-            });
+        res.headers['set-cookie'].forEach((cookieHeader) => {
+            const cookie = cookieHeader.split('; ')[0];
+            const [key, value] = cookie.split('=');
+
+            cookies[key] = value;
+        });
 
         return cookies[cookieName] !== ''
             ? cookies[cookieName]
@@ -108,35 +108,37 @@ describe('UserController (e2e)', () => {
         } as any;
         const mockAccessToken = 'token';
         const mockRefreshToken = 'token2';
-        const mockResponseBody = { accessToken: mockAccessToken, refreshToken: mockRefreshToken };
         jest.clearAllMocks();
         jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
         jest.spyOn(userService, 'areSameHashedPasswords').mockReturnValueOnce(Promise.resolve(true));
-        jest.spyOn(jwtManagerService, 'generateAccessToken').mockReturnValueOnce(Promise.resolve(mockAccessToken));
-        jest.spyOn(jwtManagerService, 'generateRefreshToken').mockReturnValueOnce(Promise.resolve(mockRefreshToken));
+        jest.spyOn(jwtManagerService, 'generateAccessToken').mockResolvedValue(mockAccessToken);
+        jest.spyOn(jwtManagerService, 'generateRefreshToken').mockResolvedValue(mockRefreshToken);
         jest.spyOn(redisService, 'setTokens').mockResolvedValue();
 
         return request(app.getHttpServer())
             .post('/users/login')
             .set('Accept', 'application/json')
             .send(mockRequestBody)
-            .expect(200)
-            .expect(mockResponseBody)
+            .expect(204)
             .then(res => {
-                const jwtCookie = getCookie(res, 'accessToken');
+                const accessToken = getCookie(res, 'accessToken');
+                const refreshToken = getCookie(res, 'refreshToken');
 
-                expect(jwtCookie).toBe(mockAccessToken);
+                expect(accessToken).toBe(mockAccessToken);
+                expect(refreshToken).toBe(mockRefreshToken);
             });
     });
 
     it('/users/logout (POST)', () => {
         return request(app.getHttpServer())
             .post('/users/logout')
-            .expect(200)
+            .expect(205)
             .then(res => {
-                const jwtCookie = getCookie(res, 'accessToken');
+                const accessCookie = getCookie(res, 'accessToken');
+                const refreshCookie = getCookie(res, 'refreshToken');
 
-                expect(jwtCookie).toBeUndefined();
+                expect(accessCookie).toBeUndefined();
+                expect(refreshCookie).toBeUndefined();
             });
     });
 

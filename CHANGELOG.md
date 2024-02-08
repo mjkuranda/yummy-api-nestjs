@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): Authentication and Authorization using guards.
 - [Marek Kurańda](https://github.com/mjkuranda): Logging-in generates `accessToken` and `refreshToken`.
 - [Marek Kurańda](https://github.com/mjkuranda): Endpoints are guarded by checking `accessToken`.
+- [Marek Kurańda](https://github.com/mjkuranda): `/users/login` and `/users/logout` returns `204` and `205` respectively.
 
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): E2E tests and unit tests.

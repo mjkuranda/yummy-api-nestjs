@@ -13,13 +13,13 @@ export class UserController {
                 private readonly userRepository: UserRepository) {}
 
     @Post('/login')
-    @HttpCode(200)
+    @HttpCode(204)
     public async login(@Body() loginBody: UserLoginDto, @Response({ passthrough: true }) res) {
         return await this.userService.loginUser(loginBody, res);
     }
 
     @Post('/logout')
-    @HttpCode(200)
+    @HttpCode(205)
     public async logout(@Response({ passthrough: true }) res) {
         return await this.userService.logoutUser(res);
     }

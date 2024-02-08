@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto, UserDto, UserLoginDto, UserTokens } from './user.dto';
+import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserDocument } from '../../mongodb/documents/user.document';
 import { isValidObjectId } from 'mongoose';
@@ -21,14 +21,13 @@ export class UserService {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly userActionRepository: UserActionRepository,
-        // @Inject('REDIS_CLIENT') private readonly redis: Redis,
         private readonly redisService: RedisService,
         private readonly jwtManagerService: JwtManagerService,
         private readonly loggerService: LoggerService,
         private readonly mailManagerService: MailManagerService
     ) {}
 
-    async loginUser(userLoginDto: UserLoginDto, res): Promise<UserTokens> {
+    async loginUser(userLoginDto: UserLoginDto, res) {
         const { login, password } = userLoginDto;
         const context = 'UserService/loginUser';
         const user = await this.userRepository.findByLogin(login);
@@ -64,8 +63,6 @@ export class UserService {
 
         const message = `User "${login}" has been successfully logged in`;
         this.loggerService.info(context, message);
-
-        return { accessToken, refreshToken };
     }
 
     async logoutUser(res): Promise<null> {

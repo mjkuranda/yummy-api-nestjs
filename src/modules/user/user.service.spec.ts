@@ -133,9 +133,7 @@ describe('UserService', () => {
 
             const result = await userService.loginUser(mockUserDto, mockRes);
 
-            expect(Object.keys(result).length).toBe(2);
-            expect(result.accessToken).toBe(accessToken);
-            expect(result.refreshToken).toBe(refreshToken);
+            expect(result).toBeUndefined();
         });
 
         it('should throw an error when user has not activated account', async () => {
