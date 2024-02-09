@@ -49,7 +49,10 @@ describe('UserService', () => {
     const mockRedisService = {
         set: jest.fn(),
         get: jest.fn(),
-        setTokens: jest.fn()
+        del: jest.fn(),
+        setTokens: jest.fn(),
+        unsetTokens: jest.fn(),
+        getAccessToken: jest.fn()
     };
 
     beforeEach(async () => {
@@ -167,6 +170,26 @@ describe('UserService', () => {
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockUser);
 
             await expect(userService.loginUser(mockUserDto, mockRes)).rejects.toThrow(BadRequestException);
+        });
+    });
+
+    describe('logoutUser', () => {
+        it('should clear tokens and successfully logout', async () => {
+            // Given
+            const mockRes = {
+                clearCookie: jest.fn()
+            } as any;
+            const mockLogin = 'login';
+            const mockAccessToken = 'token1';
+            const mockRefreshToken = 'token2';
+
+            // When
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue(mockAccessToken);
+
+            const result = await userService.logoutUser(mockRes, mockLogin, mockAccessToken, mockRefreshToken);
+
+            // Then
+            expect(result).toBeUndefined();
         });
     });
 

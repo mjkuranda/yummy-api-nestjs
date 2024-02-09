@@ -49,7 +49,8 @@ describe('UserController (e2e)', () => {
     const mockRedisServiceProvider = {
         set: jest.fn().mockImplementation((x, y, z, v) => {}),
         get: jest.fn().mockImplementation((x) => x),
-        setTokens: jest.fn()
+        setTokens: jest.fn(),
+        unsetTokens: jest.fn()
     };
 
     beforeEach(async () => {

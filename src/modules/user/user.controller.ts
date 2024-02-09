@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post, Response, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Response, Param, UseGuards, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
 import { CapabilityType } from './user.types';
@@ -20,8 +20,11 @@ export class UserController {
 
     @Post('/logout')
     @HttpCode(205)
-    public async logout(@Response({ passthrough: true }) res) {
-        return await this.userService.logoutUser(res);
+    public async logout(@Request() req, @Response({ passthrough: true }) res) {
+        const { accessToken, refreshToken } = req.cookies;
+        const { login } = req.body;
+
+        return await this.userService.logoutUser(res, login, accessToken, refreshToken);
     }
 
     @Post('/create')

@@ -14,6 +14,7 @@ import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
 import { RedisService } from '../redis/redis.service';
+import { Response } from 'express';
 
 @Injectable()
 export class UserService {
@@ -27,7 +28,7 @@ export class UserService {
         private readonly mailManagerService: MailManagerService
     ) {}
 
-    async loginUser(userLoginDto: UserLoginDto, res) {
+    async loginUser(userLoginDto: UserLoginDto, res: Response) {
         const { login, password } = userLoginDto;
         const context = 'UserService/loginUser';
         const user = await this.userRepository.findByLogin(login);
@@ -65,10 +66,15 @@ export class UserService {
         this.loggerService.info(context, message);
     }
 
-    async logoutUser(res): Promise<null> {
-        res.clearCookie('jwt');
+    async logoutUser(res: Response, login: string, accessToken: string, refreshToken: string): Promise<void> {
+        try {
+            await this.redisService.unsetTokens(login, accessToken, refreshToken);
+        } catch (err: any) {
+            throw err;
+        }
 
-        return null;
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<UserDocument> {
