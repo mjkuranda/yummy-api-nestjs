@@ -46,7 +46,8 @@ export class RedisService {
         const key = this.encodeKey(documentData, documentType);
         const value = JSON.stringify(documentData);
 
-        await this.redisClient.set(key, value, 'EX', expiration);
+        await this.redisClient.set(key, value);
+        await this.redisClient.set(key, expiration);
     }
 
     async unset<Document>(documentData: Document | Document[], documentType: DocumentType): Promise<void> {
@@ -58,11 +59,13 @@ export class RedisService {
     async setTokens(login: string, accessToken: string, refreshToken?: string): Promise<void> {
         if (refreshToken) {
             const refreshTokenKey: TokenKey = getRefreshTokenKey(login);
-            await this.redisClient.set(refreshTokenKey, refreshToken, 'EX', 5 * MINUTE);
+            await this.redisClient.set(refreshTokenKey, refreshToken);
+            await this.redisClient.expire(refreshTokenKey, 5 * MINUTE);
         }
 
         const accessTokenKey: TokenKey = getAccessTokenKey(login);
-        await this.redisClient.set(accessTokenKey, accessToken, 'EX', MINUTE);
+        await this.redisClient.set(accessTokenKey, accessToken);
+        await this.redisClient.expire(accessTokenKey, MINUTE);
     }
 
     async getAccessToken(login: string): Promise<string> {
