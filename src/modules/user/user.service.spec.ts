@@ -7,21 +7,21 @@ import { LoggerService } from '../logger/logger.service';
 import { CreateUserDto, UserDto } from './user.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { REDIS_CLIENT } from '../redis/redis.constants';
 import { CapabilityType } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import * as mongoose from 'mongoose';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
+import { RedisService } from '../redis/redis.service';
 
 describe('UserService', () => {
     let userService: UserService;
     let userRepository: UserRepository;
     let userActionRepository: UserActionRepository;
-    // let userActionModel: Model<UserActionDocument>;
     let jwtManagerService: JwtManagerService;
     let mailManagerService: MailManagerService;
+    let redisService: RedisService;
 
     const mockUser = {
         email: 'xxx',
@@ -44,6 +44,15 @@ describe('UserService', () => {
         findByLogin: jest.fn(),
         create: jest.fn(),
         deleteOne: jest.fn()
+    };
+
+    const mockRedisService = {
+        set: jest.fn(),
+        get: jest.fn(),
+        del: jest.fn(),
+        setTokens: jest.fn(),
+        unsetTokens: jest.fn(),
+        getAccessToken: jest.fn()
     };
 
     beforeEach(async () => {
@@ -74,8 +83,8 @@ describe('UserService', () => {
                     }
                 },
                 {
-                    provide: REDIS_CLIENT,
-                    useValue: {}
+                    provide: RedisService,
+                    useValue: mockRedisService
                 },
                 {
                     provide: MailManagerService,
@@ -91,6 +100,7 @@ describe('UserService', () => {
         userActionRepository = module.get(UserActionRepository);
         jwtManagerService = module.get(JwtManagerService);
         mailManagerService = module.get(MailManagerService);
+        redisService = module.get(RedisService);
     });
 
     it('should be defined', () => {
@@ -115,14 +125,18 @@ describe('UserService', () => {
         });
 
         it('should log in user', async () => {
-            const mockCookie = 'some.jwt.cookie';
+            const accessToken = 'token1';
+            const refreshToken = 'token2';
+
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockUser);
             jest.spyOn(userService, 'areSameHashedPasswords').mockResolvedValueOnce(true);
-            jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
+            jest.spyOn(jwtManagerService, 'generateAccessToken').mockResolvedValue(accessToken);
+            jest.spyOn(jwtManagerService, 'generateRefreshToken').mockResolvedValue(refreshToken);
+            jest.spyOn(redisService, 'set').mockResolvedValue();
 
             const result = await userService.loginUser(mockUserDto, mockRes);
 
-            expect(result).toBe(mockUser);
+            expect(result).toBeUndefined();
         });
 
         it('should throw an error when user has not activated account', async () => {
@@ -156,6 +170,26 @@ describe('UserService', () => {
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockUser);
 
             await expect(userService.loginUser(mockUserDto, mockRes)).rejects.toThrow(BadRequestException);
+        });
+    });
+
+    describe('logoutUser', () => {
+        it('should clear tokens and successfully logout', async () => {
+            // Given
+            const mockRes = {
+                clearCookie: jest.fn()
+            } as any;
+            const mockLogin = 'login';
+            const mockAccessToken = 'token1';
+            const mockRefreshToken = 'token2';
+
+            // When
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue(mockAccessToken);
+
+            const result = await userService.logoutUser(mockRes, mockLogin, mockAccessToken, mockRefreshToken);
+
+            // Then
+            expect(result).toBeUndefined();
         });
     });
 

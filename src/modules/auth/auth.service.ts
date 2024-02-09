@@ -24,7 +24,7 @@ export class AuthService {
             throw new BadRequestException(context, message);
         }
 
-        const userName = this.jwtManagerService.decodeUserData(jwtCookie);
+        const userName = this.jwtManagerService.decodeUserData(jwtCookie).login;
         const user = await this.userRepository.findByLogin(userName);
 
         if (!user) {
@@ -33,8 +33,6 @@ export class AuthService {
 
             throw new NotFoundException(context, message);
         }
-
-        // TODO: doesn't have capability, so not authorized
 
         return user;
     }

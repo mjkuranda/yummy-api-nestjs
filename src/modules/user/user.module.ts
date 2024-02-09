@@ -8,6 +8,7 @@ import { RedisModule } from '../redis/redis.module';
 import { MailManagerModule } from '../mail-manager/mail-manager.module';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
+import { RedisService } from '../redis/redis.service';
 
 @Module({
     imports: [
@@ -17,7 +18,7 @@ import { UserActionRepository } from '../../mongodb/repositories/user.action.rep
         MailManagerModule
     ],
     controllers: [UserController],
-    providers: [UserService, UserRepository, UserActionRepository],
+    providers: [UserService, UserRepository, UserActionRepository, RedisService],
     exports: [UserService]
 })
 export class UserModule {}

@@ -1,22 +1,23 @@
 import { INestApplication } from '@nestjs/common';
 import { AuthService } from '../src/modules/auth/auth.service';
-import { Model } from 'mongoose';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import { LoggerService } from '../src/modules/logger/logger.service';
-import { getModelToken } from '@nestjs/mongoose';
-import { models } from '../src/constants/models.constant';
 import * as cookieParser from 'cookie-parser';
 import * as request from 'supertest';
-import { MealDocument } from '../src/mongodb/documents/meal.document';
-import { RedisModule } from '../src/modules/redis/redis.module';
 import { MealService } from '../src/modules/meal/meal.service';
+import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
+import { RedisService } from '../src/modules/redis/redis.service';
+import { MealRepository } from '../src/mongodb/repositories/meal.repository';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
     let authService: AuthService;
     let mealService: MealService;
-    let mealModel: Model<MealDocument>;
+    let mealRepository: MealRepository;
+    let jwtManagerService: JwtManagerService;
+    let redisService: RedisService;
+
     const getCookie = (res, cookieName) => {
         const cookies = {};
         res.headers['set-cookie'][0]
@@ -35,17 +36,22 @@ describe('UserController (e2e)', () => {
         info: () => {},
         error: () => {}
     };
-    const mockMealModelProvider = {
+    const mockMealRepositoryProvider = {
         create: () => {},
         updateOne: () => {},
-        find: () => {},
+        findAll: () => {},
         findOne: () => {},
         findById: () => {}
     };
     const redisServiceProvider = {
-        set: () => {},
-        get: () => {},
-        del: () => {}
+        set: jest.fn(),
+        get: jest.fn(),
+        del: jest.fn(),
+        encodeKey: jest.fn()
+    };
+    const jwtManagerServiceProvider = {
+        generateAccessToken: jest.fn(),
+        verifyAccessToken: jest.fn()
     };
 
     beforeEach(async () => {
@@ -53,8 +59,9 @@ describe('UserController (e2e)', () => {
             imports: [AppModule],
         })
             .overrideProvider(LoggerService).useValue(loggerServiceProvider)
-            .overrideProvider(getModelToken(models.MEAL_MODEL)).useValue(mockMealModelProvider)
-            .overrideProvider(RedisModule).useValue(redisServiceProvider)
+            .overrideProvider(MealRepository).useValue(mockMealRepositoryProvider)
+            .overrideProvider(RedisService).useValue(redisServiceProvider)
+            .overrideProvider(JwtManagerService).useValue(jwtManagerServiceProvider)
             .compile();
 
         app = moduleRef.createNestApplication();
@@ -63,7 +70,9 @@ describe('UserController (e2e)', () => {
 
         authService = moduleRef.get(AuthService);
         mealService = moduleRef.get(MealService);
-        mealModel = moduleRef.get(getModelToken(models.MEAL_MODEL));
+        mealRepository = moduleRef.get(MealRepository);
+        jwtManagerService = moduleRef.get(JwtManagerService);
+        redisService = moduleRef.get(RedisService);
     });
 
     describe('/meals (GET)', () => {
@@ -89,7 +98,7 @@ describe('UserController (e2e)', () => {
                 }
             ] as any[];
 
-            jest.spyOn(mealModel, 'find').mockResolvedValueOnce(mockMeals);
+            jest.spyOn(mealRepository, 'findAll').mockResolvedValueOnce(mockMeals);
 
             return request(app.getHttpServer())
                 .get('/meals')
@@ -111,7 +120,7 @@ describe('UserController (e2e)', () => {
                 type: 'some type'
             } as any;
 
-            jest.spyOn(mealModel, 'findOne').mockReturnValueOnce(mockMeal);
+            jest.spyOn(mealRepository, 'findOne').mockReturnValueOnce(mockMeal);
 
             return request(app.getHttpServer())
                 .get(`/meals/${mockParamId}`)
@@ -123,7 +132,7 @@ describe('UserController (e2e)', () => {
             const mockParamId = '635981f6e40f61599e839ddb';
             const mockMeal = null;
 
-            jest.spyOn(mealModel, 'findOne').mockReturnValueOnce(mockMeal);
+            jest.spyOn(mealRepository, 'findOne').mockReturnValueOnce(mockMeal);
 
             return request(app.getHttpServer())
                 .get(`/meals/${mockParamId}`)
@@ -144,13 +153,17 @@ describe('UserController (e2e)', () => {
                 login: 'user',
                 password: 'hashed'
             } as any;
+            const accessToken = 'token';
 
             jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue(accessToken);
 
             return request(app.getHttpServer())
                 .post('/meals/create')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
                 .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer token')
                 .send(mockRequestBody)
                 .expect(201);
         });
@@ -168,10 +181,7 @@ describe('UserController (e2e)', () => {
                 .set('Cookie', [])
                 .set('Accept', 'application/json')
                 .send(mockRequestBody)
-                .expect(400)
-                .expect(res => {
-                    expect(res.body.message).toBe('You are not authorized to execute this action. Please, log in first.');
-                });
+                .expect(401);
         });
     });
 
@@ -191,14 +201,17 @@ describe('UserController (e2e)', () => {
                 login: 'user',
                 password: 'hashed'
             } as any;
+            const accessToken = 'token';
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue(accessToken);
             jest.spyOn(mealService, 'edit').mockReturnValueOnce(mockEditedMeal);
 
             return request(app.getHttpServer())
                 .put('/meals/635981f6e40f61599e839ddf')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
                 .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer token')
                 .send(mockRequestBody)
                 .expect(200)
                 .expect(mockEditedMeal);
@@ -214,9 +227,9 @@ describe('UserController (e2e)', () => {
                 .set('Cookie', [])
                 .set('Accept', 'application/json')
                 .send(mockRequestBody)
-                .expect(400)
+                .expect(401)
                 .expect(res => {
-                    expect(res.body.message).toBe('You are not authorized to execute this action. Please, log in first.');
+                    expect(res.body.message).toBe('Not provided accessToken.');
                 });
         });
     });
@@ -230,12 +243,14 @@ describe('UserController (e2e)', () => {
             } as any;
             const mockDeletedMeal = {} as any;
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue('token');
             jest.spyOn(mealService, 'delete').mockReturnValueOnce(mockDeletedMeal);
 
             return request(app.getHttpServer())
                 .delete('/meals/635981f6e40f61599e839ddf')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
                 .expect(204);
         });
 
@@ -243,9 +258,9 @@ describe('UserController (e2e)', () => {
             return request(app.getHttpServer())
                 .delete('/meals/635981f6e40f61599e839ddf')
                 .set('Cookie', [])
-                .expect(400)
+                .expect(401)
                 .expect(res => {
-                    expect(res.body.message).toBe('You are not authorized to execute this action. Please, log in first.');
+                    expect(res.body.message).toBe('Not provided accessToken.');
                 });
         });
     });
@@ -259,12 +274,14 @@ describe('UserController (e2e)', () => {
                 isAdmin: true
             } as any;
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmCreating').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/create')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
                 .expect(200);
         });
 
@@ -278,12 +295,14 @@ describe('UserController (e2e)', () => {
                 }
             } as any;
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmCreating').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/create')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
                 .expect(200);
         });
 
@@ -294,11 +313,13 @@ describe('UserController (e2e)', () => {
                 password: 'hashed'
             } as any;
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue('token');
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/create')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
                 .expect(403);
         });
 
@@ -306,7 +327,7 @@ describe('UserController (e2e)', () => {
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/create')
                 .set('Cookie', [])
-                .expect(400);
+                .expect(401);
         });
     });
 
@@ -319,12 +340,14 @@ describe('UserController (e2e)', () => {
                 isAdmin: true
             } as any;
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmEditing').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/edit')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
                 .expect(200);
         });
 
@@ -338,12 +361,14 @@ describe('UserController (e2e)', () => {
                 }
             } as any;
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmEditing').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/edit')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
                 .expect(200);
         });
 
@@ -354,11 +379,13 @@ describe('UserController (e2e)', () => {
                 password: 'hashed'
             } as any;
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue('token');
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/edit')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
                 .expect(403);
         });
 
@@ -366,7 +393,7 @@ describe('UserController (e2e)', () => {
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/edit')
                 .set('Cookie', [])
-                .expect(400);
+                .expect(401);
         });
     });
 
@@ -379,12 +406,14 @@ describe('UserController (e2e)', () => {
                 isAdmin: true
             } as any;
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmDeleting').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/delete')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
                 .expect(200);
         });
 
@@ -398,12 +427,14 @@ describe('UserController (e2e)', () => {
                 }
             } as any;
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmDeleting').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/delete')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
                 .expect(200);
         });
 
@@ -414,11 +445,13 @@ describe('UserController (e2e)', () => {
                 password: 'hashed'
             } as any;
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'get').mockResolvedValue('token');
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/delete')
-                .set('Cookie', ['jwt=token'])
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
                 .expect(403);
         });
 
@@ -426,7 +459,7 @@ describe('UserController (e2e)', () => {
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/delete')
                 .set('Cookie', [])
-                .expect(400);
+                .expect(401);
         });
     });
 });

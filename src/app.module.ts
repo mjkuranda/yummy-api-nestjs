@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MealModule } from './modules/meal/meal.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -39,32 +39,32 @@ export class AppModule implements NestModule {
         consumer
             .apply(AuthorizeMiddleware)
             .forRoutes(
-                { path: '/meals/create', method: RequestMethod.POST },
-                { path: '/meals/:id', method: RequestMethod.PUT },
-                { path: '/meals/:id', method: RequestMethod.DELETE },
-                { path: '/ingredients/create', method: RequestMethod.POST }
+                // { path: '/meals/create', method: RequestMethod.POST },
+                // { path: '/meals/:id', method: RequestMethod.PUT },
+                // { path: '/meals/:id', method: RequestMethod.DELETE },
+                // { path: '/ingredients/create', method: RequestMethod.POST }
             );
         consumer
             .apply(AuthenticateUserMiddleware)
             .forRoutes(
-                { path: '/users/:login/grant/:capability', method: RequestMethod.POST },
-                { path: '/users/:login/deny/:capability', method: RequestMethod.POST },
-                { path: '/meals/:id/create', method: RequestMethod.POST },
-                { path: '/meals/:id/edit', method: RequestMethod.POST },
-                { path: '/meals/:id/delete', method: RequestMethod.POST }
+                // { path: '/users/:login/grant/:capability', method: RequestMethod.POST },
+                // { path: '/users/:login/deny/:capability', method: RequestMethod.POST },
+                // { path: '/meals/:id/create', method: RequestMethod.POST },
+                // { path: '/meals/:id/edit', method: RequestMethod.POST },
+                // { path: '/meals/:id/delete', method: RequestMethod.POST }
             );
         consumer
             .apply(AuthorizeUserMiddleware)
             .forRoutes(
-                { path: '/users/:login/grant/:capability', method: RequestMethod.POST },
-                { path: '/users/:login/deny/:capability', method: RequestMethod.POST }
+                // { path: '/users/:login/grant/:capability', method: RequestMethod.POST },
+                // { path: '/users/:login/deny/:capability', method: RequestMethod.POST }
             );
         consumer
             .apply(AuthorizeUserActionMiddleware)
             .forRoutes(
-                { path: '/meals/:id/create', method: RequestMethod.POST },
-                { path: '/meals/:id/edit', method: RequestMethod.POST },
-                { path: '/meals/:id/delete', method: RequestMethod.POST }
+                // { path: '/meals/:id/create', method: RequestMethod.POST },
+                // { path: '/meals/:id/edit', method: RequestMethod.POST },
+                // { path: '/meals/:id/delete', method: RequestMethod.POST }
             );
     }
 }

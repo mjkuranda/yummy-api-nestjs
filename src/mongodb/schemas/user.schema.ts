@@ -5,5 +5,8 @@ export const UserSchema = new mongoose.Schema({
     password: String,
     isAdmin: Boolean,
     capabilities: Object,
-    registeredTime: Number
+    registeredTime: Number,
+    activated: {
+        type: Number
+    }
 });

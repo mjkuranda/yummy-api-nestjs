@@ -38,5 +38,5 @@ export const MealSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true
-    },
+    }
 });

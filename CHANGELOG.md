@@ -3,6 +3,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.20.0] - 2024-02-08
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Various guards.
+- [Marek Kurańda](https://github.com/mjkuranda): Time constants.
+- [Marek Kurańda](https://github.com/mjkuranda): Saving tokens to the redis - `accessToken` and `refreshToken` for 1 minute and 5 minutes respectively.
+
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): Authentication and Authorization using guards.
+- [Marek Kurańda](https://github.com/mjkuranda): Logging-in generates `accessToken` and `refreshToken`.
+- [Marek Kurańda](https://github.com/mjkuranda): Endpoints are guarded by checking `accessToken`.
+- [Marek Kurańda](https://github.com/mjkuranda): `/users/login` and `/users/logout` returns `204` and `205` respectively.
+
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): E2E tests and unit tests.
+- [Marek Kurańda](https://github.com/mjkuranda): Activation of the users, fixing user schema.
+- [Marek Kurańda](https://github.com/mjkuranda): Redis keys expiration.
+
 ## [1.19.1] - 2024-02-05
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Information about `DB_HOSTNAME` in `README` file.
