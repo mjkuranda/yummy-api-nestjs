@@ -12,7 +12,7 @@ Technologies:
 * SuperTest
 
 ## API
-* `GET /meals` - returns all meals from the database
+* `GET /meals` - returns all meals from the database that contain provided ingredients and types as `ings` and `type` respectively being query params.
 * `GET /meals/:id` - returns a specific meal defined by id parameter. It saves to the cache, if it does not exist there. Each request checks the cache.
 * `POST /meals/create` - creates a new meal and saves its to the database, marking as soft added. You need to be logged-in and provide following data (`imageUrl` is optional):
 ```json
@@ -25,7 +25,7 @@ Technologies:
     "ingredient-id-x"
   ],
   "imageUrl": "https://some.domain/path/to/resource/image.ext",
-  "type": "SOUP"
+  "type": "soup"
 }
 ```
 * `PUT /meals/:id` - updates (edits) a meal and marks as soft edited. Provide following data, where each property is optional:
@@ -78,6 +78,8 @@ Technologies:
 
 * `POST /users/activate/:userActionId` - activates a user. `userActionId` is activation code, sent in the mail message.
 
+All above endpoints excluding `GET /meals` and `GET /meals/:id` require `accessToken` as a cookie.
+
 ## Environmental variables
 
 To set up this backend application, you need to define the following variables:
@@ -102,7 +104,7 @@ To connect to MSA, you need:
 - `MAIL_PORT` (smtp port)
 
 To connect to Spoonacular API, provide:
-- `SPOONACULAR_API_KEY`
+- `SPOONACULAR_API_KEY` (API key defined for a particular account on Spoonacular)
 
 ## Development
 You need to change version in `package.json` and add a record to the `CHANGELOG.md`.
