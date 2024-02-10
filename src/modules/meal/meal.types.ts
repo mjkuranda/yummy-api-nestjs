@@ -7,3 +7,7 @@ export type RatedMeal = {
     title: string,
     relevance: number
 };
+
+export type GetMealsQueryType = Record<GetMealsQueryKeyTypes, string>;
+
+type GetMealsQueryKeyTypes = 'ings' | 'type';

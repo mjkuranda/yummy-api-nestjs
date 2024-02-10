@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
 import { LoggerService } from '../logger/logger.service';
 import { REDIS_CLIENT, REDIS_TTL } from './redis.constants';
-import { TokenKey } from './redis.types';
+import { ApiName, TokenKey } from './redis.types';
 import { getAccessTokenKey, getRefreshTokenKey } from './redis.utils';
 import { MINUTE } from '../../constants/times.constant';
 import { NotFoundException } from '../../exceptions/not-found.exception';
@@ -99,5 +99,9 @@ export class RedisService {
         const key: TokenKey = getAccessTokenKey(login);
 
         return Boolean(this.redisClient.get(key));
+    }
+
+    async saveMealResult<T>(apiName: ApiName, meals: T[]): Promise<void> {
+        // TODO: implement caching. Caching without time or really long time
     }
 }

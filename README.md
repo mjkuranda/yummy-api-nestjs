@@ -91,15 +91,18 @@ However, if you want to connect with MongoDB Atlas, you need these variables:
 - `DB_PASS` (password for MongoDB)
 - `PROD=true`
 
-To connect with Redis, you need:
+To connect to Redis, you need:
 - `REDIS_HOSTNAME` (default is `localhost`)
 - `REDIS_PORT` (default is `6379`)
 
-To connect with MSA, you need:
+To connect to MSA, you need:
 - `MAIL_USER` (mail address)
 - `MAIL_PASS` (password for mail address)
 - `MAIL_HOST` (smtp address)
 - `MAIL_PORT` (smtp port)
+
+To connect to Spoonacular API, provide:
+- `SPOONACULAR_API_KEY`
 
 ## Development
 You need to change version in `package.json` and add a record to the `CHANGELOG.md`.

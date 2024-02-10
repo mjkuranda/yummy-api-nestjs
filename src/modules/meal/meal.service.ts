@@ -8,6 +8,10 @@ import { LoggerService } from '../logger/logger.service';
 import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
 import { MealRepository } from '../../mongodb/repositories/meal.repository';
+import { IngredientName, MealType } from '../../common/enums';
+import { SpoonacularApiHandler } from '../../api/spoonacular/spoonacular.handler';
+import { proceedRecipesToMeals } from '../../api/spoonacular/spoonacular.api.utils';
+import { SpoonacularRecipe } from '../../api/spoonacular/spoonacular.api.types';
 
 @Injectable()
 export class MealService {
@@ -240,5 +244,26 @@ export class MealService {
         this.loggerService.info('MealService/findAll', message);
 
         return meals;
+    }
+
+    async getMeals(ings: IngredientName[], type: MealType) {
+        // Handlers
+        const spoonacularApiHandler = new SpoonacularApiHandler();
+
+        // Fetching data from various datasets
+        const spoonacularApiMeals = await spoonacularApiHandler.getMeals(ings, type);
+
+        // Cache results
+        await Promise.all([
+            this.redisService.saveMealResult<SpoonacularRecipe>(spoonacularApiHandler.name, spoonacularApiMeals)
+        ]);
+
+        // Merging into one set
+        const mergedDatasets = [
+            ...proceedRecipesToMeals(spoonacularApiMeals)
+        ];
+
+        // Return final set
+        return mergedDatasets;
     }
 }

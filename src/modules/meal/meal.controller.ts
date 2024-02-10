@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { MealService } from './meal.service';
 import { CreateMealBodyDto, EditMealBodyDto } from './meal.dto';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CreationGuard } from '../../guards/creation.guard';
 import { EditionGuard } from '../../guards/edition.guard';
 import { DeletionGuard } from '../../guards/deletion.guard';
+import { GetMealsQueryType } from './meal.types';
+import { IngredientName, MealType } from '../../common/enums';
 
 @Controller('meals')
 export class MealController {
@@ -12,8 +14,11 @@ export class MealController {
 
     @Get()
     @HttpCode(200)
-    public async getMeals() {
-        return await this.mealService.findAll();
+    public async getMeals(@Query() query: GetMealsQueryType) {
+        const { ings, type } = query;
+        const ingredients = ings.split(',');
+
+        return await this.mealService.getMeals(<IngredientName[]>ingredients, <MealType>type);
     }
 
     @Get('/:id')
