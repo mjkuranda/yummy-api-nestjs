@@ -1,4 +1,4 @@
-import { IngredientName, IngredientUnit } from '../../common/enums';
+import { IngredientName, IngredientUnit } from '../../../common/enums';
 
 export type SpoonacularRecipe = {
     id: number,

@@ -1,6 +1,6 @@
 import { SpoonacularRecipe, SpoonacularIngredient } from './spoonacular.api.types';
-import { RatedMeal } from '../../modules/meal/meal.types';
-import { IngredientType } from '../../common/types';
+import { RatedMeal } from '../../meal/meal.types';
+import { IngredientType } from '../../../common/types';
 
 export function proceedRecipesToMeals(recipes: SpoonacularRecipe[]): RatedMeal[] {
     return recipes.map(recipe => {

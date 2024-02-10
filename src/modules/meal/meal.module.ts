@@ -7,12 +7,14 @@ import { RedisModule } from '../redis/redis.module';
 import { MealRepository } from '../../mongodb/repositories/meal.repository';
 import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
+import { SpoonacularApiModule } from '../api/spoonacular/spoonacular.api.module';
 
 @Module({
     imports: [
         MongooseModule.forFeature([MEAL_MODEL]),
         RedisModule,
-        JwtManagerModule
+        JwtManagerModule,
+        SpoonacularApiModule
     ],
     controllers: [MealController],
     providers: [MealService, MealRepository, JwtManagerService],

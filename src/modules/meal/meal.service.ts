@@ -9,9 +9,8 @@ import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
 import { MealRepository } from '../../mongodb/repositories/meal.repository';
 import { IngredientName, MealType } from '../../common/enums';
-import { SpoonacularApiHandler } from '../../api/spoonacular/spoonacular.handler';
-import { proceedRecipesToMeals } from '../../api/spoonacular/spoonacular.api.utils';
-import { SpoonacularRecipe } from '../../api/spoonacular/spoonacular.api.types';
+import { RatedMeal } from './meal.types';
+import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
 
 @Injectable()
 export class MealService {
@@ -19,7 +18,8 @@ export class MealService {
     constructor(
         private mealRepository: MealRepository,
         private redisService: RedisService,
-        private loggerService: LoggerService
+        private loggerService: LoggerService,
+        private spoonacularApiService: SpoonacularApiService
     ) {}
 
     async create(createMealDto: CreateMealDto): Promise<MealDocument> {
@@ -247,23 +247,12 @@ export class MealService {
     }
 
     async getMeals(ings: IngredientName[], type: MealType) {
-        // Handlers
-        const spoonacularApiHandler = new SpoonacularApiHandler();
-
-        // Fetching data from various datasets
-        const spoonacularApiMeals = await spoonacularApiHandler.getMeals(ings, type);
-
-        // Cache results
-        await Promise.all([
-            this.redisService.saveMealResult<SpoonacularRecipe>(spoonacularApiHandler.name, spoonacularApiMeals)
+        const datasets: Array<RatedMeal[]> = await Promise.all([
+            this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ings, type)
         ]);
 
-        // Merging into one set
-        const mergedDatasets = [
-            ...proceedRecipesToMeals(spoonacularApiMeals)
-        ];
-
-        // Return final set
-        return mergedDatasets;
+        return datasets
+            .flat()
+            .sort((meal1: RatedMeal, meal2: RatedMeal) => meal2.relevance - meal1.relevance);
     }
 }

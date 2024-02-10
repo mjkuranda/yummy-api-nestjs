@@ -1,7 +1,7 @@
 import { IngredientName, MealType } from '../../common/enums';
 
-export function getQueryWithIngredientsAndMealType(ingredients: IngredientName[], type: MealType): string {
-    const ingredientList = ingredients.join(',');
+export function getQueryWithIngredientsAndMealType(apiKey: string, ingredients: IngredientName[], type: MealType): string {
+    const ingredientList = ingredients.sort().join(',');
 
-    return `ings=${ingredientList}&type=${type}`;
+    return `apiKey=${apiKey}&ings=${ingredientList}&type=${type}`;
 }

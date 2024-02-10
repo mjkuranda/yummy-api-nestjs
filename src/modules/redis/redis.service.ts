@@ -3,9 +3,10 @@ import { Redis } from 'ioredis';
 import { LoggerService } from '../logger/logger.service';
 import { REDIS_CLIENT, REDIS_TTL } from './redis.constants';
 import { ApiName, TokenKey } from './redis.types';
-import { getAccessTokenKey, getRefreshTokenKey } from './redis.utils';
+import { getAccessTokenKey, getMealResultQueryKey, getRefreshTokenKey } from './redis.utils';
 import { MINUTE } from '../../constants/times.constant';
 import { NotFoundException } from '../../exceptions/not-found.exception';
+import { RatedMeal } from '../meal/meal.types';
 
 type RedisKeyType = string | `${string}:${string}`;
 
@@ -101,7 +102,21 @@ export class RedisService {
         return Boolean(this.redisClient.get(key));
     }
 
-    async saveMealResult<T>(apiName: ApiName, meals: T[]): Promise<void> {
-        // TODO: implement caching. Caching without time or really long time
+    async saveMealResult(apiName: ApiName, query: string, meals: RatedMeal[]): Promise<void> {
+        const key = getMealResultQueryKey(apiName, query);
+        const value = JSON.stringify(meals);
+
+        await this.redisClient.set(key, value);
+    }
+
+    async getMealResult(apiName: ApiName, query: string): Promise<RatedMeal[] | null> {
+        const key = getMealResultQueryKey(apiName, query);
+        const value = await this.redisClient.get(key);
+
+        if (!value) {
+            return null;
+        }
+
+        return JSON.parse(value);
     }
 }
