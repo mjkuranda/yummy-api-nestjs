@@ -247,12 +247,13 @@ export class MealService {
     }
 
     async getMeals(ings: IngredientName[], type: MealType) {
-        const datasets: Array<RatedMeal[]> = await Promise.all([
+        const datasets: Array<RatedMeal[] | null> = await Promise.all([
             this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ings, type)
         ]);
 
         return datasets
+            .filter((set: RatedMeal[]): boolean => Boolean(set.length))
             .flat()
-            .sort((meal1: RatedMeal, meal2: RatedMeal) => meal2.relevance - meal1.relevance);
+            .sort((meal1: RatedMeal, meal2: RatedMeal): number => meal2.relevance - meal1.relevance);
     }
 }

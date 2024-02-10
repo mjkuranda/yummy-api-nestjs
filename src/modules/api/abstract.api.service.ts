@@ -5,13 +5,15 @@ import { RatedMeal } from '../meal/meal.types';
 import { getQueryWithIngredientsAndMealType } from '../meal/meal.utils';
 import axios, { AxiosResponse } from 'axios';
 import { ApiName } from '../redis/redis.types';
-import { IngredientType } from '../../common/types';
+import { ContextString, IngredientType } from '../../common/types';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStruct> {
 
     constructor(
-        protected readonly redisService: RedisService
+        protected readonly redisService: RedisService,
+        protected readonly loggerService: LoggerService
     ) {}
 
     abstract getApiUrl(): string;
@@ -25,28 +27,35 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
     async getMeals(apiKey: string, endpointUrl: string, ingredients: IngredientName[], mealType: MealType): Promise<RatedMeal[]> {
         const query = getQueryWithIngredientsAndMealType(apiKey, ingredients, mealType);
         const cachedResult = await this.redisService.getMealResult(this.getName(), query);
+        const context: ContextString = 'AbstractApiService/getMeals';
 
         if (cachedResult) {
+            this.loggerService.info(context, `Found cached query providing ${cachedResult.length} meals.`);
+
             return cachedResult;
         }
 
-        const url = this.getFullApiUrl(endpointUrl, query);
-        let result: AxiosResponse<GenericMealStruct[], unknown>;
+        const url: string = this.getFullApiUrl(endpointUrl, query);
 
         try {
-            result = await axios.get(url);
+            const result: AxiosResponse<GenericMealStruct[], unknown> = await axios.get(url);
+
+            if (result.status < 200 || result.status >= 300) {
+                this.loggerService.error(context, `External API returned ${result.status} code with "${result.statusText}" message. Returned 0 meals.`);
+
+                return [];
+            }
+
+            const meals: RatedMeal[] = this.proceedDataToMeals(result.data);
+            await this.redisService.saveMealResult(this.getName(), query, meals);
+            this.loggerService.info(context, `Received ${meals.length} meals. Query "${query}" has been cached from "${this.getName()}" API.`);
+
+            return meals;
         } catch (err: any) {
-            console.error('Error occured: ', err.message);
+            this.loggerService.error(context, 'Error occurred during fetching from external API. Received 0 meals.');
+
+            return [];
         }
-
-        if (result.status < 200 || result.status >= 300) {
-            throw new Error(result.statusText);
-        }
-
-        const meals = this.proceedDataToMeals(result.data);
-        await this.redisService.saveMealResult(this.getName(), query, meals);
-
-        return meals;
     }
 
     private getFullApiUrl(endpointUrl: string, query: string) {
