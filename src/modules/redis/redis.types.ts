@@ -1,3 +1,3 @@
 export type TokenKey = `user:${string}:${'accessToken' | 'refreshToken'}`;
 
-export type ApiName = 'local' | 'spoonacular';
+export type ApiName = 'merged' | 'localmongo' | 'spoonacular';

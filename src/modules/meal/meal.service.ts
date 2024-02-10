@@ -11,6 +11,8 @@ import { MealRepository } from '../../mongodb/repositories/meal.repository';
 import { IngredientName, MealType } from '../../common/enums';
 import { RatedMeal } from './meal.types';
 import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
+import { getQueryWithIngredientsAndMealType } from './meal.utils';
+import { HOUR } from '../../constants/times.constant';
 
 @Injectable()
 export class MealService {
@@ -247,13 +249,27 @@ export class MealService {
     }
 
     async getMeals(ings: IngredientName[], type: MealType): Promise<RatedMeal[]> {
+        const query = getQueryWithIngredientsAndMealType(null, ings, type);
+        const cachedResult = await this.redisService.getMealResult('merged', query);
+        const context = 'MealService/getMeals';
+
+        if (cachedResult) {
+            this.loggerService.info(context, `Found cached result "${query}" containing ${cachedResult.length} meals.`);
+
+            return cachedResult;
+        }
+
         const datasets: Array<RatedMeal[] | null> = await Promise.all([
             this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ings, type)
         ]);
 
-        return datasets
+        const meals = datasets
             .filter((set: RatedMeal[]): boolean => Boolean(set.length))
             .flat()
             .sort((meal1: RatedMeal, meal2: RatedMeal): number => meal2.relevance - meal1.relevance);
+        await this.redisService.saveMealResult('merged', query, meals, 24 * HOUR);
+        this.loggerService.info(context, `Cached result containing ${meals.length} meals, defined for query "${query}".`);
+
+        return meals;
     }
 }

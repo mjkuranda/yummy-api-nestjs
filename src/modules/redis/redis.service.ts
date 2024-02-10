@@ -4,7 +4,7 @@ import { LoggerService } from '../logger/logger.service';
 import { REDIS_CLIENT, REDIS_TTL } from './redis.constants';
 import { ApiName, TokenKey } from './redis.types';
 import { getAccessTokenKey, getMealResultQueryKey, getRefreshTokenKey } from './redis.utils';
-import { MINUTE } from '../../constants/times.constant';
+import { HOUR, MINUTE } from '../../constants/times.constant';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { RatedMeal } from '../meal/meal.types';
 
@@ -102,11 +102,12 @@ export class RedisService {
         return Boolean(this.redisClient.get(key));
     }
 
-    async saveMealResult(apiName: ApiName, query: string, meals: RatedMeal[]): Promise<void> {
+    async saveMealResult(apiName: ApiName, query: string, meals: RatedMeal[], secondsToExpire: number = 24 * HOUR): Promise<void> {
         const key = getMealResultQueryKey(apiName, query);
         const value = JSON.stringify(meals);
 
         await this.redisClient.set(key, value);
+        await this.redisClient.expire(key, secondsToExpire);
     }
 
     async getMealResult(apiName: ApiName, query: string): Promise<RatedMeal[] | null> {
