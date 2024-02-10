@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
 import { LoggerService } from '../logger/logger.service';
 import { REDIS_CLIENT, REDIS_TTL } from './redis.constants';
-import { ApiName, TokenKey } from './redis.types';
+import { ApiName, MealResultQueryKey, TokenKey } from './redis.types';
 import { getAccessTokenKey, getMealResultQueryKey, getRefreshTokenKey } from './redis.utils';
 import { HOUR, MINUTE } from '../../constants/times.constant';
 import { NotFoundException } from '../../exceptions/not-found.exception';
@@ -103,7 +103,7 @@ export class RedisService {
     }
 
     async saveMealResult(apiName: ApiName, query: string, meals: RatedMeal[], secondsToExpire: number = 24 * HOUR): Promise<void> {
-        const key = getMealResultQueryKey(apiName, query);
+        const key: MealResultQueryKey = getMealResultQueryKey(apiName, query);
         const value = JSON.stringify(meals);
 
         await this.redisClient.set(key, value);
@@ -111,7 +111,7 @@ export class RedisService {
     }
 
     async getMealResult(apiName: ApiName, query: string): Promise<RatedMeal[] | null> {
-        const key = getMealResultQueryKey(apiName, query);
+        const key: MealResultQueryKey = getMealResultQueryKey(apiName, query);
         const value = await this.redisClient.get(key);
 
         if (!value) {
