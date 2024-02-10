@@ -246,7 +246,7 @@ export class MealService {
         return meals;
     }
 
-    async getMeals(ings: IngredientName[], type: MealType) {
+    async getMeals(ings: IngredientName[], type: MealType): Promise<RatedMeal[]> {
         const datasets: Array<RatedMeal[] | null> = await Promise.all([
             this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ings, type)
         ]);
