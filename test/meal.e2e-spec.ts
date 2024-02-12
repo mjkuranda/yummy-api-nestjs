@@ -9,6 +9,8 @@ import { MealService } from '../src/modules/meal/meal.service';
 import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
 import { RedisService } from '../src/modules/redis/redis.service';
 import { MealRepository } from '../src/mongodb/repositories/meal.repository';
+import { SpoonacularApiService } from '../src/modules/api/spoonacular/spoonacular.api.service';
+import { RatedMeal } from '../src/modules/meal/meal.types';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -17,6 +19,7 @@ describe('UserController (e2e)', () => {
     let mealRepository: MealRepository;
     let jwtManagerService: JwtManagerService;
     let redisService: RedisService;
+    let spoonacularApiService: SpoonacularApiService;
 
     const getCookie = (res, cookieName) => {
         const cookies = {};
@@ -53,6 +56,7 @@ describe('UserController (e2e)', () => {
         generateAccessToken: jest.fn(),
         verifyAccessToken: jest.fn()
     };
+    const spoonacularApiServiceProvider = {};
 
     beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -62,6 +66,7 @@ describe('UserController (e2e)', () => {
             .overrideProvider(MealRepository).useValue(mockMealRepositoryProvider)
             .overrideProvider(RedisService).useValue(redisServiceProvider)
             .overrideProvider(JwtManagerService).useValue(jwtManagerServiceProvider)
+            .overrideProvider(SpoonacularApiService).useValue(spoonacularApiServiceProvider)
             .compile();
 
         app = moduleRef.createNestApplication();
@@ -73,37 +78,20 @@ describe('UserController (e2e)', () => {
         mealRepository = moduleRef.get(MealRepository);
         jwtManagerService = moduleRef.get(JwtManagerService);
         redisService = moduleRef.get(RedisService);
+        spoonacularApiService = moduleRef.get(SpoonacularApiService);
     });
 
     describe('/meals (GET)', () => {
-        it('should get all available meals', () => {
-            const mockMeals = [
-                {
-                    _id: '635981f6e40f61599e839dda',
-                    title: 'X',
-                    description: 'Lorem ipsum',
-                    author: 'Author name',
-                    ingredients: [],
-                    posted: 123,
-                    type: 'some type'
-                },
-                {
-                    _id: '635981f6e40f61599e839ddb',
-                    title: 'Y',
-                    description: 'Lorem ipsum',
-                    author: 'Author name 2',
-                    ingredients: [],
-                    posted: 123456,
-                    type: 'some type'
-                }
-            ] as any[];
+        it('should get all matching meals', () => {
+            const mealResult: RatedMeal[] = [];
 
-            jest.spyOn(mealRepository, 'findAll').mockResolvedValueOnce(mockMeals);
+            jest.spyOn(mealService, 'getMeals').mockImplementation(jest.fn());
+            jest.spyOn(mealService, 'getMeals').mockResolvedValue(mealResult);
 
             return request(app.getHttpServer())
-                .get('/meals')
+                .get('/meals?ings=carrot,tomato&type=soup')
                 .expect(200)
-                .expect(mockMeals);
+                .expect(mealResult);
         });
     });
 

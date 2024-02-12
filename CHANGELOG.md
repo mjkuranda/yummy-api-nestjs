@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.22.0] - 2024-02-12
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `MealService/getMeals`.
+- [Marek Kurańda](https://github.com/mjkuranda): E2E tests for `GET /meals`.
 
 ## [1.21.1] - 2024-02-12
 ### Fixed
