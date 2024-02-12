@@ -22,7 +22,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 id: recipe.id.toString(),
                 imgUrl: recipe.image,
                 ingredients: [...this.proceedDataMealIngredients(recipe.usedIngredients), ...this.proceedDataMealIngredients(recipe.missedIngredients)],
-                relevance: recipe.usedIngredients.length / (recipe.usedIngredients.length + recipe.missedIngredients.length),
+                relevance: Number((recipe.usedIngredients.length / (recipe.usedIngredients.length + recipe.missedIngredients.length)).toFixed(2)),
                 title: recipe.title
             };
         });
