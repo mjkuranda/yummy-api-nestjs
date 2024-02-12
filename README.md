@@ -12,7 +12,7 @@ Technologies:
 * SuperTest
 
 ## API
-* `GET /meals` - returns all meals from the database that contain provided ingredients and types as `ings` and `type` respectively being query params.
+* `GET /meals?ings=ingredient1,ingredient2,ingredientX&type=meal-type` - returns all meals from the database that contain provided ingredients and type as `ings` and `type` respectively being query params.
 * `GET /meals/:id` - returns a specific meal defined by id parameter. It saves to the cache, if it does not exist there. Each request checks the cache.
 * `POST /meals/create` - creates a new meal and saves its to the database, marking as soft added. You need to be logged-in and provide following data (`imageUrl` is optional):
 ```json
