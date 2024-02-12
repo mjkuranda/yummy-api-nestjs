@@ -9,6 +9,7 @@ import { LoggerService } from '../src/modules/logger/logger.service';
 import { MailManagerService } from '../src/modules/mail-manager/mail-manager.service';
 import { UserRepository } from '../src/mongodb/repositories/user.repository';
 import { RedisService } from '../src/modules/redis/redis.service';
+import { AxiosService } from '../src/services/axios.service';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -16,6 +17,7 @@ describe('UserController (e2e)', () => {
     let userRepository: UserRepository;
     let jwtManagerService: JwtManagerService;
     let redisService: RedisService;
+    let axiosService: AxiosService;
 
     const getCookie = (res, cookieName) => {
         const cookies = {};
@@ -53,6 +55,10 @@ describe('UserController (e2e)', () => {
         unsetTokens: jest.fn()
     };
 
+    const mockAxiosServiceProvider = {
+        get: jest.fn()
+    };
+
     beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
             imports: [AppModule],
@@ -62,6 +68,7 @@ describe('UserController (e2e)', () => {
             .overrideProvider(MailManagerService).useValue({ sendActivationMail: jest.fn((email, id) => {}) })
             .overrideProvider(JwtManagerService).useValue(mockJwtServiceProvider)
             .overrideProvider(RedisService).useValue(mockRedisServiceProvider)
+            .overrideProvider(AxiosService).useValue(mockAxiosServiceProvider)
             .compile();
 
         app = moduleRef.createNestApplication();
@@ -72,6 +79,7 @@ describe('UserController (e2e)', () => {
         userRepository = moduleRef.get(UserRepository);
         jwtManagerService = moduleRef.get(JwtManagerService);
         redisService = moduleRef.get(RedisService);
+        axiosService = moduleRef.get(AxiosService);
     });
 
     it('/users/create (POST)', () => {

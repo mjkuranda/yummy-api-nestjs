@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { RedisService } from '../redis/redis.service';
-import { IngredientName, MealType } from '../../common/enums';
-import { RatedMeal } from '../meal/meal.types';
-import { getQueryWithIngredientsAndMealType } from '../meal/meal.utils';
-import axios, { AxiosResponse } from 'axios';
-import { ApiName } from '../redis/redis.types';
-import { ContextString, IngredientType } from '../../common/types';
-import { LoggerService } from '../logger/logger.service';
+import { RedisService } from '../modules/redis/redis.service';
+import { IngredientName, MealType } from '../common/enums';
+import { RatedMeal } from '../modules/meal/meal.types';
+import { getQueryWithIngredientsAndMealType } from '../modules/meal/meal.utils';
+import { AxiosResponse } from 'axios';
+import { ApiName } from '../modules/redis/redis.types';
+import { ContextString, IngredientType } from '../common/types';
+import { LoggerService } from '../modules/logger/logger.service';
+import { AxiosService } from './axios.service';
 
 @Injectable()
 export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStruct> {
 
     constructor(
+        protected readonly axiosService: AxiosService,
         protected readonly redisService: RedisService,
         protected readonly loggerService: LoggerService
     ) {}
@@ -38,7 +40,7 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
         const url: string = this.getFullApiUrl(endpointUrl, query);
 
         try {
-            const result: AxiosResponse<GenericMealStruct[], unknown> = await axios.get(url);
+            const result: AxiosResponse<GenericMealStruct[], unknown> = await this.axiosService.get(url);
 
             if (result.status < 200 || result.status >= 300) {
                 this.loggerService.error(context, `External API returned ${result.status} code with "${result.statusText}" message. Returned 0 meals.`);
