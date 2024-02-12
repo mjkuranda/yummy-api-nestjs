@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RatedMeal } from '../../meal/meal.types';
-import { AbstractApiService } from '../abstract.api.service';
+import { AbstractApiService } from '../../../services/abstract.api.service';
 import { ApiName } from '../../redis/redis.types';
 import { SpoonacularIngredient, SpoonacularRecipe } from './spoonacular.api.types';
 import { IngredientType } from '../../../common/types';

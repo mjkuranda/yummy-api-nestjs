@@ -9,11 +9,15 @@ import { NotFoundException } from '../../exceptions/not-found.exception';
 import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
 import { MealRepository } from '../../mongodb/repositories/meal.repository';
+import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
+import { IngredientName, MealType } from '../../common/enums';
+import { RatedMeal } from './meal.types';
 
 describe('MealService', () => {
     let mealService: MealService;
     let mealRepository: MealRepository;
     let redisService: RedisService;
+    let spoonacularApiService: SpoonacularApiService;
 
     const mockMealService = {
         create: jest.fn(),
@@ -23,6 +27,10 @@ describe('MealService', () => {
         updateOne: jest.fn(),
         replaceOne: jest.fn(),
         deleteOne: jest.fn()
+    };
+
+    const mockSpoonacularApiService = {
+        getMeals: jest.fn()
     };
 
     beforeEach(async () => {
@@ -54,8 +62,14 @@ describe('MealService', () => {
                         get: jest.fn(),
                         set: jest.fn(),
                         unset: jest.fn(),
-                        encodeKey: jest.fn()
+                        encodeKey: jest.fn(),
+                        getMealResult: jest.fn(),
+                        saveMealResult: jest.fn()
                     }
+                },
+                {
+                    provide: SpoonacularApiService,
+                    useValue: mockSpoonacularApiService
                 }
             ],
         }).compile();
@@ -63,12 +77,14 @@ describe('MealService', () => {
         mealService = module.get(MealService);
         mealRepository = module.get(MealRepository);
         redisService = module.get(RedisService);
+        spoonacularApiService = module.get(SpoonacularApiService);
     });
 
     it('should be defined', () => {
         expect(mealService).toBeDefined();
         expect(mealRepository).toBeDefined();
         expect(redisService).toBeDefined();
+        expect(spoonacularApiService).toBeDefined();
     });
 
     describe('create', () => {
@@ -262,6 +278,50 @@ describe('MealService', () => {
             const result = await mealService.confirmDeleting(mockId, mockUser);
 
             expect(result).toBe(mockDeletedMeal);
+        });
+    });
+
+    describe('getMeals', () => {
+        it('should return cached query', async () => {
+            const ings: IngredientName[] = [IngredientName.CARROT, IngredientName.TOMATO];
+            const type: MealType = MealType.SOUP;
+            const cachedResult: RatedMeal[] = [
+                {
+                    id: 'some-id',
+                    ingredients: [],
+                    relevance: 50,
+                    title: 'some-meal'
+                }
+            ];
+
+            jest.spyOn(redisService, 'getMealResult').mockResolvedValue(cachedResult);
+
+            const result = await mealService.getMeals(ings, type);
+
+            expect(result).toBe(cachedResult);
+        });
+
+        it('should build new query from various APIs when cache is empty and save query', async () => {
+            const ings: IngredientName[] = [IngredientName.CARROT, IngredientName.TOMATO];
+            const type: MealType = MealType.SOUP;
+            const cachedResult = null;
+            const mockResult: RatedMeal[] = [
+                {
+                    id: 'some-id',
+                    ingredients: [],
+                    relevance: 50,
+                    title: 'some-meal'
+                }
+            ];
+
+            jest.spyOn(redisService, 'getMealResult').mockResolvedValue(cachedResult);
+            jest.spyOn(spoonacularApiService, 'getMeals').mockResolvedValue(mockResult);
+            jest.spyOn(redisService, 'saveMealResult').mockResolvedValue();
+
+            const result = await mealService.getMeals(ings, type);
+
+            expect(result).toStrictEqual(mockResult);
+            expect(redisService.saveMealResult).toHaveBeenCalled();
         });
     });
 
