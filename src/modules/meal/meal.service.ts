@@ -249,7 +249,7 @@ export class MealService {
     }
 
     async getMeals(ings: IngredientName[], type: MealType): Promise<RatedMeal[]> {
-        const query = getQueryWithIngredientsAndMealType(null, ings, type);
+        const query = getQueryWithIngredientsAndMealType(ings, type);
         const cachedResult = await this.redisService.getMealResult('merged', query);
         const context = 'MealService/getMeals';
 
@@ -267,7 +267,7 @@ export class MealService {
             .filter((set: RatedMeal[]): boolean => Boolean(set.length))
             .flat()
             .sort((meal1: RatedMeal, meal2: RatedMeal): number => meal2.relevance - meal1.relevance);
-        await this.redisService.saveMealResult('merged', query, meals, 24 * HOUR);
+        await this.redisService.saveMealResult('merged', query, meals, 12 * HOUR);
         this.loggerService.info(context, `Cached result containing ${meals.length} meals, defined for query "${query}".`);
 
         return meals;

@@ -25,7 +25,7 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
     abstract proceedDataMealIngredients(ingredients: GenericIngredientStruct[]): IngredientType[];
 
     async getMeals(apiKey: string, endpointUrl: string, ingredients: IngredientName[], mealType: MealType): Promise<RatedMeal[]> {
-        const query = getQueryWithIngredientsAndMealType(apiKey, ingredients, mealType);
+        const query = getQueryWithIngredientsAndMealType(ingredients, mealType, this.getName(), apiKey);
         const cachedResult = await this.redisService.getMealResult(this.getName(), query);
         const context: ContextString = 'AbstractApiService/getMeals';
 
