@@ -140,7 +140,6 @@ describe('UserService', () => {
         });
 
         it('should throw an error when user has not activated account', async () => {
-            const mockCookie = 'some.jwt.cookie';
             const mockInactivatedUser = {
                 email: 'xxx',
                 login: 'Aaa',
@@ -149,7 +148,6 @@ describe('UserService', () => {
 
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockInactivatedUser);
             jest.spyOn(userService, 'areSameHashedPasswords').mockResolvedValueOnce(true);
-            jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
 
             await expect(userService.loginUser(mockUserDto, mockRes)).rejects.toThrow(ForbiddenException);
         });
