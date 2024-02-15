@@ -7,6 +7,7 @@ import { getAccessTokenKey, getMealResultQueryKey, getRefreshTokenKey } from './
 import { HOUR, MINUTE } from '../../constants/times.constant';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { RatedMeal } from '../meal/meal.types';
+import { ACCESS_TOKEN_DURATION, REFRESH_TOKEN_DURATION } from '../../constants/tokens.constant';
 
 type RedisKeyType = string | `${string}:${string}`;
 
@@ -62,12 +63,12 @@ export class RedisService {
         if (refreshToken) {
             const refreshTokenKey: TokenKey = getRefreshTokenKey(login);
             await this.redisClient.set(refreshTokenKey, refreshToken);
-            await this.redisClient.expire(refreshTokenKey, 5 * MINUTE);
+            await this.redisClient.expire(refreshTokenKey, REFRESH_TOKEN_DURATION);
         }
 
         const accessTokenKey: TokenKey = getAccessTokenKey(login);
         await this.redisClient.set(accessTokenKey, accessToken);
-        await this.redisClient.expire(accessTokenKey, MINUTE);
+        await this.redisClient.expire(accessTokenKey, ACCESS_TOKEN_DURATION);
     }
 
     async unsetTokens(login: string, accessToken: string, refreshToken?: string): Promise<void> {
@@ -96,10 +97,10 @@ export class RedisService {
         return this.redisClient.get(key);
     }
 
-    async hasRefreshToken(login: string): Promise<boolean> {
-        const key: TokenKey = getAccessTokenKey(login);
+    async getRefreshToken(login: string): Promise<string> {
+        const key: TokenKey = getRefreshTokenKey(login);
 
-        return Boolean(this.redisClient.get(key));
+        return this.redisClient.get(key);
     }
 
     async saveMealResult(apiName: ApiName, query: string, meals: RatedMeal[], secondsToExpire: number = 24 * HOUR): Promise<void> {

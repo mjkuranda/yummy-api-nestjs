@@ -15,6 +15,8 @@ import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
 import { RedisService } from '../redis/redis.service';
 import { Response } from 'express';
+import { isTooShortToExpireRefreshToken } from '../jwt-manager/jwt-manager.utils';
+import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
 
 @Injectable()
 export class UserService {
@@ -75,6 +77,27 @@ export class UserService {
 
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
+    }
+
+    async refreshTokens(userPayload: UserAccessTokenPayload, accessToken: string, res: Response) {
+        const refreshToken = await this.redisService.getRefreshToken(userPayload.login);
+        const context = 'UserService/refreshTokens';
+
+        if (!refreshToken) {
+            throw new ForbiddenException(context, `User ${userPayload.login} doesn't have alive refresh token.`);
+        }
+
+        const newAccessToken = await this.jwtManagerService.generateAccessToken(userPayload);
+        res.cookie('accessToken', newAccessToken, { httpOnly: true });
+        const refreshTokenPayload = await this.jwtManagerService.verifyRefreshToken(refreshToken);
+        let newRefreshToken = null;
+
+        if (isTooShortToExpireRefreshToken(refreshTokenPayload)) {
+            newRefreshToken = await this.jwtManagerService.generateRefreshToken(refreshTokenPayload);
+            res.cookie('refreshToken', newRefreshToken, { httpOnly: true });
+        }
+
+        await this.redisService.setTokens(userPayload.login, newAccessToken, newRefreshToken);
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<UserDocument> {

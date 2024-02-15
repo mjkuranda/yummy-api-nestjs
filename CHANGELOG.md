@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.23.0] - 2024-02-14
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Refresh token endpoint at `/users/refreshTokens`.
+- [Marek Kurańda](https://github.com/mjkuranda): JwtManager utils.
+- [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `UserService/refreshTokens`.
+- [Marek Kurańda](https://github.com/mjkuranda): E2E tests for `/users/refreshTokens`.
+
 ## [1.22.0] - 2024-02-12
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `MealService/getMeals`.

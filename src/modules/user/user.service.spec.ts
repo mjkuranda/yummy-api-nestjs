@@ -14,6 +14,7 @@ import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
 import { RedisService } from '../redis/redis.service';
+import { UserAccessTokenPayload, UserRefreshTokenPayload } from '../jwt-manager/jwt-manager.types';
 
 describe('UserService', () => {
     let userService: UserService;
@@ -46,13 +47,21 @@ describe('UserService', () => {
         deleteOne: jest.fn()
     };
 
+    const mockJwtManagerService = {
+        generateAccessToken: jest.fn(),
+        verifyAccessToken: jest.fn(),
+        generateRefreshToken: jest.fn(),
+        verifyRefreshToken: jest.fn()
+    };
+
     const mockRedisService = {
         set: jest.fn(),
         get: jest.fn(),
         del: jest.fn(),
         setTokens: jest.fn(),
         unsetTokens: jest.fn(),
-        getAccessToken: jest.fn()
+        getAccessToken: jest.fn(),
+        getRefreshToken: jest.fn()
     };
 
     beforeEach(async () => {
@@ -73,7 +82,7 @@ describe('UserService', () => {
                 },
                 {
                     provide: JwtManagerService,
-                    useClass: JwtManagerService
+                    useValue: mockJwtManagerService
                 },
                 {
                     provide: LoggerService,
@@ -140,7 +149,6 @@ describe('UserService', () => {
         });
 
         it('should throw an error when user has not activated account', async () => {
-            const mockCookie = 'some.jwt.cookie';
             const mockInactivatedUser = {
                 email: 'xxx',
                 login: 'Aaa',
@@ -149,7 +157,6 @@ describe('UserService', () => {
 
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockInactivatedUser);
             jest.spyOn(userService, 'areSameHashedPasswords').mockResolvedValueOnce(true);
-            jest.spyOn(jwtManagerService, 'encodeUserData').mockResolvedValueOnce(mockCookie);
 
             await expect(userService.loginUser(mockUserDto, mockRes)).rejects.toThrow(ForbiddenException);
         });
@@ -190,6 +197,82 @@ describe('UserService', () => {
 
             // Then
             expect(result).toBeUndefined();
+        });
+    });
+
+    describe('refreshTokens', () => {
+        it('should refresh accessToken when refreshToken is valid', async () => {
+            const mockAccessToken = 'token';
+            const mockResponse: any = {
+                cookie: jest.fn()
+            };
+            const mockAccessTokenPayload: UserAccessTokenPayload = {
+                login: 'some login',
+                expirationTimestamp: Date.now() + 10000000
+            };
+            const mockRefreshToken = 'token2';
+            const mockNewAccessToken = 'new token';
+            const mockRefreshTokenPayload: UserRefreshTokenPayload = {
+                login: 'some login',
+                expirationTimestamp: Date.now() + 1000000
+            };
+
+            jest.spyOn(redisService, 'getRefreshToken').mockResolvedValueOnce(mockRefreshToken);
+            jest.spyOn(jwtManagerService, 'generateAccessToken').mockResolvedValueOnce(mockNewAccessToken);
+            jest.spyOn(jwtManagerService, 'verifyRefreshToken').mockResolvedValueOnce(mockRefreshTokenPayload);
+
+            const result = await userService.refreshTokens(mockAccessTokenPayload, mockAccessToken, mockResponse);
+
+            expect(result).toBeUndefined();
+            expect(redisService.setTokens).toHaveBeenCalledWith(mockAccessTokenPayload.login, mockNewAccessToken, undefined);
+            expect(mockResponse.cookie).toHaveBeenCalledWith('accessToken', mockNewAccessToken, { httpOnly: true });
+            expect(mockResponse.cookie).not.toHaveBeenCalledWith('refreshToken');
+        });
+
+        it('should throw an error when refreshToken expired', async () => {
+            const mockAccessToken = 'token';
+            const mockResponse: any = {
+                cookie: jest.fn()
+            };
+            const mockAccessTokenPayload: UserAccessTokenPayload = {
+                login: 'some login',
+                expirationTimestamp: Date.now() + 10000000
+            };
+            const mockRefreshToken = null;
+
+            jest.spyOn(redisService, 'getRefreshToken').mockResolvedValueOnce(mockRefreshToken);
+
+            await expect(userService.refreshTokens(mockAccessTokenPayload, mockAccessToken, mockResponse)).rejects.toThrow(ForbiddenException);
+        });
+
+        it('should refresh the both tokens when refresh token is going to expire', async () => {
+            const mockAccessToken = 'token';
+            const mockResponse: any = {
+                cookie: jest.fn()
+            };
+            const mockAccessTokenPayload: UserAccessTokenPayload = {
+                login: 'some login',
+                expirationTimestamp: Date.now() + 10000000
+            };
+            const mockRefreshToken = 'token2';
+            const mockNewAccessToken = 'new token';
+            const mockRefreshTokenPayload: UserRefreshTokenPayload = {
+                login: 'some login',
+                expirationTimestamp: Date.now() + 30
+            };
+            const mockNewRefreshToken = 'new token2';
+
+            jest.spyOn(redisService, 'getRefreshToken').mockResolvedValueOnce(mockRefreshToken);
+            jest.spyOn(jwtManagerService, 'generateAccessToken').mockResolvedValueOnce(mockNewAccessToken);
+            jest.spyOn(jwtManagerService, 'verifyRefreshToken').mockResolvedValueOnce(mockRefreshTokenPayload);
+            jest.spyOn(jwtManagerService, 'generateRefreshToken').mockResolvedValueOnce(mockNewRefreshToken);
+
+            const result = await userService.refreshTokens(mockAccessTokenPayload, mockAccessToken, mockResponse);
+
+            expect(result).toBeUndefined();
+            expect(redisService.setTokens).toHaveBeenCalledWith(mockAccessTokenPayload.login, mockNewAccessToken, mockNewRefreshToken);
+            expect(mockResponse.cookie).toHaveBeenCalledWith('accessToken', mockNewAccessToken, { httpOnly: true });
+            expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', mockNewRefreshToken, { httpOnly: true });
         });
     });
 

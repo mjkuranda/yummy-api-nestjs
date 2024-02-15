@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post, Response, Param, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Response, Param, UseGuards, Request,  } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
 import { CapabilityType } from './user.types';
@@ -25,6 +25,16 @@ export class UserController {
         const { login } = req.body;
 
         return await this.userService.logoutUser(res, login, accessToken, refreshToken);
+    }
+
+    @Post('/refreshTokens')
+    @HttpCode(200)
+    @UseGuards(AuthenticationGuard)
+    public async refreshTokens(@Request() req, @Response() res) {
+        const { accessToken } = req.cookies;
+        const { authenticatedUser } = req.body;
+
+        return await this.userService.refreshTokens(authenticatedUser, accessToken, res);
     }
 
     @Post('/create')
