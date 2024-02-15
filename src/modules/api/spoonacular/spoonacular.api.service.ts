@@ -3,7 +3,7 @@ import { RatedMeal } from '../../meal/meal.types';
 import { AbstractApiService } from '../../../services/abstract.api.service';
 import { ApiName } from '../../redis/redis.types';
 import { SpoonacularIngredient, SpoonacularRecipe } from './spoonacular.api.types';
-import { IngredientType } from '../../../common/types';
+import { IngredientType } from '../../ingredient/ingredient.types';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient> {
@@ -29,12 +29,6 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
     }
 
     proceedDataMealIngredients(ingredients: SpoonacularIngredient[]): IngredientType[] {
-        return ingredients.map(ingredient => {
-            return {
-                name: ingredient.name,
-                unit: ingredient.unit,
-                amount: ingredient.amount
-            };
-        });
+        return ingredients.map(ingredient => ingredient.name);
     }
 }

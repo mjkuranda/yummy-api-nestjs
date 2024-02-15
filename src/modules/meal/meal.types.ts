@@ -1,4 +1,4 @@
-import { IngredientType } from '../../common/types';
+import { IngredientType } from '../ingredient/ingredient.types';
 
 export type RatedMeal = {
     id: string,

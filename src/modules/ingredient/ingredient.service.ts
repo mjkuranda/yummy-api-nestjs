@@ -1,46 +1,72 @@
-import { Injectable } from '@nestjs/common';
-import { IngredientDocument } from '../../mongodb/documents/ingredient.document';
-import { CreateIngredientDto } from './ingredient.dto';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { LoggerService } from '../logger/logger.service';
-import { RedisService } from '../redis/redis.service';
-import { IngredientRepository } from '../../mongodb/repositories/ingredient.repository';
+import * as fs from 'fs';
+import { IngredientCategory, IngredientDataObject, IngredientDataset, IngredientType } from './ingredient.types';
 
 @Injectable()
 export class IngredientService {
 
+    private ingredientDatasets: IngredientDataObject;
+
     constructor(
-        private readonly ingredientRepository: IngredientRepository,
-        private readonly redisService: RedisService,
         private readonly loggerService: LoggerService
-    ) {}
-
-    async findAll(): Promise<IngredientDocument[]> {
-        const cachedIngredients = await this.redisService.get<IngredientDocument>('ingredients') as IngredientDocument[];
-        const context = 'IngredientService/findAll';
-
-        if (cachedIngredients) {
-            this.loggerService.info(context, `Fetched ${cachedIngredients.length} ingredients from cache.`);
-
-            return cachedIngredients;
-        }
-
-        const ingredients = (await this.ingredientRepository.findAll({})) as IngredientDocument[];
-        const message = `Found ${ingredients.length} ingredients.`;
-
-        await this.redisService.set<IngredientDocument>(ingredients, 'ingredients');
-        this.loggerService.info(context, 'Cached found ingredients.');
-
-        this.loggerService.info(context, message);
-
-        return ingredients;
+    ) {
+        this.ingredientDatasets = {
+            'breads': [],
+            'dairy-and-eggs': [],
+            'fish-and-seafood': [],
+            'fruits': [],
+            'meats': [],
+            'oils-and-fats': [],
+            'pasta': [],
+            'seeds-and-nuts': [],
+            'spices': [],
+            'vegetables': []
+        };
     }
 
-    async create(createIngredientDto: CreateIngredientDto): Promise<IngredientDocument> {
-        const createdIngredient = await this.ingredientRepository.create(createIngredientDto) as IngredientDocument;
-        const message = `New ingredient "${createIngredientDto.name}" has been added.`;
+    onModuleInit() {
+        this.init();
+    }
 
-        this.loggerService.info('IngredientService/create', message);
+    // TODO: Pass category and ingredient name to optimize it
+    public filterIngredients(ingredients: IngredientType[]): IngredientType[] {
+        return ingredients.filter(ingredient => {
+            if (this.ingredientDatasets['breads'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['dairy-and-eggs'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['fish-and-seafood'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['fruits'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['meats'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['oils-and-fats'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['pasta'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['seeds-and-nuts'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['spices'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['vegetables'].includes(ingredient)) return true;
 
-        return createdIngredient;
+            return false;
+        });
+    }
+
+    private init(): void {
+        this.loadIngredientSet('breads');
+        this.loadIngredientSet('dairy-and-eggs');
+        this.loadIngredientSet('fish-and-seafood');
+        this.loadIngredientSet('fruits');
+        this.loadIngredientSet('meats');
+        this.loadIngredientSet('oils-and-fats');
+        this.loadIngredientSet('pasta');
+        this.loadIngredientSet('seeds-and-nuts');
+        this.loadIngredientSet('spices');
+        this.loadIngredientSet('vegetables');
+    }
+
+    private loadIngredientSet(name: IngredientCategory): void {
+        const rawData = fs.readFileSync(`data/ingredients/${name}.json`, 'utf-8');
+        const { category, data } = <IngredientDataset>JSON.parse(rawData);
+        const context = 'IngredientService/loadIngredientSet';
+        const message = `${data.length} ingredients loaded from ${category.replaceAll('-', ' ')} category.`;
+
+        this.ingredientDatasets[category].push(...data);
+        this.loggerService.info(context, message);
     }
 }

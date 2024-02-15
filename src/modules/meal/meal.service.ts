@@ -8,11 +8,13 @@ import { LoggerService } from '../logger/logger.service';
 import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
 import { MealRepository } from '../../mongodb/repositories/meal.repository';
-import { IngredientName, MealType } from '../../common/enums';
+import { MealType } from '../../common/enums';
 import { RatedMeal } from './meal.types';
 import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
 import { getQueryWithIngredientsAndMealType } from './meal.utils';
 import { HOUR } from '../../constants/times.constant';
+import { IngredientService } from '../ingredient/ingredient.service';
+import { IngredientType } from '../ingredient/ingredient.types';
 
 @Injectable()
 export class MealService {
@@ -21,6 +23,7 @@ export class MealService {
         private mealRepository: MealRepository,
         private redisService: RedisService,
         private loggerService: LoggerService,
+        private ingredientService: IngredientService,
         private spoonacularApiService: SpoonacularApiService
     ) {}
 
@@ -248,8 +251,9 @@ export class MealService {
         return meals;
     }
 
-    async getMeals(ings: IngredientName[], type: MealType): Promise<RatedMeal[]> {
-        const query = getQueryWithIngredientsAndMealType(ings, type);
+    async getMeals(ings: IngredientType[], type: MealType): Promise<RatedMeal[]> {
+        const filteredIngredients = this.ingredientService.filterIngredients(ings);
+        const query = getQueryWithIngredientsAndMealType(filteredIngredients, type);
         const cachedResult = await this.redisService.getMealResult('merged', query);
         const context = 'MealService/getMeals';
 
@@ -260,7 +264,7 @@ export class MealService {
         }
 
         const datasets: Array<RatedMeal[] | null> = await Promise.all([
-            this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ings, type)
+            this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', filteredIngredients, type)
         ]);
 
         const meals = datasets
