@@ -12,6 +12,7 @@ import { MealRepository } from '../../mongodb/repositories/meal.repository';
 import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
 import { IngredientName, MealType } from '../../common/enums';
 import { RatedMeal } from './meal.types';
+import { IngredientModule } from '../ingredient/ingredient.module';
 
 describe('MealService', () => {
     let mealService: MealService;
@@ -35,6 +36,7 @@ describe('MealService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
+            imports: [IngredientModule],
             providers: [
                 MealService,
                 {
