@@ -146,7 +146,6 @@ describe('UserController (e2e)', () => {
             });
     });
 
-    // TODO: It used to work too long, therefore test will be designed in the future
     describe('/users/refreshTokens (POST)', () => {
         it('should generate new accessToken', () => {
             const mockAccessToken = 'token';
@@ -155,15 +154,15 @@ describe('UserController (e2e)', () => {
                 expirationTimestamp: Date.now() + 10000000
             };
             const mockRefreshToken = 'token2';
-            const mockNewAccessToken = 'new token';
+            const mockNewAccessToken = 'new-token';
             const mockRefreshTokenPayload: UserRefreshTokenPayload = {
                 login: 'some login',
-                expirationTimestamp: Date.now() + 100000000
+                expirationTimestamp: Date.now() + 1000000
             };
 
             jest.clearAllMocks();
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValueOnce(mockAccessTokenPayload);
-            jest.spyOn(redisService, 'get').mockResolvedValue(mockAccessToken);
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue(mockAccessToken);
             jest.spyOn(redisService, 'getRefreshToken').mockResolvedValueOnce(mockRefreshToken);
             jest.spyOn(jwtManagerService, 'generateAccessToken').mockResolvedValueOnce(mockNewAccessToken);
             jest.spyOn(jwtManagerService, 'verifyRefreshToken').mockResolvedValueOnce(mockRefreshTokenPayload);
@@ -172,7 +171,14 @@ describe('UserController (e2e)', () => {
                 .post('/users/refreshTokens')
                 .set('Cookie', ['accessToken=token'])
                 .set('Authorization', 'Bearer token')
-                .expect(200);
+                .expect(204)
+                .then(res => {
+                    const accessToken = getCookie(res, 'accessToken');
+                    const refreshToken = getCookie(res, 'refreshCookie');
+
+                    expect(accessToken).toBe(mockNewAccessToken);
+                    expect(refreshToken).toBeUndefined();
+                });
         });
     });
 
@@ -197,7 +203,7 @@ describe('UserController (e2e)', () => {
 
             jest.clearAllMocks();
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockAdminUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
@@ -231,7 +237,7 @@ describe('UserController (e2e)', () => {
 
             jest.clearAllMocks();
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockAdminUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
@@ -256,7 +262,7 @@ describe('UserController (e2e)', () => {
 
             jest.clearAllMocks();
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockAdminUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
@@ -278,7 +284,7 @@ describe('UserController (e2e)', () => {
             jest.clearAllMocks();
             jest.spyOn(userRepository, 'findByLogin').mockReturnValue(null);
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockAdminUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
 
             const res = await request(app.getHttpServer())
                 .post('/users/XNAME2/grant/some-capability')
@@ -309,7 +315,7 @@ describe('UserController (e2e)', () => {
 
             jest.clearAllMocks();
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockAdminUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
@@ -335,7 +341,7 @@ describe('UserController (e2e)', () => {
 
             jest.clearAllMocks();
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockAdminUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
@@ -360,7 +366,7 @@ describe('UserController (e2e)', () => {
 
             jest.clearAllMocks();
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockAdminUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
 
             return request(app.getHttpServer())
@@ -381,7 +387,7 @@ describe('UserController (e2e)', () => {
             jest.resetAllMocks();
             jest.clearAllMocks();
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockAdminUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(null);
 
             return request(app.getHttpServer())

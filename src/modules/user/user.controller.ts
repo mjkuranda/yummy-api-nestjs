@@ -28,9 +28,9 @@ export class UserController {
     }
 
     @Post('/refreshTokens')
-    @HttpCode(200)
+    @HttpCode(204)
     @UseGuards(AuthenticationGuard)
-    public async refreshTokens(@Request() req, @Response() res) {
+    public async refreshTokens(@Request() req, @Response({ passthrough: true }) res) {
         const { accessToken } = req.cookies;
         const { authenticatedUser } = req.body;
 
