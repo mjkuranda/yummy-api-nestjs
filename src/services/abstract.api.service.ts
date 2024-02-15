@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { RedisService } from '../modules/redis/redis.service';
-import { IngredientName, MealType } from '../common/enums';
+import { MealType } from '../common/enums';
 import { RatedMeal } from '../modules/meal/meal.types';
 import { getQueryWithIngredientsAndMealType } from '../modules/meal/meal.utils';
 import { AxiosResponse } from 'axios';
 import { ApiName } from '../modules/redis/redis.types';
-import { ContextString, IngredientType } from '../common/types';
+import { ContextString } from '../common/types';
 import { LoggerService } from '../modules/logger/logger.service';
 import { AxiosService } from './axios.service';
+import { IngredientType } from '../modules/ingredient/ingredient.types';
 
 @Injectable()
 export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStruct> {
@@ -26,7 +27,7 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
 
     abstract proceedDataMealIngredients(ingredients: GenericIngredientStruct[]): IngredientType[];
 
-    async getMeals(apiKey: string, endpointUrl: string, ingredients: IngredientName[], mealType: MealType): Promise<RatedMeal[]> {
+    async getMeals(apiKey: string, endpointUrl: string, ingredients: IngredientType[], mealType: MealType): Promise<RatedMeal[]> {
         const query = getQueryWithIngredientsAndMealType(ingredients, mealType, this.getName(), apiKey);
         const cachedResult = await this.redisService.getMealResult(this.getName(), query);
         const context: ContextString = 'AbstractApiService/getMeals';

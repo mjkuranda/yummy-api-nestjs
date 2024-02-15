@@ -1,6 +1,6 @@
 import { SpoonacularRecipe, SpoonacularIngredient } from './spoonacular.api.types';
 import { RatedMeal } from '../../meal/meal.types';
-import { IngredientType } from '../../../common/types';
+import { IngredientType } from '../../ingredient/ingredient.types';
 
 export function proceedRecipesToMeals(recipes: SpoonacularRecipe[]): RatedMeal[] {
     return recipes.map(recipe => {
@@ -15,11 +15,5 @@ export function proceedRecipesToMeals(recipes: SpoonacularRecipe[]): RatedMeal[]
 }
 
 function proceedIngredients(ingredients: SpoonacularIngredient[]): IngredientType[] {
-    return ingredients.map(ingredient => {
-        return {
-            name: ingredient.name,
-            unit: ingredient.unit,
-            amount: ingredient.amount
-        };
-    });
+    return ingredients.map(ingredient => ingredient.name);
 }

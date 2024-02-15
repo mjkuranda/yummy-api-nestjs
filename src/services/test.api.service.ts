@@ -1,7 +1,7 @@
 import { AbstractApiService } from './abstract.api.service';
 import { ApiName } from '../modules/redis/redis.types';
-import { IngredientType } from '../common/types';
 import { RatedMeal } from '../modules/meal/meal.types';
+import { IngredientType } from '../modules/ingredient/ingredient.types';
 
 export class TestApiService extends AbstractApiService<any, any> {
 

@@ -7,4 +7,4 @@ export type IngredientCategory = 'breads' | 'dairy-and-eggs' | 'fish-and-seafood
 
 export type IngredientDataObject = Record<IngredientCategory, IngredientType[]>;
 
-type IngredientType = string;
+export type IngredientType = string;

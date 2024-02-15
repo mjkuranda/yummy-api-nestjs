@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { LoggerService } from '../logger/logger.service';
 import * as fs from 'fs';
-import { IngredientCategory, IngredientDataObject, IngredientDataset } from './ingredient.types';
+import { IngredientCategory, IngredientDataObject, IngredientDataset, IngredientType } from './ingredient.types';
 
 @Injectable()
 export class IngredientService {
@@ -27,6 +27,24 @@ export class IngredientService {
 
     onModuleInit() {
         this.init();
+    }
+
+    // TODO: Pass category and ingredient name to optimize it
+    public filterIngredients(ingredients: IngredientType[]): IngredientType[] {
+        return ingredients.filter(ingredient => {
+            if (this.ingredientDatasets['breads'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['dairy-and-eggs'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['fish-and-seafood'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['fruits'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['meats'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['oils-and-fats'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['pasta'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['seeds-and-nuts'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['spices'].includes(ingredient)) return true;
+            if (this.ingredientDatasets['vegetables'].includes(ingredient)) return true;
+
+            return false;
+        });
     }
 
     private init(): void {

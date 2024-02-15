@@ -8,12 +8,14 @@ import { MealRepository } from '../../mongodb/repositories/meal.repository';
 import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { SpoonacularApiModule } from '../api/spoonacular/spoonacular.api.module';
+import { IngredientModule } from '../ingredient/ingredient.module';
 
 @Module({
     imports: [
         MongooseModule.forFeature([MEAL_MODEL]),
         RedisModule,
         JwtManagerModule,
+        IngredientModule,
         SpoonacularApiModule
     ],
     controllers: [MealController],
