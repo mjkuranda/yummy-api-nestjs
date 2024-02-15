@@ -44,15 +44,6 @@ Technologies:
 * `POST /meals/:id/edit` - confirm editing a meal. You need to be logged-in and has `canEdit` capability (or be an admin).
 * `POST /meals/:id/delete` - confirm deleting a meal. You need to be logged-in and has `canDelete` capability (or be an admin).
 
-* `GET /ingredients/` - returns all ingredients from the database. It saves to the cache. Each request checks, if there exist ingredient and return them, if they exist.
-* `POST /ingredients/create` - creates a new ingredient and saves its to the database. You need to provide following data:
-```json
-{
-  "name": "Ingredient name",
-  "category": "Category name"
-}
-```
-
 * `POST /users/create` - register a new user. You need to provide following data:
 ```json
 {
