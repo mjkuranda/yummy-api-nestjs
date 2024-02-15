@@ -1,5 +1,4 @@
 import { INestApplication } from '@nestjs/common';
-import { AuthService } from '../src/modules/auth/auth.service';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import { LoggerService } from '../src/modules/logger/logger.service';
@@ -14,7 +13,6 @@ import { RatedMeal } from '../src/modules/meal/meal.types';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
-    let authService: AuthService;
     let mealService: MealService;
     let mealRepository: MealRepository;
     let jwtManagerService: JwtManagerService;
@@ -73,7 +71,6 @@ describe('UserController (e2e)', () => {
         app.use(cookieParser());
         await app.init();
 
-        authService = moduleRef.get(AuthService);
         mealService = moduleRef.get(MealService);
         mealRepository = moduleRef.get(MealRepository);
         jwtManagerService = moduleRef.get(JwtManagerService);
@@ -143,7 +140,6 @@ describe('UserController (e2e)', () => {
             } as any;
             const accessToken = 'token';
 
-            jest.spyOn(authService, 'getAuthorizedUser').mockReturnValueOnce(mockUser);
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
             jest.spyOn(redisService, 'get').mockResolvedValue(accessToken);
 
