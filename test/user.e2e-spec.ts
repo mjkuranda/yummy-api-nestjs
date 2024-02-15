@@ -9,6 +9,7 @@ import { LoggerService } from '../src/modules/logger/logger.service';
 import { MailManagerService } from '../src/modules/mail-manager/mail-manager.service';
 import { UserRepository } from '../src/mongodb/repositories/user.repository';
 import { RedisService } from '../src/modules/redis/redis.service';
+import { UserAccessTokenPayload, UserRefreshTokenPayload } from '../src/modules/jwt-manager/jwt-manager.types';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -147,7 +148,32 @@ describe('UserController (e2e)', () => {
 
     // TODO: It used to work too long, therefore test will be designed in the future
     describe('/users/refreshTokens (POST)', () => {
-        it('should generate new accessToken', () => {});
+        it('should generate new accessToken', () => {
+            const mockAccessToken = 'token';
+            const mockAccessTokenPayload: UserAccessTokenPayload = {
+                login: 'some login',
+                expirationTimestamp: Date.now() + 10000000
+            };
+            const mockRefreshToken = 'token2';
+            const mockNewAccessToken = 'new token';
+            const mockRefreshTokenPayload: UserRefreshTokenPayload = {
+                login: 'some login',
+                expirationTimestamp: Date.now() + 100000000
+            };
+
+            jest.clearAllMocks();
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValueOnce(mockAccessTokenPayload);
+            jest.spyOn(redisService, 'get').mockResolvedValue(mockAccessToken);
+            jest.spyOn(redisService, 'getRefreshToken').mockResolvedValueOnce(mockRefreshToken);
+            jest.spyOn(jwtManagerService, 'generateAccessToken').mockResolvedValueOnce(mockNewAccessToken);
+            jest.spyOn(jwtManagerService, 'verifyRefreshToken').mockResolvedValueOnce(mockRefreshTokenPayload);
+
+            return request(app.getHttpServer())
+                .post('/users/refreshTokens')
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
+                .expect(200);
+        });
     });
 
     describe('/users/:login/grant/:capability (POST)', () => {

@@ -15,12 +15,12 @@ export function generateUserDataPayload<
 
     return {
         ...userData,
-        expirationTimestamp: Date.now() + expirationTime
+        expirationTimestamp: Date.now() + (expirationTime * 1000)
     } as R;
 }
 
 export function isTooShortToExpireRefreshToken(userRefreshTokenPayload: UserRefreshTokenPayload): boolean {
-    const toExpire = Date.now() - userRefreshTokenPayload.expirationTimestamp;
+    const toExpire = userRefreshTokenPayload.expirationTimestamp - Date.now();
 
     return toExpire < MINUTE;
 }
