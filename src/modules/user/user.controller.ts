@@ -32,8 +32,9 @@ export class UserController {
     @UseGuards(AuthenticationGuard)
     public async refreshTokens(@Request() req, @Response() res) {
         const { accessToken } = req.cookies;
+        const { authenticatedUser } = req.body;
 
-        return await this.userService.refreshTokens(accessToken, res);
+        return await this.userService.refreshTokens(authenticatedUser, accessToken, res);
     }
 
     @Post('/create')
