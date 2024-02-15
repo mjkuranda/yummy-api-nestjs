@@ -89,12 +89,14 @@ export class UserService {
 
         const newAccessToken = await this.jwtManagerService.generateAccessToken(userPayload);
         res.cookie('accessToken', newAccessToken, { httpOnly: true });
+        this.loggerService.info(context, `Access token was renewed for ${userPayload.login} user.`);
         const refreshTokenPayload = await this.jwtManagerService.verifyRefreshToken(refreshToken);
         let newRefreshToken = null;
 
         if (isTooShortToExpireRefreshToken(refreshTokenPayload)) {
             newRefreshToken = await this.jwtManagerService.generateRefreshToken(refreshTokenPayload);
             res.cookie('refreshToken', newRefreshToken, { httpOnly: true });
+            this.loggerService.info(context, `Refresh token was renewed for ${userPayload.login} user.`);
         }
 
         await this.redisService.setTokens(userPayload.login, newAccessToken, newRefreshToken);

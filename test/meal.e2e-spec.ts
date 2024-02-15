@@ -48,7 +48,8 @@ describe('UserController (e2e)', () => {
         set: jest.fn(),
         get: jest.fn(),
         del: jest.fn(),
-        encodeKey: jest.fn()
+        encodeKey: jest.fn(),
+        getAccessToken: jest.fn()
     };
     const jwtManagerServiceProvider = {
         generateAccessToken: jest.fn(),
@@ -141,7 +142,7 @@ describe('UserController (e2e)', () => {
             const accessToken = 'token';
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue(accessToken);
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue(accessToken);
 
             return request(app.getHttpServer())
                 .post('/meals/create')
@@ -188,7 +189,7 @@ describe('UserController (e2e)', () => {
             const accessToken = 'token';
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue(accessToken);
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue(accessToken);
             jest.spyOn(mealService, 'edit').mockReturnValueOnce(mockEditedMeal);
 
             return request(app.getHttpServer())
@@ -228,7 +229,7 @@ describe('UserController (e2e)', () => {
             const mockDeletedMeal = {} as any;
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(mealService, 'delete').mockReturnValueOnce(mockDeletedMeal);
 
             return request(app.getHttpServer())
@@ -259,7 +260,7 @@ describe('UserController (e2e)', () => {
             } as any;
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmCreating').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
@@ -280,7 +281,7 @@ describe('UserController (e2e)', () => {
             } as any;
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmCreating').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
@@ -298,7 +299,7 @@ describe('UserController (e2e)', () => {
             } as any;
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/create')
@@ -325,7 +326,7 @@ describe('UserController (e2e)', () => {
             } as any;
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmEditing').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
@@ -346,7 +347,7 @@ describe('UserController (e2e)', () => {
             } as any;
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmEditing').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
@@ -364,7 +365,7 @@ describe('UserController (e2e)', () => {
             } as any;
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/edit')
@@ -391,7 +392,7 @@ describe('UserController (e2e)', () => {
             } as any;
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmDeleting').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
@@ -412,7 +413,7 @@ describe('UserController (e2e)', () => {
             } as any;
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
             jest.spyOn(mealService, 'confirmDeleting').mockReturnValueOnce({} as any);
 
             return request(app.getHttpServer())
@@ -430,7 +431,7 @@ describe('UserController (e2e)', () => {
             } as any;
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'get').mockResolvedValue('token');
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
 
             return request(app.getHttpServer())
                 .post('/meals/635981f6e40f61599e839aaa/delete')

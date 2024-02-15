@@ -19,7 +19,7 @@ export class AuthenticationGuard implements CanActivate {
         }
 
         const user = await this.jwtManagerService.verifyAccessToken(token);
-        const cachedToken = await this.redisService.get(`user:${user.login}`);
+        const cachedToken = await this.redisService.getAccessToken(user.login);
 
         if (!cachedToken) {
             throw new UnauthorizedException(context, 'User accessToken expired.');
