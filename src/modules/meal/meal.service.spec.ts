@@ -13,6 +13,7 @@ import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.servic
 import { IngredientName, MealType } from '../../common/enums';
 import { RatedMeal } from './meal.types';
 import { IngredientModule } from '../ingredient/ingredient.module';
+import { proceedMealDocumentToMealDetails } from './meal.utils';
 
 describe('MealService', () => {
     let mealService: MealService;
@@ -31,7 +32,8 @@ describe('MealService', () => {
     };
 
     const mockSpoonacularApiService = {
-        getMeals: jest.fn()
+        getMeals: jest.fn(),
+        getMealDetails: jest.fn()
     };
 
     beforeEach(async () => {
@@ -54,8 +56,8 @@ describe('MealService', () => {
                 {
                     provide: LoggerService,
                     useValue: {
-                        info: () => {},
-                        error: () => {}
+                        info: jest.fn(),
+                        error: jest.fn()
                     }
                 },
                 {
@@ -66,7 +68,9 @@ describe('MealService', () => {
                         unset: jest.fn(),
                         encodeKey: jest.fn(),
                         getMealResult: jest.fn(),
-                        saveMealResult: jest.fn()
+                        saveMealResult: jest.fn(),
+                        getMealDetails: jest.fn(),
+                        saveMealDetails: jest.fn()
                     }
                 },
                 {
@@ -324,6 +328,62 @@ describe('MealService', () => {
 
             expect(result).toStrictEqual(mockResult);
             expect(redisService.saveMealResult).toHaveBeenCalled();
+        });
+    });
+
+    describe('getMealDetails', () => {
+        it('should throw an error when id is not provided', async () => {
+            await expect(mealService.getMealDetails(null)).rejects.toThrow(BadRequestException);
+        });
+
+        it('should return a meal when found its in cache', async () => {
+            const mockCachedMeal: any = {};
+            const mockId = 'id';
+
+            jest.spyOn(redisService, 'getMealDetails').mockResolvedValueOnce(mockCachedMeal);
+
+            const result = await mealService.getMealDetails(mockId);
+
+            expect(result).toStrictEqual(mockCachedMeal);
+        });
+
+        it('should return a meal when found its in local database and cache it', async () => {
+            const mockMeal: any = {};
+            const resultMeal = proceedMealDocumentToMealDetails(mockMeal);
+            const mockId = '5cabe64dcf0d4447fa60f5e2';
+
+            jest.spyOn(redisService, 'getMealDetails').mockResolvedValueOnce(null);
+            jest.spyOn(mealRepository, 'findById').mockResolvedValueOnce(mockMeal);
+
+            const result = await mealService.getMealDetails(mockId);
+
+            expect(result).toStrictEqual(resultMeal);
+            expect(redisService.saveMealDetails).toHaveBeenCalled();
+        });
+
+        it('should return a meal when found its in an external API and cache it', async () => {
+            const mockMeal: any = {};
+            const resultMeal = proceedMealDocumentToMealDetails(mockMeal);
+            const mockId = '5cabe64dcf0d4447fa60f5e2';
+
+            jest.spyOn(redisService, 'getMealDetails').mockResolvedValueOnce(null);
+            jest.spyOn(mealRepository, 'findById').mockResolvedValueOnce(null);
+            jest.spyOn(spoonacularApiService, 'getMealDetails').mockResolvedValueOnce(resultMeal);
+
+            const result = await mealService.getMealDetails(mockId);
+
+            expect(result).toStrictEqual(resultMeal);
+            expect(redisService.saveMealDetails).toHaveBeenCalled();
+        });
+
+        it('should throw an error when meal with provided id hasn\'t found', async () => {
+            const mockId = '5cabe64dcf0d4447fa60f5e2';
+
+            jest.spyOn(redisService, 'getMealDetails').mockResolvedValueOnce(null);
+            jest.spyOn(mealRepository, 'findById').mockResolvedValueOnce(null);
+            jest.spyOn(spoonacularApiService, 'getMealDetails').mockResolvedValueOnce(null);
+
+            await expect(mealService.getMealDetails(mockId)).rejects.toThrow(NotFoundException);
         });
     });
 
