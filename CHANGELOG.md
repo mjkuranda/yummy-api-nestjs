@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.26.0] - 2024-02-16
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `/meals/:id/details` endpoint to get more detailed information about a meal.
+
 ## [1.25.0] - 2024-02-15
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Filtering provided ingredients - only supported ingredients.

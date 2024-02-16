@@ -9,9 +9,9 @@ import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
 import { MealRepository } from '../../mongodb/repositories/meal.repository';
 import { MealType } from '../../common/enums';
-import { RatedMeal } from './meal.types';
+import { DetailedMeal, RatedMeal } from './meal.types';
 import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
-import { getQueryWithIngredientsAndMealType } from './meal.utils';
+import { getQueryWithIngredientsAndMealType, proceedMealDocumentToMealDetails } from './meal.utils';
 import { HOUR } from '../../constants/times.constant';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { IngredientType } from '../ingredient/ingredient.types';
@@ -194,6 +194,49 @@ export class MealService {
         this.loggerService.info(context, `Meal with id "${meal._id}" (titled: "${meal.title}") has been confirmed deleting by "${user.login}" user.`);
 
         return deletedMeal;
+    }
+
+    async getMealDetails(id: string): Promise<DetailedMeal> {
+        const context = 'MealService/getMealDetails';
+
+        if (!id) {
+            throw new BadRequestException(context, 'Not provided id param.');
+        }
+
+        const cachedMeal: DetailedMeal = await this.redisService.getMealDetails(id);
+
+        if (cachedMeal) {
+            this.loggerService.info(context, `Found in cache a meal with id "${id}".`);
+
+            return cachedMeal;
+        }
+
+        if (isValidObjectId(id)) {
+            const mealDocument: MealDocument = await this.mealRepository.findById(id);
+
+            if (mealDocument) {
+                const mealDetails: DetailedMeal = proceedMealDocumentToMealDetails(mealDocument);
+                await this.redisService.saveMealDetails(id, mealDetails);
+                this.loggerService.info(context, `Found in local database a meal with id "${id}" and cached.`);
+
+                return mealDetails;
+            }
+        }
+
+        const datasets: Array<DetailedMeal | null> = await Promise.all([
+            this.spoonacularApiService.getMealDetails(id)
+        ]);
+
+        const filteredMeal: DetailedMeal = datasets.find(meal => meal !== null);
+
+        if (filteredMeal) {
+            await this.redisService.saveMealDetails(id, filteredMeal);
+            this.loggerService.info(context, `Found in external database a meal with id "${id}" and cached.`);
+
+            return filteredMeal;
+        }
+
+        throw new NotFoundException(context, `Meal with "${id}" does not exist in any integrated API.`);
     }
 
     async find(id: string): Promise<MealDocument> {

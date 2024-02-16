@@ -2,11 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
 import { LoggerService } from '../logger/logger.service';
 import { REDIS_CLIENT, REDIS_TTL } from './redis.constants';
-import { ApiName, MealResultQueryKey, TokenKey } from './redis.types';
-import { getAccessTokenKey, getMealResultQueryKey, getRefreshTokenKey } from './redis.utils';
+import { ApiName, MealDetailsQueryKey, MealResultQueryKey, TokenKey } from './redis.types';
+import { getAccessTokenKey, getMealDetailsQueryKey, getMealResultQueryKey, getRefreshTokenKey } from './redis.utils';
 import { HOUR, MINUTE } from '../../constants/times.constant';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { RatedMeal } from '../meal/meal.types';
+import { DetailedMeal, RatedMeal } from '../meal/meal.types';
 import { ACCESS_TOKEN_DURATION, REFRESH_TOKEN_DURATION } from '../../constants/tokens.constant';
 
 type RedisKeyType = string | `${string}:${string}`;
@@ -113,6 +113,25 @@ export class RedisService {
 
     async getMealResult(apiName: ApiName, query: string): Promise<RatedMeal[] | null> {
         const key: MealResultQueryKey = getMealResultQueryKey(apiName, query);
+        const value = await this.redisClient.get(key);
+
+        if (!value) {
+            return null;
+        }
+
+        return JSON.parse(value);
+    }
+
+    async saveMealDetails(id: string, mealDetails: DetailedMeal): Promise<void> {
+        const key: MealDetailsQueryKey = getMealDetailsQueryKey(id);
+        const value = JSON.stringify(mealDetails);
+
+        await this.redisClient.set(key, value);
+        await this.redisClient.expire(key, 24 * HOUR);
+    }
+
+    async getMealDetails(id: string): Promise<DetailedMeal> {
+        const key: MealDetailsQueryKey = getMealDetailsQueryKey(id);
         const value = await this.redisClient.get(key);
 
         if (!value) {

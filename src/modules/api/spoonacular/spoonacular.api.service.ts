@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { RatedMeal } from '../../meal/meal.types';
+import { DetailedMeal, RatedMeal } from '../../meal/meal.types';
 import { AbstractApiService } from '../../../services/abstract.api.service';
 import { ApiName } from '../../redis/redis.types';
-import { SpoonacularIngredient, SpoonacularRecipe } from './spoonacular.api.types';
+import { SpoonacularIngredient, SpoonacularRecipe, SpoonacularRecipeDetails } from './spoonacular.api.types';
 import { IngredientType } from '../../ingredient/ingredient.types';
 
 @Injectable()
-export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient> {
+export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails> {
 
     getApiUrl(): string {
         return 'https://api.spoonacular.com';
@@ -14,6 +14,10 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
 
     getName(): ApiName {
         return 'spoonacular';
+    }
+
+    proceedDataMealIngredients(ingredients: SpoonacularIngredient[]): IngredientType[] {
+        return ingredients.map(ingredient => ingredient.name);
     }
 
     proceedDataToMeals(data: SpoonacularRecipe[]): RatedMeal[] {
@@ -28,7 +32,14 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         });
     }
 
-    proceedDataMealIngredients(ingredients: SpoonacularIngredient[]): IngredientType[] {
-        return ingredients.map(ingredient => ingredient.name);
+    proceedDataToMealDetails(data: SpoonacularRecipeDetails): DetailedMeal {
+        const { id, image, title, extendedIngredients } = data;
+
+        return {
+            id: id.toString(),
+            imgUrl: image,
+            ingredients: this.proceedDataMealIngredients(extendedIngredients),
+            title
+        };
     }
 }
