@@ -92,6 +92,37 @@ describe('TestApiService', () => {
             expect(result).toStrictEqual(mockResult);
             expect(redisService.saveMealResult).toHaveBeenCalled();
         });
+    });
 
+    describe('getMealDetails', () => {
+        it('should return a meal when everything went fine', async () => {
+            const mockMealFromExternalAPI = {
+                id: 'id',
+                title: 'some title'
+            };
+            const mockId = 'id';
+
+            jest.spyOn(axiosService, 'get').mockResolvedValueOnce({
+                status: 200,
+                data: mockMealFromExternalAPI
+            });
+
+            const result = await testApiService.getMealDetails(mockId);
+
+            expect(result).toStrictEqual(mockMealFromExternalAPI);
+        });
+
+        it('shouldn\'t return any meal when there is no such meal with provided id', async () => {
+            const mockId = 'id';
+
+            jest.spyOn(axiosService, 'get').mockResolvedValueOnce({
+                status: 404,
+                data: null
+            });
+
+            const result = await testApiService.getMealDetails(mockId);
+
+            expect(result).toStrictEqual(null);
+        });
     });
 });

@@ -49,13 +49,16 @@ describe('UserController (e2e)', () => {
         get: jest.fn(),
         del: jest.fn(),
         encodeKey: jest.fn(),
-        getAccessToken: jest.fn()
+        getAccessToken: jest.fn(),
+        getMealDetails: jest.fn()
     };
     const jwtManagerServiceProvider = {
         generateAccessToken: jest.fn(),
         verifyAccessToken: jest.fn()
     };
-    const spoonacularApiServiceProvider = {};
+    const spoonacularApiServiceProvider = {
+        getMealDetails: jest.fn()
+    };
 
     beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -90,6 +93,29 @@ describe('UserController (e2e)', () => {
                 .get('/meals?ings=carrot,tomato&type=soup')
                 .expect(200)
                 .expect(mealResult);
+        });
+    });
+
+    describe('/meals/:id/details', () => {
+        it('should return a meal when is cached', async () => {
+            const mockCachedMeal: any = {};
+
+            jest.spyOn(redisService, 'getMealDetails').mockResolvedValueOnce(mockCachedMeal);
+
+            return request(app.getHttpServer())
+                .get('/meals/some-id/details')
+                .expect(200)
+                .expect(mockCachedMeal);
+        });
+
+        it('should throw an error when meal hasn\'t found', async () => {
+            jest.spyOn(redisService, 'getMealDetails').mockResolvedValueOnce(null);
+            jest.spyOn(mealRepository, 'findById').mockResolvedValueOnce(null);
+            jest.spyOn(spoonacularApiService, 'getMealDetails').mockResolvedValueOnce(null);
+
+            return request(app.getHttpServer())
+                .get('/meals/some-id/details')
+                .expect(404);
         });
     });
 

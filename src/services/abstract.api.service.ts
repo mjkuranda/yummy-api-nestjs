@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RedisService } from '../modules/redis/redis.service';
 import { MealType } from '../common/enums';
-import { RatedMeal } from '../modules/meal/meal.types';
+import { DetailedMeal, RatedMeal } from '../modules/meal/meal.types';
 import { getQueryWithIngredientsAndMealType } from '../modules/meal/meal.utils';
 import { AxiosResponse } from 'axios';
 import { ApiName } from '../modules/redis/redis.types';
@@ -11,7 +11,7 @@ import { AxiosService } from './axios.service';
 import { IngredientType } from '../modules/ingredient/ingredient.types';
 
 @Injectable()
-export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStruct> {
+export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStruct, GenericMealDetailsStruct> {
 
     constructor(
         protected readonly axiosService: AxiosService,
@@ -24,6 +24,8 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
     abstract getName(): ApiName;
 
     abstract proceedDataToMeals(data: GenericMealStruct[]): RatedMeal[];
+
+    abstract proceedDataToMealDetails(data: GenericMealDetailsStruct): DetailedMeal;
 
     abstract proceedDataMealIngredients(ingredients: GenericIngredientStruct[]): IngredientType[];
 
@@ -61,7 +63,35 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
         }
     }
 
-    private getFullApiUrl(endpointUrl: string, query: string) {
+    async getMealDetails(id: string): Promise<DetailedMeal> {
+        const url: string = this.getFullApiUrl(`recipes/${id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`);
+        const context = 'AbstractApiService/getMealDetails';
+
+        try {
+            const result: AxiosResponse<GenericMealDetailsStruct, unknown> = await this.axiosService.get(url);
+
+            if (result.status < 200 || result.status >= 300) {
+                this.loggerService.error(context, `External API returned ${result.status} code with "${result.statusText}" message. Returned 0 meals.`);
+
+                return null;
+            }
+
+            const meal: DetailedMeal = this.proceedDataToMealDetails(result.data);
+            this.loggerService.info(context, `Received meal with details from "${this.getName()}" API.`);
+
+            return meal;
+        } catch (err: any) {
+            this.loggerService.error(context, `Error occurred during fetching a meal from ${this.getName()} API: ${err.message}.`);
+
+            return null;
+        }
+    }
+
+    private getFullApiUrl(endpointUrl: string, query?: string) {
+        if (!query) {
+            return `${this.getApiUrl()}/${endpointUrl}`;
+        }
+
         return `${this.getApiUrl()}/${endpointUrl}?${query}`;
     }
 }

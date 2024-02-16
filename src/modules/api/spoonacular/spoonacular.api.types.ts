@@ -1,5 +1,14 @@
 import { IngredientName, IngredientUnit } from '../../../common/enums';
 
+export type SpoonacularIngredient = {
+    amount: number,
+    id: number,
+    image: string,
+    meta: [],
+    name: IngredientName,
+    unit: IngredientUnit
+};
+
 export type SpoonacularRecipe = {
     id: number,
     image: string,
@@ -11,11 +20,9 @@ export type SpoonacularRecipe = {
     usedIngredients: SpoonacularIngredient[]
 };
 
-export type SpoonacularIngredient = {
-    amount: number,
+export type SpoonacularRecipeDetails = {
     id: number,
     image: string,
-    meta: [],
-    name: IngredientName,
-    unit: IngredientUnit
+    title: string,
+    extendedIngredients: SpoonacularIngredient[]
 };

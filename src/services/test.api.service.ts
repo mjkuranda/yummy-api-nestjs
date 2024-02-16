@@ -1,9 +1,9 @@
 import { AbstractApiService } from './abstract.api.service';
 import { ApiName } from '../modules/redis/redis.types';
-import { RatedMeal } from '../modules/meal/meal.types';
+import { DetailedMeal, RatedMeal } from '../modules/meal/meal.types';
 import { IngredientType } from '../modules/ingredient/ingredient.types';
 
-export class TestApiService extends AbstractApiService<any, any> {
+export class TestApiService extends AbstractApiService<any, any, any> {
 
     getApiUrl(): string {
         return 'api-url';
@@ -19,6 +19,10 @@ export class TestApiService extends AbstractApiService<any, any> {
 
     proceedDataToMeals(data: any[]): RatedMeal[] {
         return [...data];
+    }
+
+    proceedDataToMealDetails(data: any): DetailedMeal {
+        return { ...data };
     }
 
 }

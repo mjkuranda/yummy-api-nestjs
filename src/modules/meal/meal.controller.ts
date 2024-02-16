@@ -5,7 +5,7 @@ import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CreationGuard } from '../../guards/creation.guard';
 import { EditionGuard } from '../../guards/edition.guard';
 import { DeletionGuard } from '../../guards/deletion.guard';
-import { GetMealsQueryType } from './meal.types';
+import { DetailedMeal, GetMealsQueryType } from './meal.types';
 import { IngredientName, MealType } from '../../common/enums';
 
 @Controller('meals')
@@ -25,6 +25,12 @@ export class MealController {
     @HttpCode(200)
     public async getMeal(@Param('id') id: string) {
         return await this.mealService.find(id);
+    }
+
+    @Get('/:id/details')
+    @HttpCode(200)
+    public async getMealDetails(@Param('id') id: string): Promise<DetailedMeal> {
+        return await this.mealService.getMealDetails(id);
     }
 
     @Post('/create')
