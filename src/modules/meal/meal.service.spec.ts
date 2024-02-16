@@ -12,8 +12,8 @@ import { MealRepository } from '../../mongodb/repositories/meal.repository';
 import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
 import { IngredientName, MealType } from '../../common/enums';
 import { RatedMeal } from './meal.types';
-import { IngredientModule } from '../ingredient/ingredient.module';
 import { proceedMealDocumentToMealDetails } from './meal.utils';
+import { IngredientService } from '../ingredient/ingredient.service';
 
 describe('MealService', () => {
     let mealService: MealService;
@@ -36,47 +36,33 @@ describe('MealService', () => {
         getMealDetails: jest.fn()
     };
 
+    const mockLoggerService = {
+        info: jest.fn(),
+        error: jest.fn()
+    };
+
+    const mockRedisService = {
+        get: jest.fn(),
+        set: jest.fn(),
+        unset: jest.fn(),
+        encodeKey: jest.fn(),
+        getMealResult: jest.fn(),
+        saveMealResult: jest.fn(),
+        getMealDetails: jest.fn(),
+        saveMealDetails: jest.fn()
+    };
+
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [IngredientModule],
             providers: [
                 MealService,
-                {
-                    provide: MealRepository,
-                    useValue: mockMealService
-                },
-                {
-                    provide: JwtService,
-                    useClass: JwtService
-                },
-                {
-                    provide: JwtManagerService,
-                    useClass: JwtManagerService
-                },
-                {
-                    provide: LoggerService,
-                    useValue: {
-                        info: jest.fn(),
-                        error: jest.fn()
-                    }
-                },
-                {
-                    provide: RedisService,
-                    useValue: {
-                        get: jest.fn(),
-                        set: jest.fn(),
-                        unset: jest.fn(),
-                        encodeKey: jest.fn(),
-                        getMealResult: jest.fn(),
-                        saveMealResult: jest.fn(),
-                        getMealDetails: jest.fn(),
-                        saveMealDetails: jest.fn()
-                    }
-                },
-                {
-                    provide: SpoonacularApiService,
-                    useValue: mockSpoonacularApiService
-                }
+                IngredientService,
+                { provide: MealRepository, useValue: mockMealService },
+                { provide: JwtService, useClass: JwtService },
+                { provide: JwtManagerService, useClass: JwtManagerService },
+                { provide: LoggerService, useValue: mockLoggerService },
+                { provide: RedisService, useValue: mockRedisService },
+                { provide: SpoonacularApiService, useValue: mockSpoonacularApiService }
             ],
         }).compile();
 
