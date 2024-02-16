@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.26.0] - 2024-02-16
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `/meals/:id/details` endpoint to get more detailed information about a meal.
+- [Marek Kurańda](https://github.com/mjkuranda): Tests for this endpoint.
 
 ## [1.25.0] - 2024-02-15
 ### Added
