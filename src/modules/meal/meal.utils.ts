@@ -66,7 +66,7 @@ export function proceedRatedMealsToProposedMeals(meals: RatedMeal[], mergedSearc
 
         return {
             id,
-            imgUrl,
+            ...(imgUrl && { imgUrl }),
             ingredients,
             recommendationPoints,
             title

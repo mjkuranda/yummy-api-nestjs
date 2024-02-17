@@ -14,11 +14,14 @@ import { IngredientName, MealType } from '../../common/enums';
 import { RatedMeal } from './meal.types';
 import { proceedMealDocumentToMealDetails } from './meal.utils';
 import { IngredientService } from '../ingredient/ingredient.service';
+import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
 
 describe('MealService', () => {
     let mealService: MealService;
     let mealRepository: MealRepository;
+    let searchQueryRepository: SearchQueryRepository;
     let redisService: RedisService;
+    let ingredientService: IngredientService;
     let spoonacularApiService: SpoonacularApiService;
 
     const mockMealService = {
@@ -58,24 +61,30 @@ describe('MealService', () => {
                 MealService,
                 IngredientService,
                 { provide: MealRepository, useValue: mockMealService },
+                { provide: SearchQueryRepository, useValue: mockMealService },
                 { provide: JwtService, useClass: JwtService },
                 { provide: JwtManagerService, useClass: JwtManagerService },
                 { provide: LoggerService, useValue: mockLoggerService },
                 { provide: RedisService, useValue: mockRedisService },
+                { provide: IngredientService, useValue: { filterIngredients: jest.fn() }},
                 { provide: SpoonacularApiService, useValue: mockSpoonacularApiService }
             ],
         }).compile();
 
         mealService = module.get(MealService);
         mealRepository = module.get(MealRepository);
+        searchQueryRepository = module.get(SearchQueryRepository);
         redisService = module.get(RedisService);
+        ingredientService = module.get(IngredientService);
         spoonacularApiService = module.get(SpoonacularApiService);
     });
 
     it('should be defined', () => {
         expect(mealService).toBeDefined();
         expect(mealRepository).toBeDefined();
+        expect(searchQueryRepository).toBeDefined();
         expect(redisService).toBeDefined();
+        expect(ingredientService).toBeDefined();
         expect(spoonacularApiService).toBeDefined();
     });
 
@@ -435,6 +444,47 @@ describe('MealService', () => {
             const result = await mealService.findAll();
 
             expect(result).toBe(mockMeals);
+        });
+    });
+
+    describe('getMealProposal', () => {
+        it('should get received meals from all integrated APIs', async () => {
+            const user: any = { login: 'login', expirationTimestamp: new Date(Date.now() + 50000) };
+            const mockSearchQueries: any = [
+                { login: 'login', date: new Date(), ingredients: ['carrot', 'garlic'] },
+                { login: 'login', date: new Date(), ingredients: ['carrot', 'garlic'] },
+                { login: 'login', date: new Date(), ingredients: ['carrot', 'garlic'] },
+                { login: 'login', date: new Date(), ingredients: ['carrot'] },
+                { login: 'login', date: new Date(), ingredients: ['carrot'] },
+                { login: 'login', date: new Date(), ingredients: ['onion'] }
+            ];
+            const mockMeals: any = [
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'] },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'] }
+            ];
+            const mockMealResult: any = [
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], recommendationPoints: 8 },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5 }
+            ];
+
+            jest.spyOn(searchQueryRepository, 'findAll').mockResolvedValueOnce(mockSearchQueries);
+            jest.spyOn(spoonacularApiService, 'getMeals').mockResolvedValueOnce(mockMeals);
+
+            const result = await mealService.getMealProposal(user);
+
+            expect(result).toStrictEqual(mockMealResult);
+        });
+    });
+
+    describe('addMealProposal', () => {
+        it('should add a new record with provided ingredients', async () => {
+            const user: any = { id: '1' };
+            const ingredients = ['carrot', 'apple', 'fish'];
+
+            await mealService.addMealProposal(user, ingredients);
+
+            expect(ingredientService.filterIngredients).toHaveBeenCalledWith(ingredients);
+            expect(searchQueryRepository.create).toHaveBeenCalled();
         });
     });
 });
