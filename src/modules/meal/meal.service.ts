@@ -9,18 +9,27 @@ import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
 import { MealRepository } from '../../mongodb/repositories/meal.repository';
 import { MealType } from '../../common/enums';
-import { DetailedMeal, RatedMeal } from './meal.types';
+import { DetailedMeal, MergedSearchQueries, ProposedMeal, RatedMeal } from './meal.types';
 import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
-import { getQueryWithIngredientsAndMealType, proceedMealDocumentToMealDetails } from './meal.utils';
+import {
+    getQueryWithIngredientsAndMealType,
+    mergeSearchQueries,
+    proceedMealDocumentToMealDetails,
+    proceedRatedMealsToProposedMeals
+} from './meal.utils';
 import { HOUR } from '../../constants/times.constant';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { IngredientType } from '../ingredient/ingredient.types';
+import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
+import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
+import { SearchQueryDocument } from '../../mongodb/documents/search-query.document';
 
 @Injectable()
 export class MealService {
 
     constructor(
         private mealRepository: MealRepository,
+        private searchQueryRepository: SearchQueryRepository,
         private redisService: RedisService,
         private loggerService: LoggerService,
         private ingredientService: IngredientService,
@@ -318,5 +327,28 @@ export class MealService {
         this.loggerService.info(context, `Cached result containing ${meals.length} meals, defined for query "${query}".`);
 
         return meals;
+    }
+
+    async getMealProposal(user: UserAccessTokenPayload) {
+        const dateFilter = new Date();
+        dateFilter.setDate(dateFilter.getDate() - 30);
+
+        const searchQueries: SearchQueryDocument[] = await this.searchQueryRepository.findAll({ date: { $gte: dateFilter }, login: user.login });
+        const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(searchQueries);
+        const datasets: Array<RatedMeal[] | null> = await Promise.all([
+            this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', Object.keys(mergedSearchQueries))
+        ]);
+        const meals: RatedMeal[] = datasets.flat();
+        const proposedMeals: ProposedMeal[] = proceedRatedMealsToProposedMeals(meals, mergedSearchQueries);
+
+        return proposedMeals
+            .filter(meal => meal.recommendationPoints > 0)
+            .sort((a, b) => b.recommendationPoints - a.recommendationPoints);
+    }
+
+    async addMealProposal(user: UserAccessTokenPayload, ingredients: string[]) {
+        const filteredIngredients = this.ingredientService.filterIngredients(ingredients);
+        await this.searchQueryRepository.create({ ingredients: filteredIngredients, date: new Date(), login: user.login });
+        this.loggerService.info('MealService/addMealProposal', `Added search query for user ${user.login}.`);
     }
 }
