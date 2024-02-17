@@ -10,11 +10,13 @@ import { RedisService } from '../src/modules/redis/redis.service';
 import { MealRepository } from '../src/mongodb/repositories/meal.repository';
 import { SpoonacularApiService } from '../src/modules/api/spoonacular/spoonacular.api.service';
 import { RatedMeal } from '../src/modules/meal/meal.types';
+import { SearchQueryRepository } from '../src/mongodb/repositories/search-query.repository';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
     let mealService: MealService;
     let mealRepository: MealRepository;
+    let searchQueryRepository: SearchQueryRepository;
     let jwtManagerService: JwtManagerService;
     let redisService: RedisService;
     let spoonacularApiService: SpoonacularApiService;
@@ -57,6 +59,7 @@ describe('UserController (e2e)', () => {
         verifyAccessToken: jest.fn()
     };
     const spoonacularApiServiceProvider = {
+        getMeals: jest.fn(),
         getMealDetails: jest.fn()
     };
 
@@ -66,6 +69,7 @@ describe('UserController (e2e)', () => {
         })
             .overrideProvider(LoggerService).useValue(loggerServiceProvider)
             .overrideProvider(MealRepository).useValue(mockMealRepositoryProvider)
+            .overrideProvider(SearchQueryRepository).useValue(mockMealRepositoryProvider)
             .overrideProvider(RedisService).useValue(redisServiceProvider)
             .overrideProvider(JwtManagerService).useValue(jwtManagerServiceProvider)
             .overrideProvider(SpoonacularApiService).useValue(spoonacularApiServiceProvider)
@@ -77,6 +81,7 @@ describe('UserController (e2e)', () => {
 
         mealService = moduleRef.get(MealService);
         mealRepository = moduleRef.get(MealRepository);
+        searchQueryRepository = moduleRef.get(SearchQueryRepository);
         jwtManagerService = moduleRef.get(JwtManagerService);
         redisService = moduleRef.get(RedisService);
         spoonacularApiService = moduleRef.get(SpoonacularApiService);
@@ -471,6 +476,52 @@ describe('UserController (e2e)', () => {
                 .post('/meals/635981f6e40f61599e839aaa/delete')
                 .set('Cookie', [])
                 .expect(401);
+        });
+    });
+
+    describe('/meals/proposal/all (GET)', () => {
+        it('should get proposal meals', () => {
+            const mockUser: any = { login: 'login', expirationTimestamp: new Date(Date.now() + 50000) };
+            const mockSearchQueries: any = [
+                { login: 'login', date: new Date(), ingredients: ['carrot', 'garlic'] },
+                { login: 'login', date: new Date(), ingredients: ['carrot', 'garlic'] },
+                { login: 'login', date: new Date(), ingredients: ['carrot', 'garlic'] },
+                { login: 'login', date: new Date(), ingredients: ['carrot'] },
+                { login: 'login', date: new Date(), ingredients: ['carrot'] },
+                { login: 'login', date: new Date(), ingredients: ['onion'] }
+            ];
+            const mockMeals: any = [
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'] },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'] }
+            ];
+            const mockMealResult: any = [
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], recommendationPoints: 8 },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5 }
+            ];
+
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(searchQueryRepository, 'findAll').mockResolvedValueOnce(mockSearchQueries);
+            jest.spyOn(spoonacularApiService, 'getMeals').mockResolvedValueOnce(mockMeals);
+
+            return request(app.getHttpServer())
+                .get('/meals/proposal/all')
+                .set('Authorization', 'Bearer token')
+                .expect(mockMealResult)
+                .expect(200);
+        });
+    });
+
+    describe('/meals/proposal (POST)', () => {
+        it('should add a new record with provided ingredients', () => {
+            const user: any = { id: '1' };
+            const ingredients = ['carrot', 'apple', 'fish'];
+
+            return request(app.getHttpServer())
+                .post('/meals/proposal')
+                .set('Authorization', 'Bearer token')
+                .set('Accept', 'application/json')
+                .send({ ingredients })
+                .expect(204);
         });
     });
 });

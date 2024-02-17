@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseGuards, Request, Response } from '@nestjs/common';
 import { MealService } from './meal.service';
 import { CreateMealBodyDto, EditMealBodyDto } from './meal.dto';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
@@ -83,5 +83,24 @@ export class MealController {
         const { authenticatedUser } = body;
 
         return await this.mealService.confirmDeleting(id, authenticatedUser);
+    }
+
+    @Get('/proposal/all')
+    @HttpCode(200)
+    @UseGuards(AuthenticationGuard)
+    public async getMealProposal(@Request() req) {
+        const { authenticatedUser } = req.body;
+
+        return await this.mealService.getMealProposal(authenticatedUser);
+    }
+
+    @Post('/proposal')
+    @HttpCode(204)
+    @UseGuards(AuthenticationGuard)
+    public async addMealProposal(@Request() req) {
+        const { authenticatedUser, data } = req.body;
+        const { ingredients } = data;
+
+        return await this.mealService.addMealProposal(authenticatedUser, ingredients);
     }
 }

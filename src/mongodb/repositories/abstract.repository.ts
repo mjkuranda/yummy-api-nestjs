@@ -12,7 +12,11 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
         return this.model.findById(id);
     }
 
-    async findAll(filterQuery: FilterQuery<T>): Promise<T[] | null> {
+    async findAll(filterQuery: FilterQuery<T>, limit?: number): Promise<T[] | null> {
+        if (limit) {
+            return this.model.find(filterQuery).limit(limit);
+        }
+
         return this.model.find(filterQuery);
     }
 
