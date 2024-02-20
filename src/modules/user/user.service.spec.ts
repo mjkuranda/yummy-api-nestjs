@@ -15,6 +15,7 @@ import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
 import { RedisService } from '../redis/redis.service';
 import { UserAccessTokenPayload, UserRefreshTokenPayload } from '../jwt-manager/jwt-manager.types';
+import { PasswordManagerService } from '../password-manager/password-manager.service';
 
 describe('UserService', () => {
     let userService: UserService;
@@ -23,6 +24,7 @@ describe('UserService', () => {
     let jwtManagerService: JwtManagerService;
     let mailManagerService: MailManagerService;
     let redisService: RedisService;
+    let passwordManagerService: PasswordManagerService;
 
     const mockUser = {
         email: 'xxx',
@@ -64,6 +66,12 @@ describe('UserService', () => {
         getRefreshToken: jest.fn()
     };
 
+    const mockPasswordManagerService = {
+        areEqualPasswords: jest.fn(),
+        getHashedPassword: jest.fn(),
+        generateSalt: jest.fn()
+    };
+
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
@@ -100,6 +108,10 @@ describe('UserService', () => {
                     useValue: {
                         sendActivationMail: jest.fn().mockImplementation((email, id) => {})
                     }
+                },
+                {
+                    provide: PasswordManagerService,
+                    useValue: mockPasswordManagerService
                 }
             ],
         }).compile();
@@ -110,6 +122,7 @@ describe('UserService', () => {
         jwtManagerService = module.get(JwtManagerService);
         mailManagerService = module.get(MailManagerService);
         redisService = module.get(RedisService);
+        passwordManagerService = module.get(PasswordManagerService);
     });
 
     it('should be defined', () => {
@@ -138,7 +151,7 @@ describe('UserService', () => {
             const refreshToken = 'token2';
 
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockUser);
-            jest.spyOn(userService, 'areSameHashedPasswords').mockResolvedValueOnce(true);
+            jest.spyOn(passwordManagerService, 'areEqualPasswords').mockResolvedValueOnce(true);
             jest.spyOn(jwtManagerService, 'generateAccessToken').mockResolvedValue(accessToken);
             jest.spyOn(jwtManagerService, 'generateRefreshToken').mockResolvedValue(refreshToken);
             jest.spyOn(redisService, 'set').mockResolvedValue();
@@ -156,7 +169,7 @@ describe('UserService', () => {
             } as any as UserDocument;
 
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockInactivatedUser);
-            jest.spyOn(userService, 'areSameHashedPasswords').mockResolvedValueOnce(true);
+            jest.spyOn(passwordManagerService, 'areEqualPasswords').mockResolvedValueOnce(true);
 
             await expect(userService.loginUser(mockUserDto, mockRes)).rejects.toThrow(ForbiddenException);
         });
@@ -168,13 +181,9 @@ describe('UserService', () => {
         });
 
         it('should throw an error when user found but passwords do not match', async () => {
-            mockUserDto = {
-                ...mockUserDto,
-                password: '456',
-                activated: 1
-            };
-
+            jest.resetAllMocks();
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockUser);
+            jest.spyOn(passwordManagerService, 'areEqualPasswords').mockResolvedValueOnce(false);
 
             await expect(userService.loginUser(mockUserDto, mockRes)).rejects.toThrow(BadRequestException);
         });
@@ -284,7 +293,8 @@ describe('UserService', () => {
         const mockUserDto: CreateUserDto = {
             email: 'xxx',
             login: 'Login',
-            password: '123'
+            password: '123',
+            salt: 'salt'
         };
 
         it('should create a new user', async () => {
@@ -302,7 +312,7 @@ describe('UserService', () => {
             } as any;
 
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(null);
-            jest.spyOn(userService, 'getHashedPassword').mockResolvedValueOnce(mockHashedPassword);
+            jest.spyOn(passwordManagerService, 'getHashedPassword').mockResolvedValueOnce(mockHashedPassword);
             jest.spyOn(userRepository, 'create').mockResolvedValue(mockCreatedUser);
             jest.spyOn(userActionRepository, 'create').mockResolvedValueOnce(mockUserAction);
 

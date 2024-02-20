@@ -100,6 +100,8 @@ To connect to MSA, you need:
 To connect to Spoonacular API, provide:
 - `SPOONACULAR_API_KEY` (API key defined for a particular account on Spoonacular)
 
+Provide `PASSWORD_PEPPER` to protect all user account passwords.
+
 ## Development
 You need to change version in `package.json` and add a record to the `CHANGELOG.md`.
 Before creating a pull request, you need to execute following commands, with success result:

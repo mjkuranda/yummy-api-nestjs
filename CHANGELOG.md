@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.28.0] - 2024-02-20
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Salt property for every user and pepper in API.
+- [Marek Kurańda](https://github.com/mjkuranda): `PasswordManager` module to hash and compare passwords and generating salts.
+
 ## [1.27.0] - 2024-02-17
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Meal recommendation system - `GET /meals/proposal/all` and `POST /meals/proposal` to get proposals and insert new search queries respectively.
