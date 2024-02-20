@@ -10,6 +10,7 @@ import { MailManagerService } from '../src/modules/mail-manager/mail-manager.ser
 import { UserRepository } from '../src/mongodb/repositories/user.repository';
 import { RedisService } from '../src/modules/redis/redis.service';
 import { UserAccessTokenPayload, UserRefreshTokenPayload } from '../src/modules/jwt-manager/jwt-manager.types';
+import { PasswordManagerService } from '../src/modules/password-manager/password-manager.service';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -17,6 +18,7 @@ describe('UserController (e2e)', () => {
     let userRepository: UserRepository;
     let jwtManagerService: JwtManagerService;
     let redisService: RedisService;
+    let passwordManagerService: PasswordManagerService;
 
     const getCookie = (res, cookieName) => {
         const cookies = {};
@@ -56,6 +58,12 @@ describe('UserController (e2e)', () => {
         getRefreshToken: jest.fn()
     };
 
+    const mockPasswordManagerService = {
+        areEqualPasswords: jest.fn(),
+        getHashedPassword: jest.fn(),
+        generateSalt: jest.fn()
+    };
+
     beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
             imports: [AppModule],
@@ -65,6 +73,7 @@ describe('UserController (e2e)', () => {
             .overrideProvider(MailManagerService).useValue({ sendActivationMail: jest.fn((email, id) => {}) })
             .overrideProvider(JwtManagerService).useValue(mockJwtServiceProvider)
             .overrideProvider(RedisService).useValue(mockRedisServiceProvider)
+            .overrideProvider(PasswordManagerService).useValue(mockPasswordManagerService)
             .compile();
 
         app = moduleRef.createNestApplication();
@@ -75,6 +84,7 @@ describe('UserController (e2e)', () => {
         userRepository = moduleRef.get(UserRepository);
         jwtManagerService = moduleRef.get(JwtManagerService);
         redisService = moduleRef.get(RedisService);
+        passwordManagerService = moduleRef.get(PasswordManagerService);
     });
 
     it('/users/create (POST)', () => {
@@ -108,13 +118,14 @@ describe('UserController (e2e)', () => {
             ...mockRequestBody,
             _id: '123-abc',
             email: 'some email',
+            salt: 'salt',
             activated: 1
         } as any;
         const mockAccessToken = 'token';
         const mockRefreshToken = 'token2';
         jest.clearAllMocks();
         jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
-        jest.spyOn(userService, 'areSameHashedPasswords').mockReturnValueOnce(Promise.resolve(true));
+        jest.spyOn(passwordManagerService, 'areEqualPasswords').mockResolvedValueOnce(true);
         jest.spyOn(jwtManagerService, 'generateAccessToken').mockResolvedValue(mockAccessToken);
         jest.spyOn(jwtManagerService, 'generateRefreshToken').mockResolvedValue(mockRefreshToken);
         jest.spyOn(redisService, 'setTokens').mockResolvedValue();

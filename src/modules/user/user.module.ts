@@ -9,13 +9,15 @@ import { MailManagerModule } from '../mail-manager/mail-manager.module';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { UserActionRepository } from '../../mongodb/repositories/user.action.repository';
 import { RedisService } from '../redis/redis.service';
+import { PasswordManagerModule } from '../password-manager/password-manager.module';
 
 @Module({
     imports: [
         MongooseModule.forFeature([USER_MODEL, USER_ACTION_MODEL]),
         JwtManagerModule,
         RedisModule,
-        MailManagerModule
+        MailManagerModule,
+        PasswordManagerModule
     ],
     controllers: [UserController],
     providers: [UserService, UserRepository, UserActionRepository, RedisService],

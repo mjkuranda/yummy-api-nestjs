@@ -5,6 +5,7 @@ export interface UserDocument extends Document {
     readonly email: string;
     readonly login: string;
     readonly password: string;
+    readonly salt: string;
     readonly isAdmin?: boolean;
     readonly capabilities?: Record<keyof CapabilityType, boolean>;
     readonly activated?: number;

@@ -17,6 +17,7 @@ import { RedisService } from '../redis/redis.service';
 import { Response } from 'express';
 import { isTooShortToExpireRefreshToken } from '../jwt-manager/jwt-manager.utils';
 import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
+import { PasswordManagerService } from '../password-manager/password-manager.service';
 
 @Injectable()
 export class UserService {
@@ -27,7 +28,8 @@ export class UserService {
         private readonly redisService: RedisService,
         private readonly jwtManagerService: JwtManagerService,
         private readonly loggerService: LoggerService,
-        private readonly mailManagerService: MailManagerService
+        private readonly mailManagerService: MailManagerService,
+        private readonly passwordManagerService: PasswordManagerService
     ) {}
 
     async loginUser(userLoginDto: UserLoginDto, res: Response) {
@@ -49,7 +51,13 @@ export class UserService {
             throw new ForbiddenException(context, message);
         }
 
-        if (!await this.areSameHashedPasswords(password, user.password)) {
+        const areTheSamePasswords = await this.passwordManagerService.areEqualPasswords({
+            password,
+            salt: user.salt,
+            pepper: process.env.PASSWORD_PEPPER
+        }, user.password);
+
+        if (!areTheSamePasswords) {
             const message = `Incorrect credentials for user ${login}`;
             this.loggerService.error(context, message);
 
@@ -64,7 +72,7 @@ export class UserService {
         res.cookie('accessToken', accessToken, { httpOnly: true });
         res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
-        const message = `User "${login}" has been successfully logged in`;
+        const message = `User "${login}" has been successfully logged in.`;
         this.loggerService.info(context, message);
     }
 
@@ -112,11 +120,17 @@ export class UserService {
             throw new BadRequestException(context, message);
         }
 
-        const hashedPassword = await this.getHashedPassword(createUserDto.password);
+        const salt = await this.passwordManagerService.generateSalt();
+        const hashedPassword = await this.passwordManagerService.getHashedPassword({
+            password: createUserDto.password,
+            salt,
+            pepper: process.env.PASSWORD_PEPPER
+        });
         const newUser = await this.userRepository.create({
             email: createUserDto.email,
             login: createUserDto.login,
-            password: hashedPassword
+            password: hashedPassword,
+            salt: salt
         }) as UserDocument;
         const userActionRecord = await this.userActionRepository.create({
             userId: newUser._id,
@@ -129,13 +143,13 @@ export class UserService {
         return newUser;
     }
 
-    async getHashedPassword(password: string): Promise<string> {
-        return await bcrypt.hash(password, 12);
-    }
-
-    async areSameHashedPasswords(password: string, hashedPassword: string): Promise<boolean> {
-        return await bcrypt.compare(password, hashedPassword);
-    }
+    // async getHashedPassword(password: string): Promise<string> {
+    //     return await bcrypt.hash(password, 12);
+    // }
+    //
+    // async areSameHashedPasswords(password: string, hashedPassword: string): Promise<boolean> {
+    //     return await bcrypt.compare(password, hashedPassword);
+    // }
 
     async grantPermission(user: UserDto, byUser: UserDto, capability: CapabilityType): Promise<boolean> {
         const context = 'UserService/grantPermission';
