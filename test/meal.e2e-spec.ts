@@ -99,6 +99,18 @@ describe('UserController (e2e)', () => {
                 .expect(200)
                 .expect(mealResult);
         });
+
+        it('should throw an error when no query are provided', () => {
+            return request(app.getHttpServer())
+                .get('/meals')
+                .expect(400);
+        });
+
+        it('should throw an error when no ingredients are provided', () => {
+            return request(app.getHttpServer())
+                .get('/meals?ings')
+                .expect(400);
+        });
     });
 
     describe('/meals/:id/details', () => {

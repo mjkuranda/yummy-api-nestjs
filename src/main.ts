@@ -9,7 +9,7 @@ async function bootstrap() {
     app.use(cookieParser());
     app.useGlobalFilters(new HttpExceptionFilter());
     app.useGlobalPipes(new ValidationPipe());
-    await app.listen(3000);
+    await app.listen(3001);
 }
 
 bootstrap();
