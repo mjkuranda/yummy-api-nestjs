@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.28.1] - 2024-02-22
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): `GET /meals` when no query or ingredients are provided.
+
 ## [1.28.0] - 2024-02-20
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Salt property for every user and pepper in API.
