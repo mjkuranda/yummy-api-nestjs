@@ -331,7 +331,7 @@ export class MealService {
 
     async getMealProposal(user: UserAccessTokenPayload) {
         const dateFilter = new Date();
-        dateFilter.setDate(dateFilter.getDate() - 30);
+        dateFilter.setDate(dateFilter.getDate() - 14);
 
         const searchQueries: SearchQueryDocument[] = await this.searchQueryRepository.findAll({ date: { $gte: dateFilter }, login: user.login });
         const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(searchQueries);
