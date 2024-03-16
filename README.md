@@ -15,6 +15,17 @@ Technologies:
 * `GET /meals?ings=ingredient1,ingredient2,ingredientX&type=meal-type` - returns all meals from the database that contain provided ingredients and type as `ings` and `type` respectively being query params.
 * `GET /meals/:id` - returns a specific meal defined by id parameter. It saves to the cache, if it does not exist there. Each request checks the cache.
 * `GET /meals/:id/details` - returns details of a meal. It can be any meal provided by any external or local API.
+* `GET /meals/proposal/all` - returns all meal proposals for a specific user defined by `accessToken`.
+* `POST /meals/proposal` - posts query including ingredients. Works for only logged-in users.
+```json
+{
+    "ingredients": [
+        "ingredient-name-1",
+        "ingredient-name-2",
+        "ingredient-name-X"
+    ]
+}
+```
 * `POST /meals/create` - creates a new meal and saves its to the database, marking as soft added. You need to be logged-in and provide following data (`imageUrl` is optional):
 ```json
 {
