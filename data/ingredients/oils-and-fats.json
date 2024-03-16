@@ -18,7 +18,6 @@
     "palm oil",
     "sesame seed oil",
     "rice bran oil",
-    "coconut oil",
     "hemp oil",
     "almond oil",
     "macadamia nut oil",
@@ -46,10 +45,6 @@
     "shea butter",
     "tahini",
     "clarified butter",
-    "lard",
-    "ghee",
-    "avocado",
-    "duck fat",
-    "beef tallow"
+    "avocado"
   ]
 }
