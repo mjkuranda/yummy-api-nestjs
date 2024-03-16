@@ -478,10 +478,13 @@ describe('MealService', () => {
     describe('addMealProposal', () => {
         it('should add a new record with provided ingredients', async () => {
             const user: any = { id: '1' };
-            const ingredients = ['carrot', 'apple', 'fish'];
+            const ingredients: any = ['carrot', 'apple', 'fish'];
+
+            jest.spyOn(ingredientService, 'filterIngredients').mockReturnValueOnce(ingredients);
 
             await mealService.addMealProposal(user, ingredients);
 
+            expect(ingredientService.filterIngredients).toHaveBeenCalledWith(ingredients);
             expect(searchQueryRepository.create).toHaveBeenCalled();
         });
     });
