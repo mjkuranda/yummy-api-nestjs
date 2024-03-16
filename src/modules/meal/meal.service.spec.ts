@@ -66,7 +66,6 @@ describe('MealService', () => {
                 { provide: JwtManagerService, useClass: JwtManagerService },
                 { provide: LoggerService, useValue: mockLoggerService },
                 { provide: RedisService, useValue: mockRedisService },
-                { provide: IngredientService, useValue: { filterIngredients: jest.fn() }},
                 { provide: SpoonacularApiService, useValue: mockSpoonacularApiService }
             ],
         }).compile();
@@ -483,7 +482,6 @@ describe('MealService', () => {
 
             await mealService.addMealProposal(user, ingredients);
 
-            expect(ingredientService.filterIngredients).toHaveBeenCalledWith(ingredients);
             expect(searchQueryRepository.create).toHaveBeenCalled();
         });
     });
