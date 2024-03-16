@@ -1,6 +1,14 @@
 export interface IngredientDataset {
-    category: IngredientCategory,
-    data: IngredientType[]
+    category: IngredientCategory;
+    data: IngredientType[];
+}
+
+export interface MealIngredient {
+    amount: number;
+    imageUrl: string;
+    name: IngredientType;
+    unit: string;
+    unitLong: string;
 }
 
 export type IngredientCategory = 'breads' | 'dairy-and-eggs' | 'fish-and-seafood' | 'fruits' | 'meats' | 'oils-and-fats' | 'pasta' | 'seeds-and-nuts' | 'spices' | 'vegetables';

@@ -3,10 +3,11 @@ import { IngredientName, IngredientUnit } from '../../../common/enums';
 export type SpoonacularIngredient = {
     amount: number,
     id: number,
-    image: string,
+    imageUrl: string,
     meta: [],
     name: IngredientName,
-    unit: IngredientUnit
+    unit: IngredientUnit,
+    unitLong: string
 };
 
 export type SpoonacularRecipe = {

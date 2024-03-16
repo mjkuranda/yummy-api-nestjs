@@ -1,4 +1,4 @@
-import { IngredientType } from '../ingredient/ingredient.types';
+import { IngredientType, MealIngredient } from '../ingredient/ingredient.types';
 
 export type RatedMeal = {
     id: string,
@@ -11,7 +11,7 @@ export type RatedMeal = {
 export type DetailedMeal = {
     id: string,
     imgUrl?: string,
-    ingredients: IngredientType[],
+    ingredients: MealIngredient[],
     title: string
 };
 
