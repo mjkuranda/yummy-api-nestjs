@@ -25,8 +25,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
             amount: ingredient.amount,
             imageUrl: ingredient.imageUrl,
             name: ingredient.name,
-            unit: ingredient.unit,
-            unitLong: ingredient.unitLong
+            unit: ingredient.unit
         }));
     }
 

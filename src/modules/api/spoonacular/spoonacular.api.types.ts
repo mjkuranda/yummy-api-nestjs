@@ -6,8 +6,7 @@ export type SpoonacularIngredient = {
     imageUrl: string,
     meta: [],
     name: IngredientName,
-    unit: IngredientUnit,
-    unitLong: string
+    unit: IngredientUnit
 };
 
 export type SpoonacularRecipe = {
