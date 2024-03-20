@@ -8,7 +8,7 @@ import { ApiName } from '../modules/redis/redis.types';
 import { ContextString } from '../common/types';
 import { LoggerService } from '../modules/logger/logger.service';
 import { AxiosService } from './axios.service';
-import { IngredientType } from '../modules/ingredient/ingredient.types';
+import { IngredientType, MealIngredient } from '../modules/ingredient/ingredient.types';
 
 @Injectable()
 export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStruct, GenericMealDetailsStruct> {
@@ -27,7 +27,9 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
 
     abstract proceedDataToMealDetails(data: GenericMealDetailsStruct): DetailedMeal;
 
-    abstract proceedDataMealIngredients(ingredients: GenericIngredientStruct[]): IngredientType[];
+    abstract proceedDataToMealIngredients(ingredients: GenericIngredientStruct[]): MealIngredient[];
+
+    abstract proceedDataToIngredientList(ingredients: GenericIngredientStruct[]): IngredientType[];
 
     async getMeals(apiKey: string, endpointUrl: string, ingredients: IngredientType[], mealType?: MealType): Promise<RatedMeal[]> {
         const query = getQueryWithIngredientsAndMealType(ingredients, mealType, this.getName(), apiKey);

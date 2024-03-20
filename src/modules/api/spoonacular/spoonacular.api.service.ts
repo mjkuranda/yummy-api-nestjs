@@ -3,7 +3,7 @@ import { DetailedMeal, RatedMeal } from '../../meal/meal.types';
 import { AbstractApiService } from '../../../services/abstract.api.service';
 import { ApiName } from '../../redis/redis.types';
 import { SpoonacularIngredient, SpoonacularRecipe, SpoonacularRecipeDetails } from './spoonacular.api.types';
-import { IngredientType } from '../../ingredient/ingredient.types';
+import { IngredientType, MealIngredient } from '../../ingredient/ingredient.types';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails> {
@@ -16,8 +16,17 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         return 'spoonacular';
     }
 
-    proceedDataMealIngredients(ingredients: SpoonacularIngredient[]): IngredientType[] {
+    proceedDataToIngredientList(ingredients: SpoonacularIngredient[]): IngredientType[] {
         return ingredients.map(ingredient => ingredient.name);
+    }
+
+    proceedDataToMealIngredients(ingredients: SpoonacularIngredient[]): MealIngredient[] {
+        return ingredients.map(ingredient => ({
+            amount: ingredient.amount,
+            imageUrl: ingredient.imageUrl,
+            name: ingredient.name,
+            unit: ingredient.unit
+        }));
     }
 
     proceedDataToMeals(data: SpoonacularRecipe[]): RatedMeal[] {
@@ -25,7 +34,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
             return {
                 id: recipe.id.toString(),
                 imgUrl: recipe.image,
-                ingredients: [...this.proceedDataMealIngredients(recipe.usedIngredients), ...this.proceedDataMealIngredients(recipe.missedIngredients)],
+                ingredients: [...this.proceedDataToIngredientList(recipe.usedIngredients), ...this.proceedDataToIngredientList(recipe.missedIngredients)],
                 relevance: Number((recipe.usedIngredients.length / (recipe.usedIngredients.length + recipe.missedIngredients.length)).toFixed(2)),
                 title: recipe.title
             };
@@ -38,7 +47,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         return {
             id: id.toString(),
             imgUrl: image,
-            ingredients: this.proceedDataMealIngredients(extendedIngredients),
+            ingredients: this.proceedDataToMealIngredients(extendedIngredients),
             title
         };
     }

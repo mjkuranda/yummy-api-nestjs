@@ -66,7 +66,6 @@ describe('MealService', () => {
                 { provide: JwtManagerService, useClass: JwtManagerService },
                 { provide: LoggerService, useValue: mockLoggerService },
                 { provide: RedisService, useValue: mockRedisService },
-                { provide: IngredientService, useValue: { filterIngredients: jest.fn() }},
                 { provide: SpoonacularApiService, useValue: mockSpoonacularApiService }
             ],
         }).compile();
@@ -479,7 +478,9 @@ describe('MealService', () => {
     describe('addMealProposal', () => {
         it('should add a new record with provided ingredients', async () => {
             const user: any = { id: '1' };
-            const ingredients = ['carrot', 'apple', 'fish'];
+            const ingredients: any = ['carrot', 'apple', 'fish'];
+
+            jest.spyOn(ingredientService, 'filterIngredients').mockReturnValueOnce(ingredients);
 
             await mealService.addMealProposal(user, ingredients);
 

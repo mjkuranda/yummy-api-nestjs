@@ -1,7 +1,7 @@
 import { AbstractApiService } from './abstract.api.service';
 import { ApiName } from '../modules/redis/redis.types';
 import { DetailedMeal, RatedMeal } from '../modules/meal/meal.types';
-import { IngredientType } from '../modules/ingredient/ingredient.types';
+import { IngredientType, MealIngredient } from '../modules/ingredient/ingredient.types';
 
 export class TestApiService extends AbstractApiService<any, any, any> {
 
@@ -13,7 +13,11 @@ export class TestApiService extends AbstractApiService<any, any, any> {
         return undefined;
     }
 
-    proceedDataMealIngredients(ingredients: any[]): IngredientType[] {
+    proceedDataToIngredientList(ingredients: any[]): IngredientType[] {
+        return [...ingredients];
+    }
+
+    proceedDataToMealIngredients(ingredients: any[]): MealIngredient[] {
         return [...ingredients];
     }
 

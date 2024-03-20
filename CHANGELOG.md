@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.29.0] - 2024-03-20
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Grammage for a specific meal.
+
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): `MealDocument` containing more details about ingredients: `amount`, `imageUrl`, `unit`, and `unitLong`.
+- [Marek Kurańda](https://github.com/mjkuranda): Meal details returns more information about ingredients for a specific meal.
+
 ## [1.28.4] - 2024-03-16
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): Meal prediction range period to 14 days.
