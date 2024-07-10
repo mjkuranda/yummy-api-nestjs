@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { LoggerService } from '../logger/logger.service';
 import * as fs from 'fs';
 import { IngredientCategory, IngredientDataObject, IngredientDataset, IngredientType } from './ingredient.types';

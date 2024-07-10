@@ -23,7 +23,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
     proceedDataToMealIngredients(ingredients: SpoonacularIngredient[]): MealIngredient[] {
         return ingredients.map(ingredient => ({
             amount: ingredient.amount,
-            imageUrl: ingredient.imageUrl,
+            imageUrl: `https://img.spoonacular.com/ingredients_250x250/${ingredient.image}`,
             name: ingredient.name,
             unit: ingredient.unit
         }));
