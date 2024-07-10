@@ -3,7 +3,7 @@ import { ApiName } from '../modules/redis/redis.types';
 import { DetailedMeal, RatedMeal } from '../modules/meal/meal.types';
 import { IngredientType, MealIngredient } from '../modules/ingredient/ingredient.types';
 
-export class TestApiService extends AbstractApiService<any, any, any> {
+export class TestApiService extends AbstractApiService<any, any, any, any> {
 
     getApiUrl(): string {
         return 'api-url';
@@ -25,8 +25,8 @@ export class TestApiService extends AbstractApiService<any, any, any> {
         return [...data];
     }
 
-    proceedDataToMealDetails(data: any): DetailedMeal {
-        return { ...data };
+    proceedDataToMealDetails(data: any, instructionData: any): DetailedMeal {
+        return { ...data, ...instructionData };
     }
 
 }

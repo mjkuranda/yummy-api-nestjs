@@ -2,11 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { DetailedMeal, RatedMeal } from '../../meal/meal.types';
 import { AbstractApiService } from '../../../services/abstract.api.service';
 import { ApiName } from '../../redis/redis.types';
-import { SpoonacularIngredient, SpoonacularRecipe, SpoonacularRecipeDetails } from './spoonacular.api.types';
+import {
+    SpoonacularIngredient,
+    SpoonacularMealInstruction,
+    SpoonacularRecipe,
+    SpoonacularRecipeDetails
+} from './spoonacular.api.types';
 import { IngredientType, MealIngredient } from '../../ingredient/ingredient.types';
 
 @Injectable()
-export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails> {
+export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularMealInstruction> {
 
     getApiUrl(): string {
         return 'https://api.spoonacular.com';
@@ -23,7 +28,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
     proceedDataToMealIngredients(ingredients: SpoonacularIngredient[]): MealIngredient[] {
         return ingredients.map(ingredient => ({
             amount: ingredient.amount,
-            imageUrl: ingredient.imageUrl,
+            imageUrl: `https://img.spoonacular.com/ingredients_250x250/${ingredient.image}`,
             name: ingredient.name,
             unit: ingredient.unit
         }));
@@ -41,14 +46,29 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         });
     }
 
-    proceedDataToMealDetails(data: SpoonacularRecipeDetails): DetailedMeal {
-        const { id, image, title, extendedIngredients } = data;
+    proceedDataToMealDetails(data: SpoonacularRecipeDetails, instructionData: SpoonacularMealInstruction): DetailedMeal {
+        const {
+            id, image, title, extendedIngredients, summary,
+            vegetarian, vegan, glutenFree, dairyFree, veryHealthy,
+            readyInMinutes, sourceName
+        } = data;
 
         return {
             id: id.toString(),
             imgUrl: image,
             ingredients: this.proceedDataToMealIngredients(extendedIngredients),
-            title
+            title,
+            description: summary,
+            readyInMinutes,
+            sourceOrAuthor: sourceName,
+            properties: {
+                vegetarian,
+                vegan,
+                glutenFree,
+                dairyFree,
+                veryHealthy
+            },
+            instruction: instructionData
         };
     }
 }

@@ -8,11 +8,32 @@ export type RatedMeal = {
     relevance: number
 };
 
+type MealInstructionRecord = {
+    name: string,
+    steps: {
+        number: number,
+        step: string
+    }[]
+};
+
+export type MealInstruction = MealInstructionRecord[];
+
 export type DetailedMeal = {
     id: string,
     imgUrl?: string,
     ingredients: MealIngredient[],
-    title: string
+    title: string,
+    description: string,
+    readyInMinutes: number,
+    sourceOrAuthor: string,
+    properties?: {
+        vegetarian?: boolean,
+        vegan?: boolean,
+        glutenFree?: boolean,
+        dairyFree?: boolean,
+        veryHealthy?: boolean
+    },
+    instruction: MealInstruction
 };
 
 export type ProposedMeal = {
