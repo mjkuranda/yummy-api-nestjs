@@ -11,7 +11,7 @@ import { AxiosService } from './axios.service';
 import { IngredientType, MealIngredient } from '../modules/ingredient/ingredient.types';
 
 @Injectable()
-export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStruct, GenericMealDetailsStruct> {
+export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStruct, GenericMealDetailsStruct, MealInstructionStruct> {
 
     constructor(
         protected readonly axiosService: AxiosService,
@@ -25,7 +25,7 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
 
     abstract proceedDataToMeals(data: GenericMealStruct[]): RatedMeal[];
 
-    abstract proceedDataToMealDetails(data: GenericMealDetailsStruct): DetailedMeal;
+    abstract proceedDataToMealDetails(data: GenericMealDetailsStruct, instructionData: MealInstructionStruct): DetailedMeal;
 
     abstract proceedDataToMealIngredients(ingredients: GenericIngredientStruct[]): MealIngredient[];
 
@@ -65,12 +65,14 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
         }
     }
 
-    async getMealDetails(id: string): Promise<DetailedMeal> {
-        const url: string = this.getFullApiUrl(`recipes/${id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`);
+    async getMealDetails(apiUrl: string, apiInstructionUrl: string): Promise<DetailedMeal> {
+        const url: string = this.getFullApiUrl(apiUrl);
+        const instructionUrl: string = this.getFullApiUrl(apiInstructionUrl);
         const context = 'AbstractApiService/getMealDetails';
 
         try {
             const result: AxiosResponse<GenericMealDetailsStruct, unknown> = await this.axiosService.get(url);
+            const instruction: AxiosResponse<MealInstructionStruct, unknown> = await this.axiosService.get(instructionUrl);
 
             if (result.status < 200 || result.status >= 300) {
                 this.loggerService.error(context, `External API returned ${result.status} code with "${result.statusText}" message. Returned 0 meals.`);
@@ -78,7 +80,13 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
                 return null;
             }
 
-            const meal: DetailedMeal = this.proceedDataToMealDetails(result.data);
+            if (instruction.status < 200 || instruction.status >= 300) {
+                this.loggerService.error(context, `External API returned ${instruction.status} code with "${instruction.statusText}" message. Returned 0 meals.`);
+
+                return null;
+            }
+
+            const meal: DetailedMeal = this.proceedDataToMealDetails(result.data, instruction.data);
             this.loggerService.info(context, `Received meal with details from "${this.getName()}" API.`);
 
             return meal;

@@ -35,3 +35,15 @@ export type SpoonacularRecipeDetails = {
     creditsText: string;
     sourceName: string;
 };
+
+type SpoonacularMealInstructionStep = {
+    number: number,
+    step: string
+};
+
+export type SpoonacularMealInstructionRecord = {
+    name: string,
+    steps: SpoonacularMealInstructionStep[]
+};
+
+export type SpoonacularMealInstruction = SpoonacularMealInstructionRecord[];

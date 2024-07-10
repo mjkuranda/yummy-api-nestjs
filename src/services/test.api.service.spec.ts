@@ -100,27 +100,34 @@ describe('TestApiService', () => {
                 id: 'id',
                 title: 'some title'
             };
-            const mockId = 'id';
+            const mockInstructionFromExternalAPI = [ 1 ];
+            const mockApiUrl = 'api-url';
+            const mockInstructionUrl = 'instruction-url';
 
             jest.spyOn(axiosService, 'get').mockResolvedValueOnce({
                 status: 200,
                 data: mockMealFromExternalAPI
             });
+            jest.spyOn(axiosService, 'get').mockResolvedValueOnce({
+                status: 200,
+                data: mockInstructionFromExternalAPI
+            });
 
-            const result = await testApiService.getMealDetails(mockId);
+            const result = await testApiService.getMealDetails(mockApiUrl, mockInstructionUrl);
 
-            expect(result).toStrictEqual(mockMealFromExternalAPI);
+            expect(result).toStrictEqual({ ...mockMealFromExternalAPI, ...mockInstructionFromExternalAPI });
         });
 
         it('shouldn\'t return any meal when there is no such meal with provided id', async () => {
-            const mockId = 'id';
+            const mockApiUrl = 'api-url';
+            const mockInstructionUrl = 'instruction-url';
 
             jest.spyOn(axiosService, 'get').mockResolvedValueOnce({
                 status: 404,
                 data: null
             });
 
-            const result = await testApiService.getMealDetails(mockId);
+            const result = await testApiService.getMealDetails(mockApiUrl, mockInstructionUrl);
 
             expect(result).toStrictEqual(null);
         });

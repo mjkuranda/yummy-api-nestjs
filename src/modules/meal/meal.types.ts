@@ -8,6 +8,16 @@ export type RatedMeal = {
     relevance: number
 };
 
+type MealInstructionRecord = {
+    name: string,
+    steps: {
+        number: number,
+        step: string
+    }[]
+};
+
+export type MealInstruction = MealInstructionRecord[];
+
 export type DetailedMeal = {
     id: string,
     imgUrl?: string,
@@ -22,7 +32,8 @@ export type DetailedMeal = {
         glutenFree?: boolean,
         dairyFree?: boolean,
         veryHealthy?: boolean
-    }
+    },
+    instruction: MealInstruction
 };
 
 export type ProposedMeal = {

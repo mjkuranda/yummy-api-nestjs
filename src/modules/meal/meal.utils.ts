@@ -27,7 +27,7 @@ export function getQueryWithIngredientsAndMealType(ingredients: IngredientType[]
 export function proceedMealDocumentToMealDetails(meal: MealDocument): DetailedMeal {
     const {
         id, imageUrl, ingredients, title, description,
-        author, readyInMinutes
+        author, readyInMinutes, instruction
     } = meal;
 
     return {
@@ -37,7 +37,8 @@ export function proceedMealDocumentToMealDetails(meal: MealDocument): DetailedMe
         title,
         description,
         sourceOrAuthor: author,
-        readyInMinutes
+        readyInMinutes,
+        instruction
     };
 }
 

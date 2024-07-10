@@ -233,7 +233,7 @@ export class MealService {
         }
 
         const datasets: Array<DetailedMeal | null> = await Promise.all([
-            this.spoonacularApiService.getMealDetails(id)
+            this.spoonacularApiService.getMealDetails(`recipes/${id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`, `recipes/${id}/analyzedInstructions?apiKey=${process.env.SPOONACULAR_API_KEY}`)
         ]);
 
         const filteredMeal: DetailedMeal = datasets.find(meal => meal !== null);
