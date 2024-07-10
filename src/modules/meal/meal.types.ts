@@ -12,7 +12,17 @@ export type DetailedMeal = {
     id: string,
     imgUrl?: string,
     ingredients: MealIngredient[],
-    title: string
+    title: string,
+    description: string,
+    readyInMinutes: number,
+    sourceOrAuthor: string,
+    properties?: {
+        vegetarian?: boolean,
+        vegan?: boolean,
+        glutenFree?: boolean,
+        dairyFree?: boolean,
+        veryHealthy?: boolean
+    }
 };
 
 export type ProposedMeal = {

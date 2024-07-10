@@ -12,4 +12,5 @@ export interface MealDocument extends Document {
   readonly softAdded?: boolean;
   readonly softDeleted?: boolean;
   readonly softEdited?: MealDocument;
+  readonly readyInMinutes: number;
 }

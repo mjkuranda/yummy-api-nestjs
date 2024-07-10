@@ -42,13 +42,27 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
     }
 
     proceedDataToMealDetails(data: SpoonacularRecipeDetails): DetailedMeal {
-        const { id, image, title, extendedIngredients } = data;
+        const {
+            id, image, title, extendedIngredients, summary,
+            vegetarian, vegan, glutenFree, dairyFree, veryHealthy,
+            readyInMinutes, sourceName
+        } = data;
 
         return {
             id: id.toString(),
             imgUrl: image,
             ingredients: this.proceedDataToMealIngredients(extendedIngredients),
-            title
+            title,
+            description: summary,
+            readyInMinutes,
+            sourceOrAuthor: sourceName,
+            properties: {
+                vegetarian,
+                vegan,
+                glutenFree,
+                dairyFree,
+                veryHealthy
+            }
         };
     }
 }

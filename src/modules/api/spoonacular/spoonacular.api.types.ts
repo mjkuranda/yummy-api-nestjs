@@ -24,5 +24,14 @@ export type SpoonacularRecipeDetails = {
     id: number,
     image: string,
     title: string,
-    extendedIngredients: SpoonacularIngredient[]
+    extendedIngredients: SpoonacularIngredient[],
+    summary: string,
+    readyInMinutes: number;
+    vegetarian: boolean;
+    vegan: boolean;
+    glutenFree: boolean;
+    dairyFree: boolean;
+    veryHealthy: boolean;
+    creditsText: string;
+    sourceName: string;
 };
