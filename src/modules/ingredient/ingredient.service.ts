@@ -31,6 +31,10 @@ export class IngredientService {
 
     // TODO: Pass category and ingredient name to optimize it
     public filterIngredients(ingredients: IngredientType[]): IngredientType[] {
+        if (!ingredients?.length) {
+            return [];
+        }
+
         return ingredients.filter(ingredient => {
             if (this.ingredientDatasets['breads'].includes(ingredient)) return true;
             if (this.ingredientDatasets['dairy-and-eggs'].includes(ingredient)) return true;

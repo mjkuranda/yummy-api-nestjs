@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.32.1] - 2024-07-25
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Log info while generating meal proposals.
+
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): Filtering empty array of ingredients.
+
 ## [1.32.0] - 2024-07-24
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `users/login` returns user permissions.

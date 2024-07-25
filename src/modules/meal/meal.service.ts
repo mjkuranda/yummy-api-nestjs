@@ -341,6 +341,8 @@ export class MealService {
         const meals: RatedMeal[] = datasets.flat();
         const proposedMeals: ProposedMeal[] = proceedRatedMealsToProposedMeals(meals, mergedSearchQueries);
 
+        this.loggerService.info('MealService/getMealProposal', `Generated ${proposedMeals.length} meal proposal${proposedMeals.length > 1 ? 's' : ''}.`);
+
         return proposedMeals
             .filter(meal => meal.recommendationPoints > 0)
             .sort((a, b) => b.recommendationPoints - a.recommendationPoints);
