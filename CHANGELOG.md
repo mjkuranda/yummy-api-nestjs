@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.32.0] - 2024-07-24
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `users/login` returns user permissions.
+
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): `users/login` return code to `200`.
+- [Marek Kurańda](https://github.com/mjkuranda): tokens have `sameSite` property.
+- [Marek Kurańda](https://github.com/mjkuranda): Authentication guard checks also tokens included in cookies.
+
 ## [1.31.0] - 2024-07-10
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): More properties of meal, e.g. is vegan, healthy and so on, and how much time it takes to prepare.
