@@ -30,6 +30,9 @@ describe('UserService', () => {
         email: 'xxx',
         login: 'Aaa',
         password: 'hashed password',
+        capabilities: {
+            canAdd: true
+        },
         activated: 1
     } as any as UserDocument;
 
@@ -149,6 +152,11 @@ describe('UserService', () => {
         it('should log in user', async () => {
             const accessToken = 'token1';
             const refreshToken = 'token2';
+            const mockedPermissions = {
+                capabilities: {
+                    canAdd: true
+                }
+            };
 
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(mockUser);
             jest.spyOn(passwordManagerService, 'areEqualPasswords').mockResolvedValueOnce(true);
@@ -158,7 +166,7 @@ describe('UserService', () => {
 
             const result = await userService.loginUser(mockUserDto, mockRes);
 
-            expect(result).toBeUndefined();
+            expect(result).toStrictEqual(mockedPermissions);
         });
 
         it('should throw an error when user has not activated account', async () => {

@@ -75,8 +75,8 @@ export class UserService {
         this.loggerService.info(context, message);
 
         return {
-            isAdmin: user.isAdmin,
-            capabilities: user.capabilities
+            ...(user.isAdmin !== undefined && { isAdmin: user.isAdmin }),
+            ...(user.capabilities !== undefined && { capabilities: user.capabilities })
         };
     }
 
