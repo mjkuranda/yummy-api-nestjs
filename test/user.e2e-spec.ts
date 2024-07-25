@@ -134,7 +134,7 @@ describe('UserController (e2e)', () => {
             .post('/users/login')
             .set('Accept', 'application/json')
             .send(mockRequestBody)
-            .expect(204)
+            .expect(200)
             .then(res => {
                 const accessToken = getCookie(res, 'accessToken');
                 const refreshToken = getCookie(res, 'refreshToken');

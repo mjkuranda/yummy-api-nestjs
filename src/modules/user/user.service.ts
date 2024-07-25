@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
-import * as bcrypt from 'bcrypt';
 import { UserDocument } from '../../mongodb/documents/user.document';
 import { isValidObjectId } from 'mongoose';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { LoggerService } from '../logger/logger.service';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { CapabilityType } from './user.types';
+import { CapabilityType, UserPermissions } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserActionDocument } from '../../mongodb/documents/user-action.document';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
@@ -32,7 +31,7 @@ export class UserService {
         private readonly passwordManagerService: PasswordManagerService
     ) {}
 
-    async loginUser(userLoginDto: UserLoginDto, res: Response) {
+    async loginUser(userLoginDto: UserLoginDto, res: Response): Promise<UserPermissions> {
         const { login, password } = userLoginDto;
         const context = 'UserService/loginUser';
         const user = await this.userRepository.findByLogin(login);
@@ -69,11 +68,16 @@ export class UserService {
         const refreshToken = await this.jwtManagerService.generateRefreshToken({ login });
 
         await this.redisService.setTokens(login, accessToken, refreshToken);
-        res.cookie('accessToken', accessToken, { httpOnly: true });
-        res.cookie('refreshToken', refreshToken, { httpOnly: true });
+        res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'lax' });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'lax' });
 
         const message = `User "${login}" has been successfully logged in.`;
         this.loggerService.info(context, message);
+
+        return {
+            ...(user.isAdmin !== undefined && { isAdmin: user.isAdmin }),
+            ...(user.capabilities !== undefined && { capabilities: user.capabilities })
+        };
     }
 
     async logoutUser(res: Response, login: string, accessToken: string, refreshToken: string): Promise<void> {
@@ -87,7 +91,7 @@ export class UserService {
         res.clearCookie('refreshToken');
     }
 
-    async refreshTokens(userPayload: UserAccessTokenPayload, accessToken: string, res: Response) {
+    async refreshTokens(userPayload: UserAccessTokenPayload, accessToken: string, res: Response): Promise<void> {
         const refreshToken = await this.redisService.getRefreshToken(userPayload.login);
         const context = 'UserService/refreshTokens';
 
