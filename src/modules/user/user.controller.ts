@@ -1,10 +1,11 @@
-import { Body, Controller, HttpCode, Post, Response, Param, UseGuards, Request,  } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Response, Param, UseGuards, Request, Get, } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
 import { CapabilityType } from './user.types';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CapabilityGuard } from '../../guards/capability.guard';
+import { AdminGuard } from '../../guards/admin.guard';
 
 @Controller('users')
 export class UserController {
@@ -67,5 +68,12 @@ export class UserController {
     @HttpCode(200)
     public async activate(@Param('userActionId') userActionId: string) {
         return await this.userService.activate(userActionId);
+    }
+
+    @Get('/not-activated')
+    @HttpCode(200)
+    @UseGuards(AuthenticationGuard, AdminGuard)
+    public async getNotActivatedUsers() {
+        return await this.userService.getNotActivated();
     }
 }

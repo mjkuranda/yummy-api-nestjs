@@ -353,4 +353,16 @@ export class MealService {
         await this.searchQueryRepository.create({ ingredients: filteredIngredients, date: new Date(), login: user.login });
         this.loggerService.info('MealService/addMealProposal', `Added search query for user ${user.login}.`);
     }
+
+    async getMealsSoftAdded(): Promise<MealDocument[]> {
+        return await this.mealRepository.findAll({ softAdded: { $eq: true }});
+    }
+
+    async getMealsSoftEdited(): Promise<MealDocument[]> {
+        return await this.mealRepository.findAll({ softEdited: { $eq: true }});
+    }
+
+    async getMealsSoftDeleted(): Promise<MealDocument[]> {
+        return await this.mealRepository.findAll({ softDeleted: { $eq: true }});
+    }
 }
