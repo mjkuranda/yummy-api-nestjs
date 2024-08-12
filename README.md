@@ -16,6 +16,9 @@ Technologies:
 * `GET /meals/:id` - returns a specific meal defined by id parameter. It saves to the cache, if it does not exist there. Each request checks the cache.
 * `GET /meals/:id/details` - returns details of a meal. It can be any meal provided by any external or local API.
 * `GET /meals/proposal/all` - returns all meal proposals for a specific user defined by `accessToken`.
+* `GET /meals/soft/added` - returns all meal having `soft-added` property.
+* `GET /meals/soft/edited` - returns all meal having `soft-edited` property.
+* `GET /meals/soft/deleted` - returns all meal having `soft-deleted` property.
 * `POST /meals/proposal` - posts query including ingredients. Works for only logged-in users.
 ```json
 {
@@ -82,6 +85,8 @@ Technologies:
 * `POST /users/:login/deny/:capability` - denies a permission to a user by admin. You need to have `jwt` token (you need to be logged-in) and you are an admin. `login` is user login whom you want to deny a permission. `capability` is value one of `canAdd`, `canEdit`, `canRemove`.
 
 * `POST /users/activate/:userActionId` - activates a user. `userActionId` is activation code, sent in the mail message.
+
+* `GET /users/not-activated` - returns all not activated user accounts.
 
 All above endpoints excluding `GET /meals` and `GET /meals/:id` require `accessToken` as a cookie.
 

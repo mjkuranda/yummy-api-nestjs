@@ -269,4 +269,13 @@ export class UserService {
         });
         this.loggerService.info(context, `User "${user._id}" has been successfully activated!`);
     }
+
+    async getNotActivated() {
+        return await this.userRepository.findAll({
+            $or: [
+                { activated: { $eq: false }},
+                { activated: { $exists: false }}
+            ]
+        });
+    }
 }

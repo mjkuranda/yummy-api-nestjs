@@ -118,4 +118,25 @@ export class MealController {
 
         return await this.mealService.addMealProposal(authenticatedUser, ingredients);
     }
+
+    @Get('/soft/added')
+    @HttpCode(200)
+    @UseGuards(AuthenticationGuard, CreationGuard)
+    public async getSoftAddedMeals() {
+        return await this.mealService.getMealsSoftAdded();
+    }
+
+    @Get('/soft/edited')
+    @HttpCode(200)
+    @UseGuards(AuthenticationGuard, EditionGuard)
+    public async getSoftEditedMeals() {
+        return await this.mealService.getMealsSoftEdited();
+    }
+
+    @Get('/soft/deleted')
+    @HttpCode(200)
+    @UseGuards(AuthenticationGuard, DeletionGuard)
+    public async getSoftDeletedMeals() {
+        return await this.mealService.getMealsSoftDeleted();
+    }
 }
