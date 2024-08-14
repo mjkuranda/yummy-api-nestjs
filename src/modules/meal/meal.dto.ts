@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import { UserDto } from '../user/user.dto';
 
 export class CreateMealDto {
+    @IsOptional()
     @IsNotEmpty({ message: 'Meal should have an author' })
     @Length(3, 16)
     readonly author: string;
@@ -19,6 +20,7 @@ export class CreateMealDto {
     @ArrayMinSize(1)
     readonly ingredients: string[];
 
+    @IsOptional()
     @IsNotEmpty({ message: 'Meal should have a posted time' })
     readonly posted: number;
 

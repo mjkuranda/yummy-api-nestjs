@@ -37,7 +37,7 @@ export class MealService {
     ) {}
 
     async create(createMealDto: CreateMealDto): Promise<MealDocument> {
-        const createdMeal = await this.mealRepository.create({ ...createMealDto, softAdded: true }) as MealDocument;
+        const createdMeal = await this.mealRepository.create({ ...createMealDto, posted: new Date().getTime(), softAdded: true }) as MealDocument;
 
         const title = createMealDto.title;
         const ingredientCount = createMealDto.ingredients.length;
