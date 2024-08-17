@@ -278,4 +278,41 @@ export class UserService {
             ]
         });
     }
+
+    async activateViaLogin(login: string): Promise<void> {
+        const context = 'UserService/activateViaLogin';
+        const userAction = await this.userActionRepository.findOne({ login: login });
+
+        if (!userAction) {
+            const message = `Not found any request for activation for "${login}" user.`;
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        const user = await this.userRepository.findById(userAction.userId);
+
+        if (!user) {
+            const message = `User with id "${userAction.userId}" does not exist.`;
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
+        if (user.activated) {
+            const message = `User "${login}" has already activated.`;
+            this.loggerService.info(context, message);
+            await this.userActionRepository.deleteOne({ _id: userAction._id });
+
+            return;
+        }
+
+        await this.userActionRepository.deleteOne({ _id: userAction._id });
+        await this.userRepository.updateOne({ _id: user._id }, {
+            $set: {
+                activated: new Date().getTime()
+            }
+        });
+        this.loggerService.info(context, `User "${login}" has been successfully activated!`);
+    }
 }

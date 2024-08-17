@@ -76,4 +76,11 @@ export class UserController {
     public async getNotActivatedUsers() {
         return await this.userService.getNotActivated();
     }
+
+    @Post('/:login/activate')
+    @HttpCode(204)
+    @UseGuards(AuthenticationGuard, AdminGuard)
+    public async activateViaLogin(@Param('login') login: string): Promise<void> {
+        return await this.userService.activateViaLogin(login);
+    }
 }

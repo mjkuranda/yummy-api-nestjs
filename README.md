@@ -88,6 +88,8 @@ Technologies:
 
 * `GET /users/not-activated` - returns all not activated user accounts.
 
+* `POST /users/:login/activate` - activates a user. `login` indicates which user should be activated only by admin.
+
 All above endpoints excluding `GET /meals` and `GET /meals/:id` require `accessToken` as a cookie.
 
 ## Environmental variables
