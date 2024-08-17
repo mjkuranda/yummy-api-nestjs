@@ -11,11 +11,13 @@ import { UserRepository } from '../src/mongodb/repositories/user.repository';
 import { RedisService } from '../src/modules/redis/redis.service';
 import { UserAccessTokenPayload, UserRefreshTokenPayload } from '../src/modules/jwt-manager/jwt-manager.types';
 import { PasswordManagerService } from '../src/modules/password-manager/password-manager.service';
+import { UserActionRepository } from '../src/mongodb/repositories/user.action.repository';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
     let userService: UserService;
     let userRepository: UserRepository;
+    let userActionRepository: UserActionRepository;
     let jwtManagerService: JwtManagerService;
     let redisService: RedisService;
     let passwordManagerService: PasswordManagerService;
@@ -40,6 +42,14 @@ describe('UserController (e2e)', () => {
         find: () => {},
         findById: () => {},
         findByLogin: () => {}
+    };
+
+    const mockUserActionRepositoryProvider = {
+        create: jest.fn(),
+        findById: jest.fn(),
+        findOne: jest.fn(),
+        deleteOne: jest.fn(),
+        updateOne: jest.fn()
     };
 
     const mockJwtServiceProvider = {
@@ -70,6 +80,7 @@ describe('UserController (e2e)', () => {
         })
             .overrideProvider(LoggerService).useValue({ info: () => {}, error: () => {} })
             .overrideProvider(UserRepository).useValue(mockUserModelProvider)
+            .overrideProvider(UserActionRepository).useValue(mockUserActionRepositoryProvider)
             .overrideProvider(MailManagerService).useValue({ sendActivationMail: jest.fn((email, id) => {}) })
             .overrideProvider(JwtManagerService).useValue(mockJwtServiceProvider)
             .overrideProvider(RedisService).useValue(mockRedisServiceProvider)
@@ -82,6 +93,7 @@ describe('UserController (e2e)', () => {
 
         userService = moduleRef.get(UserService);
         userRepository = moduleRef.get(UserRepository);
+        userActionRepository = moduleRef.get(UserActionRepository);
         jwtManagerService = moduleRef.get(JwtManagerService);
         redisService = moduleRef.get(RedisService);
         passwordManagerService = moduleRef.get(PasswordManagerService);
@@ -97,9 +109,11 @@ describe('UserController (e2e)', () => {
             _id: '123-abc',
         } as any;
         const mockResponseBody = { ...mockUser };
+        const mockUserAction = { _id: 'abc' } as any;
         jest.clearAllMocks();
         jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(null);
         jest.spyOn(userRepository, 'create').mockReturnValueOnce(mockResponseBody);
+        jest.spyOn(userActionRepository, 'create').mockReturnValueOnce(mockUserAction);
 
         return request(app.getHttpServer())
             .post('/users/create')
@@ -417,6 +431,61 @@ describe('UserController (e2e)', () => {
             return request(app.getHttpServer())
                 .post('/users/activate/635981f6e40f61599e839aaa')
                 .expect(200);
+        });
+    });
+
+    describe('/users/:login/activate (POST)', () => {
+        it('should fail when user tries to activate an another one', () => {
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'XNAME',
+                password: 'hashed',
+            } as any;
+
+            jest.resetAllMocks();
+            jest.clearAllMocks();
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
+            jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(null);
+
+            return request(app.getHttpServer())
+                .post('/users/some-user/activate')
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
+                .expect(403);
+        });
+
+        it('should activate user', () => {
+            const mockAdmin = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'XNAME',
+                password: 'hashed',
+                isAdmin: true,
+                activated: true
+            } as any;
+            const mockUser = {
+                _id: '355981f6e40f61599e839ddb',
+                login: 'user',
+                password: 'hashed'
+            } as any;
+            const mockUserAction = {
+                _id: 'some-user-action-id',
+                userId: 'some-user-id',
+                type: 'activate'
+            } as any;
+
+            jest.resetAllMocks();
+            jest.clearAllMocks();
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockAdmin);
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
+            jest.spyOn(userActionRepository, 'findOne').mockResolvedValue(mockUserAction);
+            jest.spyOn(userRepository, 'findById').mockResolvedValueOnce(mockUser);
+
+            return request(app.getHttpServer())
+                .post('/users/user/activate')
+                .set('Cookie', ['accessToken=token'])
+                .set('Authorization', 'Bearer token')
+                .expect(204);
         });
     });
 });
