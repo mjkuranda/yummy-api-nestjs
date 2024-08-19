@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `multer` library.
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /images/upload` for uploading new images.
 - [Marek Kurańda](https://github.com/mjkuranda): `/data/images/meals` directory for uploaded meal images.
+- [Marek Kurańda](https://github.com/mjkuranda): capability to get images via `images/meals/${filename}`.
 
 ## [1.34.0] - 2024-08-15
 ### Added

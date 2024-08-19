@@ -2,6 +2,8 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MealModule } from './modules/meal/meal.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { getMongooseUri } from './utils';
 import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { UserModule } from './modules/user/user.module';
@@ -19,6 +21,10 @@ import { ImageModule } from './modules/image/image.module';
                 uri: getMongooseUri()
             }),
             inject: [ConfigService],
+        }),
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'data/images/meals'),
+            serveRoot: '/images/meals',
         }),
         LoggerModule,
         IngredientModule,
