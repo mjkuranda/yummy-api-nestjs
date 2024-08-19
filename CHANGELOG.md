@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.35.0] - 2024-08-19
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `multer` library.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /images/upload` for uploading new images.
+- [Marek Kurańda](https://github.com/mjkuranda): `/data/images/meals` directory for uploaded meal images.
+
 ## [1.34.0] - 2024-08-15
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /users/:login/activate` endpoint to activate users via login.

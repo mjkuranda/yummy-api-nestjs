@@ -6,6 +6,7 @@ import { getMongooseUri } from './utils';
 import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { UserModule } from './modules/user/user.module';
 import { LoggerModule } from './modules/logger/logger.module';
+import { ImageModule } from './modules/image/image.module';
 
 @Module({
     imports: [
@@ -22,7 +23,8 @@ import { LoggerModule } from './modules/logger/logger.module';
         LoggerModule,
         IngredientModule,
         MealModule,
-        UserModule
+        UserModule,
+        ImageModule
     ],
     controllers: [],
     providers: [],
