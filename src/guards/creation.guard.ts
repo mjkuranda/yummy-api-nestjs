@@ -9,6 +9,8 @@ export class CreationGuard implements CanActivate {
         const req = context.switchToHttp().getRequest();
         const user = req.body.authenticatedUser;
 
+
+
         if (user.isAdmin) {
             return true;
         }

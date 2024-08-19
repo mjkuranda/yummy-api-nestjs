@@ -1,0 +1,27 @@
+version: '3'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOSTNAME=mongo
+      - DB_PORT=27017
+      - DB_COLLECTION
+      - DB_USER
+      - DB_PASS
+      - PROD
+      - REDIS_HOSTNAME=redis
+      - REDIS_PORT=6379
+      - MAIL_USER
+      - MAIL_PASS
+      - MAIL_HOST
+      - MAIL_PORT
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"

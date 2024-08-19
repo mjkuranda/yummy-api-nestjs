@@ -12,6 +12,7 @@ Technologies:
 * SuperTest
 
 ## API
+### Meals
 * `GET /meals?ings=ingredient1,ingredient2,ingredientX&type=meal-type` - returns all meals from the database that contain provided ingredients and type as `ings` and `type` respectively being query params.
 * `GET /meals/:id` - returns a specific meal defined by id parameter. It saves to the cache, if it does not exist there. Each request checks the cache.
 * `GET /meals/:id/details` - returns details of a meal. It can be any meal provided by any external or local API.
@@ -59,6 +60,7 @@ Technologies:
 * `POST /meals/:id/edit` - confirm editing a meal. You need to be logged-in and has `canEdit` capability (or be an admin).
 * `POST /meals/:id/delete` - confirm deleting a meal. You need to be logged-in and has `canDelete` capability (or be an admin).
 
+### Users
 * `POST /users/create` - register a new user. You need to provide following data:
 ```json
 {
@@ -91,6 +93,9 @@ Technologies:
 * `POST /users/:login/activate` - activates a user. `login` indicates which user should be activated only by admin.
 
 All above endpoints excluding `GET /meals` and `GET /meals/:id` require `accessToken` as a cookie.
+
+### Images
+* `POST /images/upload` - uploads a new image. You need to be logged-in and have `caAdd` capability or be an admin. Image should be passed as `image` property in form data. The image constraint is 512 KB.
 
 ## Environmental variables
 
