@@ -13,10 +13,7 @@ const RecipeSectionStepsSchema = new mongoose.Schema({
 });
 
 const RecipeSectionSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
+    name: String,
     steps: [RecipeSectionStepsSchema]
 });
 

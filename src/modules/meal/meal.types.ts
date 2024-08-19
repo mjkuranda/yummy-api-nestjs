@@ -9,7 +9,7 @@ export type RatedMeal = {
 };
 
 type MealRecipeSection = {
-    name: string,
+    name?: string,
     steps: {
         number: number,
         step: string
