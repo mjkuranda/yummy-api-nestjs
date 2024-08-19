@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 import { MealIngredient } from '../../modules/ingredient/ingredient.types';
-import { MealInstruction } from '../../modules/meal/meal.types';
+import { MealRecipeSections } from '../../modules/meal/meal.types';
 
 export interface MealDocument extends Document {
   readonly author: string;
@@ -14,5 +14,5 @@ export interface MealDocument extends Document {
   readonly softDeleted?: boolean;
   readonly softEdited?: MealDocument;
   readonly readyInMinutes: number;
-  readonly instruction: MealInstruction;
+  readonly recipeSections: MealRecipeSections;
 }

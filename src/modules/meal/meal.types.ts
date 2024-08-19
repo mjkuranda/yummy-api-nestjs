@@ -8,7 +8,7 @@ export type RatedMeal = {
     relevance: number
 };
 
-type MealInstructionRecord = {
+type MealRecipeSection = {
     name: string,
     steps: {
         number: number,
@@ -16,7 +16,7 @@ type MealInstructionRecord = {
     }[]
 };
 
-export type MealInstruction = MealInstructionRecord[];
+export type MealRecipeSections = MealRecipeSection[];
 
 export type DetailedMeal = {
     id: string,
@@ -33,7 +33,7 @@ export type DetailedMeal = {
         dairyFree?: boolean,
         veryHealthy?: boolean
     },
-    instruction: MealInstruction
+    recipeSections: MealRecipeSections
 };
 
 export type ProposedMeal = {
