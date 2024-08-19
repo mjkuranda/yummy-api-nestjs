@@ -1,6 +1,7 @@
 import { ArrayMinSize, IsArray, IsNotEmpty, IsOptional, Length, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UserDto } from '../user/user.dto';
+import { MealRecipeSections } from './meal.types';
 
 export class CreateMealDto {
     @IsOptional()
@@ -23,6 +24,9 @@ export class CreateMealDto {
     @IsOptional()
     @IsNotEmpty({ message: 'Meal should have a posted time' })
     readonly posted: number;
+
+    @IsNotEmpty({ message: 'Meal should have a recipe' })
+    readonly recipeSections: MealRecipeSections;
 
     @IsNotEmpty({ message: 'Meal should have a title' })
     @Length(3, 16)

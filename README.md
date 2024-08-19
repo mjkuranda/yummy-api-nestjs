@@ -31,17 +31,37 @@ Technologies:
 }
 ```
 * `POST /meals/create` - creates a new meal and saves its to the database, marking as soft added. You need to be logged-in and provide following data (`imageUrl` is optional):
+
 ```json
 {
-  "description": "The best meal ever",
-  "title": "New awesome meal",
-  "ingredients": [
-    "ingredient-id-1",
-    "ingredient-id-2",
-    "ingredient-id-x"
-  ],
-  "imageUrl": "https://some.domain/path/to/resource/image.ext",
-  "type": "soup"
+    "description": "The best meal ever",
+    "title": "New awesome meal",
+    "ingredients": [
+        "ingredient-id-1",
+        "ingredient-id-2",
+        "ingredient-id-x"
+    ],
+    "imageUrl": "https://some.domain/path/to/resource/image.ext",
+    "recipeSections": [
+        {
+            "name": "",
+            "steps": [
+                {
+                    "number": 1,
+                    "step": "Heat up to 100 degrees."
+                },
+                {
+                    "number": 2,
+                    "step": "Mix everything"
+                },
+                {
+                    "number": 3,
+                    "step": "Enjoy your meal! :)"
+                }
+            ]
+        }
+    ],
+    "type": "soup"
 }
 ```
 * `PUT /meals/:id` - updates (edits) a meal and marks as soft edited. Provide following data, where each property is optional:
