@@ -1,5 +1,22 @@
 import * as mongoose from 'mongoose';
 
+const RecipeSectionStepsSchema = new mongoose.Schema({
+    number: {
+        type: Number,
+        required: true,
+        min: 1
+    },
+    step: {
+        type: String,
+        required: true
+    }
+});
+
+const RecipeSectionSchema = new mongoose.Schema({
+    name: String,
+    steps: [RecipeSectionStepsSchema]
+});
+
 export const MealSchema = new mongoose.Schema({
     author: {
         type: String
@@ -16,6 +33,10 @@ export const MealSchema = new mongoose.Schema({
     },
     posted: {
         type: Number,
+        required: true
+    },
+    recipeSections: {
+        type: [RecipeSectionSchema],
         required: true
     },
     softAdded: {

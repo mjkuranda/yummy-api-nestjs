@@ -36,14 +36,14 @@ export type SpoonacularRecipeDetails = {
     sourceName: string;
 };
 
-type SpoonacularMealInstructionStep = {
+type SpoonacularRecipeStep = {
     number: number,
     step: string
 };
 
-export type SpoonacularMealInstructionRecord = {
+export type SpoonacularRecipeSection = {
     name: string,
-    steps: SpoonacularMealInstructionStep[]
+    steps: SpoonacularRecipeStep[]
 };
 
-export type SpoonacularMealInstruction = SpoonacularMealInstructionRecord[];
+export type SpoonacularRecipeSections = SpoonacularRecipeSection[];

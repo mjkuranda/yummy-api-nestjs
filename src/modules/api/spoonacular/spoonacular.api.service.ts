@@ -4,14 +4,14 @@ import { AbstractApiService } from '../../../services/abstract.api.service';
 import { ApiName } from '../../redis/redis.types';
 import {
     SpoonacularIngredient,
-    SpoonacularMealInstruction,
+    SpoonacularRecipeSections,
     SpoonacularRecipe,
     SpoonacularRecipeDetails
 } from './spoonacular.api.types';
 import { IngredientType, MealIngredient } from '../../ingredient/ingredient.types';
 
 @Injectable()
-export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularMealInstruction> {
+export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularRecipeSections> {
 
     getApiUrl(): string {
         return 'https://api.spoonacular.com';
@@ -46,7 +46,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         });
     }
 
-    proceedDataToMealDetails(data: SpoonacularRecipeDetails, instructionData: SpoonacularMealInstruction): DetailedMeal {
+    proceedDataToMealDetails(data: SpoonacularRecipeDetails, recipeSections: SpoonacularRecipeSections): DetailedMeal {
         const {
             id, image, title, extendedIngredients, summary,
             vegetarian, vegan, glutenFree, dairyFree, veryHealthy,
@@ -68,7 +68,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 dairyFree,
                 veryHealthy
             },
-            instruction: instructionData
+            recipeSections
         };
     }
 }
