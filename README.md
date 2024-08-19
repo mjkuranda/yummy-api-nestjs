@@ -97,6 +97,8 @@ All above endpoints excluding `GET /meals` and `GET /meals/:id` require `accessT
 ### Images
 * `POST /images/upload` - uploads a new image. You need to be logged-in and have `caAdd` capability or be an admin. Image should be passed as `image` property in form data. The image constraint is 512 KB.
 
+* `serverUrl/images/meals/${filename}` - returns image as a static file.
+
 ## Environmental variables
 
 To set up this backend application, you need to define the following variables:
