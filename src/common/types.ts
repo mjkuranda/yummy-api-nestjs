@@ -1,4 +1,4 @@
-import { IngredientName, IngredientUnit } from './enums';
+import { IngredientName } from './enums';
 
 /**
  * Equals to {}
@@ -20,6 +20,11 @@ export type ContextString = `${string}/${string}`;
  */
 export type IngredientType = {
     name: IngredientName,
-    unit: IngredientUnit,
+    unit: string,
     amount?: number
 };
+
+/**
+ * Language type
+ */
+export type Language = 'en' | 'en-US' | 'pl';

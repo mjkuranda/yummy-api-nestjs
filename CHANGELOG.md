@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.37.0] - 2024-08-20
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `google-translate-api-x` library.
+- [Marek Kurańda](https://github.com/mjkuranda): `TranslateModule` to translate all ingredient expressions and recipe sections.
+- [Marek Kurańda](https://github.com/mjkuranda): `Accept-Language` header in `GET /meals` to define language for an incoming client.
+- [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `MealController`.
+
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): `GET /meal/:id/details` return type to `DetailedMealWithTranslations`.
+
+### Removed
+- [Marek Kurańda](https://github.com/mjkuranda): `IngredientUnit` enum.
+
 ## [1.36.0] - 2024-08-19
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): Meal schema and renamed `instructions` to `recipeSections` and other fields similarly.
