@@ -1,5 +1,6 @@
 import { IngredientType, MealIngredient } from '../ingredient/ingredient.types';
 import { TranslatedIngredient } from '../translation/translation.types';
+import { Language } from '../../common/types';
 
 export type RatedMeal = {
     id: string,
@@ -25,6 +26,7 @@ export type DetailedMeal = {
     id: string,
     imgUrl?: string,
     ingredients: MealIngredient[],
+    language: Language,
     title: string,
     description: string,
     readyInMinutes: number,

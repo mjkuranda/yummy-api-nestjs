@@ -2,6 +2,7 @@ import { ArrayMinSize, IsArray, IsNotEmpty, IsOptional, Length, ValidateNested }
 import { Type } from 'class-transformer';
 import { UserDto } from '../user/user.dto';
 import { MealRecipeSections } from './meal.types';
+import { Language } from '../../common/types';
 
 export class CreateMealDto {
     @IsOptional()
@@ -20,6 +21,9 @@ export class CreateMealDto {
     @IsArray()
     @ArrayMinSize(1)
     readonly ingredients: string[];
+
+    @IsNotEmpty({ message: 'Meal should have a language in which was defined' })
+    readonly language: Language;
 
     @IsOptional()
     @IsNotEmpty({ message: 'Meal should have a posted time' })

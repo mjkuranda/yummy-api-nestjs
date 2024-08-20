@@ -4,7 +4,7 @@ import { LoggerService } from '../logger/logger.service';
 import { REDIS_CLIENT, REDIS_TTL } from './redis.constants';
 import { ApiName, MealDetailsQueryKey, MealResultQueryKey, TokenKey } from './redis.types';
 import { getAccessTokenKey, getMealDetailsQueryKey, getMealResultQueryKey, getRefreshTokenKey } from './redis.utils';
-import { HOUR, MINUTE } from '../../constants/times.constant';
+import { HOUR } from '../../constants/times.constant';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { DetailedMeal, RatedMeal } from '../meal/meal.types';
 import { ACCESS_TOKEN_DURATION, REFRESH_TOKEN_DURATION } from '../../constants/tokens.constant';
