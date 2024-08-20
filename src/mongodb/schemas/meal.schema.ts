@@ -31,6 +31,10 @@ export const MealSchema = new mongoose.Schema({
         type: [String],
         required: true
     },
+    language: {
+        type: String,
+        required: true
+    },
     posted: {
         type: Number,
         required: true
