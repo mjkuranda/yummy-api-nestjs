@@ -9,7 +9,7 @@ import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.servic
 import { RedisService } from '../src/modules/redis/redis.service';
 import { MealRepository } from '../src/mongodb/repositories/meal.repository';
 import { SpoonacularApiService } from '../src/modules/api/spoonacular/spoonacular.api.service';
-import { RatedMeal } from '../src/modules/meal/meal.types';
+import { DetailedMeal, DetailedMealWithTranslatedIngredients, RatedMeal } from '../src/modules/meal/meal.types';
 import { SearchQueryRepository } from '../src/mongodb/repositories/search-query.repository';
 
 describe('UserController (e2e)', () => {
@@ -115,14 +115,34 @@ describe('UserController (e2e)', () => {
 
     describe('/meals/:id/details', () => {
         it('should return a meal when is cached', async () => {
-            const mockCachedMeal: any = {};
+            const mockCachedMeal: DetailedMeal = {
+                id: 'some-id',
+                title: 'some title',
+                description: 'some description',
+                readyInMinutes: 0,
+                sourceOrAuthor: 'unknown',
+                recipeSections: [],
+                ingredients: []
+            };
+            const expectedResponseBody: DetailedMealWithTranslatedIngredients = {
+                meal: {
+                    id: 'some-id',
+                    title: 'some title',
+                    description: 'some description',
+                    readyInMinutes: 0,
+                    sourceOrAuthor: 'unknown',
+                    recipeSections: [],
+                    ingredients: []
+                },
+                ingredients: []
+            };
 
             jest.spyOn(redisService, 'getMealDetails').mockResolvedValueOnce(mockCachedMeal);
 
             return request(app.getHttpServer())
                 .get('/meals/some-id/details')
                 .expect(200)
-                .expect(mockCachedMeal);
+                .expect(expectedResponseBody);
         });
 
         it('should throw an error when meal hasn\'t found', async () => {
@@ -525,7 +545,6 @@ describe('UserController (e2e)', () => {
 
     describe('/meals/proposal (POST)', () => {
         it('should add a new record with provided ingredients', () => {
-            const user: any = { id: '1' };
             const ingredients = ['carrot', 'apple', 'fish'];
 
             return request(app.getHttpServer())
