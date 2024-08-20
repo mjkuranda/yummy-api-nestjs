@@ -30,6 +30,10 @@ describe('TranslationService', () => {
     });
 
     describe('translateIngredients', () => {
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
         it('should translate array of ingredients', async () => {
             const ingredients: MealIngredient[] = [
                 {
