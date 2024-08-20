@@ -10,6 +10,7 @@ import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { SpoonacularApiModule } from '../api/spoonacular/spoonacular.api.module';
 import { IngredientModule } from '../ingredient/ingredient.module';
 import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
+import { TranslationModule } from '../translation/translation.module';
 
 @Module({
     imports: [
@@ -17,7 +18,8 @@ import { SearchQueryRepository } from '../../mongodb/repositories/search-query.r
         RedisModule,
         JwtManagerModule,
         IngredientModule,
-        SpoonacularApiModule
+        SpoonacularApiModule,
+        TranslationModule
     ],
     controllers: [MealController],
     providers: [MealService, MealRepository, SearchQueryRepository, JwtManagerService],

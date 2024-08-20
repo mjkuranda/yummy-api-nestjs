@@ -8,6 +8,7 @@ import {
     Post,
     Put,
     Query,
+    Headers,
     UseGuards,
     Request,
     UsePipes
@@ -21,17 +22,20 @@ import { DeletionGuard } from '../../guards/deletion.guard';
 import { DetailedMeal, GetMealsQueryType } from './meal.types';
 import { IngredientName, MealType } from '../../common/enums';
 import { MealQueryValidationPipe } from '../../pipes/meal-query-validation.pipe';
+import { TranslationService } from '../translation/translation.service';
 
 @Controller('meals')
 export class MealController {
-    constructor(private readonly mealService: MealService) {}
+    constructor(private readonly mealService: MealService,
+                private readonly translationService: TranslationService) {}
 
     @Get()
     @HttpCode(200)
     @UsePipes(MealQueryValidationPipe)
-    public async getMeals(@Query() query: GetMealsQueryType) {
+    public async getMeals(@Headers('accept-language') lang: string, @Query() query: GetMealsQueryType) {
         const { ings, type } = query;
         const ingredients = ings.split(',');
+        console.log(await this.translationService.translate('1.5 cups plus 3 tablespoons buttermilk', lang ?? 'en'));
 
         return await this.mealService.getMeals(<IngredientName[]>ingredients, <MealType>type);
     }
