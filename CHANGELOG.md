@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `TranslateModule` to translate all ingredient expressions.
 - [Marek Kurańda](https://github.com/mjkuranda): `Accept-Language` header in `GET /meals` to define language for an incoming client.
 
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): `GET /meal/:id/details` return type to `DetailedMealWithTranslatedIngredients`.
+
+### Removed
+- [Marek Kurańda](https://github.com/mjkuranda): `IngredientUnit` enum.
+
 ## [1.36.0] - 2024-08-19
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): Meal schema and renamed `instructions` to `recipeSections` and other fields similarly.

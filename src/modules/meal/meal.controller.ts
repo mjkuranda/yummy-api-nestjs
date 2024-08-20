@@ -19,10 +19,11 @@ import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CreationGuard } from '../../guards/creation.guard';
 import { EditionGuard } from '../../guards/edition.guard';
 import { DeletionGuard } from '../../guards/deletion.guard';
-import { DetailedMeal, GetMealsQueryType } from './meal.types';
+import { DetailedMealWithTranslatedIngredients, GetMealsQueryType } from './meal.types';
 import { IngredientName, MealType } from '../../common/enums';
 import { MealQueryValidationPipe } from '../../pipes/meal-query-validation.pipe';
 import { TranslationService } from '../translation/translation.service';
+import { Language } from '../../common/types';
 
 @Controller('meals')
 export class MealController {
@@ -32,10 +33,9 @@ export class MealController {
     @Get()
     @HttpCode(200)
     @UsePipes(MealQueryValidationPipe)
-    public async getMeals(@Headers('accept-language') lang: string, @Query() query: GetMealsQueryType) {
+    public async getMeals(@Query() query: GetMealsQueryType) {
         const { ings, type } = query;
         const ingredients = ings.split(',');
-        console.log(await this.translationService.translate('1.5 cups plus 3 tablespoons buttermilk', lang ?? 'en'));
 
         return await this.mealService.getMeals(<IngredientName[]>ingredients, <MealType>type);
     }
@@ -48,8 +48,11 @@ export class MealController {
 
     @Get('/:id/details')
     @HttpCode(200)
-    public async getMealDetails(@Param('id') id: string): Promise<DetailedMeal> {
-        return await this.mealService.getMealDetails(id);
+    public async getMealDetails(@Param('id') id: string, @Headers('accept-language') lang: Language): Promise<DetailedMealWithTranslatedIngredients> {
+        const meal = await this.mealService.getMealDetails(id);
+        const ingredients = await this.translationService.translateIngredients(meal.ingredients, lang);
+
+        return { meal, ingredients };
     }
 
     @Post('/create')

@@ -29,7 +29,3 @@ export enum IngredientName {
     WHITE_BEANS = 'white beans',
     ZUCCHINI = 'zucchini'
 }
-
-export enum IngredientUnit {
-    STICKS = 'sticks'
-}
