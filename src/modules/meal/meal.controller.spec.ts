@@ -19,11 +19,16 @@ describe('MealController', () => {
             providers: [
                 {
                     provide: MealService,
-                    useValue: { getMealDetails: jest.fn() },
+                    useValue: {
+                        getMealDetails: jest.fn()
+                    },
                 },
                 {
                     provide: TranslationService,
-                    useValue: { translateIngredients: jest.fn() },
+                    useValue: {
+                        translateIngredients: jest.fn(),
+                        translateRecipe: jest.fn()
+                    },
                 },
                 {
                     provide: RedisService,
@@ -62,17 +67,21 @@ describe('MealController', () => {
         it('should return detailed meal with translated ingredients', async () => {
             const id = '123';
             const lang: Language = 'en';
-            const meal = { ingredients: ['ingredient1', 'ingredient2'] } as any;
+            const meal = { ingredients: ['ingredient1', 'ingredient2'], recipeSections: [] } as any;
             const translatedIngredients = ['translated1', 'translated2'] as any;
+            const translatedRecipe = ['translated1', 'translated2'] as any;
+            const expectedResult = { meal, ingredients: translatedIngredients, recipe: translatedRecipe };
 
             jest.spyOn(mealService, 'getMealDetails').mockResolvedValue(meal);
             jest.spyOn(translationService, 'translateIngredients').mockResolvedValue(translatedIngredients);
+            jest.spyOn(translationService, 'translateRecipe').mockResolvedValue(translatedRecipe);
 
             const result = await controller.getMealDetails(id, lang);
 
-            expect(result).toEqual({ meal, ingredients: translatedIngredients });
+            expect(result).toEqual(expectedResult);
             expect(mealService.getMealDetails).toHaveBeenCalledWith(id);
             expect(translationService.translateIngredients).toHaveBeenCalledWith(meal.ingredients, lang);
+            expect(translationService.translateRecipe).toHaveBeenCalledWith(meal.recipeSections, lang);
         });
     });
 });

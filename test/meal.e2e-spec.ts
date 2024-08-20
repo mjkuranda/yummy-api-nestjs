@@ -9,7 +9,7 @@ import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.servic
 import { RedisService } from '../src/modules/redis/redis.service';
 import { MealRepository } from '../src/mongodb/repositories/meal.repository';
 import { SpoonacularApiService } from '../src/modules/api/spoonacular/spoonacular.api.service';
-import { DetailedMeal, DetailedMealWithTranslatedIngredients, RatedMeal } from '../src/modules/meal/meal.types';
+import { DetailedMeal, DetailedMealWithTranslations, RatedMeal } from '../src/modules/meal/meal.types';
 import { SearchQueryRepository } from '../src/mongodb/repositories/search-query.repository';
 
 describe('UserController (e2e)', () => {
@@ -124,7 +124,7 @@ describe('UserController (e2e)', () => {
                 recipeSections: [],
                 ingredients: []
             };
-            const expectedResponseBody: DetailedMealWithTranslatedIngredients = {
+            const expectedResponseBody: DetailedMealWithTranslations = {
                 meal: {
                     id: 'some-id',
                     title: 'some title',
@@ -132,9 +132,10 @@ describe('UserController (e2e)', () => {
                     readyInMinutes: 0,
                     sourceOrAuthor: 'unknown',
                     recipeSections: [],
-                    ingredients: []
+                    ingredients: [],
                 },
-                ingredients: []
+                ingredients: [],
+                recipe: []
             };
 
             jest.spyOn(redisService, 'getMealDetails').mockResolvedValueOnce(mockCachedMeal);

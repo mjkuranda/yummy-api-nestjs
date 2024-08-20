@@ -9,12 +9,14 @@ export type RatedMeal = {
     relevance: number
 };
 
-type MealRecipeSection = {
+export type MealRecipeStep = {
+    number: number,
+    step: string
+};
+
+export type MealRecipeSection = {
     name?: string,
-    steps: {
-        number: number,
-        step: string
-    }[]
+    steps: MealRecipeStep[]
 };
 
 export type MealRecipeSections = MealRecipeSection[];
@@ -37,9 +39,10 @@ export type DetailedMeal = {
     recipeSections: MealRecipeSections
 };
 
-export interface DetailedMealWithTranslatedIngredients {
+export interface DetailedMealWithTranslations {
     meal: DetailedMeal;
     ingredients: TranslatedIngredient[];
+    recipe: MealRecipeSections;
 }
 
 export type ProposedMeal = {
