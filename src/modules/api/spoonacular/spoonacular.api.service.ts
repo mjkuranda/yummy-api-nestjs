@@ -69,7 +69,10 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 dairyFree,
                 veryHealthy
             },
-            recipeSections
+            recipeSections: recipeSections.map(section => ({
+                name: section.name,
+                steps: section.steps.map(step => step.step)
+            }))
         };
     }
 }

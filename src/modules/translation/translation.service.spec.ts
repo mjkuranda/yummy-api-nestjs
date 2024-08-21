@@ -39,31 +39,13 @@ describe('TranslationService', () => {
             const sections: MealRecipeSections = [
                 {
                     name: 'X',
-                    steps: [
-                        {
-                            number: 1,
-                            step: 'Y'
-                        },
-                        {
-                            number: 2,
-                            step: 'Z'
-                        }
-                    ]
+                    steps: ['Y', 'Z']
                 }
             ];
             const expectedResult: MealRecipeSections = [
                 {
                     name: 'X',
-                    steps: [
-                        {
-                            number: 1,
-                            step: 'mocked translation of Y'
-                        },
-                        {
-                            number: 2,
-                            step: 'mocked translation of Z'
-                        }
-                    ]
+                    steps: ['mocked translation of Y', 'mocked translation of Z']
                 }
             ];
 
