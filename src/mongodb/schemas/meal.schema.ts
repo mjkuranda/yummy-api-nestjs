@@ -1,20 +1,8 @@
 import * as mongoose from 'mongoose';
 
-const RecipeSectionStepsSchema = new mongoose.Schema({
-    number: {
-        type: Number,
-        required: true,
-        min: 1
-    },
-    step: {
-        type: String,
-        required: true
-    }
-});
-
 const RecipeSectionSchema = new mongoose.Schema({
     name: String,
-    steps: [RecipeSectionStepsSchema]
+    steps: [String]
 });
 
 export const MealSchema = new mongoose.Schema({

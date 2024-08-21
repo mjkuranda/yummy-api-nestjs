@@ -10,14 +10,9 @@ export type RatedMeal = {
     relevance: number
 };
 
-export type MealRecipeStep = {
-    number: number,
-    step: string
-};
-
 export type MealRecipeSection = {
     name?: string,
-    steps: MealRecipeStep[]
+    steps: string[]
 };
 
 export type MealRecipeSections = MealRecipeSection[];
