@@ -46,18 +46,9 @@ Technologies:
         {
             "name": "",
             "steps": [
-                {
-                    "number": 1,
-                    "step": "Heat up to 100 degrees."
-                },
-                {
-                    "number": 2,
-                    "step": "Mix everything"
-                },
-                {
-                    "number": 3,
-                    "step": "Enjoy your meal! :)"
-                }
+                "Heat up to 100 degrees.",
+                "Mix everything",
+                "Enjoy your meal! :)"
             ]
         }
     ],
