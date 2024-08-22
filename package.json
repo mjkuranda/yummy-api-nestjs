@@ -1,6 +1,6 @@
 {
   "name": "yummy-api-nestjs",
-  "version": "1.38.2",
+  "version": "1.38.3",
   "description": "REST API for Yummy application",
   "author": "mjkuranda",
   "private": false,
