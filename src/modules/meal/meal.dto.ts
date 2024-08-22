@@ -11,11 +11,11 @@ export class CreateMealDto {
     readonly author: string;
 
     @IsNotEmpty({ message: 'Meal should have a description' })
-    @Length(3, 256)
+    @Length(3, 1024)
     readonly description: string;
 
     @IsOptional()
-    @Length(3, 16)
+    @Length(3, 48)
     readonly imageUrl: string;
 
     @IsArray()

@@ -198,7 +198,8 @@ describe('UserController (e2e)', () => {
                 title: 'Title',
                 description: 'Lorem ipsum',
                 ingredients: ['123', '456'],
-                type: 'some type'
+                type: 'some type',
+                imageUrl: '2e99e91d-7bd0-4ec8-89a6-ea9a6604a4f7.jpg'
             } as any;
             const mockUser = {
                 _id: '635981f6e40f61599e839ddb',

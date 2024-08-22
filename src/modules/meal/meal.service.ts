@@ -45,7 +45,7 @@ export class MealService {
             ? `"${createMealDto.imageUrl}" image url`
             : 'no image';
         const context = 'MealService/create';
-        const message = `New meal "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription}.`;
+        const message = `New meal "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription} has been created.`;
 
         this.loggerService.info(context, message);
 

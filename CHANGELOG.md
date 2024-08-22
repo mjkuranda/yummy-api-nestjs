@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.38.3] - 2024-08-22
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): Some validation conditions regarding meal creation DTO.
+
 ## [1.38.2] - 2024-08-22
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /meals/create` payload in `README` regarding recent deletion of `number` property.
