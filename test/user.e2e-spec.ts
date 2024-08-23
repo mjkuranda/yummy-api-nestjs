@@ -434,7 +434,7 @@ describe('UserController (e2e)', () => {
         });
     });
 
-    describe('/users/:login/activate (POST)', () => {
+    describe('/users/:id/activate (POST)', () => {
         it('should fail when user tries to activate an another one', () => {
             const mockUser = {
                 _id: '635981f6e40f61599e839ddb',
@@ -449,7 +449,7 @@ describe('UserController (e2e)', () => {
             jest.spyOn(userRepository, 'findByLogin').mockResolvedValueOnce(null);
 
             return request(app.getHttpServer())
-                .post('/users/some-user/activate')
+                .post('/users/some-user-id/activate')
                 .set('Cookie', ['accessToken=token'])
                 .set('Authorization', 'Bearer token')
                 .expect(403);
@@ -482,7 +482,7 @@ describe('UserController (e2e)', () => {
             jest.spyOn(userRepository, 'findById').mockResolvedValueOnce(mockUser);
 
             return request(app.getHttpServer())
-                .post('/users/user/activate')
+                .post('/users/user-id/activate')
                 .set('Cookie', ['accessToken=token'])
                 .set('Authorization', 'Bearer token')
                 .expect(204);
