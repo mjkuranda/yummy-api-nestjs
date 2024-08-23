@@ -531,45 +531,45 @@ describe('UserService', () => {
         });
     });
 
-    describe('activateViaLogin', () => {
+    describe('activateViaId', () => {
         beforeEach(() => {
             jest.clearAllMocks();
             jest.resetAllMocks();
         });
 
         it('should fail when action for token has not found', async () => {
-            const mockUsername = 'some-username';
+            const mockUserId= 'some-user-id';
 
             jest.spyOn(userActionRepository, 'findOne').mockReturnValueOnce(null);
 
-            await expect(userService.activateViaLogin(mockUsername)).rejects.toThrow(NotFoundException);
+            await expect(userService.activateViaId(mockUserId)).rejects.toThrow(NotFoundException);
         });
 
         it('should fail when found action but user not found', async () => {
-            const mockUserLogin = 'some-username';
+            const mockUserId = 'some-user-id';
             const mockUserAction = {
                 _id: 'some-user-action-id',
-                userId: 'some-user-id',
+                userId: mockUserId,
                 type: 'activate'
             } as any;
 
             jest.spyOn(userActionRepository, 'findOne').mockReturnValueOnce(mockUserAction);
             jest.spyOn(userRepository, 'findById').mockReturnValueOnce(null);
 
-            await expect(userService.activate(mockUserLogin)).rejects.toThrow(BadRequestException);
+            await expect(userService.activateViaId(mockUserId)).rejects.toThrow(BadRequestException);
         });
 
         it('should fail when user is already activated', async () => {
-            const mockUserLogin = 'some-username';
+            const mockUserId = 'some-user-id';
             const mockUserAction = {
                 _id: 'some-user-action-id',
-                userId: 'some-user-id',
+                userId: mockUserId,
                 type: 'activate'
             } as any;
             const mockUser = {
                 _id: mockUserAction.userId,
                 email: 'xxx',
-                login: mockUserLogin,
+                login: mockUserId,
                 pass: 'hashed',
                 activated: 1
             } as any;
@@ -577,29 +577,29 @@ describe('UserService', () => {
             jest.spyOn(userActionRepository, 'findOne').mockReturnValueOnce(mockUserAction);
             jest.spyOn(userRepository, 'findById').mockReturnValueOnce(mockUser);
 
-            const result = await userService.activateViaLogin(mockUserLogin);
+            const result = await userService.activateViaId(mockUserId);
 
             expect(result).toBeUndefined();
         });
 
         it('should activate a user', async () => {
-            const mockUserLogin = 'some-username';
+            const mockUserId = 'some-user-id';
             const mockUserAction = {
                 _id: 'some-user-action-id',
-                userId: 'some-user-id',
+                userId: mockUserId,
                 type: 'activate'
             } as any;
             const mockUser = {
                 _id: mockUserAction.userId,
                 email: 'xxx',
-                login: mockUserLogin,
+                login: mockUserId,
                 pass: 'hashed',
             } as any;
 
             jest.spyOn(userActionRepository, 'findOne').mockReturnValueOnce(mockUserAction);
             jest.spyOn(userRepository, 'findById').mockReturnValueOnce(mockUser);
 
-            const result = await userService.activateViaLogin(mockUserLogin);
+            const result = await userService.activateViaId(mockUserId);
 
             expect(result).toBeUndefined();
         });

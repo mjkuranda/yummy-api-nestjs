@@ -271,6 +271,7 @@ export class UserService {
     }
 
     async getNotActivated() {
+        // FIXME: Should return _id and login only !!! Security... (salt and other fields are returned)
         return await this.userRepository.findAll({
             $or: [
                 { activated: { $eq: false }},
@@ -279,12 +280,12 @@ export class UserService {
         });
     }
 
-    async activateViaLogin(login: string): Promise<void> {
-        const context = 'UserService/activateViaLogin';
-        const userAction = await this.userActionRepository.findOne({ login: login });
+    async activateViaId(id: string): Promise<void> {
+        const context = 'UserService/activateViaId';
+        const userAction = await this.userActionRepository.findOne({ userId: id });
 
         if (!userAction) {
-            const message = `Not found any request for activation for "${login}" user.`;
+            const message = `Not found any request for activation for "${id}" user.`;
             this.loggerService.error(context, message);
 
             throw new NotFoundException(context, message);
@@ -300,7 +301,7 @@ export class UserService {
         }
 
         if (user.activated) {
-            const message = `User "${login}" has already activated.`;
+            const message = `User "${id}" has already activated.`;
             this.loggerService.info(context, message);
             await this.userActionRepository.deleteOne({ _id: userAction._id });
 
@@ -313,6 +314,6 @@ export class UserService {
                 activated: new Date().getTime()
             }
         });
-        this.loggerService.info(context, `User "${login}" has been successfully activated!`);
+        this.loggerService.info(context, `User "${id}" has been successfully activated!`);
     }
 }
