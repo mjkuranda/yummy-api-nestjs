@@ -1,53 +1,197 @@
 {
-  "category": "breads",
-  "data": [
-    "baguette",
-    "brioche",
-    "ciabatta",
-    "croissant",
-    "focaccia",
-    "pita bread",
-    "naan",
-    "sourdough bread",
-    "rye bread",
-    "whole wheat bread",
-    "multigrain bread",
-    "white bread",
-    "French bread",
-    "Italian bread",
-    "wheat bread",
-    "sliced bread",
-    "sandwich bread",
-    "artisan bread",
-    "flatbread",
-    "panini bread",
-    "pumpernickel bread",
-    "bagel",
-    "English muffin",
-    "cornbread",
-    "oat bread",
-    "rye crispbread",
-    "challah",
-    "lavash",
-    "pretzel",
-    "matzo",
-    "crumpet",
-    "scone",
-    "biscuit",
-    "muffin",
-    "toast",
-    "roll",
-    "bun",
-    "loaf",
-    "breadstick",
-    "tortilla",
-    "pizza dough",
-    "pie crust",
-    "phyllo dough",
-    "cracker",
-    "cookie",
-    "cake",
-    "pastry",
-    "donut"
-  ]
+    "baguette": {
+        "en": "baguette",
+        "pl": "bagietka"
+    },
+    "brioche": {
+        "en": "brioche",
+        "pl": "brioche"
+    },
+    "ciabatta": {
+        "en": "ciabatta",
+        "pl": "ciabatta"
+    },
+    "croissant": {
+        "en": "croissant",
+        "pl": "rogalik"
+    },
+    "focaccia": {
+        "en": "focaccia",
+        "pl": "focaccia"
+    },
+    "pita bread": {
+        "en": "pita bread",
+        "pl": "chleb pita"
+    },
+    "naan": {
+        "en": "naan",
+        "pl": "naan"
+    },
+    "sourdough bread": {
+        "en": "sourdough bread",
+        "pl": "chleb na zakwasie"
+    },
+    "rye bread": {
+        "en": "rye bread",
+        "pl": "chleb żytni"
+    },
+    "whole wheat bread": {
+        "en": "whole wheat bread",
+        "pl": "chleb pełnoziarnisty"
+    },
+    "multigrain bread": {
+        "en": "multigrain bread",
+        "pl": "chleb wieloziarnisty"
+    },
+    "white bread": {
+        "en": "white bread",
+        "pl": "chleb biały"
+    },
+    "French bread": {
+        "en": "French bread",
+        "pl": "chleb francuski"
+    },
+    "Italian bread": {
+        "en": "Italian bread",
+        "pl": "chleb włoski"
+    },
+    "wheat bread": {
+        "en": "wheat bread",
+        "pl": "chleb pszenny"
+    },
+    "sliced bread": {
+        "en": "sliced bread",
+        "pl": "chleb krojony"
+    },
+    "sandwich bread": {
+        "en": "sandwich bread",
+        "pl": "chleb kanapkowy"
+    },
+    "artisan bread": {
+        "en": "artisan bread",
+        "pl": "chleb rzemieślniczy"
+    },
+    "flatbread": {
+        "en": "flatbread",
+        "pl": "chleb płaski"
+    },
+    "panini bread": {
+        "en": "panini bread",
+        "pl": "chleb panini"
+    },
+    "pumpernickel bread": {
+        "en": "pumpernickel bread",
+        "pl": "chleb pumpernikiel"
+    },
+    "bagel": {
+        "en": "bagel",
+        "pl": "bajgiel"
+    },
+    "English muffin": {
+        "en": "English muffin",
+        "pl": "angielska muffinka"
+    },
+    "cornbread": {
+        "en": "cornbread",
+        "pl": "chleb kukurydziany"
+    },
+    "oat bread": {
+        "en": "oat bread",
+        "pl": "chleb owsiany"
+    },
+    "rye crispbread": {
+        "en": "rye crispbread",
+        "pl": "chleb chrupki żytni"
+    },
+    "challah": {
+        "en": "challah",
+        "pl": "challah"
+    },
+    "lavash": {
+        "en": "lavash",
+        "pl": "lavash"
+    },
+    "pretzel": {
+        "en": "pretzel",
+        "pl": "precel"
+    },
+    "matzo": {
+        "en": "matzo",
+        "pl": "maca"
+    },
+    "crumpet": {
+        "en": "crumpet",
+        "pl": "crumpet"
+    },
+    "scone": {
+        "en": "scone",
+        "pl": "scone"
+    },
+    "biscuit": {
+        "en": "biscuit",
+        "pl": "biszkopt"
+    },
+    "muffin": {
+        "en": "muffin",
+        "pl": "muffinka"
+    },
+    "toast": {
+        "en": "toast",
+        "pl": "tost"
+    },
+    "roll": {
+        "en": "roll",
+        "pl": "bułka"
+    },
+    "bun": {
+        "en": "bun",
+        "pl": "bułka"
+    },
+    "loaf": {
+        "en": "loaf",
+        "pl": "bochenek"
+    },
+    "breadstick": {
+        "en": "breadstick",
+        "pl": "paluszek"
+    },
+    "tortilla": {
+        "en": "tortilla",
+        "pl": "tortilla"
+    },
+    "pizza dough": {
+        "en": "pizza dough",
+        "pl": "ciasto na pizzę"
+    },
+    "pie crust": {
+        "en": "pie crust",
+        "pl": "skorupa do ciasta"
+    },
+    "phyllo dough": {
+        "en": "phyllo dough",
+        "pl": "ciasto filo"
+    },
+    "cracker": {
+        "en": "cracker",
+        "pl": "krakers"
+    },
+    "cookie": {
+        "en": "cookie",
+        "pl": "ciasteczko"
+    },
+    "cake": {
+        "en": "cake",
+        "pl": "ciasto"
+    },
+    "pastry": {
+        "en": "pastry",
+        "pl": "ciasto"
+    },
+    "donut": {
+        "en": "donut",
+        "pl": "pączek"
+    },
+    "": {
+        "en": ""
+    }
 }

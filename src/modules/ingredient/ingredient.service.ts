@@ -1,76 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from '../logger/logger.service';
 import * as fs from 'fs';
-import { IngredientCategory, IngredientDataObject, IngredientDataset, IngredientType } from './ingredient.types';
+import { IngredientDataset, IngredientType } from './ingredient.types';
+import { ContextString } from '../../common/types';
 
 @Injectable()
 export class IngredientService {
 
-    private ingredientDatasets: IngredientDataObject;
+    private ingredients: IngredientDataset;
 
     constructor(
         private readonly loggerService: LoggerService
     ) {
-        this.ingredientDatasets = {
-            'breads': [],
-            'dairy-and-eggs': [],
-            'fish-and-seafood': [],
-            'fruits': [],
-            'meats': [],
-            'oils-and-fats': [],
-            'pasta': [],
-            'seeds-and-nuts': [],
-            'spices': [],
-            'vegetables': []
-        };
+        this.ingredients = new Map();
     }
 
     onModuleInit() {
-        this.init();
+        this.loadIngredients();
     }
 
-    // TODO: Pass category and ingredient name to optimize it
     public filterIngredients(ingredients: IngredientType[]): IngredientType[] {
         if (!ingredients?.length) {
             return [];
         }
 
-        return ingredients.filter(ingredient => {
-            if (this.ingredientDatasets['breads'].includes(ingredient)) return true;
-            if (this.ingredientDatasets['dairy-and-eggs'].includes(ingredient)) return true;
-            if (this.ingredientDatasets['fish-and-seafood'].includes(ingredient)) return true;
-            if (this.ingredientDatasets['fruits'].includes(ingredient)) return true;
-            if (this.ingredientDatasets['meats'].includes(ingredient)) return true;
-            if (this.ingredientDatasets['oils-and-fats'].includes(ingredient)) return true;
-            if (this.ingredientDatasets['pasta'].includes(ingredient)) return true;
-            if (this.ingredientDatasets['seeds-and-nuts'].includes(ingredient)) return true;
-            if (this.ingredientDatasets['spices'].includes(ingredient)) return true;
-            if (this.ingredientDatasets['vegetables'].includes(ingredient)) return true;
-
-            return false;
-        });
+        return ingredients.filter(ingredient => this.ingredients.has(ingredient));
     }
 
-    private init(): void {
-        this.loadIngredientSet('breads');
-        this.loadIngredientSet('dairy-and-eggs');
-        this.loadIngredientSet('fish-and-seafood');
-        this.loadIngredientSet('fruits');
-        this.loadIngredientSet('meats');
-        this.loadIngredientSet('oils-and-fats');
-        this.loadIngredientSet('pasta');
-        this.loadIngredientSet('seeds-and-nuts');
-        this.loadIngredientSet('spices');
-        this.loadIngredientSet('vegetables');
-    }
+    private loadIngredients(): void {
+        const context: ContextString = 'IngredientService/loadIngredients';
 
-    private loadIngredientSet(name: IngredientCategory): void {
-        const rawData = fs.readFileSync(`data/ingredients/${name}.json`, 'utf-8');
-        const { category, data } = <IngredientDataset>JSON.parse(rawData);
-        const context = 'IngredientService/loadIngredientSet';
-        const message = `${data.length} ingredients loaded from ${category.replaceAll('-', ' ')} category.`;
+        try {
+            const rawData = fs.readFileSync('data/ingredients/ingredients.json', 'utf-8');
+            const json = JSON.parse(rawData);
 
-        this.ingredientDatasets[category].push(...data);
-        this.loggerService.info(context, message);
+            this.ingredients = new Map(Object.entries(json));
+            this.loggerService.info(context, `All ${Object.keys(json).length} has been loaded.`);
+        } catch (err: unknown) {
+            this.loggerService.error(context, `Error while loading all ingredients: ${typeof err === 'object' && err['message']}`);
+        }
     }
 }

@@ -22,10 +22,16 @@ import { ImageModule } from './modules/image/image.module';
             }),
             inject: [ConfigService],
         }),
-        ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', 'data/images/meals'),
-            serveRoot: '/images/meals',
-        }),
+        ServeStaticModule.forRoot(
+            {
+                rootPath: join(__dirname, '..', 'data/images/meals'),
+                serveRoot: '/images/meals',
+            },
+            {
+                rootPath: join(__dirname, '..', 'data/ingredients'),
+                serveRoot: '/ingredients'
+            }
+        ),
         LoggerModule,
         IngredientModule,
         MealModule,

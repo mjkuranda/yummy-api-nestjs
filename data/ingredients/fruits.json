@@ -1,54 +1,201 @@
 {
-  "category": "fruits",
-  "data": [
-    "apple",
-    "banana",
-    "orange",
-    "strawberry",
-    "grape",
-    "watermelon",
-    "kiwi",
-    "pear",
-    "pineapple",
-    "mango",
-    "peach",
-    "lemon",
-    "lime",
-    "blueberry",
-    "raspberry",
-    "blackberry",
-    "cherry",
-    "plum",
-    "apricot",
-    "pomegranate",
-    "coconut",
-    "fig",
-    "guava",
-    "nectarine",
-    "papaya",
-    "dragon fruit",
-    "lychee",
-    "passion fruit",
-    "tangerine",
-    "cantaloupe",
-    "honeydew melon",
-    "persimmon",
-    "star fruit",
-    "grapefruit",
-    "date",
-    "kiwifruit",
-    "cranberry",
-    "mulberry",
-    "gooseberry",
-    "black currant",
-    "red currant",
-    "elderberry",
-    "boysenberry",
-    "quince",
-    "rhubarb",
-    "soursop",
-    "kumquat",
-    "acai berry",
-    "mangosteen"
-  ]
+    "apple": {
+        "en": "apple",
+        "pl": "jabłko"
+    },
+    "banana": {
+        "en": "banana",
+        "pl": "banan"
+    },
+    "orange": {
+        "en": "orange",
+        "pl": "pomarańcza"
+    },
+    "strawberry": {
+        "en": "strawberry",
+        "pl": "truskawka"
+    },
+    "grape": {
+        "en": "grape",
+        "pl": "winogrono"
+    },
+    "watermelon": {
+        "en": "watermelon",
+        "pl": "arbuz"
+    },
+    "kiwi": {
+        "en": "kiwi",
+        "pl": "kiwi"
+    },
+    "pear": {
+        "en": "pear",
+        "pl": "gruszka"
+    },
+    "pineapple": {
+        "en": "pineapple",
+        "pl": "ananas"
+    },
+    "mango": {
+        "en": "mango",
+        "pl": "mango"
+    },
+    "peach": {
+        "en": "peach",
+        "pl": "brzoskwinia"
+    },
+    "lemon": {
+        "en": "lemon",
+        "pl": "cytryna"
+    },
+    "lime": {
+        "en": "lime",
+        "pl": "limonka"
+    },
+    "blueberry": {
+        "en": "blueberry",
+        "pl": "borówka"
+    },
+    "raspberry": {
+        "en": "raspberry",
+        "pl": "malina"
+    },
+    "blackberry": {
+        "en": "blackberry",
+        "pl": "jeżyna"
+    },
+    "cherry": {
+        "en": "cherry",
+        "pl": "wiśnia"
+    },
+    "plum": {
+        "en": "plum",
+        "pl": "śliwka"
+    },
+    "apricot": {
+        "en": "apricot",
+        "pl": "morela"
+    },
+    "pomegranate": {
+        "en": "pomegranate",
+        "pl": "granat"
+    },
+    "coconut": {
+        "en": "coconut",
+        "pl": "kokos"
+    },
+    "fig": {
+        "en": "fig",
+        "pl": "figa"
+    },
+    "guava": {
+        "en": "guava",
+        "pl": "guawa"
+    },
+    "nectarine": {
+        "en": "nectarine",
+        "pl": "nektarynka"
+    },
+    "papaya": {
+        "en": "papaya",
+        "pl": "papaja"
+    },
+    "dragon fruit": {
+        "en": "dragon fruit",
+        "pl": "smoczy owoc"
+    },
+    "lychee": {
+        "en": "lychee",
+        "pl": "liczi"
+    },
+    "passion fruit": {
+        "en": "passion fruit",
+        "pl": "marakuja"
+    },
+    "tangerine": {
+        "en": "tangerine",
+        "pl": "mandarynka"
+    },
+    "cantaloupe": {
+        "en": "cantaloupe",
+        "pl": "kantalupa"
+    },
+    "honeydew melon": {
+        "en": "honeydew melon",
+        "pl": "melon miodowy"
+    },
+    "persimmon": {
+        "en": "persimmon",
+        "pl": "kakismon"
+    },
+    "star fruit": {
+        "en": "star fruit",
+        "pl": "owoc karamboli"
+    },
+    "grapefruit": {
+        "en": "grapefruit",
+        "pl": "grejpfrut"
+    },
+    "date": {
+        "en": "date",
+        "pl": "daktyl"
+    },
+    "kiwifruit": {
+        "en": "kiwifruit",
+        "pl": "kiwi"
+    },
+    "cranberry": {
+        "en": "cranberry",
+        "pl": "żurawina"
+    },
+    "mulberry": {
+        "en": "mulberry",
+        "pl": "morwa"
+    },
+    "gooseberry": {
+        "en": "gooseberry",
+        "pl": "agrest"
+    },
+    "black currant": {
+        "en": "black currant",
+        "pl": "czarna porzeczka"
+    },
+    "red currant": {
+        "en": "red currant",
+        "pl": "czerwona porzeczka"
+    },
+    "elderberry": {
+        "en": "elderberry",
+        "pl": "czarny bez"
+    },
+    "boysenberry": {
+        "en": "boysenberry",
+        "pl": "jeżyna"
+    },
+    "quince": {
+        "en": "quince",
+        "pl": "pigwa"
+    },
+    "rhubarb": {
+        "en": "rhubarb",
+        "pl": "rabarbar"
+    },
+    "soursop": {
+        "en": "soursop",
+        "pl": "miękkociernista"
+    },
+    "kumquat": {
+        "en": "kumquat",
+        "pl": "kumkwat"
+    },
+    "acai berry": {
+        "en": "acai berry",
+        "pl": "jagody acai"
+    },
+    "mangosteen": {
+        "en": "mangosteen",
+        "pl": "mangostan"
+    },
+    "": {
+        "en": ""
+    }
 }

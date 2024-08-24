@@ -1,55 +1,206 @@
 {
-  "category": "vegetables",
-  "data": [
-    "carrot",
-    "potato",
-    "tomato",
-    "onion",
-    "cucumber",
-    "lettuce",
-    "bell pepper",
-    "broccoli",
-    "spinach",
-    "zucchini",
-    "cabbage",
-    "cauliflower",
-    "garlic",
-    "celery",
-    "mushroom",
-    "green bean",
-    "asparagus",
-    "sweet potato",
-    "radish",
-    "corn",
-    "eggplant",
-    "pea",
-    "kale",
-    "brussels sprout",
-    "artichoke",
-    "beet",
-    "pumpkin",
-    "butternut squash",
-    "fennel",
-    "leek",
-    "turnip",
-    "rhubarb",
-    "chili pepper",
-    "okra",
-    "squash",
-    "chard",
-    "arugula",
-    "endive",
-    "watercress",
-    "bok choy",
-    "kohlrabi",
-    "collard greens",
-    "broccoli rabe",
-    "chicory",
-    "snow pea",
-    "daikon",
-    "jicama",
-    "chayote",
-    "rutabaga",
-    "lotus root"
-  ]
+    "carrot": {
+        "en": "carrot",
+        "pl": "spaghetti"
+    },
+    "potato": {
+        "en": "potato",
+        "pl": "penne"
+    },
+    "tomato": {
+        "en": "tomato",
+        "pl": "fettuccine"
+    },
+    "onion": {
+        "en": "onion",
+        "pl": "linguine"
+    },
+    "cucumber": {
+        "en": "cucumber",
+        "pl": "rigatoni"
+    },
+    "lettuce": {
+        "en": "lettuce",
+        "pl": "farfalle"
+    },
+    "bell pepper": {
+        "en": "bell pepper",
+        "pl": "macaroni"
+    },
+    "broccoli": {
+        "en": "broccoli",
+        "pl": "rotini"
+    },
+    "spinach": {
+        "en": "spinach",
+        "pl": "angel hair"
+    },
+    "zucchini": {
+        "en": "zucchini",
+        "pl": "cavatappi"
+    },
+    "cabbage": {
+        "en": "cabbage",
+        "pl": "shells"
+    },
+    "cauliflower": {
+        "en": "cauliflower",
+        "pl": "lasagna"
+    },
+    "garlic": {
+        "en": "garlic",
+        "pl": "tagliatelle"
+    },
+    "celery": {
+        "en": "celery",
+        "pl": "orecchiette"
+    },
+    "mushroom": {
+        "en": "mushroom",
+        "pl": "bucatini"
+    },
+    "green bean": {
+        "en": "green bean",
+        "pl": "conchiglie"
+    },
+    "asparagus": {
+        "en": "asparagus",
+        "pl": "campanelle"
+    },
+    "sweet potato": {
+        "en": "sweet potato",
+        "pl": "strozzapreti"
+    },
+    "radish": {
+        "en": "radish",
+        "pl": "gemelli"
+    },
+    "corn": {
+        "en": "corn",
+        "pl": "pappardelle"
+    },
+    "eggplant": {
+        "en": "eggplant",
+        "pl": "gnocchi"
+    },
+    "pea": {
+        "en": "pea",
+        "pl": "cannelloni"
+    },
+    "kale": {
+        "en": "kale",
+        "pl": "manicotti"
+    },
+    "brussels sprout": {
+        "en": "brussels sprout",
+        "pl": "spätzle"
+    },
+    "artichoke": {
+        "en": "artichoke",
+        "pl": "vermicelli"
+    },
+    "beet": {
+        "en": "beet",
+        "pl": "cappelletti"
+    },
+    "pumpkin": {
+        "en": "pumpkin",
+        "pl": "tortellini"
+    },
+    "butternut squash": {
+        "en": "butternut squash",
+        "pl": "ravioli"
+    },
+    "fennel": {
+        "en": "fennel",
+        "pl": "ramen"
+    },
+    "leek": {
+        "en": "leek",
+        "pl": "udon"
+    },
+    "turnip": {
+        "en": "turnip",
+        "pl": "soba"
+    },
+    "rhubarb": {
+        "en": "rhubarb",
+        "pl": "rice noodles"
+    },
+    "chili pepper": {
+        "en": "chili pepper",
+        "pl": "egg noodles"
+    },
+    "okra": {
+        "en": "okra",
+        "pl": "somen"
+    },
+    "squash": {
+        "en": "squash",
+        "pl": "couscous"
+    },
+    "chard": {
+        "en": "chard",
+        "pl": "orzo"
+    },
+    "arugula": {
+        "en": "arugula",
+        "pl": "acini di pepe"
+    },
+    "endive": {
+        "en": "endive",
+        "pl": "ditalini"
+    },
+    "watercress": {
+        "en": "watercress",
+        "pl": "fregola"
+    },
+    "bok choy": {
+        "en": "bok choy",
+        "pl": "mafalda"
+    },
+    "kohlrabi": {
+        "en": "kohlrabi",
+        "pl": "mafalda corta"
+    },
+    "collard greens": {
+        "en": "collard greens",
+        "pl": "gemelli rigati"
+    },
+    "broccoli rabe": {
+        "en": "broccoli rabe",
+        "pl": "fiorentine"
+    },
+    "chicory": {
+        "en": "chicory",
+        "pl": "linguine fini"
+    },
+    "snow pea": {
+        "en": "snow pea",
+        "pl": "fusilli bucati"
+    },
+    "daikon": {
+        "en": "daikon",
+        "pl": "trofie"
+    },
+    "jicama": {
+        "en": "jicama",
+        "pl": "fideo"
+    },
+    "chayote": {
+        "en": "chayote",
+        "pl": "maltagliati"
+    },
+    "rutabaga": {
+        "en": "rutabaga",
+        "pl": "quadrucci"
+    },
+    "lotus root": {
+        "en": "lotus root",
+        "pl": "435 / 5 000"
+    },
+    "": {
+        "en": "",
+        "pl": "marchewka"
+    }
 }
