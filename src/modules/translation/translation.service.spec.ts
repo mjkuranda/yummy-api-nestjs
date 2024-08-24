@@ -6,11 +6,11 @@ import { TranslatedIngredient } from './translation.types';
 import { MealRecipeSections } from '../meal/meal.types';
 
 jest.mock('google-translate-api-x', () => ({
-    translate: jest.fn((text) => {
+    translate: jest.fn((text, opts) => {
         return Promise.resolve({
             text: `mocked translation of ${text}`,
-            from: { language: { iso: 'en' }},
-            to: { language: { iso: 'es' }},
+            ...(opts && opts.from && { from: opts.from }),
+            ...(opts && opts.to && { to: opts.to }),
         });
     }),
 }));
@@ -85,6 +85,10 @@ describe('TranslationService', () => {
     });
 
     describe('translate', () => {
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
         it('should translate simple text', async () => {
             const simpleText = 'xyz';
 
@@ -93,6 +97,16 @@ describe('TranslationService', () => {
             expect(translate).toHaveBeenCalledTimes(1);
             expect(translate).toHaveBeenCalledWith('xyz', { to: 'pl' });
             expect(text).toBe('mocked translation of xyz');
+        });
+
+        it('should set target language as \"en\" when provided language does not match', async () => {
+            const simpleText = 'xyz';
+
+            // as any to simulate unknown language
+            await translationService.translate(simpleText, 'XXX' as any);
+
+            expect(translate).toHaveBeenCalledTimes(1);
+            expect(translate).toHaveBeenCalledWith('xyz', { to: 'en' });
         });
     });
 });
