@@ -1,55 +1,206 @@
 {
-  "category": "meats",
-  "data": [
-    "beef",
-    "chicken",
-    "pork",
-    "lamb",
-    "veal",
-    "duck",
-    "turkey",
-    "goose",
-    "rabbit",
-    "quail",
-    "venison",
-    "buffalo",
-    "bison",
-    "elk",
-    "moose",
-    "boar",
-    "pheasant",
-    "ostrich",
-    "emu",
-    "squab",
-    "guinea hen",
-    "partridge",
-    "goat",
-    "kangaroo",
-    "alligator",
-    "snake",
-    "frog legs",
-    "escargot",
-    "crab",
-    "lobster",
-    "shrimp",
-    "prawn",
-    "crawfish",
-    "clams",
-    "mussels",
-    "oysters",
-    "octopus",
-    "squid",
-    "cuttlefish",
-    "scallops",
-    "abalone",
-    "crayfish",
-    "snail",
-    "anchovy",
-    "sardine",
-    "mackerel",
-    "trout",
-    "salmon",
-    "tuna",
-    "herring"
-  ]
+    "beef": {
+        "en": "beef",
+        "pl": "358 / 5 000"
+    },
+    "chicken": {
+        "en": "chicken",
+        "pl": "wołowina"
+    },
+    "pork": {
+        "en": "pork",
+        "pl": "kurczak"
+    },
+    "lamb": {
+        "en": "lamb",
+        "pl": "wieprzowina"
+    },
+    "veal": {
+        "en": "veal",
+        "pl": "jagnięcina"
+    },
+    "duck": {
+        "en": "duck",
+        "pl": "cielęcina"
+    },
+    "turkey": {
+        "en": "turkey",
+        "pl": "kaczka"
+    },
+    "goose": {
+        "en": "goose",
+        "pl": "indyk"
+    },
+    "rabbit": {
+        "en": "rabbit",
+        "pl": "gęś"
+    },
+    "quail": {
+        "en": "quail",
+        "pl": "królik"
+    },
+    "venison": {
+        "en": "venison",
+        "pl": "przepiórka"
+    },
+    "buffalo": {
+        "en": "buffalo",
+        "pl": "sarnina"
+    },
+    "bison": {
+        "en": "bison",
+        "pl": "bawół"
+    },
+    "elk": {
+        "en": "elk",
+        "pl": "bizon"
+    },
+    "moose": {
+        "en": "moose",
+        "pl": "łoś"
+    },
+    "boar": {
+        "en": "boar",
+        "pl": "łoś"
+    },
+    "pheasant": {
+        "en": "pheasant",
+        "pl": "dzik"
+    },
+    "ostrich": {
+        "en": "ostrich",
+        "pl": "bażant"
+    },
+    "emu": {
+        "en": "emu",
+        "pl": "struś"
+    },
+    "squab": {
+        "en": "squab",
+        "pl": "emu"
+    },
+    "guinea hen": {
+        "en": "guinea hen",
+        "pl": "gołąbek"
+    },
+    "partridge": {
+        "en": "partridge",
+        "pl": "perliczka"
+    },
+    "goat": {
+        "en": "goat",
+        "pl": "kuropatwa"
+    },
+    "kangaroo": {
+        "en": "kangaroo",
+        "pl": "koza"
+    },
+    "alligator": {
+        "en": "alligator",
+        "pl": "kangur"
+    },
+    "snake": {
+        "en": "snake",
+        "pl": "aligator"
+    },
+    "frog legs": {
+        "en": "frog legs",
+        "pl": "wąż"
+    },
+    "escargot": {
+        "en": "escargot",
+        "pl": "żabie udka"
+    },
+    "crab": {
+        "en": "crab",
+        "pl": "ślimak"
+    },
+    "lobster": {
+        "en": "lobster",
+        "pl": "krab"
+    },
+    "shrimp": {
+        "en": "shrimp",
+        "pl": "homar"
+    },
+    "prawn": {
+        "en": "prawn",
+        "pl": "krewetka"
+    },
+    "crawfish": {
+        "en": "crawfish",
+        "pl": "krewetka"
+    },
+    "clams": {
+        "en": "clams",
+        "pl": "rak"
+    },
+    "mussels": {
+        "en": "mussels",
+        "pl": "małże"
+    },
+    "oysters": {
+        "en": "oysters",
+        "pl": "małże"
+    },
+    "octopus": {
+        "en": "octopus",
+        "pl": "ostrygi"
+    },
+    "squid": {
+        "en": "squid",
+        "pl": "ośmiornica"
+    },
+    "cuttlefish": {
+        "en": "cuttlefish",
+        "pl": "kalmary"
+    },
+    "scallops": {
+        "en": "scallops",
+        "pl": "mątwy"
+    },
+    "abalone": {
+        "en": "abalone",
+        "pl": "przegrzebki"
+    },
+    "crayfish": {
+        "en": "crayfish",
+        "pl": "abalone"
+    },
+    "snail": {
+        "en": "snail",
+        "pl": "rak"
+    },
+    "anchovy": {
+        "en": "anchovy",
+        "pl": "ślimak"
+    },
+    "sardine": {
+        "en": "sardine",
+        "pl": "anchois"
+    },
+    "mackerel": {
+        "en": "mackerel",
+        "pl": "sardynka"
+    },
+    "trout": {
+        "en": "trout",
+        "pl": "makrela"
+    },
+    "salmon": {
+        "en": "salmon",
+        "pl": "pstrąg"
+    },
+    "tuna": {
+        "en": "tuna",
+        "pl": "łosoś"
+    },
+    "herring": {
+        "en": "herring",
+        "pl": "tuńczyk"
+    },
+    "": {
+        "en": "",
+        "pl": "śledź"
+    }
 }

@@ -1,54 +1,202 @@
 {
-  "category": "pasta",
-  "data": [
-    "spaghetti",
-    "penne",
-    "fettuccine",
-    "linguine",
-    "rigatoni",
-    "farfalle",
-    "macaroni",
-    "rotini",
-    "angel hair",
-    "cavatappi",
-    "shells",
-    "lasagna",
-    "tagliatelle",
-    "orecchiette",
-    "bucatini",
-    "conchiglie",
-    "campanelle",
-    "strozzapreti",
-    "gemelli",
-    "pappardelle",
-    "gnocchi",
-    "cannelloni",
-    "manicotti",
-    "spätzle",
-    "vermicelli",
-    "cappelletti",
-    "tortellini",
-    "ravioli",
-    "ramen",
-    "udon",
-    "soba",
-    "rice noodles",
-    "egg noodles",
-    "somen",
-    "couscous",
-    "orzo",
-    "acini di pepe",
-    "ditalini",
-    "fregola",
-    "mafalda",
-    "mafalda corta",
-    "gemelli rigati",
-    "fiorentine",
-    "linguine fini",
-    "fusilli bucati",
-    "trofie",
-    "fideo",
-    "maltagliati",
-    "quadrucci"
-  ]
+    "spaghetti": {
+        "en": "spaghetti",
+        "pl": "spaghetti"
+    },
+    "penne": {
+        "en": "penne",
+        "pl": "penne"
+    },
+    "fettuccine": {
+        "en": "fettuccine",
+        "pl": "fettuccine"
+    },
+    "linguine": {
+        "en": "linguine",
+        "pl": "linguine"
+    },
+    "rigatoni": {
+        "en": "rigatoni",
+        "pl": "rigatoni"
+    },
+    "farfalle": {
+        "en": "farfalle",
+        "pl": "farfalle"
+    },
+    "macaroni": {
+        "en": "macaroni",
+        "pl": "macaroni"
+    },
+    "rotini": {
+        "en": "rotini",
+        "pl": "rotini"
+    },
+    "angel hair": {
+        "en": "angel hair",
+        "pl": "angel hair"
+    },
+    "cavatappi": {
+        "en": "cavatappi",
+        "pl": "cavatappi"
+    },
+    "shells": {
+        "en": "shells",
+        "pl": "shells"
+    },
+    "lasagna": {
+        "en": "lasagna",
+        "pl": "lasagna"
+    },
+    "tagliatelle": {
+        "en": "tagliatelle",
+        "pl": "tagliatelle"
+    },
+    "orecchiette": {
+        "en": "orecchiette",
+        "pl": "orecchiette"
+    },
+    "bucatini": {
+        "en": "bucatini",
+        "pl": "bucatini"
+    },
+    "conchiglie": {
+        "en": "conchiglie",
+        "pl": "conchiglie"
+    },
+    "campanelle": {
+        "en": "campanelle",
+        "pl": "campanelle"
+    },
+    "strozzapreti": {
+        "en": "strozzapreti",
+        "pl": "strozzapreti"
+    },
+    "gemelli": {
+        "en": "gemelli",
+        "pl": "gemelli"
+    },
+    "pappardelle": {
+        "en": "pappardelle",
+        "pl": "pappardelle"
+    },
+    "gnocchi": {
+        "en": "gnocchi",
+        "pl": "gnocchi"
+    },
+    "cannelloni": {
+        "en": "cannelloni",
+        "pl": "cannelloni"
+    },
+    "manicotti": {
+        "en": "manicotti",
+        "pl": "manicotti"
+    },
+    "spätzle": {
+        "en": "spätzle",
+        "pl": "spätzle"
+    },
+    "vermicelli": {
+        "en": "vermicelli",
+        "pl": "vermicelli"
+    },
+    "cappelletti": {
+        "en": "cappelletti",
+        "pl": "cappelletti"
+    },
+    "tortellini": {
+        "en": "tortellini",
+        "pl": "tortellini"
+    },
+    "ravioli": {
+        "en": "ravioli",
+        "pl": "ravioli"
+    },
+    "ramen": {
+        "en": "ramen",
+        "pl": "ramen"
+    },
+    "udon": {
+        "en": "udon",
+        "pl": "udon"
+    },
+    "soba": {
+        "en": "soba",
+        "pl": "soba"
+    },
+    "rice noodles": {
+        "en": "rice noodles",
+        "pl": "rice noodles"
+    },
+    "egg noodles": {
+        "en": "egg noodles",
+        "pl": "egg noodles"
+    },
+    "somen": {
+        "en": "somen",
+        "pl": "somen"
+    },
+    "couscous": {
+        "en": "couscous",
+        "pl": "couscous"
+    },
+    "orzo": {
+        "en": "orzo",
+        "pl": "orzo"
+    },
+    "acini di pepe": {
+        "en": "acini di pepe",
+        "pl": "acini di pepe"
+    },
+    "ditalini": {
+        "en": "ditalini",
+        "pl": "ditalini"
+    },
+    "fregola": {
+        "en": "fregola",
+        "pl": "fregola"
+    },
+    "mafalda": {
+        "en": "mafalda",
+        "pl": "mafalda"
+    },
+    "mafalda corta": {
+        "en": "mafalda corta",
+        "pl": "mafalda corta"
+    },
+    "gemelli rigati": {
+        "en": "gemelli rigati",
+        "pl": "gemelli rigati"
+    },
+    "fiorentine": {
+        "en": "fiorentine",
+        "pl": "fiorentine"
+    },
+    "linguine fini": {
+        "en": "linguine fini",
+        "pl": "linguine fini"
+    },
+    "fusilli bucati": {
+        "en": "fusilli bucati",
+        "pl": "fusilli bucati"
+    },
+    "trofie": {
+        "en": "trofie",
+        "pl": "trofie"
+    },
+    "fideo": {
+        "en": "fideo",
+        "pl": "fideo"
+    },
+    "maltagliati": {
+        "en": "maltagliati",
+        "pl": "maltagliati"
+    },
+    "quadrucci": {
+        "en": "quadrucci",
+        "pl": "quadrucci"
+    },
+    "": {
+        "en": "",
+        "pl": ""
+    }
 }

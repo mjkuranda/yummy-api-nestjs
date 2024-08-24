@@ -1,7 +1,7 @@
-export interface IngredientDataset {
-    category: IngredientCategory;
-    data: IngredientType[];
-}
+export type IngredientDataset = Map<string, {
+    en: string,
+    pl: string
+}>;
 
 export interface MealIngredient {
     amount: number;

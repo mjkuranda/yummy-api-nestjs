@@ -1,57 +1,212 @@
 {
-  "category": "fish-and-seafood",
-  "data": [
-    "cod",
-    "haddock",
-    "halibut",
-    "trout",
-    "sole",
-    "catfish",
-    "tilapia",
-    "snapper",
-    "barramundi",
-    "grouper",
-    "mahi mahi",
-    "swordfish",
-    "marlin",
-    "wahoo",
-    "amberjack",
-    "mackerel",
-    "sardine",
-    "herring",
-    "anchovy",
-    "smelt",
-    "hake",
-    "pollock",
-    "bluefish",
-    "tilefish",
-    "cobia",
-    "wolffish",
-    "pompano",
-    "ribbonfish",
-    "rockfish",
-    "sheepshead",
-    "sturgeon",
-    "turbot",
-    "monkfish",
-    "lingcod",
-    "perch",
-    "pickerel",
-    "pike",
-    "walleye",
-    "whitefish",
-    "cuttlefish",
-    "squid",
-    "octopus",
-    "whelk",
-    "abalone",
-    "scallop",
-    "clam",
-    "oyster",
-    "mussel",
-    "crab",
-    "lobster",
-    "shrimp",
-    "prawn"
-  ]
+    "cod": {
+        "en": "cod",
+        "pl": "dorsz"
+    },
+    "haddock": {
+        "en": "haddock",
+        "pl": "plamiak"
+    },
+    "halibut": {
+        "en": "halibut",
+        "pl": "halibut"
+    },
+    "trout": {
+        "en": "trout",
+        "pl": "pstrąg"
+    },
+    "sole": {
+        "en": "sole",
+        "pl": "sola"
+    },
+    "catfish": {
+        "en": "catfish",
+        "pl": "sum"
+    },
+    "tilapia": {
+        "en": "tilapia",
+        "pl": "tilapia"
+    },
+    "snapper": {
+        "en": "snapper",
+        "pl": "lucjan"
+    },
+    "barramundi": {
+        "en": "barramundi",
+        "pl": "barramundi"
+    },
+    "grouper": {
+        "en": "grouper",
+        "pl": "gruper"
+    },
+    "mahi mahi": {
+        "en": "mahi mahi",
+        "pl": "mahi mahi"
+    },
+    "swordfish": {
+        "en": "swordfish",
+        "pl": "miecznik"
+    },
+    "marlin": {
+        "en": "marlin",
+        "pl": "marlin"
+    },
+    "wahoo": {
+        "en": "wahoo",
+        "pl": "wahoo"
+    },
+    "amberjack": {
+        "en": "amberjack",
+        "pl": "amberjack"
+    },
+    "mackerel": {
+        "en": "mackerel",
+        "pl": "makrela"
+    },
+    "sardine": {
+        "en": "sardine",
+        "pl": "sardynka"
+    },
+    "herring": {
+        "en": "herring",
+        "pl": "śledź"
+    },
+    "anchovy": {
+        "en": "anchovy",
+        "pl": "sardela"
+    },
+    "smelt": {
+        "en": "smelt",
+        "pl": "stynka"
+    },
+    "hake": {
+        "en": "hake",
+        "pl": "morszczuk"
+    },
+    "pollock": {
+        "en": "pollock",
+        "pl": "minta"
+    },
+    "bluefish": {
+        "en": "bluefish",
+        "pl": "ryba błękitna"
+    },
+    "tilefish": {
+        "en": "tilefish",
+        "pl": "ryba kafelkowa"
+    },
+    "cobia": {
+        "en": "cobia",
+        "pl": "cobia"
+    },
+    "wolffish": {
+        "en": "wolffish",
+        "pl": "wilk"
+    },
+    "pompano": {
+        "en": "pompano",
+        "pl": "pompano"
+    },
+    "ribbonfish": {
+        "en": "ribbonfish",
+        "pl": "ryba wstęgowata"
+    },
+    "rockfish": {
+        "en": "rockfish",
+        "pl": "ryba skalna"
+    },
+    "sheepshead": {
+        "en": "sheepshead",
+        "pl": "owcowata"
+    },
+    "sturgeon": {
+        "en": "sturgeon",
+        "pl": "jesiotr"
+    },
+    "turbot": {
+        "en": "turbot",
+        "pl": "turbot"
+    },
+    "monkfish": {
+        "en": "monkfish",
+        "pl": "ryba morska"
+    },
+    "lingcod": {
+        "en": "lingcod",
+        "pl": "dorsz"
+    },
+    "perch": {
+        "en": "perch",
+        "pl": "okoń"
+    },
+    "pickerel": {
+        "en": "pickerel",
+        "pl": "szczupak"
+    },
+    "pike": {
+        "en": "pike",
+        "pl": "sandacz"
+    },
+    "walleye": {
+        "en": "walleye",
+        "pl": "biała ryba"
+    },
+    "whitefish": {
+        "en": "whitefish",
+        "pl": "mątwa"
+    },
+    "cuttlefish": {
+        "en": "cuttlefish",
+        "pl": "kalmar"
+    },
+    "squid": {
+        "en": "squid",
+        "pl": "ośmiornica"
+    },
+    "octopus": {
+        "en": "octopus",
+        "pl": "ślimak"
+    },
+    "whelk": {
+        "en": "whelk",
+        "pl": "abalon"
+    },
+    "abalone": {
+        "en": "abalone",
+        "pl": "przegrzebek"
+    },
+    "scallop": {
+        "en": "scallop",
+        "pl": "małż"
+    },
+    "clam": {
+        "en": "clam",
+        "pl": "ostryga"
+    },
+    "oyster": {
+        "en": "oyster",
+        "pl": "małż"
+    },
+    "mussel": {
+        "en": "mussel",
+        "pl": "krab"
+    },
+    "crab": {
+        "en": "crab",
+        "pl": "homar"
+    },
+    "lobster": {
+        "en": "lobster",
+        "pl": "krewetka (shrimp)"
+    },
+    "shrimp": {
+        "en": "shrimp",
+        "pl": "krewetka (prawn)"
+    },
+    "prawn": {
+        "en": "prawn"
+    },
+    "": {
+        "en": ""
+    }
 }

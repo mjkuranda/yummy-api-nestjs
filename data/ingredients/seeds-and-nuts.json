@@ -1,25 +1,85 @@
 {
-  "category": "seeds-and-nuts",
-  "data": [
-    "almonds",
-    "walnuts",
-    "pecans",
-    "pistachios",
-    "cashews",
-    "macadamia nuts",
-    "peanuts",
-    "hazelnuts",
-    "brazil nuts",
-    "pine nuts",
-    "sesame seeds",
-    "chia seeds",
-    "flaxseeds",
-    "sunflower seeds",
-    "pumpkin seeds",
-    "hemp seeds",
-    "poppy seeds",
-    "quinoa",
-    "amaranth",
-    "buckwheat"
-  ]
+    "almonds": {
+        "en": "almonds",
+        "pl": "migdały"
+    },
+    "walnuts": {
+        "en": "walnuts",
+        "pl": "orzechy włoskie"
+    },
+    "pecans": {
+        "en": "pecans",
+        "pl": "orzechy pekan"
+    },
+    "pistachios": {
+        "en": "pistachios",
+        "pl": "pistacje"
+    },
+    "cashews": {
+        "en": "cashews",
+        "pl": "nerkowce"
+    },
+    "macadamia nuts": {
+        "en": "macadamia nuts",
+        "pl": "orzechy makadamia"
+    },
+    "peanuts": {
+        "en": "peanuts",
+        "pl": "orzeszki ziemne"
+    },
+    "hazelnuts": {
+        "en": "hazelnuts",
+        "pl": "orzechy laskowe"
+    },
+    "brazil nuts": {
+        "en": "brazil nuts",
+        "pl": "orzechy brazylijskie"
+    },
+    "pine nuts": {
+        "en": "pine nuts",
+        "pl": "orzeszki piniowe"
+    },
+    "sesame seeds": {
+        "en": "sesame seeds",
+        "pl": "nasiona sezamu"
+    },
+    "chia seeds": {
+        "en": "chia seeds",
+        "pl": "nasiona chia"
+    },
+    "flaxseeds": {
+        "en": "flaxseeds",
+        "pl": "siemię lniane"
+    },
+    "sunflower seeds": {
+        "en": "sunflower seeds",
+        "pl": "nasiona słonecznika"
+    },
+    "pumpkin seeds": {
+        "en": "pumpkin seeds",
+        "pl": "nasiona dyni"
+    },
+    "hemp seeds": {
+        "en": "hemp seeds",
+        "pl": "nasiona konopi"
+    },
+    "poppy seeds": {
+        "en": "poppy seeds",
+        "pl": "nasiona maku"
+    },
+    "quinoa": {
+        "en": "quinoa",
+        "pl": "komosa ryżowa"
+    },
+    "amaranth": {
+        "en": "amaranth",
+        "pl": "amarantus"
+    },
+    "buckwheat": {
+        "en": "buckwheat",
+        "pl": "gryka"
+    },
+    "": {
+        "en": ""
+    }
 }

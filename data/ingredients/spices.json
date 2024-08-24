@@ -1,54 +1,201 @@
 {
-  "category": "spices",
-  "data": [
-    "salt",
-    "black pepper",
-    "garlic powder",
-    "onion powder",
-    "paprika",
-    "cumin",
-    "cinnamon",
-    "ginger",
-    "oregano",
-    "thyme",
-    "rosemary",
-    "nutmeg",
-    "coriander",
-    "cayenne pepper",
-    "chili powder",
-    "turmeric",
-    "cloves",
-    "cardamom",
-    "fennel seeds",
-    "mustard seeds",
-    "celery seed",
-    "bay leaf",
-    "allspice",
-    "poppy seeds",
-    "dill",
-    "basil",
-    "parsley",
-    "cilantro",
-    "marjoram",
-    "tarragon",
-    "sage",
-    "mint",
-    "vanilla bean",
-    "saffron",
-    "star anise",
-    "sumac",
-    "fenugreek",
-    "caraway seeds",
-    "chia seeds",
-    "wasabi",
-    "sesame seeds",
-    "ground cloves",
-    "anise",
-    "pink peppercorns",
-    "juniper berries",
-    "lavender",
-    "lemon pepper",
-    "garam masala",
-    "curry powder"
-  ]
+    "salt": {
+        "en": "salt",
+        "pl": "sól"
+    },
+    "black pepper": {
+        "en": "black pepper",
+        "pl": "czarny pieprz"
+    },
+    "garlic powder": {
+        "en": "garlic powder",
+        "pl": "czosnek w proszku"
+    },
+    "onion powder": {
+        "en": "onion powder",
+        "pl": "cebula w proszku"
+    },
+    "paprika": {
+        "en": "paprika",
+        "pl": "papryka"
+    },
+    "cumin": {
+        "en": "cumin",
+        "pl": "kminek"
+    },
+    "cinnamon": {
+        "en": "cinnamon",
+        "pl": "cynamon"
+    },
+    "ginger": {
+        "en": "ginger",
+        "pl": "imbir"
+    },
+    "oregano": {
+        "en": "oregano",
+        "pl": "oregano"
+    },
+    "thyme": {
+        "en": "thyme",
+        "pl": "tymianek"
+    },
+    "rosemary": {
+        "en": "rosemary",
+        "pl": "rozmaryn"
+    },
+    "nutmeg": {
+        "en": "nutmeg",
+        "pl": "gałka muszkatołowa"
+    },
+    "coriander": {
+        "en": "coriander",
+        "pl": "kolendra"
+    },
+    "cayenne pepper": {
+        "en": "cayenne pepper",
+        "pl": "pieprz cayenne"
+    },
+    "chili powder": {
+        "en": "chili powder",
+        "pl": "chili w proszku"
+    },
+    "turmeric": {
+        "en": "turmeric",
+        "pl": "kurkuma"
+    },
+    "cloves": {
+        "en": "cloves",
+        "pl": "goździki"
+    },
+    "cardamom": {
+        "en": "cardamom",
+        "pl": "kardamon"
+    },
+    "fennel seeds": {
+        "en": "fennel seeds",
+        "pl": "nasiona kopru włoskiego"
+    },
+    "mustard seeds": {
+        "en": "mustard seeds",
+        "pl": "nasiona gorczycy"
+    },
+    "celery seed": {
+        "en": "celery seed",
+        "pl": "nasiona selera"
+    },
+    "bay leaf": {
+        "en": "bay leaf",
+        "pl": "liść laurowy"
+    },
+    "allspice": {
+        "en": "allspice",
+        "pl": "ziele angielskie"
+    },
+    "poppy seeds": {
+        "en": "poppy seeds",
+        "pl": "nasiona maku"
+    },
+    "dill": {
+        "en": "dill",
+        "pl": "koperek"
+    },
+    "basil": {
+        "en": "basil",
+        "pl": "bazylia"
+    },
+    "parsley": {
+        "en": "parsley",
+        "pl": "pietruszka"
+    },
+    "cilantro": {
+        "en": "cilantro",
+        "pl": "kolendra"
+    },
+    "marjoram": {
+        "en": "marjoram",
+        "pl": "majeranek"
+    },
+    "tarragon": {
+        "en": "tarragon",
+        "pl": "estragon"
+    },
+    "sage": {
+        "en": "sage",
+        "pl": "szałwia"
+    },
+    "mint": {
+        "en": "mint",
+        "pl": "mięta"
+    },
+    "vanilla bean": {
+        "en": "vanilla bean",
+        "pl": "laski wanilii"
+    },
+    "saffron": {
+        "en": "saffron",
+        "pl": "szafran"
+    },
+    "star anise": {
+        "en": "star anise",
+        "pl": "anyż gwiaździsty"
+    },
+    "sumac": {
+        "en": "sumac",
+        "pl": "sumak"
+    },
+    "fenugreek": {
+        "en": "fenugreek",
+        "pl": "kozieradka"
+    },
+    "caraway seeds": {
+        "en": "caraway seeds",
+        "pl": "kminek"
+    },
+    "chia seeds": {
+        "en": "chia seeds",
+        "pl": "nasiona chia"
+    },
+    "wasabi": {
+        "en": "wasabi",
+        "pl": "wasabi"
+    },
+    "sesame seeds": {
+        "en": "sesame seeds",
+        "pl": "nasiona sezamu"
+    },
+    "ground cloves": {
+        "en": "ground cloves",
+        "pl": "mielone goździki"
+    },
+    "anise": {
+        "en": "anise",
+        "pl": "anyż"
+    },
+    "pink peppercorns": {
+        "en": "pink peppercorns",
+        "pl": "różowy pieprz w ziarnach"
+    },
+    "juniper berries": {
+        "en": "juniper berries",
+        "pl": "jagody jałowca"
+    },
+    "lavender": {
+        "en": "lavender",
+        "pl": "lawenda"
+    },
+    "lemon pepper": {
+        "en": "lemon pepper",
+        "pl": "pieprz cytrynowy"
+    },
+    "garam masala": {
+        "en": "garam masala",
+        "pl": "garam masala"
+    },
+    "curry powder": {
+        "en": "curry powder",
+        "pl": "proszek curry"
+    },
+    "": {
+        "en": ""
+    }
 }
