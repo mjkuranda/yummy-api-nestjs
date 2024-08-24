@@ -9,16 +9,19 @@ import { MealRecipeSection, MealRecipeSections } from '../meal/meal.types';
 export class TranslationService {
 
     async translateRecipe(recipeSections: MealRecipeSections, targetLanguage?: Language): Promise<MealRecipeSections> {
-        const language = targetLanguage ?? 'en';
+        // NOTE: Do not translate when your language is English
+        if (['en', 'en-US'].includes(targetLanguage)) {
+            return [];
+        }
 
         return await Promise.all(
             recipeSections.map(
-                section => this._translateRecipeSection(section, language)
+                section => this._translateRecipeSection(section, targetLanguage)
             )
         );
     }
 
-    async _translateRecipeSection(recipeSection: MealRecipeSection, targetLanguage: Language): Promise<MealRecipeSection> {
+    async _translateRecipeSection(recipeSection: MealRecipeSection, targetLanguage?: Language): Promise<MealRecipeSection> {
         const { name, steps } = recipeSection;
 
         const translatedSteps: string[] = await Promise.all(steps.map(step => this.translate(step, targetLanguage)));
@@ -30,9 +33,14 @@ export class TranslationService {
     }
 
     async translateIngredients(ingredients: MealIngredient[], targetLanguage?: Language): Promise<TranslatedIngredient[]> {
+        // NOTE: Do not translate when your language is English
+        if (['en', 'en-US'].includes(targetLanguage)) {
+            return [];
+        }
+
         const translatedIngredients = ingredients.map(async (ingredient) => {
             const { amount, unit, name, imageUrl } = ingredient;
-            const text = await this.translate(`${amount} ${unit} ${name}`, targetLanguage ?? 'en');
+            const text = await this.translate(`${amount} ${unit} ${name}`, targetLanguage);
 
             return { text, imageUrl } as TranslatedIngredient;
         });
@@ -40,9 +48,24 @@ export class TranslationService {
         return await Promise.all(translatedIngredients);
     }
 
-    async translate(text: string, targetLanguage: string): Promise<string> {
-        const result = await translate(text, { to: targetLanguage });
+    async translate(text: string, targetLanguage: Language): Promise<string> {
+        const language = this._getTargetLanguage(targetLanguage);
+        const result = await translate(text, { to: language });
 
         return result.text;
+    }
+
+    private _getTargetLanguage(targetLanguage?: Language): Language {
+        if (!targetLanguage) {
+            return 'en';
+        }
+
+        const languages: Language[] = ['en', 'en-US', 'pl'];
+
+        if (!languages.includes(targetLanguage)) {
+            return 'en';
+        }
+
+        return targetLanguage;
     }
 }
