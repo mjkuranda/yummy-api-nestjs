@@ -495,58 +495,59 @@ describe('MealService', () => {
         });
     });
 
-    describe('getComments', () => {
-        it('should return all comments for a particular meal when meal is cached', async () => {
+    describe('hasMeal', () => {
+        it('should return true when meal is cached', async () => {
             const mockMealId = 'mock meal id';
-            const mockHasMeal = true;
-            const mockMealComments: any[] = [
-                {
-                    mealId: mockMealId,
-                    user: 'mock user name',
-                    text: 'That\'s an awesome meal ever!',
-                    posted: Date.now()
-                }
-            ];
 
-            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(mockHasMeal);
-            jest.spyOn(mealCommentRepository, 'findAll').mockResolvedValueOnce(mockMealComments);
+            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(true);
 
-            const mealComments = await mealService.getComments(mockMealId);
+            const hasMeal = await mealService.hasMeal(mockMealId);
 
-            expect(mealComments).toHaveLength(1);
-            expect(mealComments[0]).toStrictEqual(mockMealComments[0]);
+            expect(hasMeal).toBeTruthy();
         });
 
-        it('should return all comments for a particular meal when meal is saved within mongo base', async () => {
+        it('should return true when is not cached but is in mongo', async () => {
             const mockMealId = 'mock meal id';
-            const mockHasMeal = false;
-            const mockIsValidId = true;
             const mockMeal: any = { _id: mockMealId };
-            const mockMealComments: any[] = [
-                {
-                    mealId: mockMealId,
-                    user: 'mock user name',
-                    text: 'That\'s an awesome meal ever!',
-                    posted: Date.now()
-                }
-            ];
 
-            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(mockHasMeal);
-            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(mockIsValidId);
+            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(false);
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
             jest.spyOn(mealRepository, 'findById').mockResolvedValueOnce(mockMeal);
-            jest.spyOn(mealCommentRepository, 'findAll').mockResolvedValueOnce(mockMealComments);
 
-            const mealComments = await mealService.getComments(mockMealId);
+            const hasMeal = await mealService.hasMeal(mockMealId);
 
-            expect(mealComments).toHaveLength(1);
-            expect(mealComments[0]).toStrictEqual(mockMealComments[0]);
+            expect(hasMeal).toBeTruthy();
         });
 
-        it('should return all comments for a particular meal when meal is saved within external databases', async () => {
+        it('should return true when is not cached but is in external database', async () => {
             const mockMealId = 'mock meal id';
-            const mockHasMeal = false;
-            const mockIsValidId = false;
             const mockMeal: any = { _id: mockMealId };
+
+            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(false);
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(false);
+            jest.spyOn(spoonacularApiService, 'getMealDetails').mockResolvedValueOnce(mockMeal);
+
+            const hasMeal = await mealService.hasMeal(mockMealId);
+
+            expect(hasMeal).toBeTruthy();
+        });
+
+        it('should return false when does not exist', async () => {
+            const mockMealId = 'mock meal id';
+
+            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(false);
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
+            jest.spyOn(mealRepository, 'findById').mockResolvedValueOnce(null);
+
+            const hasMeal = await mealService.hasMeal(mockMealId);
+
+            expect(hasMeal).toBeFalsy();
+        });
+    });
+
+    describe('getComments', () => {
+        it('should return all comments for a particular meal', async () => {
+            const mockMealId = 'mock meal id';
             const mockMealComments: any[] = [
                 {
                     mealId: mockMealId,
@@ -556,9 +557,7 @@ describe('MealService', () => {
                 }
             ];
 
-            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(mockHasMeal);
-            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(mockIsValidId);
-            jest.spyOn(spoonacularApiService, 'getMealDetails').mockResolvedValueOnce(mockMeal);
+            jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(true);
             jest.spyOn(mealCommentRepository, 'findAll').mockResolvedValueOnce(mockMealComments);
 
             const mealComments = await mealService.getComments(mockMealId);
@@ -570,7 +569,7 @@ describe('MealService', () => {
         it('should throw an error when meal with provided ID does not exist', async () => {
             const mockMealId = 'mock meal id';
 
-            jest.spyOn(mealRepository, 'findById').mockResolvedValueOnce(null);
+            jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(false);
 
             await expect(mealService.getComments(mockMealId)).rejects.toThrow(NotFoundException);
         });

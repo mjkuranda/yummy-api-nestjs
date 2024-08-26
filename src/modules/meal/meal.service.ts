@@ -1,7 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { MealDocument } from '../../mongodb/documents/meal.document';
-import { CreateMealDto, MealEditDto } from './meal.dto';
+import { CreateMealCommentDto, CreateMealDto, MealEditDto } from './meal.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { LoggerService } from '../logger/logger.service';
@@ -370,36 +370,45 @@ export class MealService {
         return await this.mealRepository.findAll({ softDeleted: { $eq: true }});
     }
 
-    async getComments(mealId: string): Promise<MealCommentDocument[]> {
-        const context: ContextString = 'MealService/getComments';
+    async hasMeal(mealId: string): Promise<boolean> {
         const isSaved = await this.redisService.hasMeal(mealId);
+
+        if (isSaved) {
+            return true;
+        }
 
         // NOTE: When it is usual request after fetching details, it should be found within cache
         // Checking existence of the meal
-        if (!isSaved) {
-            if (isValidObjectId(mealId)) {
-                const meal = await this.mealRepository.findById(mealId);
+        if (isValidObjectId(mealId)) {
+            const meal = await this.mealRepository.findById(mealId);
 
-                if (!meal) {
-                    const message = 'Meal with provided ID does not exist.';
-                    this.loggerService.error(context, message);
-
-                    throw new NotFoundException(context, message);
-                }
-            } else {
-                const datasets: Array<DetailedMeal | null> = await Promise.all([
-                    this.spoonacularApiService.getMealDetails(`recipes/${mealId}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`, `recipes/${mealId}/analyzedInstructions?apiKey=${process.env.SPOONACULAR_API_KEY}`)
-                ]);
-
-                const filteredMeal: DetailedMeal = datasets.find(meal => meal !== null);
-
-                if (!filteredMeal) {
-                    const message = 'Meal with provided ID does not exist.';
-                    this.loggerService.error(context, message);
-
-                    throw new NotFoundException(context, message);
-                }
+            if (!meal) {
+                return false;
             }
+        } else {
+            const datasets: Array<DetailedMeal | null> = await Promise.all([
+                this.spoonacularApiService.getMealDetails(`recipes/${mealId}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`, `recipes/${mealId}/analyzedInstructions?apiKey=${process.env.SPOONACULAR_API_KEY}`)
+            ]);
+
+            const filteredMeal: DetailedMeal = datasets.find(meal => meal !== null);
+
+            if (!filteredMeal) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    async getComments(mealId: string): Promise<MealCommentDocument[]> {
+        const context: ContextString = 'MealService/getComments';
+        const hasMeal = await this.hasMeal(mealId);
+
+        if (!hasMeal) {
+            const message = 'Meal with provided ID does not exist.';
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
         }
 
         const comments = await this.mealCommentRepository.findAll({ mealId });
@@ -407,5 +416,20 @@ export class MealService {
         this.loggerService.info(context, `Found ${comments.length} comments for "${mealId}" meal.`);
 
         return comments;
+    }
+
+    async addComment(createCommentDto: CreateMealCommentDto): Promise<void> {
+        const context: ContextString = 'MealService/addComment';
+        const hasMeal = await this.hasMeal(createCommentDto.mealId);
+
+        if (!hasMeal) {
+            const message = 'Meal with provided ID does not exist.';
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        await this.mealCommentRepository.create({ ...createCommentDto, posted: Date.now() });
+        this.loggerService.info(context, `Successfully added a new comment to ${createCommentDto.mealId} meal by "${createCommentDto.user}" user.`);
     }
 }
