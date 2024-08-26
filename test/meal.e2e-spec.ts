@@ -220,6 +220,39 @@ describe('UserController (e2e)', () => {
         });
     });
 
+    describe('/meals/:id/comment (POST)', () => {
+        it('should post a new comment for a particular meal', () => {
+            const mockMealId = 'mock meal id';
+            const mockRequestBody = {
+                mealId: mockMealId,
+                user: 'mock user name',
+                text: 'That\'s an awesome meal ever!'
+            } as any;
+            const mockMealComment = {
+                ...mockRequestBody,
+                posted: Date.now()
+            } as any;
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'user',
+                password: 'hashed'
+            } as any;
+
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
+            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(true);
+            jest.spyOn(mealCommentRepository, 'create').mockResolvedValueOnce(mockMealComment);
+
+            return request(app.getHttpServer())
+                .post(`/meals/${mockMealId}/comment`)
+                .set('Cookie', ['accessToken=token'])
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer token')
+                .send(mockRequestBody)
+                .expect(201);
+        });
+    });
+
     describe('/meals/create (POST)', () => {
         it('should add a new meal when user is logged-in', () => {
             const mockRequestBody = {

@@ -1,7 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { MealDocument } from '../../mongodb/documents/meal.document';
-import { CreateMealCommentDto, CreateMealDto, MealEditDto } from './meal.dto';
+import { CreateMealCommentBody, CreateMealCommentDto, CreateMealDto, MealEditDto } from './meal.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { LoggerService } from '../logger/logger.service';
@@ -418,9 +418,9 @@ export class MealService {
         return comments;
     }
 
-    async addComment(createCommentDto: CreateMealCommentDto): Promise<void> {
+    async addComment(createCommentBody: CreateMealCommentBody): Promise<void> {
         const context: ContextString = 'MealService/addComment';
-        const hasMeal = await this.hasMeal(createCommentDto.mealId);
+        const hasMeal = await this.hasMeal(createCommentBody.mealId);
 
         if (!hasMeal) {
             const message = 'Meal with provided ID does not exist.';
@@ -429,7 +429,7 @@ export class MealService {
             throw new NotFoundException(context, message);
         }
 
-        await this.mealCommentRepository.create({ ...createCommentDto, posted: Date.now() });
-        this.loggerService.info(context, `Successfully added a new comment to ${createCommentDto.mealId} meal by "${createCommentDto.user}" user.`);
+        await this.mealCommentRepository.create({ ...createCommentBody, posted: Date.now() });
+        this.loggerService.info(context, `Successfully added a new comment to ${createCommentBody.mealId} meal by "${createCommentBody.user}" user.`);
     }
 }

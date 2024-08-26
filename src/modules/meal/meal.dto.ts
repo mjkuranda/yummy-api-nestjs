@@ -67,7 +67,7 @@ export class EditMealBodyDto {
     readonly authenticatedUser: UserDto;
 }
 
-export class CreateMealCommentDto {
+export class CreateMealCommentBody {
     @IsNotEmpty({ message: 'Meal comment should have a reference to meal' })
     readonly mealId: string;
 
@@ -77,7 +77,9 @@ export class CreateMealCommentDto {
     @IsNotEmpty({ message: 'Meal comment should have a posted time' })
     @Length(4, 64)
     readonly text: string;
+}
 
-    @IsNotEmpty({ message: 'Meal comment should have a posted time' })
+export class CreateMealCommentDto extends CreateMealCommentBody {
+    @IsNotEmpty({ message: 'Meal comment should have a posted date' })
     readonly posted: number;
 }

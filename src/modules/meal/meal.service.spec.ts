@@ -16,6 +16,8 @@ import { proceedMealDocumentToMealDetails } from './meal.utils';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
 import { MealCommentRepository } from '../../mongodb/repositories/meal-comment.repository';
+import { CreateMealCommentBody } from './meal.dto';
+import { MealCommentDocument } from '../../mongodb/documents/meal-comment.document';
 
 describe('MealService', () => {
     let mealService: MealService;
@@ -572,6 +574,39 @@ describe('MealService', () => {
             jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(false);
 
             await expect(mealService.getComments(mockMealId)).rejects.toThrow(NotFoundException);
+        });
+    });
+
+    describe('addComment', () => {
+        it('should add a new comment for a particular meal', async () => {
+            const createMealCommentDto: CreateMealCommentBody = {
+                mealId: 'mock meal id',
+                user: 'mock user name',
+                text: 'That\'s an awesome meal ever!'
+            };
+            const mockMealComment = {
+                ...createMealCommentDto,
+                posted: Date.now()
+            } as MealCommentDocument;
+
+            jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(true);
+            jest.spyOn(mealCommentRepository, 'create').mockResolvedValueOnce(mockMealComment);
+
+            const result = await mealService.addComment(createMealCommentDto);
+
+            expect(result).toBeUndefined();
+        });
+
+        it('should throw an error when meal with provided ID does not exist', async () => {
+            const createMealCommentDto: CreateMealCommentBody = {
+                mealId: 'mock meal id',
+                user: 'mock user name',
+                text: 'That\'s an awesome meal ever!'
+            };
+
+            jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(false);
+
+            await expect(mealService.addComment(createMealCommentDto)).rejects.toThrow(NotFoundException);
         });
     });
 });

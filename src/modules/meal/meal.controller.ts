@@ -14,7 +14,7 @@ import {
     UsePipes
 } from '@nestjs/common';
 import { MealService } from './meal.service';
-import { CreateMealBodyDto, EditMealBodyDto } from './meal.dto';
+import { CreateMealBodyDto, CreateMealCommentBody, EditMealBodyDto } from './meal.dto';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CreationGuard } from '../../guards/creation.guard';
 import { EditionGuard } from '../../guards/edition.guard';
@@ -112,6 +112,13 @@ export class MealController {
     @HttpCode(200)
     public async getComments(@Param('id') id: string) {
         return await this.mealService.getComments(id);
+    }
+
+    @Post('/:id/comment')
+    @HttpCode(201)
+    @UseGuards(AuthenticationGuard)
+    public async addMealComment(@Body() body: CreateMealCommentBody) {
+        return await this.mealService.addComment(body);
     }
 
     @Get('/proposal/all')
