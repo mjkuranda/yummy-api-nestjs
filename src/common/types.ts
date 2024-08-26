@@ -1,4 +1,5 @@
 import { IngredientName } from './enums';
+import { UserAccessTokenPayload } from '../modules/jwt-manager/jwt-manager.types';
 
 /**
  * Equals to {}
@@ -28,3 +29,11 @@ export type IngredientType = {
  * Language type
  */
 export type Language = 'en' | 'en-US' | 'pl';
+
+/**
+ * Transformed endpoint body
+ */
+export interface TransformedBody<TData> {
+    data: TData;
+    authenticatedUser: UserAccessTokenPayload;
+}

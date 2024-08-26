@@ -594,7 +594,6 @@ describe('MealService', () => {
         it('should add a new comment for a particular meal', async () => {
             const createMealCommentDto: CreateMealCommentBody = {
                 mealId: 'mock meal id',
-                user: 'mock user name',
                 text: 'That\'s an awesome meal ever!'
             };
             const mockMealComment = {
@@ -605,7 +604,7 @@ describe('MealService', () => {
             jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(true);
             jest.spyOn(mealCommentRepository, 'create').mockResolvedValueOnce(mockMealComment);
 
-            const result = await mealService.addComment(createMealCommentDto);
+            const result = await mealService.addComment(createMealCommentDto, 'user name');
 
             expect(result).toBeUndefined();
         });
@@ -613,13 +612,12 @@ describe('MealService', () => {
         it('should throw an error when meal with provided ID does not exist', async () => {
             const createMealCommentDto: CreateMealCommentBody = {
                 mealId: 'mock meal id',
-                user: 'mock user name',
                 text: 'That\'s an awesome meal ever!'
             };
 
             jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(false);
 
-            await expect(mealService.addComment(createMealCommentDto)).rejects.toThrow(NotFoundException);
+            await expect(mealService.addComment(createMealCommentDto, 'user name')).rejects.toThrow(NotFoundException);
         });
     });
 
@@ -653,7 +651,6 @@ describe('MealService', () => {
         it('should add a new rating for a specific meal', async () => {
             const createMealRatingDto: CreateMealRatingBody = {
                 mealId: 'mock meal id',
-                user: 'mock user name',
                 rating: 7
             };
             const mockMealRating = {
@@ -665,7 +662,7 @@ describe('MealService', () => {
             jest.spyOn(mealRatingRepository, 'findOne').mockResolvedValueOnce(null);
             jest.spyOn(mealRatingRepository, 'create').mockResolvedValueOnce(mockMealRating);
 
-            const rating = await mealService.addRating(createMealRatingDto);
+            const rating = await mealService.addRating(createMealRatingDto, 'user name');
 
             expect(rating).toStrictEqual(mockMealRating);
         });
@@ -673,7 +670,6 @@ describe('MealService', () => {
         it('should change a rating when rating exists', async () => {
             const createMealRatingDto: CreateMealRatingBody = {
                 mealId: 'mock meal id',
-                user: 'mock user name',
                 rating: 10
             };
             const mockExistingRating = {
@@ -693,7 +689,7 @@ describe('MealService', () => {
             jest.spyOn(mealRatingRepository, 'updateAndReturnDocument').mockResolvedValueOnce(mockMealRating);
             jest.spyOn(mealRatingRepository, 'create').mockResolvedValueOnce(mockMealRating);
 
-            const rating = await mealService.addRating(createMealRatingDto);
+            const rating = await mealService.addRating(createMealRatingDto, 'user name');
 
             expect(rating).toStrictEqual(mockMealRating);
             expect(rating.rating).toEqual(mockMealRating.rating);
@@ -703,13 +699,12 @@ describe('MealService', () => {
         it('should throw an error when meal with provided ID does not exist', async () => {
             const createMealRatingDto: CreateMealRatingBody = {
                 mealId: 'mock meal id',
-                user: 'mock user name',
                 rating: 7
             };
 
             jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(false);
 
-            await expect(mealService.addRating(createMealRatingDto)).rejects.toThrow(NotFoundException);
+            await expect(mealService.addRating(createMealRatingDto, 'user name')).rejects.toThrow(NotFoundException);
         });
     });
 });

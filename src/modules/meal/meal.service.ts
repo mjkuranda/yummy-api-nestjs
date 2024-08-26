@@ -425,7 +425,7 @@ export class MealService {
         return comments;
     }
 
-    async addComment(createCommentBody: CreateMealCommentBody): Promise<void> {
+    async addComment(createCommentBody: CreateMealCommentBody, user: string): Promise<void> {
         const context: ContextString = 'MealService/addComment';
         const hasMeal = await this.hasMeal(createCommentBody.mealId);
 
@@ -436,8 +436,8 @@ export class MealService {
             throw new NotFoundException(context, message);
         }
 
-        await this.mealCommentRepository.create({ ...createCommentBody, posted: Date.now() });
-        this.loggerService.info(context, `Successfully added a new comment to "${createCommentBody.mealId}" meal by "${createCommentBody.user}" user.`);
+        await this.mealCommentRepository.create({ ...createCommentBody, user, posted: Date.now() });
+        this.loggerService.info(context, `Successfully added a new comment to "${createCommentBody.mealId}" meal by "${user}" user.`);
     }
 
     async calculateRating(mealId: string): Promise<MealRating> {
@@ -456,7 +456,7 @@ export class MealService {
         return await this.mealRatingRepository.getAverageRatingForMeal(mealId);
     }
 
-    async addRating(createRatingBody: CreateMealRatingBody): Promise<MealRatingDocument> {
+    async addRating(createRatingBody: CreateMealRatingBody, user: string): Promise<MealRatingDocument> {
         const context: ContextString = 'MealService/addRating';
         const hasMeal = await this.hasMeal(createRatingBody.mealId);
 
@@ -469,15 +469,15 @@ export class MealService {
 
         const rating = await this.mealRatingRepository.findOne({
             mealId: createRatingBody.mealId,
-            user: createRatingBody.user
+            user
         });
 
         if (rating) {
-            this.loggerService.info(context, `Successfully changed a rating for "${createRatingBody.mealId}" meal by "${createRatingBody.user}" user.`);
+            this.loggerService.info(context, `Successfully changed a rating for "${createRatingBody.mealId}" meal by "${user}" user.`);
 
             return await this.mealRatingRepository.updateAndReturnDocument({
                 mealId: createRatingBody.mealId,
-                user: createRatingBody.user
+                user
             },
             {
                 ...createRatingBody,
@@ -485,8 +485,8 @@ export class MealService {
             });
         }
 
-        this.loggerService.info(context, `Successfully added a new rating for "${createRatingBody.mealId}" meal by "${createRatingBody.user}" user.`);
+        this.loggerService.info(context, `Successfully added a new rating for "${createRatingBody.mealId}" meal by "${user}" user.`);
 
-        return await this.mealRatingRepository.create({ ...createRatingBody, posted: Date.now() });
+        return await this.mealRatingRepository.create({ ...createRatingBody, user, posted: Date.now() });
     }
 }

@@ -23,7 +23,7 @@ import { DetailedMealWithTranslations, GetMealsQueryType } from './meal.types';
 import { IngredientName, MealType } from '../../common/enums';
 import { MealQueryValidationPipe } from '../../pipes/meal-query-validation.pipe';
 import { TranslationService } from '../translation/translation.service';
-import { Language } from '../../common/types';
+import { Language, TransformedBody } from '../../common/types';
 
 @Controller('meals')
 export class MealController {
@@ -117,8 +117,10 @@ export class MealController {
     @Post('/:id/comment')
     @HttpCode(201)
     @UseGuards(AuthenticationGuard)
-    public async addMealComment(@Body() body: CreateMealCommentBody) {
-        return await this.mealService.addComment(body);
+    public async addMealComment(@Body() body: TransformedBody<CreateMealCommentBody>) {
+        const { data, authenticatedUser } = body;
+
+        return await this.mealService.addComment(data, authenticatedUser.login);
     }
 
     @Get('/:id/rating')
@@ -130,8 +132,10 @@ export class MealController {
     @Post('/:id/rating')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard)
-    public async addRating(@Body() body: CreateMealRatingBody) {
-        return await this.mealService.addRating(body);
+    public async addRating(@Body() body: TransformedBody<CreateMealRatingBody>) {
+        const { data, authenticatedUser } = body;
+
+        return await this.mealService.addRating(data, authenticatedUser.login);
     }
 
     @Get('/proposal/all')
