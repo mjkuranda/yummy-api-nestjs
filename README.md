@@ -26,7 +26,6 @@ Technologies:
 ```json
 {
     "mealId": "123",
-    "user": "user login",
     "text": "That's an awesome meal!"
 }
 ```
@@ -35,7 +34,6 @@ Technologies:
 ```json
 {
     "mealId": "123",
-    "user": "user login",
     "rating": 8
 }
 ```
