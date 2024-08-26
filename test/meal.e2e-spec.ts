@@ -11,11 +11,13 @@ import { MealRepository } from '../src/mongodb/repositories/meal.repository';
 import { SpoonacularApiService } from '../src/modules/api/spoonacular/spoonacular.api.service';
 import { DetailedMeal, DetailedMealWithTranslations, RatedMeal } from '../src/modules/meal/meal.types';
 import { SearchQueryRepository } from '../src/mongodb/repositories/search-query.repository';
+import { MealCommentRepository } from '../src/mongodb/repositories/meal-comment.repository';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
     let mealService: MealService;
     let mealRepository: MealRepository;
+    let mealCommentRepository: MealCommentRepository;
     let searchQueryRepository: SearchQueryRepository;
     let jwtManagerService: JwtManagerService;
     let redisService: RedisService;
@@ -50,6 +52,7 @@ describe('UserController (e2e)', () => {
         set: jest.fn(),
         get: jest.fn(),
         del: jest.fn(),
+        hasMeal: jest.fn(),
         encodeKey: jest.fn(),
         getAccessToken: jest.fn(),
         getMealDetails: jest.fn()
@@ -69,6 +72,7 @@ describe('UserController (e2e)', () => {
         })
             .overrideProvider(LoggerService).useValue(loggerServiceProvider)
             .overrideProvider(MealRepository).useValue(mockMealRepositoryProvider)
+            .overrideProvider(MealCommentRepository).useValue(mockMealRepositoryProvider)
             .overrideProvider(SearchQueryRepository).useValue(mockMealRepositoryProvider)
             .overrideProvider(RedisService).useValue(redisServiceProvider)
             .overrideProvider(JwtManagerService).useValue(jwtManagerServiceProvider)
@@ -81,6 +85,7 @@ describe('UserController (e2e)', () => {
 
         mealService = moduleRef.get(MealService);
         mealRepository = moduleRef.get(MealRepository);
+        mealCommentRepository = moduleRef.get(MealCommentRepository);
         searchQueryRepository = moduleRef.get(SearchQueryRepository);
         jwtManagerService = moduleRef.get(JwtManagerService);
         redisService = moduleRef.get(RedisService);
@@ -189,6 +194,62 @@ describe('UserController (e2e)', () => {
             return request(app.getHttpServer())
                 .get(`/meals/${mockParamId}`)
                 .expect(404);
+        });
+    });
+
+    describe('/meals/:id/comments (GET)', () => {
+        it('should receive all comments for a particular meal', () => {
+            const mockMealId = 'mock meal id';
+            const mockHasMeal: boolean = true;
+            const mockMealComments: any[] = [
+                {
+                    mealId: mockMealId,
+                    user: 'mock user name',
+                    text: 'That\'s an awesome meal ever!',
+                    posted: Date.now()
+                }
+            ];
+
+            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(mockHasMeal);
+            jest.spyOn(mealCommentRepository, 'findAll').mockResolvedValueOnce(mockMealComments);
+
+            return request(app.getHttpServer())
+                .get(`/meals/${mockMealId}/comments`)
+                .expect(200)
+                .expect(mockMealComments);
+        });
+    });
+
+    describe('/meals/:id/comment (POST)', () => {
+        it('should post a new comment for a particular meal', () => {
+            const mockMealId = 'mock meal id';
+            const mockRequestBody = {
+                mealId: mockMealId,
+                user: 'mock user name',
+                text: 'That\'s an awesome meal ever!'
+            } as any;
+            const mockMealComment = {
+                ...mockRequestBody,
+                posted: Date.now()
+            } as any;
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'user',
+                password: 'hashed'
+            } as any;
+
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
+            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(true);
+            jest.spyOn(mealCommentRepository, 'create').mockResolvedValueOnce(mockMealComment);
+
+            return request(app.getHttpServer())
+                .post(`/meals/${mockMealId}/comment`)
+                .set('Cookie', ['accessToken=token'])
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer token')
+                .send(mockRequestBody)
+                .expect(201);
         });
     });
 

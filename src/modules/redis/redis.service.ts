@@ -29,6 +29,12 @@ export class RedisService {
         return `${documentType}:${documentData._id}`;
     }
 
+    async hasMeal(mealId: string): Promise<boolean> {
+        const rawData = await this.redisClient.get(`meal:${mealId}`);
+
+        return Boolean(rawData !== null);
+    }
+
     async get<Document>(key: RedisKeyType): Promise<Document[] | Document | null> {
         const rawData = await this.redisClient.get(key);
 

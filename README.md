@@ -16,10 +16,20 @@ Technologies:
 * `GET /meals?ings=ingredient1,ingredient2,ingredientX&type=meal-type` - returns all meals from the database that contain provided ingredients and type as `ings` and `type` respectively being query params. Additionally, set `Accept-Language` header to define language of ingredients.
 * `GET /meals/:id` - returns a specific meal defined by id parameter. It saves to the cache, if it does not exist there. Each request checks the cache.
 * `GET /meals/:id/details` - returns details of a meal. It can be any meal provided by any external or local API.
+* `GET /meals/:id/comments` - returns all comments for a particular meal.
 * `GET /meals/proposal/all` - returns all meal proposals for a specific user defined by `accessToken`.
 * `GET /meals/soft/added` - returns all meal having `soft-added` property.
 * `GET /meals/soft/edited` - returns all meal having `soft-edited` property.
 * `GET /meals/soft/deleted` - returns all meal having `soft-deleted` property.
+* `POST /meals/:id/comment` - posts a new comment to a particular meal.
+```json
+{
+    "mealId": "123",
+    "user": "user login",
+    "text": "That's an awesome meal!"
+}
+```
+
 * `POST /meals/proposal` - posts query including ingredients. Works for only logged-in users.
 ```json
 {

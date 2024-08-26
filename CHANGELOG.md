@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.41.0] - 2024-08-26
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): New collection `MealComment`.
+- [Marek Kurańda](https://github.com/mjkuranda): `GET /meals/:id/comments` endpoint for fetching all comments for a particular meal.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /meals/:id/comment` endpoint for posting new comments for a particular meal.
+
 ## [1.40.1] - 2024-08-24
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): When your language is English then do not translate ingredients and recipe.

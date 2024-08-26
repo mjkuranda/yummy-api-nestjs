@@ -66,3 +66,20 @@ export class EditMealBodyDto {
     @ValidateNested({ each: true })
     readonly authenticatedUser: UserDto;
 }
+
+export class CreateMealCommentBody {
+    @IsNotEmpty({ message: 'Meal comment should have a reference to meal' })
+    readonly mealId: string;
+
+    @IsNotEmpty({ message: 'Meal comment should have an author of the comment' })
+    readonly user: string;
+
+    @IsNotEmpty({ message: 'Meal comment should have a posted time' })
+    @Length(4, 64)
+    readonly text: string;
+}
+
+export class CreateMealCommentDto extends CreateMealCommentBody {
+    @IsNotEmpty({ message: 'Meal comment should have a posted date' })
+    readonly posted: number;
+}

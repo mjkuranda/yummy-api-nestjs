@@ -1,7 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { MealDocument } from '../../mongodb/documents/meal.document';
-import { CreateMealDto, MealEditDto } from './meal.dto';
+import { CreateMealCommentBody, CreateMealCommentDto, CreateMealDto, MealEditDto } from './meal.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { LoggerService } from '../logger/logger.service';
@@ -23,12 +23,16 @@ import { IngredientType } from '../ingredient/ingredient.types';
 import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
 import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
 import { SearchQueryDocument } from '../../mongodb/documents/search-query.document';
+import { ContextString } from '../../common/types';
+import { MealCommentRepository } from '../../mongodb/repositories/meal-comment.repository';
+import { MealCommentDocument } from '../../mongodb/documents/meal-comment.document';
 
 @Injectable()
 export class MealService {
 
     constructor(
         private mealRepository: MealRepository,
+        private mealCommentRepository: MealCommentRepository,
         private searchQueryRepository: SearchQueryRepository,
         private redisService: RedisService,
         private loggerService: LoggerService,
@@ -364,5 +368,68 @@ export class MealService {
 
     async getMealsSoftDeleted(): Promise<MealDocument[]> {
         return await this.mealRepository.findAll({ softDeleted: { $eq: true }});
+    }
+
+    async hasMeal(mealId: string): Promise<boolean> {
+        const isSaved = await this.redisService.hasMeal(mealId);
+
+        if (isSaved) {
+            return true;
+        }
+
+        // NOTE: When it is usual request after fetching details, it should be found within cache
+        // Checking existence of the meal
+        if (isValidObjectId(mealId)) {
+            const meal = await this.mealRepository.findById(mealId);
+
+            if (!meal) {
+                return false;
+            }
+        } else {
+            const datasets: Array<DetailedMeal | null> = await Promise.all([
+                this.spoonacularApiService.getMealDetails(`recipes/${mealId}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`, `recipes/${mealId}/analyzedInstructions?apiKey=${process.env.SPOONACULAR_API_KEY}`)
+            ]);
+
+            const filteredMeal: DetailedMeal = datasets.find(meal => meal !== null);
+
+            if (!filteredMeal) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    async getComments(mealId: string): Promise<MealCommentDocument[]> {
+        const context: ContextString = 'MealService/getComments';
+        const hasMeal = await this.hasMeal(mealId);
+
+        if (!hasMeal) {
+            const message = 'Meal with provided ID does not exist.';
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        const comments = await this.mealCommentRepository.findAll({ mealId });
+
+        this.loggerService.info(context, `Found ${comments.length} comments for "${mealId}" meal.`);
+
+        return comments;
+    }
+
+    async addComment(createCommentBody: CreateMealCommentBody): Promise<void> {
+        const context: ContextString = 'MealService/addComment';
+        const hasMeal = await this.hasMeal(createCommentBody.mealId);
+
+        if (!hasMeal) {
+            const message = 'Meal with provided ID does not exist.';
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        await this.mealCommentRepository.create({ ...createCommentBody, posted: Date.now() });
+        this.loggerService.info(context, `Successfully added a new comment to ${createCommentBody.mealId} meal by "${createCommentBody.user}" user.`);
     }
 }
