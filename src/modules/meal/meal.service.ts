@@ -1,7 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { MealDocument } from '../../mongodb/documents/meal.document';
-import { CreateMealCommentBody, CreateMealDto, MealEditDto } from './meal.dto';
+import { CreateMealCommentBody, CreateMealDto, CreateMealRatingBody, MealEditDto } from './meal.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { LoggerService } from '../logger/logger.service';
@@ -27,6 +27,7 @@ import { ContextString } from '../../common/types';
 import { MealCommentRepository } from '../../mongodb/repositories/meal-comment.repository';
 import { MealCommentDocument } from '../../mongodb/documents/meal-comment.document';
 import { MealRatingRepository } from '../../mongodb/repositories/meal-rating.repository';
+import { MealRatingDocument } from '../../mongodb/documents/meal-rating.document';
 
 @Injectable()
 export class MealService {
@@ -436,7 +437,7 @@ export class MealService {
         }
 
         await this.mealCommentRepository.create({ ...createCommentBody, posted: Date.now() });
-        this.loggerService.info(context, `Successfully added a new comment to ${createCommentBody.mealId} meal by "${createCommentBody.user}" user.`);
+        this.loggerService.info(context, `Successfully added a new comment to "${createCommentBody.mealId}" meal by "${createCommentBody.user}" user.`);
     }
 
     async calculateRating(mealId: string): Promise<MealRating> {
@@ -453,5 +454,39 @@ export class MealService {
         this.loggerService.info(context, `Calculated rating for meal "${mealId}".`);
 
         return await this.mealRatingRepository.getAverageRatingForMeal(mealId);
+    }
+
+    async addRating(createRatingBody: CreateMealRatingBody): Promise<MealRatingDocument> {
+        const context: ContextString = 'MealService/addRating';
+        const hasMeal = await this.hasMeal(createRatingBody.mealId);
+
+        if (!hasMeal) {
+            const message = 'Meal with provided ID does not exist.';
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        const rating = await this.mealRatingRepository.findOne({
+            mealId: createRatingBody.mealId,
+            user: createRatingBody.user
+        });
+
+        if (rating) {
+            this.loggerService.info(context, `Successfully changed a rating for "${createRatingBody.mealId}" meal by "${createRatingBody.user}" user.`);
+
+            return await this.mealRatingRepository.updateAndReturnDocument({
+                mealId: createRatingBody.mealId,
+                user: createRatingBody.user
+            },
+            {
+                ...createRatingBody,
+                posted: Date.now()
+            });
+        }
+
+        this.loggerService.info(context, `Successfully added a new rating for "${createRatingBody.mealId}" meal by "${createRatingBody.user}" user.`);
+
+        return await this.mealRatingRepository.create({ ...createRatingBody, posted: Date.now() });
     }
 }

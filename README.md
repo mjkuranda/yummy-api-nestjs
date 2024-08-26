@@ -22,12 +22,21 @@ Technologies:
 * `GET /meals/soft/added` - returns all meal having `soft-added` property.
 * `GET /meals/soft/edited` - returns all meal having `soft-edited` property.
 * `GET /meals/soft/deleted` - returns all meal having `soft-deleted` property.
-* `POST /meals/:id/comment` - posts a new comment to a particular meal.
+* `POST /meals/:id/comment` - posts a new comment to a particular meal. You need to be logged-in.
 ```json
 {
     "mealId": "123",
     "user": "user login",
     "text": "That's an awesome meal!"
+}
+```
+
+* `POST /meals/:id/rating` - posts a new rating to a specific meal. You need to be logged-in.
+```json
+{
+    "mealId": "123",
+    "user": "user login",
+    "rating": 8
 }
 ```
 

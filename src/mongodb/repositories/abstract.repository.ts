@@ -32,6 +32,10 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
         return this.model.updateMany(filterQuery, updateQuery);
     }
 
+    async updateAndReturnDocument(filterQuery: FilterQuery<T>, updateQuery: UpdateQuery<T>) {
+        return this.model.findOneAndUpdate(filterQuery, updateQuery, { new: true });
+    }
+
     async deleteOne(filterQuery: FilterQuery<T>) {
         return this.model.deleteOne(filterQuery);
     }

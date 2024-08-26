@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): New collection `MealRating`.
 - [Marek Kurańda](https://github.com/mjkuranda): `GET /meals/:id/rating` endpoint for fetching all comments for a specific meal.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /meals/:id/rating` endpoint for posting new rating for a specific meal.
 
 ## [1.41.0] - 2024-08-26
 ### Added

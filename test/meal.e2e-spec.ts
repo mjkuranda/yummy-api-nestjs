@@ -281,6 +281,39 @@ describe('UserController (e2e)', () => {
         });
     });
 
+    describe('/meals/:id/rating (POST)', () => {
+        it('should post a new rating for a specific meal', () => {
+            const mockMealId = 'mock meal id';
+            const mockRequestBody = {
+                mealId: mockMealId,
+                user: 'mock user name',
+                rating: 10
+            } as any;
+            const mockMealRating = {
+                ...mockRequestBody,
+                posted: Date.now()
+            } as any;
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'user',
+                password: 'hashed'
+            } as any;
+
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
+            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(true);
+            jest.spyOn(mealRatingRepository, 'create').mockResolvedValueOnce(mockMealRating);
+
+            return request(app.getHttpServer())
+                .post(`/meals/${mockMealId}/rating`)
+                .set('Cookie', ['accessToken=token'])
+                .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer token')
+                .send(mockRequestBody)
+                .expect(200);
+        });
+    });
+
     describe('/meals/create (POST)', () => {
         it('should add a new meal when user is logged-in', () => {
             const mockRequestBody = {

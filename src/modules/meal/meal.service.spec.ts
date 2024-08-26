@@ -16,9 +16,10 @@ import { proceedMealDocumentToMealDetails } from './meal.utils';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
 import { MealCommentRepository } from '../../mongodb/repositories/meal-comment.repository';
-import { CreateMealCommentBody } from './meal.dto';
+import { CreateMealCommentBody, CreateMealRatingBody } from './meal.dto';
 import { MealCommentDocument } from '../../mongodb/documents/meal-comment.document';
 import { MealRatingRepository } from '../../mongodb/repositories/meal-rating.repository';
+import { MealRatingDocument } from '../../mongodb/documents/meal-rating.document';
 
 describe('MealService', () => {
     let mealService: MealService;
@@ -39,6 +40,12 @@ describe('MealService', () => {
         replaceOne: jest.fn(),
         deleteOne: jest.fn(),
         calculateAverage: jest.fn()
+    };
+
+    const mockMealRatingRepository = {
+        ...mockMealService,
+        getAverageRatingForMeal: jest.fn(),
+        updateAndReturnDocument: jest.fn()
     };
 
     const mockSpoonacularApiService = {
@@ -70,7 +77,7 @@ describe('MealService', () => {
                 IngredientService,
                 { provide: MealRepository, useValue: mockMealService },
                 { provide: MealCommentRepository, useValue: mockMealService },
-                { provide: MealRatingRepository, useValue: { ...mockMealService, getAverageRatingForMeal: jest.fn() }},
+                { provide: MealRatingRepository, useValue: mockMealRatingRepository },
                 { provide: SearchQueryRepository, useValue: mockMealService },
                 { provide: JwtService, useClass: JwtService },
                 { provide: JwtManagerService, useClass: JwtManagerService },
@@ -616,7 +623,7 @@ describe('MealService', () => {
         });
     });
 
-    describe('getRating', () => {
+    describe('calculateRating', () => {
         it('should return rating for meal', async () => {
             const mockMealId = 'mock meal id';
             const mockMealRating: MealRating = {
@@ -639,6 +646,70 @@ describe('MealService', () => {
             jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(false);
 
             await expect(mealService.calculateRating(mockMealId)).rejects.toThrow(NotFoundException);
+        });
+    });
+
+    describe('addRating', () => {
+        it('should add a new rating for a specific meal', async () => {
+            const createMealRatingDto: CreateMealRatingBody = {
+                mealId: 'mock meal id',
+                user: 'mock user name',
+                rating: 7
+            };
+            const mockMealRating = {
+                ...createMealRatingDto,
+                posted: Date.now()
+            } as MealRatingDocument;
+
+            jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(true);
+            jest.spyOn(mealRatingRepository, 'findOne').mockResolvedValueOnce(null);
+            jest.spyOn(mealRatingRepository, 'create').mockResolvedValueOnce(mockMealRating);
+
+            const rating = await mealService.addRating(createMealRatingDto);
+
+            expect(rating).toStrictEqual(mockMealRating);
+        });
+
+        it('should change a rating when rating exists', async () => {
+            const createMealRatingDto: CreateMealRatingBody = {
+                mealId: 'mock meal id',
+                user: 'mock user name',
+                rating: 10
+            };
+            const mockExistingRating = {
+                _id: 'abc',
+                mealId: 'mock meal id',
+                user: 'mock user name',
+                rating: 7,
+                posted: Date.now() - 5000
+            } as MealRatingDocument;
+            const mockMealRating = {
+                ...createMealRatingDto,
+                posted: Date.now()
+            } as any;
+
+            jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(true);
+            jest.spyOn(mealRatingRepository, 'findOne').mockResolvedValueOnce(mockExistingRating);
+            jest.spyOn(mealRatingRepository, 'updateAndReturnDocument').mockResolvedValueOnce(mockMealRating);
+            jest.spyOn(mealRatingRepository, 'create').mockResolvedValueOnce(mockMealRating);
+
+            const rating = await mealService.addRating(createMealRatingDto);
+
+            expect(rating).toStrictEqual(mockMealRating);
+            expect(rating.rating).toEqual(mockMealRating.rating);
+            expect(mealRatingRepository.updateAndReturnDocument).toHaveBeenCalled();
+        });
+
+        it('should throw an error when meal with provided ID does not exist', async () => {
+            const createMealRatingDto: CreateMealRatingBody = {
+                mealId: 'mock meal id',
+                user: 'mock user name',
+                rating: 7
+            };
+
+            jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(false);
+
+            await expect(mealService.addRating(createMealRatingDto)).rejects.toThrow(NotFoundException);
         });
     });
 });
