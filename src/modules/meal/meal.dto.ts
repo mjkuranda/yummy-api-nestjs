@@ -1,4 +1,4 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, IsOptional, Length, ValidateNested } from 'class-validator';
+import { ArrayMinSize, IsArray, IsNotEmpty, IsOptional, Length, Max, Min, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UserDto } from '../user/user.dto';
 import { MealRecipeSections } from './meal.types';
@@ -81,5 +81,23 @@ export class CreateMealCommentBody {
 
 export class CreateMealCommentDto extends CreateMealCommentBody {
     @IsNotEmpty({ message: 'Meal comment should have a posted date' })
+    readonly posted: number;
+}
+
+export class CreateMealRatingBody {
+    @IsNotEmpty({ message: 'Meal rating should have a reference to meal' })
+    readonly mealId: string;
+
+    @IsNotEmpty({ message: 'Meal rating should have an author of the comment' })
+    readonly user: string;
+
+    @IsNotEmpty({ message: 'Meal rating should have a posted time' })
+    @Min(0)
+    @Max(10)
+    readonly rating: number;
+}
+
+export class CreateMealRatingDto extends CreateMealRatingBody {
+    @IsNotEmpty({ message: 'Meal rating should have a posted date' })
     readonly posted: number;
 }

@@ -1,4 +1,4 @@
-import { Document, FilterQuery, Model, UpdateQuery, UpdateWithAggregationPipeline } from 'mongoose';
+import { Document, FilterQuery, Model, PipelineStage, UpdateQuery, UpdateWithAggregationPipeline } from 'mongoose';
 
 export abstract class AbstractRepository<T extends Document, CreateDataType> {
 
@@ -32,11 +32,19 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
         return this.model.updateMany(filterQuery, updateQuery);
     }
 
+    async updateAndReturnDocument(filterQuery: FilterQuery<T>, updateQuery: UpdateQuery<T>) {
+        return this.model.findOneAndUpdate(filterQuery, updateQuery, { new: true });
+    }
+
     async deleteOne(filterQuery: FilterQuery<T>) {
         return this.model.deleteOne(filterQuery);
     }
 
     async deleteMany(filterQuery: FilterQuery<T>) {
         return this.model.deleteMany(filterQuery);
+    }
+
+    async calculateAverage(pipeline: PipelineStage[]) {
+        return this.model.aggregate(pipeline);
     }
 }
