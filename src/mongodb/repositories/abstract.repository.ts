@@ -1,4 +1,4 @@
-import { Document, FilterQuery, Model, UpdateQuery, UpdateWithAggregationPipeline } from 'mongoose';
+import { Document, FilterQuery, Model, PipelineStage, UpdateQuery, UpdateWithAggregationPipeline } from 'mongoose';
 
 export abstract class AbstractRepository<T extends Document, CreateDataType> {
 
@@ -38,5 +38,9 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
 
     async deleteMany(filterQuery: FilterQuery<T>) {
         return this.model.deleteMany(filterQuery);
+    }
+
+    async calculateAverage(pipeline: PipelineStage[]) {
+        return this.model.aggregate(pipeline);
     }
 }

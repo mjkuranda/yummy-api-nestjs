@@ -61,3 +61,9 @@ export interface MealProposalDto {
     date: Date;
     login: string;
 }
+
+export interface MealRating {
+    mealId: string;
+    rating: number;
+    count: number;
+}

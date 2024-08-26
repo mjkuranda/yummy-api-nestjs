@@ -121,6 +121,12 @@ export class MealController {
         return await this.mealService.addComment(body);
     }
 
+    @Get('/:id/rating')
+    @HttpCode(200)
+    public async getRating(@Param('id') id: string) {
+        return await this.mealService.calculateRating(id);
+    }
+
     @Get('/proposal/all')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard)

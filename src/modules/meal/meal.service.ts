@@ -1,7 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { MealDocument } from '../../mongodb/documents/meal.document';
-import { CreateMealCommentBody, CreateMealCommentDto, CreateMealDto, MealEditDto } from './meal.dto';
+import { CreateMealCommentBody, CreateMealDto, MealEditDto } from './meal.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { LoggerService } from '../logger/logger.service';
@@ -9,7 +9,7 @@ import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
 import { MealRepository } from '../../mongodb/repositories/meal.repository';
 import { MealType } from '../../common/enums';
-import { DetailedMeal, MergedSearchQueries, ProposedMeal, RatedMeal } from './meal.types';
+import { DetailedMeal, MealRating, MergedSearchQueries, ProposedMeal, RatedMeal } from './meal.types';
 import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
 import {
     getQueryWithIngredientsAndMealType,
@@ -26,6 +26,7 @@ import { SearchQueryDocument } from '../../mongodb/documents/search-query.docume
 import { ContextString } from '../../common/types';
 import { MealCommentRepository } from '../../mongodb/repositories/meal-comment.repository';
 import { MealCommentDocument } from '../../mongodb/documents/meal-comment.document';
+import { MealRatingRepository } from '../../mongodb/repositories/meal-rating.repository';
 
 @Injectable()
 export class MealService {
@@ -33,6 +34,7 @@ export class MealService {
     constructor(
         private mealRepository: MealRepository,
         private mealCommentRepository: MealCommentRepository,
+        private mealRatingRepository: MealRatingRepository,
         private searchQueryRepository: SearchQueryRepository,
         private redisService: RedisService,
         private loggerService: LoggerService,
@@ -371,6 +373,7 @@ export class MealService {
     }
 
     async hasMeal(mealId: string): Promise<boolean> {
+        const context: ContextString = 'MealService/hasMeal';
         const isSaved = await this.redisService.hasMeal(mealId);
 
         if (isSaved) {
@@ -382,8 +385,8 @@ export class MealService {
         if (isValidObjectId(mealId)) {
             const meal = await this.mealRepository.findById(mealId);
 
-            if (!meal) {
-                return false;
+            if (meal) {
+                return true;
             }
         } else {
             const datasets: Array<DetailedMeal | null> = await Promise.all([
@@ -392,12 +395,15 @@ export class MealService {
 
             const filteredMeal: DetailedMeal = datasets.find(meal => meal !== null);
 
-            if (!filteredMeal) {
-                return false;
+            if (filteredMeal) {
+                await this.redisService.saveMealDetails(mealId, filteredMeal);
+                this.loggerService.info(context, `Cached a meal with id "${mealId}".`);
+
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     async getComments(mealId: string): Promise<MealCommentDocument[]> {
@@ -431,5 +437,21 @@ export class MealService {
 
         await this.mealCommentRepository.create({ ...createCommentBody, posted: Date.now() });
         this.loggerService.info(context, `Successfully added a new comment to ${createCommentBody.mealId} meal by "${createCommentBody.user}" user.`);
+    }
+
+    async calculateRating(mealId: string): Promise<MealRating> {
+        const context: ContextString = 'MealService/calculateRating';
+        const hasMeal = await this.hasMeal(mealId);
+
+        if (!hasMeal) {
+            const message = 'Meal with provided ID does not exist.';
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        this.loggerService.info(context, `Calculated rating for meal "${mealId}".`);
+
+        return await this.mealRatingRepository.getAverageRatingForMeal(mealId);
     }
 }

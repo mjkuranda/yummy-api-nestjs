@@ -11,18 +11,20 @@ import { UserDto } from '../user/user.dto';
 import { MealRepository } from '../../mongodb/repositories/meal.repository';
 import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
 import { IngredientName, MealType } from '../../common/enums';
-import { RatedMeal } from './meal.types';
+import { MealRating, RatedMeal } from './meal.types';
 import { proceedMealDocumentToMealDetails } from './meal.utils';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
 import { MealCommentRepository } from '../../mongodb/repositories/meal-comment.repository';
 import { CreateMealCommentBody } from './meal.dto';
 import { MealCommentDocument } from '../../mongodb/documents/meal-comment.document';
+import { MealRatingRepository } from '../../mongodb/repositories/meal-rating.repository';
 
 describe('MealService', () => {
     let mealService: MealService;
     let mealRepository: MealRepository;
     let mealCommentRepository: MealCommentRepository;
+    let mealRatingRepository: MealRatingRepository;
     let searchQueryRepository: SearchQueryRepository;
     let redisService: RedisService;
     let ingredientService: IngredientService;
@@ -35,7 +37,8 @@ describe('MealService', () => {
         findById: jest.fn(),
         updateOne: jest.fn(),
         replaceOne: jest.fn(),
-        deleteOne: jest.fn()
+        deleteOne: jest.fn(),
+        calculateAverage: jest.fn()
     };
 
     const mockSpoonacularApiService = {
@@ -67,6 +70,7 @@ describe('MealService', () => {
                 IngredientService,
                 { provide: MealRepository, useValue: mockMealService },
                 { provide: MealCommentRepository, useValue: mockMealService },
+                { provide: MealRatingRepository, useValue: { ...mockMealService, getAverageRatingForMeal: jest.fn() }},
                 { provide: SearchQueryRepository, useValue: mockMealService },
                 { provide: JwtService, useClass: JwtService },
                 { provide: JwtManagerService, useClass: JwtManagerService },
@@ -79,6 +83,7 @@ describe('MealService', () => {
         mealService = module.get(MealService);
         mealRepository = module.get(MealRepository);
         mealCommentRepository = module.get(MealCommentRepository);
+        mealRatingRepository = module.get(MealRatingRepository);
         searchQueryRepository = module.get(SearchQueryRepository);
         redisService = module.get(RedisService);
         ingredientService = module.get(IngredientService);
@@ -89,6 +94,7 @@ describe('MealService', () => {
         expect(mealService).toBeDefined();
         expect(mealRepository).toBeDefined();
         expect(mealCommentRepository).toBeDefined();
+        expect(mealRatingRepository).toBeDefined();
         expect(searchQueryRepository).toBeDefined();
         expect(redisService).toBeDefined();
         expect(ingredientService).toBeDefined();
@@ -607,6 +613,32 @@ describe('MealService', () => {
             jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(false);
 
             await expect(mealService.addComment(createMealCommentDto)).rejects.toThrow(NotFoundException);
+        });
+    });
+
+    describe('getRating', () => {
+        it('should return rating for meal', async () => {
+            const mockMealId = 'mock meal id';
+            const mockMealRating: MealRating = {
+                mealId: mockMealId,
+                rating: 7.44,
+                count: 712
+            };
+
+            jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(true);
+            jest.spyOn(mealRatingRepository, 'getAverageRatingForMeal').mockResolvedValueOnce(mockMealRating);
+
+            const mealRating = await mealService.calculateRating(mockMealId);
+
+            expect(mealRating).toStrictEqual(mockMealRating);
+        });
+
+        it('should throw an error when meal with provided ID does not exist', async () => {
+            const mockMealId = 'mock meal id';
+
+            jest.spyOn(mealService, 'hasMeal').mockResolvedValueOnce(false);
+
+            await expect(mealService.calculateRating(mockMealId)).rejects.toThrow(NotFoundException);
         });
     });
 });
