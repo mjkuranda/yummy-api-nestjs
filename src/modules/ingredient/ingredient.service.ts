@@ -35,7 +35,7 @@ export class IngredientService {
             const json = JSON.parse(rawData);
 
             this.ingredients = new Map(Object.entries(json));
-            this.loggerService.info(context, `All ${Object.keys(json).length} has been loaded.`);
+            this.loggerService.info(context, `All ${Object.keys(json).length} ingredients has been loaded.`);
         } catch (err: unknown) {
             this.loggerService.error(context, `Error while loading all ingredients: ${typeof err === 'object' && err['message']}`);
         }

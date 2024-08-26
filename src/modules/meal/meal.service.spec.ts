@@ -15,10 +15,12 @@ import { RatedMeal } from './meal.types';
 import { proceedMealDocumentToMealDetails } from './meal.utils';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
+import { MealCommentRepository } from '../../mongodb/repositories/meal-comment.repository';
 
 describe('MealService', () => {
     let mealService: MealService;
     let mealRepository: MealRepository;
+    let mealCommentRepository: MealCommentRepository;
     let searchQueryRepository: SearchQueryRepository;
     let redisService: RedisService;
     let ingredientService: IngredientService;
@@ -48,6 +50,7 @@ describe('MealService', () => {
         get: jest.fn(),
         set: jest.fn(),
         unset: jest.fn(),
+        hasMeal: jest.fn(),
         encodeKey: jest.fn(),
         getMealResult: jest.fn(),
         saveMealResult: jest.fn(),
@@ -61,6 +64,7 @@ describe('MealService', () => {
                 MealService,
                 IngredientService,
                 { provide: MealRepository, useValue: mockMealService },
+                { provide: MealCommentRepository, useValue: mockMealService },
                 { provide: SearchQueryRepository, useValue: mockMealService },
                 { provide: JwtService, useClass: JwtService },
                 { provide: JwtManagerService, useClass: JwtManagerService },
@@ -72,6 +76,7 @@ describe('MealService', () => {
 
         mealService = module.get(MealService);
         mealRepository = module.get(MealRepository);
+        mealCommentRepository = module.get(MealCommentRepository);
         searchQueryRepository = module.get(SearchQueryRepository);
         redisService = module.get(RedisService);
         ingredientService = module.get(IngredientService);
@@ -81,6 +86,7 @@ describe('MealService', () => {
     it('should be defined', () => {
         expect(mealService).toBeDefined();
         expect(mealRepository).toBeDefined();
+        expect(mealCommentRepository).toBeDefined();
         expect(searchQueryRepository).toBeDefined();
         expect(redisService).toBeDefined();
         expect(ingredientService).toBeDefined();
@@ -486,6 +492,87 @@ describe('MealService', () => {
 
             expect(ingredientService.filterIngredients).toHaveBeenCalledWith(ingredients);
             expect(searchQueryRepository.create).toHaveBeenCalled();
+        });
+    });
+
+    describe('getComments', () => {
+        it('should return all comments for a particular meal when meal is cached', async () => {
+            const mockMealId = 'mock meal id';
+            const mockHasMeal = true;
+            const mockMealComments: any[] = [
+                {
+                    mealId: mockMealId,
+                    user: 'mock user name',
+                    text: 'That\'s an awesome meal ever!',
+                    posted: Date.now()
+                }
+            ];
+
+            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(mockHasMeal);
+            jest.spyOn(mealCommentRepository, 'findAll').mockResolvedValueOnce(mockMealComments);
+
+            const mealComments = await mealService.getComments(mockMealId);
+
+            expect(mealComments).toHaveLength(1);
+            expect(mealComments[0]).toStrictEqual(mockMealComments[0]);
+        });
+
+        it('should return all comments for a particular meal when meal is saved within mongo base', async () => {
+            const mockMealId = 'mock meal id';
+            const mockHasMeal = false;
+            const mockIsValidId = true;
+            const mockMeal: any = { _id: mockMealId };
+            const mockMealComments: any[] = [
+                {
+                    mealId: mockMealId,
+                    user: 'mock user name',
+                    text: 'That\'s an awesome meal ever!',
+                    posted: Date.now()
+                }
+            ];
+
+            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(mockHasMeal);
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(mockIsValidId);
+            jest.spyOn(mealRepository, 'findById').mockResolvedValueOnce(mockMeal);
+            jest.spyOn(mealCommentRepository, 'findAll').mockResolvedValueOnce(mockMealComments);
+
+            const mealComments = await mealService.getComments(mockMealId);
+
+            expect(mealComments).toHaveLength(1);
+            expect(mealComments[0]).toStrictEqual(mockMealComments[0]);
+        });
+
+        it('should return all comments for a particular meal when meal is saved within external databases', async () => {
+            const mockMealId = 'mock meal id';
+            const mockHasMeal = false;
+            const mockIsValidId = false;
+            const mockMeal: any = { _id: mockMealId };
+            const mockMealComments: any[] = [
+                {
+                    mealId: mockMealId,
+                    user: 'mock user name',
+                    text: 'That\'s an awesome meal ever!',
+                    posted: Date.now()
+                }
+            ];
+
+            jest.spyOn(redisService, 'hasMeal').mockResolvedValueOnce(mockHasMeal);
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(mockIsValidId);
+            jest.spyOn(spoonacularApiService, 'getMealDetails').mockResolvedValueOnce(mockMeal);
+            jest.spyOn(mealCommentRepository, 'findAll').mockResolvedValueOnce(mockMealComments);
+
+            const mealComments = await mealService.getComments(mockMealId);
+
+            expect(mealComments).toHaveLength(1);
+            expect(mealComments[0]).toStrictEqual(mockMealComments[0]);
+        });
+
+        it('should throw an error when meal with provided ID does not exist', async () => {
+            const mockMealId = 'mock meal id';
+
+            jest.spyOn(mealRepository, 'findById').mockResolvedValueOnce(null);
+
+            await expect(mealService.getComments(mockMealId)).rejects.toThrow(NotFoundException);
         });
     });
 });

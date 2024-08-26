@@ -108,6 +108,12 @@ export class MealController {
         return await this.mealService.confirmDeleting(id, authenticatedUser);
     }
 
+    @Get('/:id/comments')
+    @HttpCode(200)
+    public async getComments(@Param('id') id: string) {
+        return await this.mealService.getComments(id);
+    }
+
     @Get('/proposal/all')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard)
