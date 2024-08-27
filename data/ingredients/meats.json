@@ -1,206 +1,190 @@
 {
     "beef": {
         "en": "beef",
-        "pl": "358 / 5 000"
+        "pl": "wołowina"
     },
     "chicken": {
         "en": "chicken",
-        "pl": "wołowina"
+        "pl": "kurczak"
     },
     "pork": {
         "en": "pork",
-        "pl": "kurczak"
+        "pl": "wieprzowina"
     },
     "lamb": {
         "en": "lamb",
-        "pl": "wieprzowina"
+        "pl": "jagnięcina"
     },
     "veal": {
         "en": "veal",
-        "pl": "jagnięcina"
+        "pl": "cielęcina"
     },
     "duck": {
         "en": "duck",
-        "pl": "cielęcina"
+        "pl": "kaczka"
     },
     "turkey": {
         "en": "turkey",
-        "pl": "kaczka"
+        "pl": "indyk"
     },
     "goose": {
         "en": "goose",
-        "pl": "indyk"
+        "pl": "gęś"
     },
     "rabbit": {
         "en": "rabbit",
-        "pl": "gęś"
+        "pl": "królik"
     },
     "quail": {
         "en": "quail",
-        "pl": "królik"
+        "pl": "przepiórka"
     },
     "venison": {
         "en": "venison",
-        "pl": "przepiórka"
+        "pl": "sarnina"
     },
     "buffalo": {
         "en": "buffalo",
-        "pl": "sarnina"
+        "pl": "bawół"
     },
     "bison": {
         "en": "bison",
-        "pl": "bawół"
+        "pl": "bizon"
     },
     "elk": {
         "en": "elk",
-        "pl": "bizon"
-    },
-    "moose": {
-        "en": "moose",
         "pl": "łoś"
     },
     "boar": {
         "en": "boar",
-        "pl": "łoś"
+        "pl": "dzik"
     },
     "pheasant": {
         "en": "pheasant",
-        "pl": "dzik"
+        "pl": "bażant"
     },
     "ostrich": {
         "en": "ostrich",
-        "pl": "bażant"
+        "pl": "struś"
     },
     "emu": {
         "en": "emu",
-        "pl": "struś"
+        "pl": "emu"
     },
     "squab": {
         "en": "squab",
-        "pl": "emu"
+        "pl": "gołąbek"
     },
     "guinea hen": {
         "en": "guinea hen",
-        "pl": "gołąbek"
+        "pl": "perliczka"
     },
     "partridge": {
         "en": "partridge",
-        "pl": "perliczka"
+        "pl": "kuropatwa"
     },
     "goat": {
         "en": "goat",
-        "pl": "kuropatwa"
+        "pl": "koza"
     },
     "kangaroo": {
         "en": "kangaroo",
-        "pl": "koza"
+        "pl": "kangur"
     },
     "alligator": {
         "en": "alligator",
-        "pl": "kangur"
+        "pl": "aligator"
     },
     "snake": {
         "en": "snake",
-        "pl": "aligator"
+        "pl": "wąż"
     },
     "frog legs": {
         "en": "frog legs",
-        "pl": "wąż"
+        "pl": "żabie udka"
     },
     "escargot": {
         "en": "escargot",
-        "pl": "żabie udka"
+        "pl": "ślimak"
     },
     "crab": {
         "en": "crab",
-        "pl": "ślimak"
+        "pl": "krab"
     },
     "lobster": {
         "en": "lobster",
-        "pl": "krab"
+        "pl": "homar"
     },
     "shrimp": {
         "en": "shrimp",
-        "pl": "homar"
+        "pl": "krewetka"
     },
     "prawn": {
         "en": "prawn",
-        "pl": "krewetka"
+        "pl": "krewetka (prawn)"
     },
     "crawfish": {
         "en": "crawfish",
-        "pl": "krewetka"
+        "pl": "rak"
     },
     "clams": {
         "en": "clams",
-        "pl": "rak"
-    },
-    "mussels": {
-        "en": "mussels",
         "pl": "małże"
     },
     "oysters": {
         "en": "oysters",
-        "pl": "małże"
+        "pl": "ostrygi"
     },
     "octopus": {
         "en": "octopus",
-        "pl": "ostrygi"
+        "pl": "ośmiornica"
     },
     "squid": {
         "en": "squid",
-        "pl": "ośmiornica"
+        "pl": "kalmary"
     },
     "cuttlefish": {
         "en": "cuttlefish",
-        "pl": "kalmary"
+        "pl": "mątwy"
     },
     "scallops": {
         "en": "scallops",
-        "pl": "mątwy"
+        "pl": "przegrzebki"
     },
     "abalone": {
         "en": "abalone",
-        "pl": "przegrzebki"
-    },
-    "crayfish": {
-        "en": "crayfish",
         "pl": "abalone"
     },
     "snail": {
         "en": "snail",
-        "pl": "rak"
+        "pl": "ślimak"
     },
     "anchovy": {
         "en": "anchovy",
-        "pl": "ślimak"
+        "pl": "anchois"
     },
     "sardine": {
         "en": "sardine",
-        "pl": "anchois"
+        "pl": "sardynka"
     },
     "mackerel": {
         "en": "mackerel",
-        "pl": "sardynka"
+        "pl": "makrela"
     },
     "trout": {
         "en": "trout",
-        "pl": "makrela"
+        "pl": "pstrąg"
     },
     "salmon": {
         "en": "salmon",
-        "pl": "pstrąg"
+        "pl": "łosoś"
     },
     "tuna": {
         "en": "tuna",
-        "pl": "łosoś"
+        "pl": "tuńczyk"
     },
     "herring": {
         "en": "herring",
-        "pl": "tuńczyk"
-    },
-    "": {
-        "en": "",
         "pl": "śledź"
     }
 }

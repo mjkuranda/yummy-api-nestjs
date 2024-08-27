@@ -131,10 +131,6 @@
         "en": "monkfish",
         "pl": "ryba morska"
     },
-    "lingcod": {
-        "en": "lingcod",
-        "pl": "dorsz"
-    },
     "perch": {
         "en": "perch",
         "pl": "okoń"
@@ -145,68 +141,58 @@
     },
     "pike": {
         "en": "pike",
-        "pl": "sandacz"
+        "pl": ""
     },
     "walleye": {
         "en": "walleye",
-        "pl": "biała ryba"
+        "pl": "sandacz"
     },
     "whitefish": {
         "en": "whitefish",
-        "pl": "mątwa"
+        "pl": "biała ryba"
     },
     "cuttlefish": {
         "en": "cuttlefish",
-        "pl": "kalmar"
-    },
-    "squid": {
-        "en": "squid",
-        "pl": "ośmiornica"
+        "pl": "mątwa"
     },
     "octopus": {
         "en": "octopus",
-        "pl": "ślimak"
-    },
-    "whelk": {
-        "en": "whelk",
-        "pl": "abalon"
+        "pl": "ośmiornica"
     },
     "abalone": {
         "en": "abalone",
-        "pl": "przegrzebek"
+        "pl": "abalon"
     },
     "scallop": {
         "en": "scallop",
-        "pl": "małż"
+        "pl": "przegrzebek"
     },
     "clam": {
         "en": "clam",
-        "pl": "ostryga"
+        "pl": "małż"
     },
     "oyster": {
         "en": "oyster",
-        "pl": "małż"
+        "pl": "ostryga"
     },
     "mussel": {
         "en": "mussel",
-        "pl": "krab"
+        "pl": "małż"
     },
     "crab": {
         "en": "crab",
-        "pl": "homar"
+        "pl": "krab"
     },
     "lobster": {
         "en": "lobster",
-        "pl": "krewetka (shrimp)"
+        "pl": "homar"
     },
     "shrimp": {
         "en": "shrimp",
-        "pl": "krewetka (prawn)"
+        "pl": "krewetka (shrimp)"
     },
     "prawn": {
-        "en": "prawn"
-    },
-    "": {
-        "en": ""
+        "en": "prawn",
+        "pl": "krewetka (prawn)"
     }
 }

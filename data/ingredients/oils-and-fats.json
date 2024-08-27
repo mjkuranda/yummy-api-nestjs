@@ -131,54 +131,48 @@
         "en": "duck fat",
         "pl": "łój wołowy"
     },
-    "beef tallow": {
-        "en": "beef tallow",
-        "pl": "tłuszcz z kurczaka"
-    },
     "chicken fat": {
         "en": "chicken fat",
-        "pl": "schmaltz"
+        "pl": "tłuszcz z kurczaka"
     },
     "schmaltz": {
         "en": "schmaltz",
-        "pl": "smar z boczku"
+        "pl": "schmaltz"
     },
     "bacon grease": {
         "en": "bacon grease",
-        "pl": "margaryna"
+        "pl": "smar z boczku"
     },
     "margarine": {
         "en": "margarine",
-        "pl": "tłuszcz roślinny"
+        "pl": "margaryna"
     },
     "vegetable shortening": {
         "en": "vegetable shortening",
-        "pl": "masło kokosowe"
+        "pl": "tłuszcz roślinny"
     },
     "coconut butter": {
         "en": "coconut butter",
-        "pl": "masło kakaowe"
+        "pl": "masło kokosowe"
     },
     "cocoa butter": {
         "en": "cocoa butter",
-        "pl": "masło shea"
+        "pl": "masło kakaowe"
     },
     "shea butter": {
         "en": "shea butter",
-        "pl": "tahini"
+        "pl": "masło shea"
     },
     "tahini": {
         "en": "tahini",
-        "pl": "masło klarowane"
+        "pl": "tahini"
     },
     "clarified butter": {
         "en": "clarified butter",
-        "pl": "awokado"
+        "pl": "masło klarowane"
     },
     "avocado": {
-        "en": "avocado"
-    },
-    "": {
-        "en": ""
+        "en": "avocado",
+        "pl": "awokado"
     }
 }
