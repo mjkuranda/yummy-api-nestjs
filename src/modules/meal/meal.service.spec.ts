@@ -481,12 +481,12 @@ describe('MealService', () => {
                 { login: 'login', date: new Date(), ingredients: ['onion'] }
             ];
             const mockMeals: any = [
-                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'] },
-                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'] }
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], provider: 'yummy' },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], provider: 'yummy' }
             ];
             const mockMealResult: any = [
-                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], recommendationPoints: 8 },
-                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5 }
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], recommendationPoints: 8, provider: 'yummy' },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5, provider: 'yummy' }
             ];
 
             jest.spyOn(searchQueryRepository, 'findAll').mockResolvedValueOnce(mockSearchQueries);
