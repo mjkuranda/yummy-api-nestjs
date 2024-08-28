@@ -311,7 +311,8 @@ describe('MealService', () => {
                     id: 'some-id',
                     ingredients: [],
                     relevance: 50,
-                    title: 'some-meal'
+                    title: 'some-meal',
+                    provider: 'yummy'
                 }
             ];
 
@@ -331,7 +332,8 @@ describe('MealService', () => {
                     id: 'some-id',
                     ingredients: [],
                     relevance: 50,
-                    title: 'some-meal'
+                    title: 'some-meal',
+                    provider: 'yummy'
                 }
             ];
 
