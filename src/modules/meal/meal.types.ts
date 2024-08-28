@@ -49,10 +49,11 @@ export type ProposedMeal = {
     imgUrl?: string,
     ingredients: IngredientType[],
     recommendationPoints: number,
-    title: string
+    title: string,
+    provider: MealProvider
 };
 
-type MealProvider = 'yummy' | 'spoonacular';
+export type MealProvider = 'yummy' | 'spoonacular';
 
 export type GetMealsQueryType = Record<GetMealsQueryKeyTypes, string>;
 

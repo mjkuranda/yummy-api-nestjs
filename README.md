@@ -48,8 +48,8 @@ Technologies:
     ]
 }
 ```
-* `POST /meals/create` - creates a new meal and saves its to the database, marking as soft added. You need to be logged-in and provide following data (`imageUrl` is optional):
 
+* `POST /meals/create` - creates a new meal and saves its to the database, marking as soft added. You need to be logged-in and provide following data (`imageUrl` is optional):
 ```json
 {
     "description": "The best meal ever",
