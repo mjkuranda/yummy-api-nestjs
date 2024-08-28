@@ -41,7 +41,8 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 imgUrl: recipe.image,
                 ingredients: [...this.proceedDataToIngredientList(recipe.usedIngredients), ...this.proceedDataToIngredientList(recipe.missedIngredients)],
                 relevance: Number((recipe.usedIngredients.length / (recipe.usedIngredients.length + recipe.missedIngredients.length)).toFixed(2)),
-                title: recipe.title
+                title: recipe.title,
+                provider: 'spoonacular'
             };
         });
     }
@@ -69,6 +70,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 dairyFree,
                 veryHealthy
             },
+            provider: 'spoonacular',
             recipeSections: recipeSections.map(section => ({
                 name: section.name,
                 steps: section.steps.map(step => step.step)

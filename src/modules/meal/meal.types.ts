@@ -6,6 +6,7 @@ export type RatedMeal = {
     id: string,
     imgUrl?: string,
     ingredients: IngredientType[],
+    provider: MealProvider,
     title: string,
     relevance: number
 };
@@ -33,6 +34,7 @@ export type DetailedMeal = {
         dairyFree?: boolean,
         veryHealthy?: boolean
     },
+    provider: MealProvider,
     recipeSections: MealRecipeSections
 };
 
@@ -49,6 +51,8 @@ export type ProposedMeal = {
     recommendationPoints: number,
     title: string
 };
+
+type MealProvider = 'yummy' | 'spoonacular';
 
 export type GetMealsQueryType = Record<GetMealsQueryKeyTypes, string>;
 

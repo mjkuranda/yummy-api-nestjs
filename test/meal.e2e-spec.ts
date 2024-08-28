@@ -136,7 +136,8 @@ describe('UserController (e2e)', () => {
                 readyInMinutes: 0,
                 sourceOrAuthor: 'unknown',
                 recipeSections: [],
-                ingredients: []
+                ingredients: [],
+                provider: 'yummy'
             };
             const expectedResponseBody: DetailedMealWithTranslations = {
                 meal: {
@@ -148,6 +149,7 @@ describe('UserController (e2e)', () => {
                     sourceOrAuthor: 'unknown',
                     recipeSections: [],
                     ingredients: [],
+                    provider: 'yummy'
                 },
                 ingredients: [],
                 recipe: []

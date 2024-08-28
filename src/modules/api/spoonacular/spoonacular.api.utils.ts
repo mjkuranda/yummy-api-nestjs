@@ -9,7 +9,8 @@ export function proceedRecipesToMeals(recipes: SpoonacularRecipe[]): RatedMeal[]
             imgUrl: recipe.image,
             ingredients: [...proceedIngredients(recipe.usedIngredients), ...proceedIngredients(recipe.missedIngredients)],
             relevance: recipe.usedIngredients.length / (recipe.usedIngredients.length + recipe.missedIngredients.length),
-            title: recipe.title
+            title: recipe.title,
+            provider: 'spoonacular'
         };
     });
 }

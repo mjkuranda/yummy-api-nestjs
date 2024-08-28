@@ -38,6 +38,7 @@ export function proceedMealDocumentToMealDetails(meal: MealDocument): DetailedMe
         title,
         description,
         sourceOrAuthor: author,
+        provider: 'yummy',
         readyInMinutes,
         recipeSections
     };
