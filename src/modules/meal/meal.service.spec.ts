@@ -20,6 +20,7 @@ import { CreateMealCommentBody, CreateMealRatingBody } from './meal.dto';
 import { MealCommentDocument } from '../../mongodb/documents/meal-comment.document';
 import { MealRatingRepository } from '../../mongodb/repositories/meal-rating.repository';
 import { MealRatingDocument } from '../../mongodb/documents/meal-rating.document';
+import { AxiosService } from '../../services/axios.service';
 
 describe('MealService', () => {
     let mealService: MealService;
@@ -30,6 +31,7 @@ describe('MealService', () => {
     let redisService: RedisService;
     let ingredientService: IngredientService;
     let spoonacularApiService: SpoonacularApiService;
+    let axiosService: AxiosService;
 
     const mockMealService = {
         create: jest.fn(),
@@ -70,6 +72,10 @@ describe('MealService', () => {
         saveMealDetails: jest.fn()
     };
 
+    const mockAxiosService = {
+        get: jest.fn()
+    };
+
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
@@ -83,7 +89,8 @@ describe('MealService', () => {
                 { provide: JwtManagerService, useClass: JwtManagerService },
                 { provide: LoggerService, useValue: mockLoggerService },
                 { provide: RedisService, useValue: mockRedisService },
-                { provide: SpoonacularApiService, useValue: mockSpoonacularApiService }
+                { provide: SpoonacularApiService, useValue: mockSpoonacularApiService },
+                { provide: AxiosService, useValue: mockAxiosService }
             ],
         }).compile();
 
@@ -95,6 +102,7 @@ describe('MealService', () => {
         redisService = module.get(RedisService);
         ingredientService = module.get(IngredientService);
         spoonacularApiService = module.get(SpoonacularApiService);
+        axiosService = module.get(AxiosService);
     });
 
     it('should be defined', () => {
@@ -106,11 +114,13 @@ describe('MealService', () => {
         expect(redisService).toBeDefined();
         expect(ingredientService).toBeDefined();
         expect(spoonacularApiService).toBeDefined();
+        expect(axiosService).toBeDefined();
     });
 
     describe('create', () => {
         let mockMealDto;
         let mockMeal;
+        let mockUserDto;
 
         beforeAll(() => {
             mockMealDto = {
@@ -125,12 +135,18 @@ describe('MealService', () => {
                 softAdded: true,
                 _id: '123456789'
             };
+            mockUserDto = {
+                login: 'user'
+            };
         });
 
         it('should create a new meal', async () => {
-            jest.spyOn(mealRepository, 'create').mockResolvedValue(mockMeal);
+            const mockWrappedElements: any[] = ['xxx', 'yyy', 'zzz'];
 
-            const result = await mealService.create(mockMealDto);
+            jest.spyOn(mealRepository, 'create').mockResolvedValue(mockMeal);
+            jest.spyOn(ingredientService, 'wrapIngredientsWithImages').mockResolvedValue(mockWrappedElements);
+
+            const result = await mealService.create(mockMealDto, mockUserDto);
 
             expect(result).toBe(mockMeal);
         });

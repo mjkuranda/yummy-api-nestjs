@@ -1,7 +1,11 @@
-export type IngredientDataset = Map<string, {
-    en: string,
-    pl: string
-}>;
+export type IngredientDataset = Map<string, IngredientData>;
+
+export interface IngredientData {
+    en: string;
+    pl: string;
+    id?: number;
+    imageUrl?: string;
+}
 
 export interface MealIngredient {
     amount: number;
@@ -9,6 +13,8 @@ export interface MealIngredient {
     name: IngredientType;
     unit: string;
 }
+
+export type MealIngredientWithoutImage = Omit<MealIngredient, 'imageUrl'> & { id: number };
 
 export type IngredientCategory = 'breads' | 'dairy-and-eggs' | 'fish-and-seafood' | 'fruits' | 'meats' | 'oils-and-fats' | 'pasta' | 'seeds-and-nuts' | 'spices' | 'vegetables';
 

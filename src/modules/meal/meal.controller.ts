@@ -60,9 +60,9 @@ export class MealController {
     @HttpCode(201)
     @UseGuards(AuthenticationGuard)
     public async createMeal(@Body() body: CreateMealBodyDto) {
-        const { data } = body;
+        const { data, authenticatedUser } = body;
 
-        return await this.mealService.create(data);
+        return await this.mealService.create(data, authenticatedUser);
     }
 
     @Delete('/:id')

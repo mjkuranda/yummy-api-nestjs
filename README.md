@@ -55,9 +55,24 @@ Technologies:
     "description": "The best meal ever",
     "title": "New awesome meal",
     "ingredients": [
-        "ingredient-id-1",
-        "ingredient-id-2",
-        "ingredient-id-x"
+        {
+            "id": "ingredient-id-1",
+            "name": "Ingredient 1",
+            "amount": 5,
+            "unit": "piece"
+        },
+        {
+            "id": "ingredient-id-2",
+            "name": "Ingredient 2",
+            "amount": 2,
+            "unit": "jar"
+        },
+        {
+            "id": "ingredient-id-x",
+            "name": "Ingredient X",
+            "amount": 1,
+            "unit": "serving"
+        }
     ],
     "imageUrl": "https://some.domain/path/to/resource/image.ext",
     "recipeSections": [

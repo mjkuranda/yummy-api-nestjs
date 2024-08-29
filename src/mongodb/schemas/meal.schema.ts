@@ -1,5 +1,22 @@
 import * as mongoose from 'mongoose';
 
+const IngredientDataSchema = new mongoose.Schema({
+    en: {
+        type: String,
+        required: true
+    },
+    pl: {
+        type: String,
+        required: true
+    },
+    id: {
+        type: Number
+    },
+    imageUrl: {
+        type: String
+    }
+});
+
 const RecipeSectionSchema = new mongoose.Schema({
     name: String,
     steps: [String]
@@ -16,7 +33,7 @@ export const MealSchema = new mongoose.Schema({
         type: String
     },
     ingredients: {
-        type: [String],
+        type: [IngredientDataSchema],
         required: true
     },
     language: {

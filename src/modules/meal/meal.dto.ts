@@ -3,13 +3,9 @@ import { Type } from 'class-transformer';
 import { UserDto } from '../user/user.dto';
 import { MealProvider, MealRecipeSections } from './meal.types';
 import { Language } from '../../common/types';
+import { MealIngredientWithoutImage } from '../ingredient/ingredient.types';
 
-export class CreateMealDto {
-    @IsOptional()
-    @IsNotEmpty({ message: 'Meal should have an author' })
-    @Length(3, 16)
-    readonly author: string;
-
+export class CreateMealDto<Ingredient> {
     @IsNotEmpty({ message: 'Meal should have a description' })
     @Length(3, 1024)
     readonly description: string;
@@ -20,7 +16,7 @@ export class CreateMealDto {
 
     @IsArray()
     @ArrayMinSize(1)
-    readonly ingredients: string[];
+    readonly ingredients: Ingredient[];
 
     @IsNotEmpty({ message: 'Meal should have a language in which was defined' })
     readonly language: Language;
@@ -44,10 +40,16 @@ export class CreateMealDto {
     readonly type: string;
 }
 
+export class CreateMealWithAuthorDto<Ingredient> extends CreateMealDto<Ingredient> {
+    @IsNotEmpty({ message: 'Meal should have an author' })
+    @Length(3, 32)
+    readonly author: string;
+}
+
 export class CreateMealBodyDto {
     @Type(() => CreateMealDto)
     @ValidateNested({ each: true })
-    readonly data: CreateMealDto;
+    readonly data: CreateMealDto<MealIngredientWithoutImage>;
 
     @Type(() => UserDto)
     @ValidateNested({ each: true })
