@@ -3,9 +3,10 @@ import { MealDocument } from '../documents/meal.document';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { Model } from 'mongoose';
-import { CreateMealDto } from '../../modules/meal/meal.dto';
+import { CreateMealWithAuthorDto } from '../../modules/meal/meal.dto';
+import { IngredientData } from '../../modules/ingredient/ingredient.types';
 
-export class MealRepository extends AbstractRepository<MealDocument, CreateMealDto | { softAdded: boolean }> {
+export class MealRepository extends AbstractRepository<MealDocument, CreateMealWithAuthorDto<IngredientData> | { softAdded: boolean }> {
 
     constructor(@InjectModel(models.MEAL_MODEL) model: Model<MealDocument>) {
         super(model);

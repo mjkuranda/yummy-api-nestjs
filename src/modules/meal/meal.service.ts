@@ -19,7 +19,7 @@ import {
 } from './meal.utils';
 import { HOUR } from '../../constants/times.constant';
 import { IngredientService } from '../ingredient/ingredient.service';
-import { IngredientType } from '../ingredient/ingredient.types';
+import { IngredientType, MealIngredientWithoutImage } from '../ingredient/ingredient.types';
 import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
 import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
 import { SearchQueryDocument } from '../../mongodb/documents/search-query.document';
@@ -43,9 +43,13 @@ export class MealService {
         private spoonacularApiService: SpoonacularApiService
     ) {}
 
-    async create(createMealDto: CreateMealDto): Promise<MealDocument> {
+    async create(createMealDto: CreateMealDto<MealIngredientWithoutImage>, user: UserDto): Promise<MealDocument> {
+        const ingredients = await this.ingredientService.wrapIngredientsWithImages(createMealDto.ingredients);
+
         const createdMeal = await this.mealRepository.create({
             ...createMealDto,
+            ingredients,
+            author: user.login,
             posted: Date.now(),
             provider: 'yummy',
             softAdded: true
@@ -57,7 +61,7 @@ export class MealService {
             ? `"${createMealDto.imageUrl}" image url`
             : 'no image';
         const context = 'MealService/create';
-        const message = `New meal "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription} has been created.`;
+        const message = `New meal "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription} has been created by ${user.login}.`;
 
         this.loggerService.info(context, message);
 
