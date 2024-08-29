@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '../logger/logger.service';
 import { IngredientService } from './ingredient.service';
 import { IngredientType } from './ingredient.types';
+import { AxiosService } from '../../services/axios.service';
 
 describe('IngredientService', () => {
     let ingredientService: IngredientService;
@@ -15,6 +16,7 @@ describe('IngredientService', () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 IngredientService,
+                AxiosService,
                 {
                     provide: LoggerService,
                     useValue: loggerServiceProvider

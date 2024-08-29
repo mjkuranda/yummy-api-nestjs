@@ -13,6 +13,7 @@ import { DetailedMeal, DetailedMealWithTranslations, MealRating, RatedMeal } fro
 import { SearchQueryRepository } from '../src/mongodb/repositories/search-query.repository';
 import { MealCommentRepository } from '../src/mongodb/repositories/meal-comment.repository';
 import { MealRatingRepository } from '../src/mongodb/repositories/meal-rating.repository';
+import { IngredientService } from '../src/modules/ingredient/ingredient.service';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -24,6 +25,7 @@ describe('UserController (e2e)', () => {
     let jwtManagerService: JwtManagerService;
     let redisService: RedisService;
     let spoonacularApiService: SpoonacularApiService;
+    let ingredientService: IngredientService;
 
     const getCookie = (res, cookieName) => {
         const cookies = {};
@@ -71,6 +73,10 @@ describe('UserController (e2e)', () => {
         getMeals: jest.fn(),
         getMealDetails: jest.fn()
     };
+    const ingredientServiceProvider = {
+        wrapIngredientsWithImages: jest.fn(),
+        filterIngredients: jest.fn()
+    };
 
     beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -84,6 +90,7 @@ describe('UserController (e2e)', () => {
             .overrideProvider(RedisService).useValue(redisServiceProvider)
             .overrideProvider(JwtManagerService).useValue(jwtManagerServiceProvider)
             .overrideProvider(SpoonacularApiService).useValue(spoonacularApiServiceProvider)
+            .overrideProvider(IngredientService).useValue(ingredientServiceProvider)
             .compile();
 
         app = moduleRef.createNestApplication();
@@ -98,6 +105,7 @@ describe('UserController (e2e)', () => {
         jwtManagerService = moduleRef.get(JwtManagerService);
         redisService = moduleRef.get(RedisService);
         spoonacularApiService = moduleRef.get(SpoonacularApiService);
+        ingredientService = moduleRef.get(IngredientService);
     });
 
     describe('/meals (GET)', () => {
@@ -330,10 +338,12 @@ describe('UserController (e2e)', () => {
                 login: 'user',
                 password: 'hashed'
             } as any;
+            const mockIngredients = ['123', '456'] as any;
             const accessToken = 'token';
 
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
             jest.spyOn(redisService, 'getAccessToken').mockResolvedValue(accessToken);
+            jest.spyOn(ingredientService, 'wrapIngredientsWithImages').mockResolvedValueOnce(mockIngredients);
 
             return request(app.getHttpServer())
                 .post('/meals/create')
@@ -674,6 +684,8 @@ describe('UserController (e2e)', () => {
     describe('/meals/proposal (POST)', () => {
         it('should add a new record with provided ingredients', () => {
             const ingredients = ['carrot', 'apple', 'fish'];
+
+            jest.spyOn(ingredientService, 'filterIngredients').mockReturnValueOnce(['carrot', 'apple', 'fish']);
 
             return request(app.getHttpServer())
                 .post('/meals/proposal')
