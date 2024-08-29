@@ -1,6 +1,7 @@
 import { IngredientType, MealIngredient } from '../ingredient/ingredient.types';
 import { TranslatedIngredient } from '../translation/translation.types';
 import { Language } from '../../common/types';
+import { MealType } from '../../common/enums';
 
 export type RatedMeal = {
     id: string,
@@ -8,7 +9,8 @@ export type RatedMeal = {
     ingredients: IngredientType[],
     provider: MealProvider,
     title: string,
-    relevance: number
+    relevance: number,
+    type: MealType
 };
 
 export type MealRecipeSection = {
@@ -35,7 +37,8 @@ export type DetailedMeal = {
         veryHealthy?: boolean
     },
     provider: MealProvider,
-    recipeSections: MealRecipeSections
+    recipeSections: MealRecipeSections,
+    type: MealType
 };
 
 export interface DetailedMealWithTranslations {
@@ -50,7 +53,8 @@ export type ProposedMeal = {
     ingredients: IngredientType[],
     recommendationPoints: number,
     title: string,
-    provider: MealProvider
+    provider: MealProvider,
+    type: MealType
 };
 
 export type MealProvider = 'yummy' | 'spoonacular';

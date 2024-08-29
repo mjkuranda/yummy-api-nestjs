@@ -1,8 +1,8 @@
 export enum MealType {
+    ANY = 'any',
     SOUP = 'soup',
     MAIN_COURSE = 'main course',
-    SALAD = 'salad',
-    RAW_SALAD = 'raw salad'
+    SALAD = 'salad'
 }
 
 export enum IngredientName {
