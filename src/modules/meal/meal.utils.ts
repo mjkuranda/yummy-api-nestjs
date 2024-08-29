@@ -65,7 +65,7 @@ export function mergeSearchQueries(searchQueries: SearchQueryDocument[]): Merged
 
 export function proceedRatedMealsToProposedMeals(meals: RatedMeal[], mergedSearchQueries: MergedSearchQueries): ProposedMeal[] {
     return meals.map(meal => {
-        const { id, imgUrl, ingredients, title, provider } = meal;
+        const { id, imgUrl, ingredients, title, provider, type } = meal;
         const recommendationPoints = meal.ingredients.reduce((points, ingredient) => {
             if (!mergedSearchQueries[ingredient]) {
                 return points;
@@ -80,7 +80,8 @@ export function proceedRatedMealsToProposedMeals(meals: RatedMeal[], mergedSearc
             ingredients,
             recommendationPoints,
             title,
-            provider
+            provider,
+            type
         };
     });
 }

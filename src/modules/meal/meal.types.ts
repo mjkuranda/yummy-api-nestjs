@@ -9,7 +9,8 @@ export type RatedMeal = {
     ingredients: IngredientType[],
     provider: MealProvider,
     title: string,
-    relevance: number
+    relevance: number,
+    type: MealType
 };
 
 export type MealRecipeSection = {
@@ -52,7 +53,8 @@ export type ProposedMeal = {
     ingredients: IngredientType[],
     recommendationPoints: number,
     title: string,
-    provider: MealProvider
+    provider: MealProvider,
+    type: MealType
 };
 
 export type MealProvider = 'yummy' | 'spoonacular';

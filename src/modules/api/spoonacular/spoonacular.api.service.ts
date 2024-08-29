@@ -43,7 +43,8 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 ingredients: [...this.proceedDataToIngredientList(recipe.usedIngredients), ...this.proceedDataToIngredientList(recipe.missedIngredients)],
                 relevance: Number((recipe.usedIngredients.length / (recipe.usedIngredients.length + recipe.missedIngredients.length)).toFixed(2)),
                 title: recipe.title,
-                provider: 'spoonacular'
+                provider: 'spoonacular',
+                type: MealType.ANY
             };
         });
     }

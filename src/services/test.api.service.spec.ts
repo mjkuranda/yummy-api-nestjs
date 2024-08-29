@@ -56,7 +56,8 @@ describe('TestApiService', () => {
                 ingredients: [],
                 relevance: 50,
                 title: 'some-meal',
-                provider: 'yummy'
+                provider: 'yummy',
+                type: MealType.ANY
             }
         ];
 

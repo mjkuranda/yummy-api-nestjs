@@ -328,7 +328,8 @@ describe('MealService', () => {
                     ingredients: [],
                     relevance: 50,
                     title: 'some-meal',
-                    provider: 'yummy'
+                    provider: 'yummy',
+                    type: MealType.ANY
                 }
             ];
 
@@ -349,7 +350,8 @@ describe('MealService', () => {
                     ingredients: [],
                     relevance: 50,
                     title: 'some-meal',
-                    provider: 'yummy'
+                    provider: 'yummy',
+                    type: MealType.ANY
                 }
             ];
 
@@ -497,12 +499,12 @@ describe('MealService', () => {
                 { login: 'login', date: new Date(), ingredients: ['onion'] }
             ];
             const mockMeals: any = [
-                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], provider: 'yummy' },
-                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], provider: 'yummy' }
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], provider: 'yummy', type: MealType.ANY },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], provider: 'yummy', type: MealType.ANY }
             ];
             const mockMealResult: any = [
-                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], recommendationPoints: 8, provider: 'yummy' },
-                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5, provider: 'yummy' }
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], recommendationPoints: 8, provider: 'yummy', type: MealType.ANY },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5, provider: 'yummy', type: MealType.ANY }
             ];
 
             jest.spyOn(searchQueryRepository, 'findAll').mockResolvedValueOnce(mockSearchQueries);
