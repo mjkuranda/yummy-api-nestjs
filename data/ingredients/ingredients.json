@@ -120,7 +120,8 @@
         "pl": "cukier granulowany"
     },
     "honey": {
-        "id": "19296",
+        "id": 19296,
+        "imageUrl": "honey.png",
         "en": "honey",
         "pl": "miód"
     },

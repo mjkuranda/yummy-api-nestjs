@@ -4,11 +4,12 @@ import { AbstractApiService } from '../../../services/abstract.api.service';
 import { ApiName } from '../../redis/redis.types';
 import {
     SpoonacularIngredient,
-    SpoonacularRecipeSections,
     SpoonacularRecipe,
-    SpoonacularRecipeDetails
+    SpoonacularRecipeDetails,
+    SpoonacularRecipeSections
 } from './spoonacular.api.types';
 import { IngredientType, MealIngredient } from '../../ingredient/ingredient.types';
+import { MealType } from '../../../common/enums';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularRecipeSections> {
@@ -74,7 +75,8 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
             recipeSections: recipeSections.map(section => ({
                 name: section.name,
                 steps: section.steps.map(step => step.step)
-            }))
+            })),
+            type: MealType.ANY
         };
     }
 }
