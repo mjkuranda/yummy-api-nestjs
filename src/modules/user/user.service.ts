@@ -68,8 +68,8 @@ export class UserService {
         const refreshToken = await this.jwtManagerService.generateRefreshToken({ login });
 
         await this.redisService.setTokens(login, accessToken, refreshToken);
-        res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'lax' });
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'lax' });
+        res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'none', secure: true });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
 
         const message = `User "${login}" has been successfully logged in.`;
         this.loggerService.info(context, message);
@@ -100,14 +100,14 @@ export class UserService {
         }
 
         const newAccessToken = await this.jwtManagerService.generateAccessToken(userPayload);
-        res.cookie('accessToken', newAccessToken, { httpOnly: true });
+        res.cookie('accessToken', newAccessToken, { httpOnly: true, sameSite: 'none', secure: true });
         this.loggerService.info(context, `Access token was renewed for ${userPayload.login} user.`);
         const refreshTokenPayload = await this.jwtManagerService.verifyRefreshToken(refreshToken);
         let newRefreshToken = null;
 
         if (isTooShortToExpireRefreshToken(refreshTokenPayload)) {
             newRefreshToken = await this.jwtManagerService.generateRefreshToken(refreshTokenPayload);
-            res.cookie('refreshToken', newRefreshToken, { httpOnly: true });
+            res.cookie('refreshToken', newRefreshToken, { httpOnly: true, sameSite: 'none', secure: true });
             this.loggerService.info(context, `Refresh token was renewed for ${userPayload.login} user.`);
         }
 
