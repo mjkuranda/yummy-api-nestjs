@@ -28,6 +28,7 @@ import { MealCommentRepository } from '../../mongodb/repositories/meal-comment.r
 import { MealCommentDocument } from '../../mongodb/documents/meal-comment.document';
 import { MealRatingRepository } from '../../mongodb/repositories/meal-rating.repository';
 import { MealRatingDocument } from '../../mongodb/documents/meal-rating.document';
+import { sortDescendingRelevance } from '../../common/helpers';
 
 @Injectable()
 export class MealService {
@@ -332,13 +333,11 @@ export class MealService {
         }
 
         const datasets: Array<RatedMeal[] | null> = await Promise.all([
+            this.mealRepository.getMeals(filteredIngredients),
             this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', filteredIngredients, type)
         ]);
 
-        const meals = datasets
-            .filter((set: RatedMeal[]): boolean => Boolean(set.length))
-            .flat()
-            .sort((meal1: RatedMeal, meal2: RatedMeal): number => meal2.relevance - meal1.relevance);
+        const meals: RatedMeal[] = datasets.flat().sort(sortDescendingRelevance);
         await this.redisService.saveMealResult('merged', query, meals, 12 * HOUR);
         this.loggerService.info(context, `Cached result containing ${meals.length} meals, defined for query "${query}".`);
 
@@ -351,17 +350,19 @@ export class MealService {
 
         const searchQueries: SearchQueryDocument[] = await this.searchQueryRepository.findAll({ date: { $gte: dateFilter }, login: user.login });
         const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(searchQueries);
+        const ingredientsList = Object.keys(mergedSearchQueries);
         const datasets: Array<RatedMeal[] | null> = await Promise.all([
-            this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', Object.keys(mergedSearchQueries))
+            this.mealRepository.getMeals(ingredientsList),
+            this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ingredientsList)
         ]);
-        const meals: RatedMeal[] = datasets.flat();
+        const meals: RatedMeal[] = datasets.flat().sort(sortDescendingRelevance);
         const proposedMeals: ProposedMeal[] = proceedRatedMealsToProposedMeals(meals, mergedSearchQueries);
 
         this.loggerService.info('MealService/getMealProposal', `Generated ${proposedMeals.length} meal proposal${proposedMeals.length > 1 ? 's' : ''}.`);
 
         return proposedMeals
             .filter(meal => meal.recommendationPoints > 0)
-            .sort((a, b) => b.recommendationPoints - a.recommendationPoints);
+            .filter((meal, idx) => idx < 10);
     }
 
     async addMealProposal(user: UserAccessTokenPayload, ingredients: string[]) {

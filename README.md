@@ -18,7 +18,7 @@ Technologies:
 * `GET /meals/:id/details` - returns details of a meal. It can be any meal provided by any external or local API.
 * `GET /meals/:id/comments` - returns all comments for a specific meal.
 * `GET /meals/:id/rating` - returns average rating for a specific meal.
-* `GET /meals/proposal/all` - returns all meal proposals for a specific user defined by `accessToken`.
+* `GET /meals/proposal/all` - returns top 10 meal proposals for a specific user defined by `accessToken`.
 * `GET /meals/soft/added` - returns all meal having `soft-added` property.
 * `GET /meals/soft/edited` - returns all meal having `soft-edited` property.
 * `GET /meals/soft/deleted` - returns all meal having `soft-deleted` property.
