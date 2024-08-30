@@ -33,7 +33,12 @@ export function proceedMealDocumentToMealDetails(meal: MealDocument): DetailedMe
     return {
         id,
         imgUrl: imageUrl,
-        ingredients,
+        ingredients: ingredients.map(ingredient => ({
+            name: ingredient.name,
+            amount: ingredient.amount,
+            unit: ingredient.unit,
+            imageUrl: ingredient.imageUrl ? `https://img.spoonacular.com/ingredients_250x250/${ingredient.imageUrl}` : ''
+        })),
         language,
         title,
         description,

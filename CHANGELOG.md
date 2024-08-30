@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.48.0] - 2024-08-30
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Fetching meals from MongoDB for `GET /meals`.
+- [Marek Kurańda](https://github.com/mjkuranda): Fetching meals from MongoDB for `GET /meals/proposal/all`.
+
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): Top 10 meal proposal as a response.
+
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): Wrapping meal ingredient images for meals from MongoDB.
 
 ## [1.47.0] - 2024-08-30
 ### Changed
