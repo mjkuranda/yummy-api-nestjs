@@ -57,7 +57,7 @@ export class MealService {
 
         const title = createMealDto.title;
         const ingredientCount = createMealDto.ingredients.length;
-        const imageUrlDescription = createMealDto
+        const imageUrlDescription = createMealDto.imageUrl
             ? `"${createMealDto.imageUrl}" image url`
             : 'no image';
         const context = 'MealService/create';

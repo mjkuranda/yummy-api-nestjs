@@ -51,7 +51,7 @@ export class IngredientService {
         }
     }
 
-    async wrapIngredientsWithImages(ingredients: MealIngredientWithoutImage[]): Promise<IngredientData[]> {
+    async wrapIngredientsWithImages(ingredients: MealIngredientWithoutImage[]): Promise<MealIngredient[]> {
         // 1. Fetch all from ingredients (to get a potential image)
         const ingredientsFromJson: IngredientData[] = ingredients.map(ingredient => {
             return {
@@ -90,7 +90,12 @@ export class IngredientService {
         }
 
         // 6. Modify initial request by updated and return (ingredients.map)
-        return ingredients.map(ingredient => this.ingredients.get(ingredient.name));
+        return ingredients.map(ingredient => ({
+            name: ingredient.name,
+            amount: ingredient.amount,
+            unit: ingredient.unit,
+            imageUrl: this.ingredients.get(ingredient.name).imageUrl
+        }));
     }
 
     applyWithImages(data: MealEditDto<MealIngredientWithoutImage>): MealEditDto<MealIngredient> {
