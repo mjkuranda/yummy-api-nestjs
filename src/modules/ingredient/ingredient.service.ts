@@ -99,6 +99,10 @@ export class IngredientService {
     }
 
     applyWithImages(data: MealEditDto<MealIngredientWithoutImage>): MealEditDto<MealIngredient> {
+        if (!data.ingredients || data.ingredients.length === 0) {
+            return data as unknown as MealEditDto<MealIngredient>;
+        }
+
         return {
             ...data,
             ingredients: data.ingredients.map(ingredient => ({

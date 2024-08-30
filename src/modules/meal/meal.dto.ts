@@ -29,6 +29,9 @@ export class CreateMealDto<Ingredient> {
     @IsNotEmpty({ message: 'Meal should have a provider name' })
     readonly provider: MealProvider;
 
+    @IsNotEmpty({ message: 'Meal should have a time preparation defined' })
+    readonly readyInMinutes: number;
+
     @IsNotEmpty({ message: 'Meal should have a recipe' })
     readonly recipeSections: MealRecipeSections;
 
@@ -62,6 +65,7 @@ export class MealEditDto<Ingredient> {
     readonly description?: string;
     readonly type?: MealType;
     readonly ingredients?: Ingredient[];
+    readonly readyInMinutes?: number;
     readonly recipeSections?: MealRecipeSections;
     readonly imageUrl?: string;
 }

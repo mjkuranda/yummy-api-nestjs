@@ -58,6 +58,10 @@ export const MealSchema = new mongoose.Schema({
     softEdited: {
         type: Object
     },
+    readyInMinutes: {
+        type: Number,
+        required: true
+    },
     title: {
         type: String,
         required: true
