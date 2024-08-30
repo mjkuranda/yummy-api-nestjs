@@ -8321,7 +8321,8 @@
         "pl": "ear corn"
     },
     "honeydew melon": {
-        "id": "9184",
+        "id": 9184,
+        "imageUrl": "honeydew.png",
         "en": "honeydew melon",
         "pl": "honeydew melon"
     },
@@ -19016,7 +19017,8 @@
         "pl": "pigwy"
     },
     "lavender honey": {
-        "id": "10019296",
+        "id": 10019296,
+        "imageUrl": "lavender-honey.jpg",
         "en": "lavender honey",
         "pl": "miód lawendowy"
     },

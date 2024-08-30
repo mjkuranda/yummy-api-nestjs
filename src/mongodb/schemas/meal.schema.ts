@@ -1,16 +1,17 @@
 import * as mongoose from 'mongoose';
 
 const IngredientDataSchema = new mongoose.Schema({
-    en: {
+    name: {
         type: String,
         required: true
     },
-    pl: {
-        type: String,
+    amount: {
+        type: Number,
         required: true
     },
-    id: {
-        type: Number
+    unit: {
+        type: String,
+        required: true
     },
     imageUrl: {
         type: String
