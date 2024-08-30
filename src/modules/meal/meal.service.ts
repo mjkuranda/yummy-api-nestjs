@@ -28,6 +28,7 @@ import { MealCommentRepository } from '../../mongodb/repositories/meal-comment.r
 import { MealCommentDocument } from '../../mongodb/documents/meal-comment.document';
 import { MealRatingRepository } from '../../mongodb/repositories/meal-rating.repository';
 import { MealRatingDocument } from '../../mongodb/documents/meal-rating.document';
+import { sortDescendingRelevance } from '../../common/helpers';
 
 @Injectable()
 export class MealService {
@@ -332,13 +333,11 @@ export class MealService {
         }
 
         const datasets: Array<RatedMeal[] | null> = await Promise.all([
+            this.mealRepository.getMeals(filteredIngredients),
             this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', filteredIngredients, type)
         ]);
 
-        const meals = datasets
-            .filter((set: RatedMeal[]): boolean => Boolean(set.length))
-            .flat()
-            .sort((meal1: RatedMeal, meal2: RatedMeal): number => meal2.relevance - meal1.relevance);
+        const meals: RatedMeal[] = datasets.flat().sort(sortDescendingRelevance);
         await this.redisService.saveMealResult('merged', query, meals, 12 * HOUR);
         this.loggerService.info(context, `Cached result containing ${meals.length} meals, defined for query "${query}".`);
 
