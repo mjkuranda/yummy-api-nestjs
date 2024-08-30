@@ -200,7 +200,12 @@ describe('MealService', () => {
             const editedMealDto = {
                 description: 'Lorem ipsum 2',
                 author: 'X',
-                ingredients: ['x']
+                ingredients: [{
+                    imageUrl: 'https://site.com/path',
+                    name: 'X',
+                    amount: 5,
+                    unit: 'pieces'
+                }]
             };
             const mockEditedMeal = {
                 mockMeal,

@@ -24,11 +24,13 @@ import { IngredientName, MealType } from '../../common/enums';
 import { MealQueryValidationPipe } from '../../pipes/meal-query-validation.pipe';
 import { TranslationService } from '../translation/translation.service';
 import { Language, TransformedBody } from '../../common/types';
+import { IngredientService } from '../ingredient/ingredient.service';
 
 @Controller('meals')
 export class MealController {
     constructor(private readonly mealService: MealService,
-                private readonly translationService: TranslationService) {}
+                private readonly translationService: TranslationService,
+                private readonly ingredientService: IngredientService) {}
 
     @Get()
     @HttpCode(200)
@@ -77,8 +79,9 @@ export class MealController {
     @UseGuards(AuthenticationGuard)
     public async updateMeal(@Param('id') id: string, @Body() body: EditMealBodyDto) {
         const { data } = body;
+        const dataWithImages = this.ingredientService.applyWithImages(data);
 
-        return await this.mealService.edit(id, data);
+        return await this.mealService.edit(id, dataWithImages);
     }
 
     @Post('/:id/create')

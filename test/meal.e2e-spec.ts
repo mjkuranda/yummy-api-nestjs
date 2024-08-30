@@ -76,7 +76,8 @@ describe('UserController (e2e)', () => {
     };
     const ingredientServiceProvider = {
         wrapIngredientsWithImages: jest.fn(),
-        filterIngredients: jest.fn()
+        filterIngredients: jest.fn(),
+        applyWithImages: jest.fn()
     };
 
     beforeEach(async () => {
