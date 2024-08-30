@@ -355,14 +355,13 @@ export class MealService {
             this.mealRepository.getMeals(ingredientsList),
             this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ingredientsList)
         ]);
-        const meals: RatedMeal[] = datasets.flat();
+        const meals: RatedMeal[] = datasets.flat().sort(sortDescendingRelevance);
         const proposedMeals: ProposedMeal[] = proceedRatedMealsToProposedMeals(meals, mergedSearchQueries);
 
         this.loggerService.info('MealService/getMealProposal', `Generated ${proposedMeals.length} meal proposal${proposedMeals.length > 1 ? 's' : ''}.`);
 
         return proposedMeals
             .filter(meal => meal.recommendationPoints > 0)
-            .sort((a, b) => b.recommendationPoints - a.recommendationPoints)
             .filter((meal, idx) => idx < 10);
     }
 
