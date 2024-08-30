@@ -350,8 +350,10 @@ export class MealService {
 
         const searchQueries: SearchQueryDocument[] = await this.searchQueryRepository.findAll({ date: { $gte: dateFilter }, login: user.login });
         const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(searchQueries);
+        const ingredientsList = Object.keys(mergedSearchQueries);
         const datasets: Array<RatedMeal[] | null> = await Promise.all([
-            this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', Object.keys(mergedSearchQueries))
+            this.mealRepository.getMeals(ingredientsList),
+            this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ingredientsList)
         ]);
         const meals: RatedMeal[] = datasets.flat();
         const proposedMeals: ProposedMeal[] = proceedRatedMealsToProposedMeals(meals, mergedSearchQueries);
@@ -360,7 +362,8 @@ export class MealService {
 
         return proposedMeals
             .filter(meal => meal.recommendationPoints > 0)
-            .sort((a, b) => b.recommendationPoints - a.recommendationPoints);
+            .sort((a, b) => b.recommendationPoints - a.recommendationPoints)
+            .filter((meal, idx) => idx < 10);
     }
 
     async addMealProposal(user: UserAccessTokenPayload, ingredients: string[]) {
