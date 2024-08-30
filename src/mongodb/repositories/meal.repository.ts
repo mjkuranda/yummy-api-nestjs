@@ -18,11 +18,11 @@ export class MealRepository extends AbstractRepository<MealDocument, CreateMealW
         const meals = await this.findAll({ 'ingredients.name': { $in: providedIngredients }});
 
         return meals.map(meal => {
-            const { id, title, imageUrl, type, ingredients, provider } = meal;
+            const { id, title, imageUrl, type, ingredients } = meal;
             const mealIngredients = ingredients.map(ingredient => ingredient.name);
             const relevance = calculateRelevance(providedIngredients, mealIngredients);
 
-            return { id, title, imgUrl: imageUrl, type, ingredients: mealIngredients, provider, relevance };
+            return { id, title, imgUrl: imageUrl, type, ingredients: mealIngredients, provider: 'yummy', relevance };
         });
     }
 }
