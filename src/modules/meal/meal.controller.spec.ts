@@ -6,11 +6,13 @@ import { Language } from '../../common/types';
 import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
 import { RedisService } from '../redis/redis.service';
 import { LoggerService } from '../logger/logger.service';
+import { IngredientService } from '../ingredient/ingredient.service';
 
 describe('MealController', () => {
     let controller: MealController;
     let mealService: MealService;
     let translationService: TranslationService;
+    let ingredientService: IngredientService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -29,6 +31,12 @@ describe('MealController', () => {
                         translateIngredients: jest.fn(),
                         translateRecipe: jest.fn()
                     },
+                },
+                {
+                    provide: IngredientService,
+                    useValue: {
+                        applyWithImages: jest.fn()
+                    }
                 },
                 {
                     provide: RedisService,

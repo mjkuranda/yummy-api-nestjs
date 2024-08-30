@@ -4,13 +4,14 @@ import * as fs from 'fs';
 import {
     IngredientData,
     IngredientDataset,
-    IngredientType,
+    IngredientType, MealIngredient,
     MealIngredientWithoutImage
 } from './ingredient.types';
 import { ContextString } from '../../common/types';
 import { AxiosService } from '../../services/axios.service';
 import { SpoonacularIngredient } from '../api/spoonacular/spoonacular.api.types';
 import { AxiosResponse } from 'axios';
+import { MealEditDto } from '../meal/meal.dto';
 
 @Injectable()
 export class IngredientService {
@@ -90,5 +91,15 @@ export class IngredientService {
 
         // 6. Modify initial request by updated and return (ingredients.map)
         return ingredients.map(ingredient => this.ingredients.get(ingredient.name));
+    }
+
+    applyWithImages(data: MealEditDto<MealIngredientWithoutImage>): MealEditDto<MealIngredient> {
+        return {
+            ...data,
+            ingredients: data.ingredients.map(ingredient => ({
+                ...ingredient,
+                imageUrl: this.ingredients.get(ingredient.name).imageUrl
+            }))
+        };
     }
 }

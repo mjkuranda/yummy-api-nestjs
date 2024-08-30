@@ -19,7 +19,7 @@ import {
 } from './meal.utils';
 import { HOUR } from '../../constants/times.constant';
 import { IngredientService } from '../ingredient/ingredient.service';
-import { IngredientType, MealIngredientWithoutImage } from '../ingredient/ingredient.types';
+import { IngredientType, MealIngredient, MealIngredientWithoutImage } from '../ingredient/ingredient.types';
 import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
 import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
 import { SearchQueryDocument } from '../../mongodb/documents/search-query.document';
@@ -101,7 +101,7 @@ export class MealService {
         return addedMeal;
     }
 
-    async edit(id: string, mealEditDto: MealEditDto): Promise<MealDocument> {
+    async edit(id: string, mealEditDto: MealEditDto<MealIngredient>): Promise<MealDocument> {
         const context = 'MealService/edit';
 
         if (!isValidObjectId(id)) {

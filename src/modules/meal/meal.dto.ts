@@ -4,6 +4,7 @@ import { UserDto } from '../user/user.dto';
 import { MealProvider, MealRecipeSections } from './meal.types';
 import { Language } from '../../common/types';
 import { MealIngredientWithoutImage } from '../ingredient/ingredient.types';
+import { MealType } from '../../common/enums';
 
 export class CreateMealDto<Ingredient> {
     @IsNotEmpty({ message: 'Meal should have a description' })
@@ -56,16 +57,19 @@ export class CreateMealBodyDto {
     readonly authenticatedUser: UserDto;
 }
 
-export class MealEditDto {
+export class MealEditDto<Ingredient> {
+    readonly title?: string;
     readonly description?: string;
+    readonly type?: MealType;
+    readonly ingredients?: Ingredient[];
+    readonly recipeSections?: MealRecipeSections;
     readonly imageUrl?: string;
-    readonly ingredients?: string[];
 }
 
 export class EditMealBodyDto {
     @Type(() => MealEditDto)
     @ValidateNested({ each: true })
-    readonly data: MealEditDto;
+    readonly data: MealEditDto<MealIngredientWithoutImage>;
 
     @Type(() => UserDto)
     @ValidateNested({ each: true })

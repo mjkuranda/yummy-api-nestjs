@@ -89,16 +89,30 @@ Technologies:
 }
 ```
 * `PUT /meals/:id` - updates (edits) a meal and marks as soft edited. Provide following data, where each property is optional:
+
 ```json
 {
-  "description": "New description",
-  "ingredients": [
-    "ingredient-id-2",
-    "ingredient-id-x"
-  ],
-  "imgUrl": "https://host.com/new-img-url"
+    "title": "New meal title",
+    "description": "New description",
+    "type": "main course",
+    "ingredients": [
+        {
+            "id": "ingredient-id-2",
+            "name": "x2",
+            "amount": 5,
+            "unit": "cup"
+        },
+        {
+            "id": "ingredient-id-x",
+            "name": "x1",
+            "amount": 1.5,
+            "unit": "pieces"
+        }
+    ],
+    "imgUrl": "https://host.com/new-img-url"
 }
 ```
+
 * `DELETE /meals/:id` - deletes a meal. It marks meal as soft deleted.
 * `POST /meals/:id/create` - confirm adding a new meal. You need to be logged-in and has `canAdd` capability (or be an admin).
 * `POST /meals/:id/edit` - confirm editing a meal. You need to be logged-in and has `canEdit` capability (or be an admin).
