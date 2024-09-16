@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `missingCount` property for `RatedMeal`.
 
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): Unit and E2E tests.
+
 ## [1.49.0] - 2024-08-31
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `readyInMinutes` property for meals from MongoDB.

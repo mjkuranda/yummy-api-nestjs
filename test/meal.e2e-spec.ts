@@ -51,7 +51,8 @@ describe('UserController (e2e)', () => {
         updateOne: () => {},
         findAll: () => {},
         findOne: () => {},
-        findById: () => {}
+        findById: () => {},
+        getMeals: jest.fn()
     };
     const mockMealRatingRepositoryProvider = {
         ...mockMealRepositoryProvider,
@@ -673,6 +674,7 @@ describe('UserController (e2e)', () => {
                 { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5 }
             ];
 
+            jest.spyOn(mealRepository, 'getMeals').mockResolvedValue([]);
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
             jest.spyOn(searchQueryRepository, 'findAll').mockResolvedValueOnce(mockSearchQueries);
             jest.spyOn(spoonacularApiService, 'getMeals').mockResolvedValueOnce(mockMeals);
