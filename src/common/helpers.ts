@@ -17,6 +17,16 @@ export function calculateRelevance(providedIngredients: string[], mealIngredient
     return toFixNumber(matchingIngredients / mealIngredients.length);
 }
 
+export function calculateMissing(providedIngredients: string[], mealIngredients: string[]): number {
+    if (!mealIngredients.length) {
+        return 0;
+    }
+
+    const matchingIngredients = mealIngredients.reduce((acc, curr) => acc + (providedIngredients.includes(curr) ? 1 : 0), 0);
+
+    return mealIngredients.length - matchingIngredients;
+}
+
 export function calculateRelevanceUsingLength(usedIngredients: SpoonacularIngredient[], missedIngredients: SpoonacularIngredient[]): number {
     const relevance = usedIngredients.length / (usedIngredients.length + missedIngredients.length);
 

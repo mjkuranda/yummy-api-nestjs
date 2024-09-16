@@ -54,6 +54,7 @@ describe('TestApiService', () => {
             {
                 id: 'some-id',
                 ingredients: [],
+                missingCount: 1,
                 relevance: 50,
                 title: 'some-meal',
                 provider: 'yummy',

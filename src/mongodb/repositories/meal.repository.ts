@@ -6,7 +6,7 @@ import { Model } from 'mongoose';
 import { CreateMealWithAuthorDto } from '../../modules/meal/meal.dto';
 import { MealIngredient } from '../../modules/ingredient/ingredient.types';
 import { RatedMeal } from '../../modules/meal/meal.types';
-import { calculateRelevance } from '../../common/helpers';
+import { calculateMissing, calculateRelevance } from '../../common/helpers';
 
 export class MealRepository extends AbstractRepository<MealDocument, CreateMealWithAuthorDto<MealIngredient> | { softAdded: boolean }> {
 
@@ -21,8 +21,9 @@ export class MealRepository extends AbstractRepository<MealDocument, CreateMealW
             const { id, title, imageUrl, type, ingredients } = meal;
             const mealIngredients = ingredients.map(ingredient => ingredient.name);
             const relevance = calculateRelevance(providedIngredients, mealIngredients);
+            const missingCount = calculateMissing(providedIngredients, mealIngredients);
 
-            return { id, title, imgUrl: imageUrl, type, ingredients: mealIngredients, provider: 'yummy', relevance };
+            return { id, title, imgUrl: imageUrl, type, ingredients: mealIngredients, provider: 'yummy', relevance, missingCount };
         });
     }
 }

@@ -41,7 +41,8 @@ describe('MealService', () => {
         updateOne: jest.fn(),
         replaceOne: jest.fn(),
         deleteOne: jest.fn(),
-        calculateAverage: jest.fn()
+        calculateAverage: jest.fn(),
+        getMeals: jest.fn()
     };
 
     const mockMealRatingRepository = {
@@ -331,6 +332,7 @@ describe('MealService', () => {
                 {
                     id: 'some-id',
                     ingredients: [],
+                    missingCount: 1,
                     relevance: 50,
                     title: 'some-meal',
                     provider: 'yummy',
@@ -353,6 +355,7 @@ describe('MealService', () => {
                 {
                     id: 'some-id',
                     ingredients: [],
+                    missingCount: 1,
                     relevance: 50,
                     title: 'some-meal',
                     provider: 'yummy',
@@ -361,6 +364,7 @@ describe('MealService', () => {
             ];
 
             jest.spyOn(redisService, 'getMealResult').mockResolvedValue(cachedResult);
+            jest.spyOn(mealRepository, 'getMeals').mockResolvedValue([]);
             jest.spyOn(spoonacularApiService, 'getMeals').mockResolvedValue(mockResult);
             jest.spyOn(redisService, 'saveMealResult').mockResolvedValue();
 
@@ -388,7 +392,12 @@ describe('MealService', () => {
         });
 
         it('should return a meal when found its in local database and cache it', async () => {
-            const mockMeal: any = {};
+            const mockMeal: any = {
+                id: 'xyz',
+                ingredients: [
+                    { name: 'x', amount: 1, unit: 'y' }
+                ]
+            };
             const resultMeal = proceedMealDocumentToMealDetails(mockMeal);
             const mockId = '5cabe64dcf0d4447fa60f5e2';
 
@@ -402,7 +411,12 @@ describe('MealService', () => {
         });
 
         it('should return a meal when found its in an external API and cache it', async () => {
-            const mockMeal: any = {};
+            const mockMeal: any = {
+                id: 'xyz',
+                ingredients: [
+                    { name: 'x', amount: 1, unit: 'y' }
+                ]
+            };
             const resultMeal = proceedMealDocumentToMealDetails(mockMeal);
             const mockId = '5cabe64dcf0d4447fa60f5e2';
 
