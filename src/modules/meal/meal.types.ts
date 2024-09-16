@@ -7,6 +7,7 @@ export type RatedMeal = {
     id: string,
     imgUrl?: string,
     ingredients: IngredientType[],
+    missingCount: number,
     provider: MealProvider,
     title: string,
     relevance: number,
