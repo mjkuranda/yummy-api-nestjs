@@ -8,6 +8,15 @@ import { MealRecipeSection, MealRecipeSections } from '../meal/meal.types';
 @Injectable()
 export class TranslationService {
 
+    async translateDescription(description: string, targetLanguage?: Language): Promise<string> {
+        // NOTE: Do not translate when your language is English
+        if (['en', 'en-US'].includes(targetLanguage)) {
+            return '';
+        }
+
+        return await this.translate(description, targetLanguage);
+    }
+
     async translateRecipe(recipeSections: MealRecipeSections, targetLanguage?: Language): Promise<MealRecipeSections> {
         // NOTE: Do not translate when your language is English
         if (['en', 'en-US'].includes(targetLanguage)) {

@@ -28,6 +28,7 @@ describe('MealController', () => {
                 {
                     provide: TranslationService,
                     useValue: {
+                        translateDescription: jest.fn(),
                         translateIngredients: jest.fn(),
                         translateRecipe: jest.fn()
                     },
@@ -75,12 +76,14 @@ describe('MealController', () => {
         it('should return detailed meal with translated ingredients', async () => {
             const id = '123';
             const lang: Language = 'en';
-            const meal = { ingredients: ['ingredient1', 'ingredient2'], recipeSections: [] } as any;
+            const meal = { description: 'description', ingredients: ['ingredient1', 'ingredient2'], recipeSections: [] } as any;
+            const translatedDescription = 'translated description' as string;
             const translatedIngredients = ['translated1', 'translated2'] as any;
             const translatedRecipe = ['translated1', 'translated2'] as any;
-            const expectedResult = { meal, ingredients: translatedIngredients, recipe: translatedRecipe };
+            const expectedResult = { meal, description: translatedDescription, ingredients: translatedIngredients, recipe: translatedRecipe };
 
             jest.spyOn(mealService, 'getMealDetails').mockResolvedValue(meal);
+            jest.spyOn(translationService, 'translateDescription').mockResolvedValue(translatedDescription);
             jest.spyOn(translationService, 'translateIngredients').mockResolvedValue(translatedIngredients);
             jest.spyOn(translationService, 'translateRecipe').mockResolvedValue(translatedRecipe);
 
@@ -88,6 +91,7 @@ describe('MealController', () => {
 
             expect(result).toEqual(expectedResult);
             expect(mealService.getMealDetails).toHaveBeenCalledWith(id);
+            expect(translationService.translateDescription).toHaveBeenCalledWith(meal.description, lang);
             expect(translationService.translateIngredients).toHaveBeenCalledWith(meal.ingredients, lang);
             expect(translationService.translateRecipe).toHaveBeenCalledWith(meal.recipeSections, lang);
         });
