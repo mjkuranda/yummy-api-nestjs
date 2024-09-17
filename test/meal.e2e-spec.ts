@@ -164,6 +164,7 @@ describe('UserController (e2e)', () => {
                     provider: 'yummy',
                     type: MealType.ANY
                 },
+                description: 'some description',
                 ingredients: [],
                 recipe: []
             };

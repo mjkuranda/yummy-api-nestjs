@@ -44,6 +44,7 @@ export type DetailedMeal = {
 
 export interface DetailedMealWithTranslations {
     meal: DetailedMeal;
+    description: string;
     ingredients: TranslatedIngredient[];
     recipe: MealRecipeSections;
 }

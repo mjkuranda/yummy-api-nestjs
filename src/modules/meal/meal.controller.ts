@@ -52,10 +52,11 @@ export class MealController {
     @HttpCode(200)
     public async getMealDetails(@Param('id') id: string, @Headers('accept-language') lang: Language): Promise<DetailedMealWithTranslations> {
         const meal = await this.mealService.getMealDetails(id);
+        const description = await this.translationService.translateDescription(meal.description, lang);
         const ingredients = await this.translationService.translateIngredients(meal.ingredients, lang);
         const recipe = await this.translationService.translateRecipe(meal.recipeSections, lang);
 
-        return { meal, ingredients, recipe };
+        return { meal, description, ingredients, recipe };
     }
 
     @Post('/create')
