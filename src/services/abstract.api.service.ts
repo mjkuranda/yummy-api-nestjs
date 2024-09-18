@@ -23,7 +23,7 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
 
     abstract getName(): ApiName;
 
-    abstract proceedDataToMeals(data: GenericMealStruct[]): RatedMeal[];
+    abstract proceedDataToMeals(data: GenericMealStruct[], providedIngredients?: IngredientType[]): RatedMeal[];
 
     abstract proceedDataToMealDetails(data: GenericMealDetailsStruct, instructionData: MealInstructionStruct): DetailedMeal;
 
@@ -53,7 +53,7 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
                 return [];
             }
 
-            const meals: RatedMeal[] = this.proceedDataToMeals(result.data);
+            const meals: RatedMeal[] = this.proceedDataToMeals(result.data, ingredients);
             await this.redisService.saveMealResult(this.getName(), query, meals);
             this.loggerService.info(context, `Received ${meals.length} meals. Query "${query}" has been cached from "${this.getName()}" API.`);
 

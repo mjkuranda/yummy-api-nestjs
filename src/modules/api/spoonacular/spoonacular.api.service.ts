@@ -10,7 +10,7 @@ import {
 } from './spoonacular.api.types';
 import { IngredientType, MealIngredient } from '../../ingredient/ingredient.types';
 import { MealType } from '../../../common/enums';
-import { calculateRelevance, calculateRelevanceUsingLength } from '../../../common/helpers';
+import { calculateCheckingAgain } from '../../../common/helpers';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularRecipeSections> {
@@ -36,15 +36,15 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         }));
     }
 
-    proceedDataToMeals(data: SpoonacularRecipe[]): RatedMeal[] {
+    proceedDataToMeals(data: SpoonacularRecipe[], providedIngredients?: IngredientType[]): RatedMeal[] {
         return data.map(recipe => {
-            const relevance = calculateRelevanceUsingLength(recipe.usedIngredients, recipe.missedIngredients);
+            const { relevance, missingCount } = calculateCheckingAgain(providedIngredients, recipe.usedIngredients, recipe.missedIngredients);
 
             return {
                 id: recipe.id.toString(),
                 imgUrl: recipe.image,
                 ingredients: [...this.proceedDataToIngredientList(recipe.usedIngredients), ...this.proceedDataToIngredientList(recipe.missedIngredients)],
-                missingCount: recipe.missedIngredients.length,
+                missingCount,
                 relevance,
                 title: recipe.title,
                 provider: 'spoonacular',

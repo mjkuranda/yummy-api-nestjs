@@ -33,6 +33,15 @@ export function calculateRelevanceUsingLength(usedIngredients: SpoonacularIngred
     return toFixNumber(relevance);
 }
 
+export function calculateCheckingAgain(providedIngredients: string[], usedIngredients: SpoonacularIngredient[], missedIngredients: SpoonacularIngredient[]): { relevance: number, missingCount: number } {
+    const mealIngredients = [...usedIngredients.map(ing => ing.name), ...missedIngredients.map(ing => ing.name)];
+
+    return {
+        relevance: calculateRelevance(providedIngredients, mealIngredients),
+        missingCount: calculateMissing(providedIngredients, mealIngredients)
+    };
+}
+
 export function sortDescendingRelevance(meal1: RatedMeal, meal2: RatedMeal): number {
     return meal2.relevance - meal1.relevance;
 }
