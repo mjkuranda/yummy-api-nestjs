@@ -72,7 +72,29 @@ describe('TranslationService', () => {
             ];
             const expectedResult: TranslatedIngredient[] = [
                 {
-                    text: 'mocked translation of 5 A M',
+                    text: 'mocked translation of 5 A of M',
+                    imageUrl: 'abc'
+                }
+            ];
+
+            const translatedIngredients = await translationService.translateIngredients(ingredients, 'pl');
+
+            expect(translate).toHaveBeenCalledTimes(ingredients.length);
+            expect(translatedIngredients).toStrictEqual(expectedResult);
+        });
+
+        it('should translate array of ingredients without unit', async () => {
+            const ingredients: MealIngredient[] = [
+                {
+                    amount: 5,
+                    unit: '',
+                    name: 'M',
+                    imageUrl: 'abc'
+                }
+            ];
+            const expectedResult: TranslatedIngredient[] = [
+                {
+                    text: 'mocked translation of 5 M',
                     imageUrl: 'abc'
                 }
             ];

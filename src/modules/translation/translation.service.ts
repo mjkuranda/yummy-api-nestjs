@@ -4,6 +4,7 @@ import { MealIngredient } from '../ingredient/ingredient.types';
 import { Language } from '../../common/types';
 import { TranslatedIngredient } from './translation.types';
 import { MealRecipeSection, MealRecipeSections } from '../meal/meal.types';
+import { compoundTextToTranslate, convertAmountToText } from '../../common/helpers';
 
 @Injectable()
 export class TranslationService {
@@ -49,7 +50,9 @@ export class TranslationService {
 
         const translatedIngredients = ingredients.map(async (ingredient) => {
             const { amount, unit, name, imageUrl } = ingredient;
-            const text = await this.translate(`${amount} ${unit} ${name}`, targetLanguage);
+            const textAmount = convertAmountToText(amount);
+            const compoundedText = compoundTextToTranslate(textAmount, unit, name);
+            const text = await this.translate(compoundedText, targetLanguage);
 
             return { text, imageUrl } as TranslatedIngredient;
         });

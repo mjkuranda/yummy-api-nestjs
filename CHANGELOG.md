@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.51.1] - 2024-09-18
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): Missing ingredient count and relevance index for Spoonacular API.
+- [Marek Kurańda](https://github.com/mjkuranda): Translations of ingredients, changing amount style as well to e.g. `1/4 cup ...`.
 
 ## [1.51.0] - 2024-09-17
 ### Added

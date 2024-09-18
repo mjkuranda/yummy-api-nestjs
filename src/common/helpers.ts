@@ -45,3 +45,39 @@ export function calculateCheckingAgain(providedIngredients: string[], usedIngred
 export function sortDescendingRelevance(meal1: RatedMeal, meal2: RatedMeal): number {
     return meal2.relevance - meal1.relevance;
 }
+
+export function convertAmountToText(amount: number): string {
+    if (amount === 0.33333334) {
+        return '1/3';
+    }
+
+    if (amount === 0.66666667) {
+        return '2/3';
+    }
+
+    if (amount === 0.5) {
+        return '1/2';
+    }
+
+    if (amount === 0.25) {
+        return '1/4';
+    }
+
+    if (amount === 0.5) {
+        return '2/4';
+    }
+
+    if (amount === 0.75) {
+        return '3/4';
+    }
+
+    return amount.toString();
+}
+
+export function compoundTextToTranslate(textAmount: string, unit: string, name: string): string {
+    if (unit === '') {
+        return `${textAmount} ${name}`;
+    }
+
+    return `${textAmount} ${unit} of ${name}`;
+}
