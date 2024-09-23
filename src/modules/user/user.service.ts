@@ -89,6 +89,8 @@ export class UserService {
 
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
+
+        this.loggerService.info('UserService/logout', `User ${login} has already logged out.`);
     }
 
     async refreshTokens(userPayload: UserAccessTokenPayload, accessToken: string, res: Response): Promise<void> {

@@ -20,7 +20,8 @@
         "pl": "cukier"
     },
     "water": {
-        "id": "14412",
+        "id": 14412,
+        "imageUrl": "water.png",
         "en": "water",
         "pl": "woda"
     },
@@ -90,7 +91,8 @@
         "pl": "sól i pieprz"
     },
     "egg": {
-        "id": "1123",
+        "id": 1123,
+        "imageUrl": "egg.png",
         "en": "egg",
         "pl": "jajko"
     },
@@ -2486,7 +2488,8 @@
         "pl": "ocet sherry"
     },
     "watermelon": {
-        "id": "9326",
+        "id": 9326,
+        "imageUrl": "watermelon.png",
         "en": "watermelon",
         "pl": "arbuz"
     },

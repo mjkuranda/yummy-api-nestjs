@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.51.2] - 2024-09-23
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Log about logging out the user.
+
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): Keeping information about user emails when user is created.
+- [Marek Kurańda](https://github.com/mjkuranda): Returning meals and meal details with `softAdded` property set to `true`.
+
 ## [1.51.1] - 2024-09-18
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): Missing ingredient count and relevance index for Spoonacular API.
