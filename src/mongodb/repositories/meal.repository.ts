@@ -15,7 +15,13 @@ export class MealRepository extends AbstractRepository<MealDocument, CreateMealW
     }
 
     async getMeals(providedIngredients: string[]): Promise<RatedMeal[]> {
-        const meals = await this.findAll({ 'ingredients.name': { $in: providedIngredients }});
+        const meals = await this.findAll({
+            'ingredients.name': { $in: providedIngredients },
+            $or: [
+                { softAdded: { $exists: false }},
+                { softAdded: false }
+            ]
+        });
 
         return meals.map(meal => {
             const { id, title, imageUrl, type, ingredients } = meal;

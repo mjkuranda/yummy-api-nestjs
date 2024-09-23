@@ -29,6 +29,7 @@ import { MealCommentDocument } from '../../mongodb/documents/meal-comment.docume
 import { MealRatingRepository } from '../../mongodb/repositories/meal-rating.repository';
 import { MealRatingDocument } from '../../mongodb/documents/meal-rating.document';
 import { sortDescendingRelevance } from '../../common/helpers';
+import { ForbiddenException } from '../../exceptions/forbidden-exception';
 
 @Injectable()
 export class MealService {
@@ -241,6 +242,10 @@ export class MealService {
             const mealDocument: MealDocument = await this.mealRepository.findById(id);
 
             if (mealDocument) {
+                if (mealDocument.softAdded) {
+                    throw new ForbiddenException(context, `Meal with "${id}" id was not confirmed by admin. Therefore, it is impossible to see its content.`);
+                }
+
                 const mealDetails: DetailedMeal = proceedMealDocumentToMealDetails(mealDocument);
                 await this.redisService.saveMealDetails(id, mealDetails);
                 this.loggerService.info(context, `Found in local database a meal with id "${id}" and cached.`);

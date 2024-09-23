@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): Keeping information about user emails when user is created.
+- [Marek Kurańda](https://github.com/mjkuranda): Returning meals and meal details with `softAdded` property set to `true`.
 
 ## [1.51.1] - 2024-09-18
 ### Fixed
