@@ -244,7 +244,7 @@ describe('UserService', () => {
             expect(result).toBeUndefined();
             expect(jwtManagerService.generateRefreshToken).not.toHaveBeenCalled();
             expect(redisService.setTokens).toHaveBeenCalledWith(mockAccessTokenPayload.login, mockNewAccessToken, null);
-            expect(mockResponse.cookie).toHaveBeenCalledWith('accessToken', mockNewAccessToken, { httpOnly: true, sameSite: 'none', secure: true });
+            expect(mockResponse.cookie).toHaveBeenCalledWith('accessToken', mockNewAccessToken, { httpOnly: true, sameSite: 'none', secure: false });
             expect(mockResponse.cookie).not.toHaveBeenCalledWith('refreshToken');
         });
 
@@ -292,8 +292,8 @@ describe('UserService', () => {
 
             expect(result).toBeUndefined();
             expect(redisService.setTokens).toHaveBeenCalledWith(mockAccessTokenPayload.login, mockNewAccessToken, mockNewRefreshToken);
-            expect(mockResponse.cookie).toHaveBeenCalledWith('accessToken', mockNewAccessToken, { httpOnly: true, sameSite: 'none', secure: true });
-            expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', mockNewRefreshToken, { httpOnly: true, sameSite: 'none', secure: true });
+            expect(mockResponse.cookie).toHaveBeenCalledWith('accessToken', mockNewAccessToken, { httpOnly: true, sameSite: 'none', secure: false });
+            expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', mockNewRefreshToken, { httpOnly: true, sameSite: 'none', secure: false });
         });
     });
 
