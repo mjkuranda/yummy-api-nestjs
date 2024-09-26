@@ -342,7 +342,7 @@ export class MealService {
             this.spoonacularApiService.getMeals(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', filteredIngredients, type)
         ]);
 
-        const meals: RatedMeal[] = datasets.flat().sort(sortDescendingRelevance);
+        const meals: RatedMeal[] = datasets.flat().filter(meal => meal.relevance > 0).sort(sortDescendingRelevance);
         await this.redisService.saveMealResult('merged', query, meals, 12 * HOUR);
         this.loggerService.info(context, `Cached result containing ${meals.length} meals, defined for query "${query}".`);
 
