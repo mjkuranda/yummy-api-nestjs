@@ -97,15 +97,15 @@ export function normalizeUnit(amount: number, unit: string): string {
 }
 
 export function inferMealType(mealTitle: string): MealType {
-    if (['Soup', 'soup'].includes(mealTitle)) {
+    if (mealTitle.toLowerCase().includes('soup')) {
         return MealType.SOUP;
     }
 
-    if (['Salad', 'salad'].includes(mealTitle)) {
+    if (mealTitle.toLowerCase().includes('salad')) {
         return MealType.SALAD;
     }
 
-    if (['Main Dish', 'main dish'].includes(mealTitle)) {
+    if (mealTitle.toLowerCase().includes('main dish')) {
         return MealType.MAIN_COURSE;
     }
 
