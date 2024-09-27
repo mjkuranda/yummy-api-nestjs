@@ -9,9 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): Normalized ingredient name removing unit value within names.
 - [Marek Kurańda](https://github.com/mjkuranda): Normalized unit for value `gr` normalizing to `gram` or `grams` depending on `amount` value.
 - [Marek Kurańda](https://github.com/mjkuranda): Filtering for duplicated ingredients from `Spoonacular API`.
+- [Marek Kurańda](https://github.com/mjkuranda): Optimized translation algorithm of meal details, creating a whole function.
 
 ### Deprecated
 - [Marek Kurańda](https://github.com/mjkuranda): `google-translate-api-x` library.
+- [Marek Kurańda](https://github.com/mjkuranda): Functions for translating different parts of a meal.
 
 ## [1.51.4] - 2024-09-26
 ### Changed
