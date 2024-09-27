@@ -28,7 +28,22 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
     }
 
     proceedDataToMealIngredients(ingredients: SpoonacularIngredient[]): MealIngredient[] {
-        return ingredients.map(ingredient => ({
+        const ingredientSet = new Set<`${string}-${number}`>([]); // name and amount
+
+        const removeDuplicates = (ingredient: SpoonacularIngredient): boolean => {
+            const { name, amount } = ingredient;
+            const ingredientKey: `${string}-${number}` = `${name}-${amount}`;
+
+            if (ingredientSet.has(ingredientKey)) {
+                return false;
+            }
+
+            ingredientSet.add(ingredientKey);
+
+            return true;
+        };
+
+        return ingredients.filter(removeDuplicates).map(ingredient => ({
             amount: ingredient.amount,
             imageUrl: `https://img.spoonacular.com/ingredients_250x250/${ingredient.image}`,
             name: ingredient.name,

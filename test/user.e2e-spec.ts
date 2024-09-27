@@ -1,10 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { UserService } from '../src/modules/user/user.service';
 import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
 import { AppModule } from '../src/app.module';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { LoggerService } from '../src/modules/logger/logger.service';
 import { MailManagerService } from '../src/modules/mail-manager/mail-manager.service';
 import { UserRepository } from '../src/mongodb/repositories/user.repository';

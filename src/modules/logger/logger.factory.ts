@@ -1,5 +1,5 @@
 import { format, transports } from 'winston';
-import * as moment from 'moment/moment';
+import moment from 'moment/moment';
 
 export const LOGGER_PLAIN_FORMAT = format.combine(
     format(info => {

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { translate } from 'google-translate-api-x';
 import { MealIngredient } from '../ingredient/ingredient.types';
 import { Language } from '../../common/types';
 import { TranslatedIngredient } from './translation.types';
 import { MealRecipeSection, MealRecipeSections } from '../meal/meal.types';
-import { compoundTextToTranslate, convertAmountToText } from '../../common/helpers';
+import { compoundTextToTranslate, convertAmountToText, normalizeName, normalizeUnit } from '../../common/helpers';
+import translate from '@iamtraction/google-translate';
 
 @Injectable()
 export class TranslationService {
@@ -50,8 +50,10 @@ export class TranslationService {
 
         const translatedIngredients = ingredients.map(async (ingredient) => {
             const { amount, unit, name, imageUrl } = ingredient;
+            const normalizedName = normalizeName(name);
+            const normalizedUnit = normalizeUnit(amount, unit);
             const textAmount = convertAmountToText(amount);
-            const compoundedText = compoundTextToTranslate(textAmount, unit, name);
+            const compoundedText = compoundTextToTranslate(textAmount, normalizedUnit, normalizedName);
             const text = await this.translate(compoundedText, targetLanguage);
 
             return { text, imageUrl } as TranslatedIngredient;
@@ -62,7 +64,7 @@ export class TranslationService {
 
     async translate(text: string, targetLanguage: Language): Promise<string> {
         const language = this._getTargetLanguage(targetLanguage);
-        const result = await translate(text, { to: language });
+        const result = await translate(text, { from: 'en', to: language });
 
         return result.text;
     }

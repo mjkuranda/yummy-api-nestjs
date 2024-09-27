@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { FileTransportInstance } from 'winston/lib/winston/transports';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ContextString } from '../../common/types';
 import { loggerFileFactory } from './logger.factory';
 
