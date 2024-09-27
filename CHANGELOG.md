@@ -13,7 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 - [Marek Kurańda](https://github.com/mjkuranda): `google-translate-api-x` library.
-- [Marek Kurańda](https://github.com/mjkuranda): Functions for translating different parts of a meal.
 
 ## [1.51.4] - 2024-09-26
 ### Changed
