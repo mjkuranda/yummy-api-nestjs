@@ -1,19 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TranslationService } from './translation.service';
-import { translate } from 'google-translate-api-x';
-import { MealIngredient } from '../ingredient/ingredient.types';
-import { TranslatedIngredient } from './translation.types';
-import { MealRecipeSections } from '../meal/meal.types';
+import translate from '@iamtraction/google-translate';
+import { DetailedMeal } from '../meal/meal.types';
+import { MealType } from '../../common/enums';
 
-jest.mock('google-translate-api-x', () => ({
-    translate: jest.fn((text, opts) => {
+jest.mock('@iamtraction/google-translate', () =>
+    jest.fn((text, opts) => {
         return Promise.resolve({
             text: `mocked translation of ${text}`,
             ...(opts && opts.from && { from: opts.from }),
             ...(opts && opts.to && { to: opts.to }),
         });
-    }),
-}));
+    })
+);
 
 describe('TranslationService', () => {
     let translationService: TranslationService;
@@ -30,79 +29,83 @@ describe('TranslationService', () => {
         expect(translationService).toBeDefined();
     });
 
-    describe('translateRecipe', () => {
+    describe('translateMeal', () => {
         afterEach(() => {
             jest.clearAllMocks();
         });
 
-        it('should translate array of recipe sections', async () => {
-            const sections: MealRecipeSections = [
-                {
-                    name: 'X',
-                    steps: ['Y', 'Z']
-                }
-            ];
-            const expectedResult: MealRecipeSections = [
-                {
-                    name: 'X',
-                    steps: ['mocked translation of Y', 'mocked translation of Z']
-                }
-            ];
+        it('should translate a detailed meal', async () => {
+            const mockDetailedMeal: DetailedMeal = {
+                id: '123',
+                type: MealType.ANY,
+                title: 'Untitled',
+                description: 'Lorem ipsum dolor sit amet.',
+                language: 'en',
+                provider: 'spoonacular',
+                readyInMinutes: 75,
+                sourceOrAuthor: 'unknown',
+                ingredients: [
+                    {
+                        name: 'carrot',
+                        unit: 'sticks',
+                        amount: 3,
+                        imageUrl: '1.jpg'
+                    },
+                    {
+                        name: 'butter',
+                        unit: 'gr',
+                        amount: 200,
+                        imageUrl: '2.jpg'
+                    }
+                ],
+                recipeSections: [
+                    {
+                        name: '',
+                        steps: ['A', 'B', 'C']
+                    },
+                    {
+                        name: 'Final recipe',
+                        steps: ['Q', 'W', 'E', 'R', 'T', 'Y']
+                    },
+                    {
+                        name: 'Yet another one',
+                        steps: ['Z', 'X', 'C', 'V']
+                    }
+                ]
+            };
 
-            const translatedRecipeSections = await translationService.translateRecipe(sections, 'pl');
+            const { description, ingredients, recipe } = await translationService.translateMeal(mockDetailedMeal, 'pl');
 
-            expect(translate).toHaveBeenCalledTimes(sections[0].steps.length);
-            expect(translatedRecipeSections).toStrictEqual(expectedResult);
-        });
-    });
+            // NOTE: Only description contains `mocked translation of` regarding concatenating all string into one.
+            // NOTE: Hence, ingredients, steps and section names do not contain that fragment.
 
-    describe('translateIngredients', () => {
-        afterEach(() => {
-            jest.clearAllMocks();
-        });
-
-        it('should translate array of ingredients', async () => {
-            const ingredients: MealIngredient[] = [
-                {
-                    amount: 5,
-                    unit: 'A',
-                    name: 'M',
-                    imageUrl: 'abc'
-                }
-            ];
-            const expectedResult: TranslatedIngredient[] = [
-                {
-                    text: 'mocked translation of 5 A of M',
-                    imageUrl: 'abc'
-                }
-            ];
-
-            const translatedIngredients = await translationService.translateIngredients(ingredients, 'pl');
-
-            expect(translate).toHaveBeenCalledTimes(ingredients.length);
-            expect(translatedIngredients).toStrictEqual(expectedResult);
-        });
-
-        it('should translate array of ingredients without unit', async () => {
-            const ingredients: MealIngredient[] = [
-                {
-                    amount: 5,
-                    unit: '',
-                    name: 'M',
-                    imageUrl: 'abc'
-                }
-            ];
-            const expectedResult: TranslatedIngredient[] = [
-                {
-                    text: 'mocked translation of 5 M',
-                    imageUrl: 'abc'
-                }
-            ];
-
-            const translatedIngredients = await translationService.translateIngredients(ingredients, 'pl');
-
-            expect(translate).toHaveBeenCalledTimes(ingredients.length);
-            expect(translatedIngredients).toStrictEqual(expectedResult);
+            expect(description).toEqual(`mocked translation of ${mockDetailedMeal.description}`);
+            expect(ingredients.length).toEqual(mockDetailedMeal.ingredients.length);
+            expect(recipe.length).toEqual(mockDetailedMeal.recipeSections.length);
+            expect(translate).toHaveBeenCalledTimes(1);
+            expect(ingredients[0].text).toEqual('3 sticks of carrot');
+            expect(ingredients[0].imageUrl).toEqual('1.jpg');
+            expect(ingredients[1].text).toEqual('200 grams of butter');
+            expect(ingredients[1].imageUrl).toEqual('2.jpg');
+            expect(recipe[0].name).toEqual('');
+            expect(recipe[0].steps.length).toEqual(3);
+            expect(recipe[0].steps[0]).toEqual('A');
+            expect(recipe[0].steps[1]).toEqual('B');
+            expect(recipe[0].steps[2]).toEqual('C');
+            expect(recipe[1].name).toEqual('Final recipe');
+            expect(recipe[1].steps.length).toEqual(6);
+            expect(recipe[1].steps[0]).toEqual('Q');
+            expect(recipe[1].steps[1]).toEqual('W');
+            expect(recipe[1].steps[2]).toEqual('E');
+            expect(recipe[1].steps[3]).toEqual('R');
+            expect(recipe[1].steps[4]).toEqual('T');
+            expect(recipe[1].steps[5]).toEqual('Y');
+            expect(recipe[2].name).toEqual('Yet another one');
+            expect(recipe[2].steps.length).toEqual(4);
+            expect(recipe[2].steps[0]).toEqual('Z');
+            expect(recipe[2].steps[1]).toEqual('X');
+            expect(recipe[2].steps[2]).toEqual('C');
+            expect(recipe[2].steps[3]).toEqual('V');
         });
     });
 
@@ -117,7 +120,7 @@ describe('TranslationService', () => {
             const text = await translationService.translate(simpleText, 'pl');
 
             expect(translate).toHaveBeenCalledTimes(1);
-            expect(translate).toHaveBeenCalledWith('xyz', { to: 'pl' });
+            expect(translate).toHaveBeenCalledWith('xyz', { from: 'en', to: 'pl' });
             expect(text).toBe('mocked translation of xyz');
         });
 
@@ -128,7 +131,7 @@ describe('TranslationService', () => {
             await translationService.translate(simpleText, 'XXX' as any);
 
             expect(translate).toHaveBeenCalledTimes(1);
-            expect(translate).toHaveBeenCalledWith('xyz', { to: 'en' });
+            expect(translate).toHaveBeenCalledWith('xyz', { from: 'en', to: 'en' });
         });
     });
 });

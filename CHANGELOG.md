@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.52.0] - 2024-09-27
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `@iamtraction/google-translate` library as a primary translate library replacing `google-translate-api-x` library.
+- [Marek Kurańda](https://github.com/mjkuranda): Normalized ingredient name removing unit value within names.
+- [Marek Kurańda](https://github.com/mjkuranda): Normalized unit for value `gr` normalizing to `gram` or `grams` depending on `amount` value.
+- [Marek Kurańda](https://github.com/mjkuranda): Filtering for duplicated ingredients from `Spoonacular API`.
+- [Marek Kurańda](https://github.com/mjkuranda): Optimized translation algorithm of meal details, creating a whole function.
+
+### Deprecated
+- [Marek Kurańda](https://github.com/mjkuranda): `google-translate-api-x` library.
+
 ## [1.51.4] - 2024-09-26
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): All results having `relevance` equals to zero are excluded.

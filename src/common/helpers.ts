@@ -81,3 +81,16 @@ export function compoundTextToTranslate(textAmount: string, unit: string, name: 
 
     return `${textAmount} ${unit} of ${name}`;
 }
+
+// Removes e.g. `.4 oz. butter` leaving `butter` only
+export function normalizeName(name: string): string {
+    return name.replace(/\..*?\./, '').trim();
+}
+
+export function normalizeUnit(amount: number, unit: string): string {
+    if (unit === 'gr') {
+        return amount > 1 ? 'grams' : 'gram';
+    }
+
+    return unit;
+}

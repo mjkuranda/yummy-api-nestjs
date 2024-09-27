@@ -12,7 +12,6 @@ describe('MealController', () => {
     let controller: MealController;
     let mealService: MealService;
     let translationService: TranslationService;
-    let ingredientService: IngredientService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -28,9 +27,7 @@ describe('MealController', () => {
                 {
                     provide: TranslationService,
                     useValue: {
-                        translateDescription: jest.fn(),
-                        translateIngredients: jest.fn(),
-                        translateRecipe: jest.fn()
+                        translateMeal: jest.fn()
                     },
                 },
                 {
@@ -83,17 +80,13 @@ describe('MealController', () => {
             const expectedResult = { meal, description: translatedDescription, ingredients: translatedIngredients, recipe: translatedRecipe };
 
             jest.spyOn(mealService, 'getMealDetails').mockResolvedValue(meal);
-            jest.spyOn(translationService, 'translateDescription').mockResolvedValue(translatedDescription);
-            jest.spyOn(translationService, 'translateIngredients').mockResolvedValue(translatedIngredients);
-            jest.spyOn(translationService, 'translateRecipe').mockResolvedValue(translatedRecipe);
+            jest.spyOn(translationService, 'translateMeal').mockResolvedValue(expectedResult);
 
             const result = await controller.getMealDetails(id, lang);
 
             expect(result).toEqual(expectedResult);
             expect(mealService.getMealDetails).toHaveBeenCalledWith(id);
-            expect(translationService.translateDescription).toHaveBeenCalledWith(meal.description, lang);
-            expect(translationService.translateIngredients).toHaveBeenCalledWith(meal.ingredients, lang);
-            expect(translationService.translateRecipe).toHaveBeenCalledWith(meal.recipeSections, lang);
+            expect(translationService.translateMeal).toHaveBeenCalledWith(meal, lang);
         });
     });
 });

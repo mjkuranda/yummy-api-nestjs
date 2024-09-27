@@ -1,68 +1,91 @@
 import { Injectable } from '@nestjs/common';
-import { translate } from 'google-translate-api-x';
-import { MealIngredient } from '../ingredient/ingredient.types';
 import { Language } from '../../common/types';
-import { TranslatedIngredient } from './translation.types';
-import { MealRecipeSection, MealRecipeSections } from '../meal/meal.types';
-import { compoundTextToTranslate, convertAmountToText } from '../../common/helpers';
+import { TranslatedDetailedMeal, TranslatedIngredient } from './translation.types';
+import { DetailedMeal, MealRecipeSections } from '../meal/meal.types';
+import { compoundTextToTranslate, convertAmountToText, normalizeName, normalizeUnit } from '../../common/helpers';
+import translate from '@iamtraction/google-translate';
 
 @Injectable()
 export class TranslationService {
 
-    async translateDescription(description: string, targetLanguage?: Language): Promise<string> {
+    async translateMeal(meal: DetailedMeal, targetLanguage?: Language): Promise<TranslatedDetailedMeal> {
         // NOTE: Do not translate when your language is English
         if (['en', 'en-US'].includes(targetLanguage)) {
-            return '';
+            return {
+                description: '',
+                ingredients: [],
+                recipe: []
+            };
         }
 
-        return await this.translate(description, targetLanguage);
-    }
+        const { description, ingredients, recipeSections } = meal;
+        const recipeNewSectionIndexes: number[] = recipeSections.reduce((acc, curr, idx) => {
+            if (acc.length === 0) {
+                return [0];
+            }
 
-    async translateRecipe(recipeSections: MealRecipeSections, targetLanguage?: Language): Promise<MealRecipeSections> {
-        // NOTE: Do not translate when your language is English
-        if (['en', 'en-US'].includes(targetLanguage)) {
-            return [];
-        }
+            return [...acc, acc.at(-1) + recipeSections[idx - 1].steps.length + 1];
+        }, []);
+        const ingredientImages: string[] = [];
+        const startRecipeIdx: number = ingredients.length;
 
-        return await Promise.all(
-            recipeSections.map(
-                section => this._translateRecipeSection(section, targetLanguage)
-            )
-        );
-    }
+        const stringToTranslate: string = [
+            description,
+            ...ingredients.map(ingredient => {
+                const { amount, unit, name, imageUrl } = ingredient;
+                const normalizedName = normalizeName(name);
+                const normalizedUnit = normalizeUnit(amount, unit);
+                const textAmount = convertAmountToText(amount);
+                const compoundedText = compoundTextToTranslate(textAmount, normalizedUnit, normalizedName);
 
-    async _translateRecipeSection(recipeSection: MealRecipeSection, targetLanguage?: Language): Promise<MealRecipeSection> {
-        const { name, steps } = recipeSection;
+                ingredientImages.push(imageUrl);
 
-        const translatedSteps: string[] = await Promise.all(steps.map(step => this.translate(step, targetLanguage)));
+                return compoundedText;
+            }),
+            ...recipeSections.map(section => {
+                return [
+                    section.name,
+                    ...section.steps
+                ];
+            }).flat()
+        ].join('\n');
+
+        const translatedResult = await this.translate(stringToTranslate, targetLanguage);
+        const [ translatedDescription, ...translatedIngredientsAndRecipes] = translatedResult.split('\n');
+        const translatedIngredients = translatedIngredientsAndRecipes.slice(0, startRecipeIdx);
+        const translatedRecipes = translatedIngredientsAndRecipes.slice(startRecipeIdx);
+
+        const ingredientList: TranslatedIngredient[] = translatedIngredients.map((ingredient, idx) => ({ text: ingredient, imageUrl: ingredientImages[idx] }));
+        const translatedRecipeSections: MealRecipeSections = recipeNewSectionIndexes.map((index, idx, sections) => {
+            const nextSection = sections[idx + 1];
+
+            if (!nextSection) {
+                return {
+                    name: translatedRecipes[index],
+                    steps: translatedRecipes.slice(index + 1)
+                };
+            }
+
+            return {
+                name: translatedRecipes[index],
+                steps: translatedRecipes.slice(index + 1, nextSection)
+            };
+        });
 
         return {
-            name,
-            steps: translatedSteps
+            description: translatedDescription,
+            ingredients: ingredientList,
+            recipe: translatedRecipeSections
         };
     }
 
-    async translateIngredients(ingredients: MealIngredient[], targetLanguage?: Language): Promise<TranslatedIngredient[]> {
-        // NOTE: Do not translate when your language is English
-        if (['en', 'en-US'].includes(targetLanguage)) {
-            return [];
+    async translate(text: string, targetLanguage: Language): Promise<string> {
+        if (text === '') {
+            return '';
         }
 
-        const translatedIngredients = ingredients.map(async (ingredient) => {
-            const { amount, unit, name, imageUrl } = ingredient;
-            const textAmount = convertAmountToText(amount);
-            const compoundedText = compoundTextToTranslate(textAmount, unit, name);
-            const text = await this.translate(compoundedText, targetLanguage);
-
-            return { text, imageUrl } as TranslatedIngredient;
-        });
-
-        return await Promise.all(translatedIngredients);
-    }
-
-    async translate(text: string, targetLanguage: Language): Promise<string> {
         const language = this._getTargetLanguage(targetLanguage);
-        const result = await translate(text, { to: language });
+        const result = await translate(text, { from: 'en', to: language });
 
         return result.text;
     }
