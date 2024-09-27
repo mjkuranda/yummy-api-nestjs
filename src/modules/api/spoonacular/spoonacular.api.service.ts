@@ -9,8 +9,7 @@ import {
     SpoonacularRecipeSections
 } from './spoonacular.api.types';
 import { IngredientType, MealIngredient } from '../../ingredient/ingredient.types';
-import { MealType } from '../../../common/enums';
-import { calculateCheckingAgain } from '../../../common/helpers';
+import { calculateCheckingAgain, inferMealType } from '../../../common/helpers';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularRecipeSections> {
@@ -63,7 +62,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 relevance,
                 title: recipe.title,
                 provider: 'spoonacular',
-                type: MealType.ANY
+                type: inferMealType(recipe.title)
             };
         });
     }
@@ -96,7 +95,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 name: section.name,
                 steps: section.steps.map(step => step.step)
             })),
-            type: MealType.ANY
+            type: inferMealType(title)
         };
     }
 }

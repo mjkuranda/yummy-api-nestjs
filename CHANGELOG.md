@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.53.0] - 2024-09-27
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): When any meal comes from `Spoonacular`, then server tries to infer its type basing on meal title.
+
 ## [1.52.0] - 2024-09-27
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `@iamtraction/google-translate` library as a primary translate library replacing `google-translate-api-x` library.

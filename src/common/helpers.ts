@@ -1,5 +1,6 @@
 import { SpoonacularIngredient } from '../modules/api/spoonacular/spoonacular.api.types';
 import { RatedMeal } from '../modules/meal/meal.types';
+import { MealType } from './enums';
 
 export function toFixNumber(relevance: number): number {
     const fixed = relevance.toFixed(2);
@@ -93,4 +94,20 @@ export function normalizeUnit(amount: number, unit: string): string {
     }
 
     return unit;
+}
+
+export function inferMealType(mealTitle: string): MealType {
+    if (['Soup', 'soup'].includes(mealTitle)) {
+        return MealType.SOUP;
+    }
+
+    if (['Salad', 'salad'].includes(mealTitle)) {
+        return MealType.SALAD;
+    }
+
+    if (['Main Dish', 'main dish'].includes(mealTitle)) {
+        return MealType.MAIN_COURSE;
+    }
+
+    return MealType.ANY;
 }

@@ -1,7 +1,7 @@
 import { SpoonacularIngredient, SpoonacularRecipe } from './spoonacular.api.types';
 import { RatedMeal } from '../../meal/meal.types';
 import { IngredientType } from '../../ingredient/ingredient.types';
-import { MealType } from '../../../common/enums';
+import { inferMealType } from '../../../common/helpers';
 
 export function proceedRecipesToMeals(recipes: SpoonacularRecipe[]): RatedMeal[] {
     return recipes.map(recipe => {
@@ -13,7 +13,7 @@ export function proceedRecipesToMeals(recipes: SpoonacularRecipe[]): RatedMeal[]
             relevance: recipe.usedIngredients.length / (recipe.usedIngredients.length + recipe.missedIngredients.length),
             title: recipe.title,
             provider: 'spoonacular',
-            type: MealType.ANY
+            type: inferMealType(recipe.title)
         };
     });
 }
