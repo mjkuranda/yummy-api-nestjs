@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { LoggerService } from '../logger/logger.service';

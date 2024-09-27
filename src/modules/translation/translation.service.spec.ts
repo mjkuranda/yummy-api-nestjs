@@ -1,19 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TranslationService } from './translation.service';
-import { translate } from 'google-translate-api-x';
+import translate from '@iamtraction/google-translate';
 import { MealIngredient } from '../ingredient/ingredient.types';
-import { TranslatedIngredient } from './translation.types';
 import { MealRecipeSections } from '../meal/meal.types';
+import { TranslatedIngredient } from './translation.types';
 
-jest.mock('google-translate-api-x', () => ({
-    translate: jest.fn((text, opts) => {
+jest.mock('@iamtraction/google-translate', () =>
+    jest.fn((text, opts) => {
         return Promise.resolve({
             text: `mocked translation of ${text}`,
             ...(opts && opts.from && { from: opts.from }),
             ...(opts && opts.to && { to: opts.to }),
         });
-    }),
-}));
+    })
+);
 
 describe('TranslationService', () => {
     let translationService: TranslationService;
@@ -117,7 +117,7 @@ describe('TranslationService', () => {
             const text = await translationService.translate(simpleText, 'pl');
 
             expect(translate).toHaveBeenCalledTimes(1);
-            expect(translate).toHaveBeenCalledWith('xyz', { to: 'pl' });
+            expect(translate).toHaveBeenCalledWith('xyz', { from: 'en', to: 'pl' });
             expect(text).toBe('mocked translation of xyz');
         });
 
@@ -128,7 +128,7 @@ describe('TranslationService', () => {
             await translationService.translate(simpleText, 'XXX' as any);
 
             expect(translate).toHaveBeenCalledTimes(1);
-            expect(translate).toHaveBeenCalledWith('xyz', { to: 'en' });
+            expect(translate).toHaveBeenCalledWith('xyz', { from: 'en', to: 'en' });
         });
     });
 });
