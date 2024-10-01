@@ -4,7 +4,7 @@ import { UserDto } from '../user/user.dto';
 import { MealProvider, MealRecipeSections } from './meal.types';
 import { Language } from '../../common/types';
 import { MealIngredientWithoutImage } from '../ingredient/ingredient.types';
-import { MealType } from '../../common/enums';
+import { DishType, MealType } from '../../common/enums';
 
 export class CreateMealDto<Ingredient> {
     @IsNotEmpty({ message: 'Meal should have a description' })
@@ -39,9 +39,13 @@ export class CreateMealDto<Ingredient> {
     @Length(3, 16)
     readonly title: string;
 
-    @IsNotEmpty({ message: 'Meal should have a type' })
+    @IsNotEmpty({ message: 'Meal should have a meal type' })
     @Length(3, 16)
     readonly type: string;
+
+    @IsNotEmpty({ message: 'Meal should have a dish type' })
+    @Length(3, 16)
+    readonly dishType: string;
 }
 
 export class CreateMealWithAuthorDto<Ingredient> extends CreateMealDto<Ingredient> {
@@ -64,6 +68,7 @@ export class MealEditDto<Ingredient> {
     readonly title?: string;
     readonly description?: string;
     readonly type?: MealType;
+    readonly dishType?: DishType;
     readonly ingredients?: Ingredient[];
     readonly readyInMinutes?: number;
     readonly recipeSections?: MealRecipeSections;

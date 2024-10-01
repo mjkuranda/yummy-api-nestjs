@@ -2,11 +2,12 @@ import { Document } from 'mongoose';
 import { MealIngredient } from '../../modules/ingredient/ingredient.types';
 import { MealRecipeSections } from '../../modules/meal/meal.types';
 import { Language } from '../../common/types';
-import { MealType } from '../../common/enums';
+import { DishType, MealType } from '../../common/enums';
 
 export interface MealDocument extends Document {
   readonly author: string;
   readonly description: string;
+  readonly dishType: DishType;
   readonly imageUrl: string;
   readonly ingredients: MealIngredient[];
   readonly language: Language;

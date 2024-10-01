@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TranslationService } from './translation.service';
 import translate from '@iamtraction/google-translate';
 import { DetailedMeal } from '../meal/meal.types';
-import { MealType } from '../../common/enums';
+import { DishType, MealType } from '../../common/enums';
 
 jest.mock('@iamtraction/google-translate', () =>
     jest.fn((text, opts) => {
@@ -38,6 +38,7 @@ describe('TranslationService', () => {
             const mockDetailedMeal: DetailedMeal = {
                 id: '123',
                 type: MealType.ANY,
+                dishType: DishType.ANY,
                 title: 'Untitled',
                 description: 'Lorem ipsum dolor sit amet.',
                 language: 'en',

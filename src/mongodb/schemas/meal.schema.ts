@@ -30,6 +30,10 @@ export const MealSchema = new mongoose.Schema({
     description: {
         type: String
     },
+    dishType: {
+        type: String,
+        required: true
+    },
     imageUrl: {
         type: String
     },

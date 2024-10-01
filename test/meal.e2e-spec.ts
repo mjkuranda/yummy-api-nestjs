@@ -14,7 +14,7 @@ import { SearchQueryRepository } from '../src/mongodb/repositories/search-query.
 import { MealCommentRepository } from '../src/mongodb/repositories/meal-comment.repository';
 import { MealRatingRepository } from '../src/mongodb/repositories/meal-rating.repository';
 import { IngredientService } from '../src/modules/ingredient/ingredient.service';
-import { MealType } from '../src/common/enums';
+import { DishType, MealType } from '../src/common/enums';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -149,7 +149,8 @@ describe('UserController (e2e)', () => {
                 recipeSections: [],
                 ingredients: [],
                 provider: 'yummy',
-                type: MealType.ANY
+                type: MealType.ANY,
+                dishType: DishType.ANY
             };
             const expectedResponseBody: DetailedMealWithTranslations = {
                 meal: {
@@ -162,7 +163,8 @@ describe('UserController (e2e)', () => {
                     recipeSections: [],
                     ingredients: [],
                     provider: 'yummy',
-                    type: MealType.ANY
+                    type: MealType.ANY,
+                    dishType: DishType.ANY
                 },
                 description: 'some description',
                 ingredients: [],

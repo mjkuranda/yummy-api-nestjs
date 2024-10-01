@@ -1,5 +1,12 @@
 export enum MealType {
     ANY = 'any',
+    BREAKFAST = 'breakfast',
+    LAUNCH = 'launch',
+    DINNER = 'dinner'
+}
+
+export enum DishType {
+    ANY = 'any',
     SOUP = 'soup',
     MAIN_COURSE = 'main course',
     SALAD = 'salad'
