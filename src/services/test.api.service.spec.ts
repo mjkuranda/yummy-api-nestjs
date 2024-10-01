@@ -3,7 +3,7 @@ import { TestApiService } from './test.api.service';
 import { RedisService } from '../modules/redis/redis.service';
 import { LoggerService } from '../modules/logger/logger.service';
 import { AxiosService } from './axios.service';
-import { IngredientName, MealType } from '../common/enums';
+import { DishType, IngredientName, MealType } from '../common/enums';
 import { RatedMeal } from '../modules/meal/meal.types';
 
 describe('TestApiService', () => {
@@ -49,7 +49,7 @@ describe('TestApiService', () => {
         const apiKey = null;
         const endpointUrl = '';
         const ingredients = [IngredientName.CARROT, IngredientName.TOMATO];
-        const mealType = MealType.SOUP;
+        const mealType = MealType.LAUNCH;
         const mockResult: RatedMeal[] = [
             {
                 id: 'some-id',
@@ -58,7 +58,8 @@ describe('TestApiService', () => {
                 relevance: 50,
                 title: 'some-meal',
                 provider: 'yummy',
-                type: MealType.ANY
+                type: MealType.ANY,
+                dishType: DishType.ANY
             }
         ];
 

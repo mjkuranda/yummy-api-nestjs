@@ -27,7 +27,7 @@ export function getQueryWithIngredientsAndMealType(ingredients: IngredientType[]
 export function proceedMealDocumentToMealDetails(meal: MealDocument): DetailedMeal {
     const {
         id, imageUrl, ingredients, language, title, description,
-        author, readyInMinutes, recipeSections, type
+        author, readyInMinutes, recipeSections, type, dishType
     } = meal;
 
     return {
@@ -46,7 +46,8 @@ export function proceedMealDocumentToMealDetails(meal: MealDocument): DetailedMe
         provider: 'yummy',
         readyInMinutes,
         recipeSections,
-        type
+        type,
+        dishType
     };
 }
 
@@ -70,7 +71,7 @@ export function mergeSearchQueries(searchQueries: SearchQueryDocument[]): Merged
 
 export function proceedRatedMealsToProposedMeals(meals: RatedMeal[], mergedSearchQueries: MergedSearchQueries): ProposedMeal[] {
     return meals.map(meal => {
-        const { id, imgUrl, ingredients, title, provider, type } = meal;
+        const { id, imgUrl, ingredients, title, provider, type, dishType } = meal;
         const recommendationPoints = meal.ingredients.reduce((points, ingredient) => {
             if (!mergedSearchQueries[ingredient]) {
                 return points;
@@ -86,7 +87,8 @@ export function proceedRatedMealsToProposedMeals(meals: RatedMeal[], mergedSearc
             recommendationPoints,
             title,
             provider,
-            type
+            type,
+            dishType
         };
     });
 }

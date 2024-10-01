@@ -10,8 +10,8 @@ import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
 import { MealRepository } from '../../mongodb/repositories/meal.repository';
 import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
-import { IngredientName, MealType } from '../../common/enums';
-import { MealRating, RatedMeal } from './meal.types';
+import { DishType, IngredientName, MealType } from '../../common/enums';
+import { MealRating, ProposedMeal, RatedMeal } from './meal.types';
 import { proceedMealDocumentToMealDetails } from './meal.utils';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
@@ -327,7 +327,7 @@ describe('MealService', () => {
     describe('getMeals', () => {
         it('should return cached query', async () => {
             const ings: IngredientName[] = [IngredientName.CARROT, IngredientName.TOMATO];
-            const type: MealType = MealType.SOUP;
+            const type: MealType = MealType.DINNER;
             const cachedResult: RatedMeal[] = [
                 {
                     id: 'some-id',
@@ -336,7 +336,8 @@ describe('MealService', () => {
                     relevance: 50,
                     title: 'some-meal',
                     provider: 'yummy',
-                    type: MealType.ANY
+                    type: MealType.ANY,
+                    dishType: DishType.ANY
                 }
             ];
 
@@ -349,7 +350,7 @@ describe('MealService', () => {
 
         it('should build new query from various APIs when cache is empty and save query', async () => {
             const ings: IngredientName[] = [IngredientName.CARROT, IngredientName.TOMATO];
-            const type: MealType = MealType.SOUP;
+            const type: MealType = MealType.DINNER;
             const cachedResult = null;
             const mockResult: RatedMeal[] = [
                 {
@@ -359,7 +360,8 @@ describe('MealService', () => {
                     relevance: 50,
                     title: 'some-meal',
                     provider: 'yummy',
-                    type: MealType.ANY
+                    type: MealType.ANY,
+                    dishType: DishType.ANY
                 }
             ];
 
@@ -517,13 +519,13 @@ describe('MealService', () => {
                 { login: 'login', date: new Date(), ingredients: ['carrot'] },
                 { login: 'login', date: new Date(), ingredients: ['onion'] }
             ];
-            const mockMeals: any = [
-                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], provider: 'yummy', type: MealType.ANY },
-                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], provider: 'yummy', type: MealType.ANY }
+            const mockMeals: any[] = [
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], provider: 'yummy', type: MealType.ANY, dishType: DishType.ANY },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], provider: 'yummy', type: MealType.ANY, dishType: DishType.ANY }
             ];
-            const mockMealResult: any = [
-                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], recommendationPoints: 8, provider: 'yummy', type: MealType.ANY },
-                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5, provider: 'yummy', type: MealType.ANY }
+            const mockMealResult: ProposedMeal[] = [
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], recommendationPoints: 8, provider: 'yummy', type: MealType.ANY, dishType: DishType.ANY },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5, provider: 'yummy', type: MealType.ANY, dishType: DishType.ANY }
             ];
 
             jest.spyOn(searchQueryRepository, 'findAll').mockResolvedValueOnce(mockSearchQueries);

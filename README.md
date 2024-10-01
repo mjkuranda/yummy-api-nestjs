@@ -13,7 +13,7 @@ Technologies:
 
 ## API
 ### Meals
-* `GET /meals?ings=ingredient1,ingredient2,ingredientX&type=meal-type` - returns all meals from the database that contain provided ingredients and type as `ings` and `type` respectively being query params. Additionally, set `Accept-Language` header to define language of ingredients.
+* `GET /meals?ings=ingredient1,ingredient2,ingredientX&type=meal-type&dish=dish-type` - returns all meals from the database that contain provided ingredients and type as `ings`, `type` and `dish` respectively being query params. Additionally, set `Accept-Language` header to define language of ingredients.
 * `GET /meals/:id` - returns a specific meal defined by id parameter. It saves to the cache, if it does not exist there. Each request checks the cache.
 * `GET /meals/:id/details` - returns details of a meal. It can be any meal provided by any external or local API.
 * `GET /meals/:id/comments` - returns all comments for a specific meal.
@@ -87,7 +87,8 @@ Technologies:
             ]
         }
     ],
-    "type": "soup"
+    "type": "launch",
+    "dishType": "soup"
 }
 ```
 
@@ -98,7 +99,8 @@ Technologies:
     "title": "New meal title",
     "description": "New description",
     "readyInMinutes": 80,
-    "type": "main course",
+    "type": "launch",
+    "dishType": "main course",
     "ingredients": [
         {
             "id": "ingredient-id-2",

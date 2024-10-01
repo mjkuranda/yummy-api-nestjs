@@ -24,12 +24,12 @@ export class MealRepository extends AbstractRepository<MealDocument, CreateMealW
         });
 
         return meals.map(meal => {
-            const { id, title, imageUrl, type, ingredients } = meal;
+            const { id, title, imageUrl, type, dishType, ingredients } = meal;
             const mealIngredients = ingredients.map(ingredient => ingredient.name);
             const relevance = calculateRelevance(providedIngredients, mealIngredients);
             const missingCount = calculateMissing(providedIngredients, mealIngredients);
 
-            return { id, title, imgUrl: imageUrl, type, ingredients: mealIngredients, provider: 'yummy', relevance, missingCount };
+            return { id, title, imgUrl: imageUrl, type, dishType, ingredients: mealIngredients, provider: 'yummy', relevance, missingCount };
         });
     }
 }

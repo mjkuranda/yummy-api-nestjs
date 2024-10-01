@@ -1,7 +1,7 @@
 import { IngredientType, MealIngredient } from '../ingredient/ingredient.types';
 import { TranslatedIngredient } from '../translation/translation.types';
 import { Language } from '../../common/types';
-import { MealType } from '../../common/enums';
+import { DishType, MealType } from '../../common/enums';
 
 export type RatedMeal = {
     id: string,
@@ -11,7 +11,8 @@ export type RatedMeal = {
     provider: MealProvider,
     title: string,
     relevance: number,
-    type: MealType
+    type: MealType,
+    dishType: DishType
 };
 
 export type MealRecipeSection = {
@@ -39,7 +40,8 @@ export type DetailedMeal = {
     },
     provider: MealProvider,
     recipeSections: MealRecipeSections,
-    type: MealType
+    type: MealType,
+    dishType: DishType
 };
 
 export interface DetailedMealWithTranslations {
@@ -56,14 +58,15 @@ export type ProposedMeal = {
     recommendationPoints: number,
     title: string,
     provider: MealProvider,
-    type: MealType
+    type: MealType,
+    dishType: DishType
 };
 
 export type MealProvider = 'yummy' | 'spoonacular';
 
 export type GetMealsQueryType = Record<GetMealsQueryKeyTypes, string>;
 
-type GetMealsQueryKeyTypes = 'ings' | 'type';
+type GetMealsQueryKeyTypes = 'ings' | 'type' | 'dish';
 
 export type MergedSearchQueries = Record<string, number>;
 
