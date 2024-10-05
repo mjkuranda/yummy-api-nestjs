@@ -37,8 +37,8 @@ describe('TranslationService', () => {
         it('should translate a detailed dish', async () => {
             const mockDetailedDish: DetailedDish = {
                 id: '123',
-                type: MealType.ANY,
-                dishType: DishType.ANY,
+                type: DishType.ANY,
+                mealType: MealType.ANY,
                 title: 'Untitled',
                 description: 'Lorem ipsum dolor sit amet.',
                 language: 'en',

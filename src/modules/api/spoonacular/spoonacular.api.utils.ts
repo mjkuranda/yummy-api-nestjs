@@ -14,8 +14,8 @@ export function proceedRecipesToDishes(recipes: SpoonacularRecipe[]): RatedDish[
             relevance: recipe.usedIngredients.length / (recipe.usedIngredients.length + recipe.missedIngredients.length),
             title: recipe.title,
             provider: 'spoonacular',
-            type: MealType.ANY,
-            dishType: inferDishType(recipe.title)
+            type: inferDishType(recipe.title),
+            mealType: MealType.ANY
         };
     });
 }

@@ -10,7 +10,7 @@ import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
 import { DishRepository } from '../../mongodb/repositories/dish.repository';
 import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
-import { MealType, IngredientName, DishType } from '../../common/enums';
+import { DishType, IngredientName, MealType } from '../../common/enums';
 import { DishRating, ProposedDish, RatedDish } from './dish.types';
 import { proceedDishDocumentToDishDetails } from './dish.utils';
 import { IngredientService } from '../ingredient/ingredient.service';
@@ -129,7 +129,7 @@ describe('DishService', () => {
                 description: 'Description of the dish',
                 ingredients: ['xxx', 'yyy', 'zzz'],
                 posted: new Date().getTime(),
-                type: 'Meal type'
+                type: 'Dish type'
             };
             mockDish = {
                 ...mockDishDto,
@@ -327,7 +327,7 @@ describe('DishService', () => {
     describe('getDishes', () => {
         it('should return cached query', async () => {
             const ings: IngredientName[] = [IngredientName.CARROT, IngredientName.TOMATO];
-            const type: MealType = MealType.DINNER;
+            const mealType: MealType = MealType.DINNER;
             const cachedResult: RatedDish[] = [
                 {
                     id: 'some-id',
@@ -336,21 +336,21 @@ describe('DishService', () => {
                     relevance: 50,
                     title: 'some-dish',
                     provider: 'yummy',
-                    type: MealType.ANY,
-                    dishType: DishType.ANY
+                    type: DishType.ANY,
+                    mealType: MealType.ANY
                 }
             ];
 
             jest.spyOn(redisService, 'getDishResult').mockResolvedValue(cachedResult);
 
-            const result = await dishService.getDishes(ings, type);
+            const result = await dishService.getDishes(ings, mealType);
 
             expect(result).toBe(cachedResult);
         });
 
         it('should build new query from various APIs when cache is empty and save query', async () => {
             const ings: IngredientName[] = [IngredientName.CARROT, IngredientName.TOMATO];
-            const type: MealType = MealType.DINNER;
+            const mealType: MealType = MealType.DINNER;
             const cachedResult = null;
             const mockResult: RatedDish[] = [
                 {
@@ -360,8 +360,8 @@ describe('DishService', () => {
                     relevance: 50,
                     title: 'some-dish',
                     provider: 'yummy',
-                    type: MealType.ANY,
-                    dishType: DishType.ANY
+                    type: DishType.ANY,
+                    mealType: MealType.ANY
                 }
             ];
 
@@ -370,7 +370,7 @@ describe('DishService', () => {
             jest.spyOn(spoonacularApiService, 'getDishes').mockResolvedValue(mockResult);
             jest.spyOn(redisService, 'saveDishResult').mockResolvedValue();
 
-            const result = await dishService.getDishes(ings, type);
+            const result = await dishService.getDishes(ings, mealType);
 
             expect(result).toStrictEqual(mockResult);
             expect(redisService.saveDishResult).toHaveBeenCalled();
@@ -520,12 +520,12 @@ describe('DishService', () => {
                 { login: 'login', date: new Date(), ingredients: ['onion'] }
             ];
             const mockDishes: any[] = [
-                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], provider: 'yummy', type: MealType.ANY, dishType: DishType.ANY },
-                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], provider: 'yummy', type: MealType.ANY, dishType: DishType.ANY }
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], provider: 'yummy', type: DishType.ANY, mealType: MealType.ANY },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], provider: 'yummy', type: DishType.ANY, mealType: MealType.ANY }
             ];
             const mockDishResult: ProposedDish[] = [
-                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], recommendationPoints: 8, provider: 'yummy', type: MealType.ANY, dishType: DishType.ANY },
-                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5, provider: 'yummy', type: MealType.ANY, dishType: DishType.ANY }
+                { id: '1', title: 'title1', ingredients: ['carrot', 'fish', 'garlic'], recommendationPoints: 8, provider: 'yummy', type: DishType.ANY, mealType: MealType.ANY },
+                { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5, provider: 'yummy', type: DishType.ANY, mealType: MealType.ANY }
             ];
 
             jest.spyOn(searchQueryRepository, 'findAll').mockResolvedValueOnce(mockSearchQueries);

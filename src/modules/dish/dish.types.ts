@@ -11,8 +11,8 @@ export type RatedDish = {
     provider: DishProvider,
     title: string,
     relevance: number,
-    type: MealType,
-    dishType: DishType
+    type: DishType
+    mealType: MealType,
 };
 
 export type DishRecipeSection = {
@@ -40,8 +40,8 @@ export type DetailedDish = {
     },
     provider: DishProvider,
     recipeSections: DishRecipeSections,
-    type: MealType,
-    dishType: DishType
+    type: DishType,
+    mealType: MealType
 };
 
 export interface DetailedDishWithTranslations {
@@ -58,8 +58,8 @@ export type ProposedDish = {
     recommendationPoints: number,
     title: string,
     provider: DishProvider,
-    type: MealType,
-    dishType: DishType
+    type: DishType,
+    mealType: MealType
 };
 
 export type DishProvider = 'yummy' | 'spoonacular';

@@ -63,8 +63,8 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 relevance,
                 title: recipe.title,
                 provider: 'spoonacular',
-                type: MealType.ANY,
-                dishType: inferDishType(recipe.title),
+                type: inferDishType(recipe.title),
+                mealType: MealType.ANY
             };
         });
     }
@@ -97,8 +97,8 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 name: section.name,
                 steps: section.steps.map(step => step.step)
             })),
-            type: MealType.ANY,
-            dishType: inferDishType(title)
+            type: inferDishType(title),
+            mealType: MealType.ANY
         };
     }
 }

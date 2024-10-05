@@ -43,9 +43,9 @@ export class CreateDishDto<Ingredient> {
     @Length(3, 16)
     readonly type: string;
 
-    @IsNotEmpty({ message: 'Dish should have a dish type' })
+    @IsNotEmpty({ message: 'Dish should have a meal type' })
     @Length(3, 16)
-    readonly dishType: string;
+    readonly mealType: string;
 }
 
 export class CreateDishWithAuthorDto<Ingredient> extends CreateDishDto<Ingredient> {

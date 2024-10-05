@@ -15,7 +15,7 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishW
     }
 
     async getDishes(providedIngredients: string[]): Promise<RatedDish[]> {
-        const meals = await this.findAll({
+        const dishes = await this.findAll({
             'ingredients.name': { $in: providedIngredients },
             $or: [
                 { softAdded: { $exists: false }},
@@ -23,13 +23,13 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishW
             ]
         });
 
-        return meals.map(meal => {
-            const { id, title, imageUrl, type, dishType, ingredients } = meal;
+        return dishes.map(dish => {
+            const { id, title, imageUrl, type, mealType, ingredients } = dish;
             const mealIngredients = ingredients.map(ingredient => ingredient.name);
             const relevance = calculateRelevance(providedIngredients, mealIngredients);
             const missingCount = calculateMissing(providedIngredients, mealIngredients);
 
-            return { id, title, imgUrl: imageUrl, type, dishType, ingredients: mealIngredients, provider: 'yummy', relevance, missingCount };
+            return { id, title, imgUrl: imageUrl, type, mealType, ingredients: mealIngredients, provider: 'yummy', relevance, missingCount };
         });
     }
 }

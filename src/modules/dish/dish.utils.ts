@@ -27,7 +27,7 @@ export function getQueryWithIngredientsAndDishType(ingredients: IngredientType[]
 export function proceedDishDocumentToDishDetails(dish: DishDocument): DetailedDish {
     const {
         id, imageUrl, ingredients, language, title, description,
-        author, readyInMinutes, recipeSections, type, dishType
+        author, readyInMinutes, recipeSections, type, mealType
     } = dish;
 
     return {
@@ -47,7 +47,7 @@ export function proceedDishDocumentToDishDetails(dish: DishDocument): DetailedDi
         readyInMinutes,
         recipeSections,
         type,
-        dishType
+        mealType
     };
 }
 
@@ -71,7 +71,7 @@ export function mergeSearchQueries(searchQueries: SearchQueryDocument[]): Merged
 
 export function proceedRatedDishesToProposedDishes(dishes: RatedDish[], mergedSearchQueries: MergedSearchQueries): ProposedDish[] {
     return dishes.map(dish => {
-        const { id, imgUrl, ingredients, title, provider, type, dishType } = dish;
+        const { id, imgUrl, ingredients, title, provider, type, mealType } = dish;
         const recommendationPoints = dish.ingredients.reduce((points, ingredient) => {
             if (!mergedSearchQueries[ingredient]) {
                 return points;
@@ -88,7 +88,7 @@ export function proceedRatedDishesToProposedDishes(dishes: RatedDish[], mergedSe
             title,
             provider,
             type,
-            dishType
+            mealType
         };
     });
 }

@@ -58,8 +58,8 @@ describe('TestApiService', () => {
                 relevance: 50,
                 title: 'some-dish',
                 provider: 'yummy',
-                type: MealType.ANY,
-                dishType: DishType.ANY
+                type: DishType.ANY,
+                mealType: MealType.ANY
             }
         ];
 

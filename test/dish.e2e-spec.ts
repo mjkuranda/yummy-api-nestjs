@@ -150,8 +150,8 @@ describe('UserController (e2e)', () => {
                 recipeSections: [],
                 ingredients: [],
                 provider: 'yummy',
-                type: MealType.ANY,
-                dishType: DishType.ANY
+                type: DishType.ANY,
+                mealType: MealType.ANY
             };
             const expectedResponseBody: DetailedDishWithTranslations = {
                 dish: {
@@ -164,8 +164,8 @@ describe('UserController (e2e)', () => {
                     recipeSections: [],
                     ingredients: [],
                     provider: 'yummy',
-                    type: MealType.ANY,
-                    dishType: DishType.ANY
+                    type: DishType.ANY,
+                    mealType: MealType.ANY
                 },
                 description: 'some description',
                 ingredients: [],

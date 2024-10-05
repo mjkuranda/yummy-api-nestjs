@@ -7,13 +7,13 @@ import { MealType, DishType } from '../../common/enums';
 export interface DishDocument extends Document {
   readonly author: string;
   readonly description: string;
-  readonly dishType: DishType;
   readonly imageUrl: string;
   readonly ingredients: DishIngredient[];
   readonly language: Language;
   readonly posted: number;
   readonly title: string;
-  readonly type: MealType;
+  readonly type: DishType;
+  readonly mealType: MealType;
   readonly softAdded?: boolean;
   readonly softDeleted?: boolean;
   readonly softEdited?: DishDocument;

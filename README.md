@@ -87,8 +87,8 @@ Technologies:
             ]
         }
     ],
-    "type": "launch",
-    "dishType": "soup"
+    "type": "soup",
+    "mealType": "launch"
 }
 ```
 
@@ -99,8 +99,8 @@ Technologies:
     "title": "New dish title",
     "description": "New description",
     "readyInMinutes": 80,
-    "type": "launch",
-    "dishType": "main course",
+    "type": "main course",
+    "dishType": "launch",
     "ingredients": [
         {
             "id": "ingredient-id-2",

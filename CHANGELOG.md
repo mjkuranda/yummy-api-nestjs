@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0] - 2024-10-05
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): `Meal` to `Dish`.
+- [Marek Kurańda](https://github.com/mjkuranda): `type` to `DishType` and `mealType` as a `MealType`.
 
 ## [1.54.0] - 2024-10-01
 ### Added
