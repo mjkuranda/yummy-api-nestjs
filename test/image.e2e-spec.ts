@@ -1,9 +1,7 @@
 import { INestApplication } from '@nestjs/common';
-import { ImageService } from '../src/modules/image/image.service';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import cookieParser from 'cookie-parser';
-import { MealService } from '../src/modules/meal/meal.service';
 import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
 import request from 'supertest';
 import path from 'path';
@@ -12,7 +10,6 @@ import { RedisService } from '../src/modules/redis/redis.service';
 
 describe('ImageController (e2e)', () => {
     let app: INestApplication;
-    let imageService: ImageService;
     let redisService: RedisService;
     let jwtManagerService: JwtManagerService;
 
@@ -50,7 +47,6 @@ describe('ImageController (e2e)', () => {
         app.use(cookieParser());
         await app.init();
 
-        imageService = moduleRef.get(MealService);
         jwtManagerService = moduleRef.get(JwtManagerService);
         redisService = moduleRef.get(RedisService);
     });

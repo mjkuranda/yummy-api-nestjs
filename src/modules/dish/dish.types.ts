@@ -1,31 +1,31 @@
-import { IngredientType, MealIngredient } from '../ingredient/ingredient.types';
+import { IngredientType, DishIngredient } from '../ingredient/ingredient.types';
 import { TranslatedIngredient } from '../translation/translation.types';
 import { Language } from '../../common/types';
-import { DishType, MealType } from '../../common/enums';
+import { MealType, DishType } from '../../common/enums';
 
-export type RatedMeal = {
+export type RatedDish = {
     id: string,
     imgUrl?: string,
     ingredients: IngredientType[],
     missingCount: number,
-    provider: MealProvider,
+    provider: DishProvider,
     title: string,
     relevance: number,
-    type: MealType,
-    dishType: DishType
+    type: DishType
+    mealType: MealType,
 };
 
-export type MealRecipeSection = {
+export type DishRecipeSection = {
     name?: string,
     steps: string[]
 };
 
-export type MealRecipeSections = MealRecipeSection[];
+export type DishRecipeSections = DishRecipeSection[];
 
-export type DetailedMeal = {
+export type DetailedDish = {
     id: string,
     imgUrl?: string,
-    ingredients: MealIngredient[],
+    ingredients: DishIngredient[],
     language: Language,
     title: string,
     description: string,
@@ -38,46 +38,46 @@ export type DetailedMeal = {
         dairyFree?: boolean,
         veryHealthy?: boolean
     },
-    provider: MealProvider,
-    recipeSections: MealRecipeSections,
-    type: MealType,
-    dishType: DishType
+    provider: DishProvider,
+    recipeSections: DishRecipeSections,
+    type: DishType,
+    mealType: MealType
 };
 
-export interface DetailedMealWithTranslations {
-    meal: DetailedMeal;
+export interface DetailedDishWithTranslations {
+    dish: DetailedDish;
     description: string;
     ingredients: TranslatedIngredient[];
-    recipe: MealRecipeSections;
+    recipe: DishRecipeSections;
 }
 
-export type ProposedMeal = {
+export type ProposedDish = {
     id: string,
     imgUrl?: string,
     ingredients: IngredientType[],
     recommendationPoints: number,
     title: string,
-    provider: MealProvider,
-    type: MealType,
-    dishType: DishType
+    provider: DishProvider,
+    type: DishType,
+    mealType: MealType
 };
 
-export type MealProvider = 'yummy' | 'spoonacular';
+export type DishProvider = 'yummy' | 'spoonacular';
 
-export type GetMealsQueryType = Record<GetMealsQueryKeyTypes, string>;
+export type GetDishesQueryType = Record<GetDishesQueryKeyTypes, string>;
 
-type GetMealsQueryKeyTypes = 'ings' | 'type' | 'dish';
+type GetDishesQueryKeyTypes = 'ings' | 'type' | 'dish';
 
 export type MergedSearchQueries = Record<string, number>;
 
-export interface MealProposalDto {
+export interface DishProposalDto {
     ingredients: string[];
     date: Date;
     login: string;
 }
 
-export interface MealRating {
-    mealId: string;
+export interface DishRating {
+    dishId: string;
     rating: number;
     count: number;
 }

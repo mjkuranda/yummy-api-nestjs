@@ -1,4 +1,4 @@
-import { MealRecipeSections } from '../meal/meal.types';
+import { DishRecipeSections } from '../dish/dish.types';
 
 export interface TranslatedIngredient {
     text: string;
@@ -8,5 +8,5 @@ export interface TranslatedIngredient {
 export interface TranslatedDetailedMeal {
     description: string;
     ingredients: TranslatedIngredient[];
-    recipe: MealRecipeSections;
+    recipe: DishRecipeSections;
 }

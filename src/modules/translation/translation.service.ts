@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Language } from '../../common/types';
 import { TranslatedDetailedMeal, TranslatedIngredient } from './translation.types';
-import { DetailedMeal, MealRecipeSections } from '../meal/meal.types';
+import { DetailedDish, DishRecipeSections } from '../dish/dish.types';
 import { compoundTextToTranslate, convertAmountToText, normalizeName, normalizeUnit } from '../../common/helpers';
 import translate from '@iamtraction/google-translate';
 
 @Injectable()
 export class TranslationService {
 
-    async translateMeal(meal: DetailedMeal, targetLanguage?: Language): Promise<TranslatedDetailedMeal> {
+    async translateDish(meal: DetailedDish, targetLanguage?: Language): Promise<TranslatedDetailedMeal> {
         // NOTE: Do not translate when your language is English
         if (['en', 'en-US'].includes(targetLanguage)) {
             return {
@@ -56,7 +56,7 @@ export class TranslationService {
         const translatedRecipes = translatedIngredientsAndRecipes.slice(startRecipeIdx);
 
         const ingredientList: TranslatedIngredient[] = translatedIngredients.map((ingredient, idx) => ({ text: ingredient, imageUrl: ingredientImages[idx] }));
-        const translatedRecipeSections: MealRecipeSections = recipeNewSectionIndexes.map((index, idx, sections) => {
+        const translatedRecipeSections: DishRecipeSections = recipeNewSectionIndexes.map((index, idx, sections) => {
             const nextSection = sections[idx + 1];
 
             if (!nextSection) {

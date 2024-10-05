@@ -1,4 +1,4 @@
-import { ApiName, MealDetailsQueryKey, MealResultQueryKey, TokenKey } from './redis.types';
+import { ApiName, DishDetailsQueryKey, DishResultQueryKey, TokenKey } from './redis.types';
 
 export function getAccessTokenKey(login: string): TokenKey {
     return getTokenKey('accessToken', login);
@@ -12,10 +12,10 @@ function getTokenKey(token: 'accessToken' | 'refreshToken', login: string): Toke
     return `user:${login}:${token}`;
 }
 
-export function getMealResultQueryKey(apiName: ApiName, query: string): MealResultQueryKey {
+export function getDishResultQueryKey(apiName: ApiName, query: string): DishResultQueryKey {
     return `query:${apiName}:${query}`;
 }
 
-export function getMealDetailsQueryKey(id: string): MealDetailsQueryKey {
-    return `meal-details:${id}`;
+export function getDishDetailsQueryKey(id: string): DishDetailsQueryKey {
+    return `dish-details:${id}`;
 }

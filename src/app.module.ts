@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MealModule } from './modules/meal/meal.module';
+import { DishModule } from './modules/dish/dish.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -24,8 +24,8 @@ import { ImageModule } from './modules/image/image.module';
         }),
         ServeStaticModule.forRoot(
             {
-                rootPath: join(__dirname, '..', 'data/images/meals'),
-                serveRoot: '/images/meals',
+                rootPath: join(__dirname, '..', 'data/images/dishes'),
+                serveRoot: '/images/dishes',
             },
             {
                 rootPath: join(__dirname, '..', 'data/ingredients'),
@@ -34,7 +34,7 @@ import { ImageModule } from './modules/image/image.module';
         ),
         LoggerModule,
         IngredientModule,
-        MealModule,
+        DishModule,
         UserModule,
         ImageModule
     ],
@@ -43,36 +43,6 @@ import { ImageModule } from './modules/image/image.module';
 })
 export class AppModule implements NestModule {
 
-    configure(consumer: MiddlewareConsumer) {
-    //     consumer
-    //         .apply(AuthorizeMiddleware)
-    //         .forRoutes(
-    //             { path: '/meals/create', method: RequestMethod.POST },
-    //             { path: '/meals/:id', method: RequestMethod.PUT },
-    //             { path: '/meals/:id', method: RequestMethod.DELETE },
-    //             { path: '/ingredients/create', method: RequestMethod.POST }
-    //         );
-    //     consumer
-    //         .apply(AuthenticateUserMiddleware)
-    //         .forRoutes(
-    //             { path: '/users/:login/grant/:capability', method: RequestMethod.POST },
-    //             { path: '/users/:login/deny/:capability', method: RequestMethod.POST },
-    //             { path: '/meals/:id/create', method: RequestMethod.POST },
-    //             { path: '/meals/:id/edit', method: RequestMethod.POST },
-    //             { path: '/meals/:id/delete', method: RequestMethod.POST }
-    //         );
-    //     consumer
-    //         .apply(AuthorizeUserMiddleware)
-    //         .forRoutes(
-    //             { path: '/users/:login/grant/:capability', method: RequestMethod.POST },
-    //             { path: '/users/:login/deny/:capability', method: RequestMethod.POST }
-    //         );
-    //     consumer
-    //         .apply(AuthorizeUserActionMiddleware)
-    //         .forRoutes(
-    //             { path: '/meals/:id/create', method: RequestMethod.POST },
-    //             { path: '/meals/:id/edit', method: RequestMethod.POST },
-    //             { path: '/meals/:id/delete', method: RequestMethod.POST }
-    //         );
-    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    configure(consumer: MiddlewareConsumer) {}
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DetailedMeal, RatedMeal } from '../../meal/meal.types';
+import { DetailedDish, RatedDish } from '../../dish/dish.types';
 import { AbstractApiService } from '../../../services/abstract.api.service';
 import { ApiName } from '../../redis/redis.types';
 import {
@@ -8,7 +8,7 @@ import {
     SpoonacularRecipeDetails,
     SpoonacularRecipeSections
 } from './spoonacular.api.types';
-import { IngredientType, MealIngredient } from '../../ingredient/ingredient.types';
+import { IngredientType, DishIngredient } from '../../ingredient/ingredient.types';
 import { calculateCheckingAgain, inferDishType } from '../../../common/helpers';
 import { MealType } from '../../../common/enums';
 
@@ -27,7 +27,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         return ingredients.map(ingredient => ingredient.name);
     }
 
-    proceedDataToMealIngredients(ingredients: SpoonacularIngredient[]): MealIngredient[] {
+    proceedDataToDishIngredients(ingredients: SpoonacularIngredient[]): DishIngredient[] {
         const ingredientSet = new Set<`${string}-${number}`>([]); // name and amount
 
         const removeDuplicates = (ingredient: SpoonacularIngredient): boolean => {
@@ -51,7 +51,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         }));
     }
 
-    proceedDataToMeals(data: SpoonacularRecipe[], providedIngredients?: IngredientType[]): RatedMeal[] {
+    proceedDataToDishes(data: SpoonacularRecipe[], providedIngredients?: IngredientType[]): RatedDish[] {
         return data.map(recipe => {
             const { relevance, missingCount } = calculateCheckingAgain(providedIngredients, recipe.usedIngredients, recipe.missedIngredients);
 
@@ -63,13 +63,13 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 relevance,
                 title: recipe.title,
                 provider: 'spoonacular',
-                type: MealType.ANY,
-                dishType: inferDishType(recipe.title),
+                type: inferDishType(recipe.title),
+                mealType: MealType.ANY
             };
         });
     }
 
-    proceedDataToMealDetails(data: SpoonacularRecipeDetails, recipeSections: SpoonacularRecipeSections): DetailedMeal {
+    proceedDataToDishDetails(data: SpoonacularRecipeDetails, recipeSections: SpoonacularRecipeSections): DetailedDish {
         const {
             id, image, title, extendedIngredients, summary,
             vegetarian, vegan, glutenFree, dairyFree, veryHealthy,
@@ -79,7 +79,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         return {
             id: id.toString(),
             imgUrl: image,
-            ingredients: this.proceedDataToMealIngredients(extendedIngredients),
+            ingredients: this.proceedDataToDishIngredients(extendedIngredients),
             language: 'en',
             title,
             description: summary,
@@ -97,8 +97,8 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 name: section.name,
                 steps: section.steps.map(step => step.step)
             })),
-            type: MealType.ANY,
-            dishType: inferDishType(title)
+            type: inferDishType(title),
+            mealType: MealType.ANY
         };
     }
 }

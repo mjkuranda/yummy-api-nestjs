@@ -1,11 +1,11 @@
 import { MealType } from '../../common/enums';
 import { ApiName } from '../redis/redis.types';
 import { IngredientType } from '../ingredient/ingredient.types';
-import { MealDocument } from '../../mongodb/documents/meal.document';
-import { DetailedMeal, MergedSearchQueries, ProposedMeal, RatedMeal } from './meal.types';
+import { DishDocument } from '../../mongodb/documents/dish.document';
+import { DetailedDish, MergedSearchQueries, ProposedDish, RatedDish } from './dish.types';
 import { SearchQueryDocument } from '../../mongodb/documents/search-query.document';
 
-export function getQueryWithIngredientsAndMealType(ingredients: IngredientType[], type?: MealType, apiName?: ApiName, apiKey?: string): string {
+export function getQueryWithIngredientsAndDishType(ingredients: IngredientType[], type?: MealType, apiName?: ApiName, apiKey?: string): string {
     const ingredientList = ingredients.sort().join(',');
     const mealType = type ? `type=${type}` : '';
 
@@ -24,11 +24,11 @@ export function getQueryWithIngredientsAndMealType(ingredients: IngredientType[]
     }
 }
 
-export function proceedMealDocumentToMealDetails(meal: MealDocument): DetailedMeal {
+export function proceedDishDocumentToDishDetails(dish: DishDocument): DetailedDish {
     const {
         id, imageUrl, ingredients, language, title, description,
-        author, readyInMinutes, recipeSections, type, dishType
-    } = meal;
+        author, readyInMinutes, recipeSections, type, mealType
+    } = dish;
 
     return {
         id,
@@ -47,7 +47,7 @@ export function proceedMealDocumentToMealDetails(meal: MealDocument): DetailedMe
         readyInMinutes,
         recipeSections,
         type,
-        dishType
+        mealType
     };
 }
 
@@ -69,10 +69,10 @@ export function mergeSearchQueries(searchQueries: SearchQueryDocument[]): Merged
     return merged;
 }
 
-export function proceedRatedMealsToProposedMeals(meals: RatedMeal[], mergedSearchQueries: MergedSearchQueries): ProposedMeal[] {
-    return meals.map(meal => {
-        const { id, imgUrl, ingredients, title, provider, type, dishType } = meal;
-        const recommendationPoints = meal.ingredients.reduce((points, ingredient) => {
+export function proceedRatedDishesToProposedDishes(dishes: RatedDish[], mergedSearchQueries: MergedSearchQueries): ProposedDish[] {
+    return dishes.map(dish => {
+        const { id, imgUrl, ingredients, title, provider, type, mealType } = dish;
+        const recommendationPoints = dish.ingredients.reduce((points, ingredient) => {
             if (!mergedSearchQueries[ingredient]) {
                 return points;
             }
@@ -88,7 +88,7 @@ export function proceedRatedMealsToProposedMeals(meals: RatedMeal[], mergedSearc
             title,
             provider,
             type,
-            dishType
+            mealType
         };
     });
 }

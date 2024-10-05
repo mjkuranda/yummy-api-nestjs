@@ -23,7 +23,7 @@ const RecipeSectionSchema = new mongoose.Schema({
     steps: [String]
 });
 
-export const MealSchema = new mongoose.Schema({
+export const DishSchema = new mongoose.Schema({
     author: {
         type: String
     },
