@@ -1,20 +1,20 @@
 import { AbstractRepository } from './abstract.repository';
-import { MealDocument } from '../documents/meal.document';
+import { DishDocument } from '../documents/dish.document';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { Model } from 'mongoose';
-import { CreateMealWithAuthorDto } from '../../modules/meal/meal.dto';
-import { MealIngredient } from '../../modules/ingredient/ingredient.types';
-import { RatedMeal } from '../../modules/meal/meal.types';
+import { CreateDishWithAuthorDto } from '../../modules/dish/dish.dto';
+import { DishIngredient } from '../../modules/ingredient/ingredient.types';
+import { RatedDish } from '../../modules/dish/dish.types';
 import { calculateMissing, calculateRelevance } from '../../common/helpers';
 
-export class MealRepository extends AbstractRepository<MealDocument, CreateMealWithAuthorDto<MealIngredient> | { softAdded: boolean }> {
+export class DishRepository extends AbstractRepository<DishDocument, CreateDishWithAuthorDto<DishIngredient> | { softAdded: boolean }> {
 
-    constructor(@InjectModel(models.MEAL_MODEL) model: Model<MealDocument>) {
+    constructor(@InjectModel(models.DISH_MODEL) model: Model<DishDocument>) {
         super(model);
     }
 
-    async getMeals(providedIngredients: string[]): Promise<RatedMeal[]> {
+    async getDishes(providedIngredients: string[]): Promise<RatedDish[]> {
         const meals = await this.findAll({
             'ingredients.name': { $in: providedIngredients },
             $or: [

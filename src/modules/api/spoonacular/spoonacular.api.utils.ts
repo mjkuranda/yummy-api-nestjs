@@ -1,10 +1,10 @@
 import { SpoonacularIngredient, SpoonacularRecipe } from './spoonacular.api.types';
-import { RatedMeal } from '../../meal/meal.types';
+import { RatedDish } from '../../dish/dish.types';
 import { IngredientType } from '../../ingredient/ingredient.types';
 import { inferDishType } from '../../../common/helpers';
 import { MealType } from '../../../common/enums';
 
-export function proceedRecipesToMeals(recipes: SpoonacularRecipe[]): RatedMeal[] {
+export function proceedRecipesToDishes(recipes: SpoonacularRecipe[]): RatedDish[] {
     return recipes.map(recipe => {
         return {
             id: recipe.id.toString(),

@@ -12,33 +12,33 @@ Technologies:
 * SuperTest
 
 ## API
-### Meals
-* `GET /meals?ings=ingredient1,ingredient2,ingredientX&type=meal-type&dish=dish-type` - returns all meals from the database that contain provided ingredients and type as `ings`, `type` and `dish` respectively being query params. Additionally, set `Accept-Language` header to define language of ingredients.
-* `GET /meals/:id` - returns a specific meal defined by id parameter. It saves to the cache, if it does not exist there. Each request checks the cache.
-* `GET /meals/:id/details` - returns details of a meal. It can be any meal provided by any external or local API.
-* `GET /meals/:id/comments` - returns all comments for a specific meal.
-* `GET /meals/:id/rating` - returns average rating for a specific meal.
-* `GET /meals/proposal/all` - returns top 10 meal proposals for a specific user defined by `accessToken`.
-* `GET /meals/soft/added` - returns all meal having `soft-added` property.
-* `GET /meals/soft/edited` - returns all meal having `soft-edited` property.
-* `GET /meals/soft/deleted` - returns all meal having `soft-deleted` property.
-* `POST /meals/:id/comment` - posts a new comment to a particular meal. You need to be logged-in.
+### Dishes
+* `GET /dishes?ings=ingredient1,ingredient2,ingredientX&type=meal-type&dish=dish-type` - returns all dishes from the database that contain provided ingredients and type as `ings`, `type` and `dish` respectively being query params. Additionally, set `Accept-Language` header to define language of ingredients.
+* `GET /dishes/:id` - returns a specific dish defined by id parameter. It saves to the cache, if it does not exist there. Each request checks the cache.
+* `GET /dishes/:id/details` - returns details of a dish. It can be any dish provided by any external or local API.
+* `GET /dishes/:id/comments` - returns all comments for a specific dish.
+* `GET /dishes/:id/rating` - returns average rating for a specific dish.
+* `GET /dishes/proposal/all` - returns top 10 dish proposals for a specific user defined by `accessToken`.
+* `GET /dishes/soft/added` - returns all dish having `soft-added` property.
+* `GET /dishes/soft/edited` - returns all dish having `soft-edited` property.
+* `GET /dishes/soft/deleted` - returns all dish having `soft-deleted` property.
+* `POST /dishes/:id/comment` - posts a new comment to a particular dish. You need to be logged-in.
 ```json
 {
-    "mealId": "123",
-    "text": "That's an awesome meal!"
+    "dishId": "123",
+    "text": "That's an awesome dish!"
 }
 ```
 
-* `POST /meals/:id/rating` - posts a new rating to a specific meal. You need to be logged-in.
+* `POST /dishes/:id/rating` - posts a new rating to a specific dish. You need to be logged-in.
 ```json
 {
-    "mealId": "123",
+    "dishId": "123",
     "rating": 8
 }
 ```
 
-* `POST /meals/proposal` - posts query including ingredients. Works for only logged-in users.
+* `POST /dishes/proposal` - posts query including ingredients. Works for only logged-in users.
 ```json
 {
     "ingredients": [
@@ -49,12 +49,12 @@ Technologies:
 }
 ```
 
-* `POST /meals/create` - creates a new meal and saves its to the database, marking as soft added. You need to be logged-in and provide following data (`imageUrl` is optional):
+* `POST /dishes/create` - creates a new dish and saves its to the database, marking as soft added. You need to be logged-in and provide following data (`imageUrl` is optional):
 
 ```json
 {
-    "description": "The best meal ever",
-    "title": "New awesome meal",
+    "description": "The best dish ever",
+    "title": "New awesome dish",
     "ingredients": [
         {
             "id": "ingredient-id-1",
@@ -83,7 +83,7 @@ Technologies:
             "steps": [
                 "Heat up to 100 degrees.",
                 "Mix everything",
-                "Enjoy your meal! :)"
+                "Enjoy your dish! :)"
             ]
         }
     ],
@@ -92,11 +92,11 @@ Technologies:
 }
 ```
 
-* `PUT /meals/:id` - updates (edits) a meal and marks as soft edited. Provide following data, where each property is optional:
+* `PUT /dishes/:id` - updates (edits) a dish and marks as soft edited. Provide following data, where each property is optional:
 
 ```json
 {
-    "title": "New meal title",
+    "title": "New dish title",
     "description": "New description",
     "readyInMinutes": 80,
     "type": "launch",
@@ -119,10 +119,10 @@ Technologies:
 }
 ```
 
-* `DELETE /meals/:id` - deletes a meal. It marks meal as soft deleted.
-* `POST /meals/:id/create` - confirm adding a new meal. You need to be logged-in and has `canAdd` capability (or be an admin).
-* `POST /meals/:id/edit` - confirm editing a meal. You need to be logged-in and has `canEdit` capability (or be an admin).
-* `POST /meals/:id/delete` - confirm deleting a meal. You need to be logged-in and has `canDelete` capability (or be an admin).
+* `DELETE /dishes/:id` - deletes a dish. It marks dish as soft deleted.
+* `POST /dishes/:id/create` - confirm adding a new dish. You need to be logged-in and has `canAdd` capability (or be an admin).
+* `POST /dishes/:id/edit` - confirm editing a dish. You need to be logged-in and has `canEdit` capability (or be an admin).
+* `POST /dishes/:id/delete` - confirm deleting a dish. You need to be logged-in and has `canDelete` capability (or be an admin).
 
 ### Users
 * `POST /users/create` - register a new user. You need to provide following data:
@@ -156,12 +156,12 @@ Technologies:
 
 * `POST /users/:id/activate` - activates a user. `id` indicates which user should be activated only by admin.
 
-All above endpoints excluding `GET /meals` and `GET /meals/:id` require `accessToken` as a cookie.
+All above endpoints excluding `GET /dishes` and `GET /dishes/:id` require `accessToken` as a cookie.
 
 ### Images
 * `POST /images/upload` - uploads a new image. You need to be logged-in and have `caAdd` capability or be an admin. Image should be passed as `image` property in form data. The image constraint is 512 KB.
 
-* `serverUrl/images/meals/${filename}` - returns image as a static file.
+* `serverUrl/images/dishes/${filename}` - returns image as a static file.
 
 ## Environmental variables
 

@@ -4,14 +4,14 @@ import * as fs from 'fs';
 import {
     IngredientData,
     IngredientDataset,
-    IngredientType, MealIngredient,
-    MealIngredientWithoutImage
+    IngredientType, DishIngredient,
+    DishIngredientWithoutImage
 } from './ingredient.types';
 import { ContextString } from '../../common/types';
 import { AxiosService } from '../../services/axios.service';
 import { SpoonacularIngredient } from '../api/spoonacular/spoonacular.api.types';
 import { AxiosResponse } from 'axios';
-import { MealEditDto } from '../meal/meal.dto';
+import { DishEditDto } from '../dish/dish.dto';
 
 @Injectable()
 export class IngredientService {
@@ -51,7 +51,7 @@ export class IngredientService {
         }
     }
 
-    async wrapIngredientsWithImages(ingredients: MealIngredientWithoutImage[]): Promise<MealIngredient[]> {
+    async wrapIngredientsWithImages(ingredients: DishIngredientWithoutImage[]): Promise<DishIngredient[]> {
         // 1. Fetch all from ingredients (to get a potential image)
         const ingredientsFromJson: IngredientData[] = ingredients.map(ingredient => {
             return {
@@ -98,9 +98,9 @@ export class IngredientService {
         }));
     }
 
-    applyWithImages(data: MealEditDto<MealIngredientWithoutImage>): MealEditDto<MealIngredient> {
+    applyWithImages(data: DishEditDto<DishIngredientWithoutImage>): DishEditDto<DishIngredient> {
         if (!data.ingredients || data.ingredients.length === 0) {
-            return data as unknown as MealEditDto<MealIngredient>;
+            return data as unknown as DishEditDto<DishIngredient>;
         }
 
         return {

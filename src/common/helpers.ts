@@ -1,5 +1,5 @@
 import { SpoonacularIngredient } from '../modules/api/spoonacular/spoonacular.api.types';
-import { RatedMeal } from '../modules/meal/meal.types';
+import { RatedDish } from '../modules/dish/dish.types';
 import { DishType } from './enums';
 
 export function toFixNumber(relevance: number): number {
@@ -43,7 +43,7 @@ export function calculateCheckingAgain(providedIngredients: string[], usedIngred
     };
 }
 
-export function sortDescendingRelevance(meal1: RatedMeal, meal2: RatedMeal): number {
+export function sortDescendingRelevance(meal1: RatedDish, meal2: RatedDish): number {
     return meal2.relevance - meal1.relevance;
 }
 

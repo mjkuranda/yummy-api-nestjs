@@ -1,24 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
-import { LoggerService } from '../logger/logger.service';
 import { REDIS_CLIENT, REDIS_TTL } from './redis.constants';
-import { ApiName, MealDetailsQueryKey, MealResultQueryKey, TokenKey } from './redis.types';
-import { getAccessTokenKey, getMealDetailsQueryKey, getMealResultQueryKey, getRefreshTokenKey } from './redis.utils';
+import { ApiName, DishDetailsQueryKey, DishResultQueryKey, TokenKey } from './redis.types';
+import { getAccessTokenKey, getDishDetailsQueryKey, getDishResultQueryKey, getRefreshTokenKey } from './redis.utils';
 import { HOUR } from '../../constants/times.constant';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { DetailedMeal, RatedMeal } from '../meal/meal.types';
+import { DetailedDish, RatedDish } from '../dish/dish.types';
 import { ACCESS_TOKEN_DURATION, REFRESH_TOKEN_DURATION } from '../../constants/tokens.constant';
 
 type RedisKeyType = string | `${string}:${string}`;
 
-type DocumentType = 'ingredient' | 'ingredients' | 'meal' | 'meals' | 'user' | 'users';
+type DocumentType = 'ingredient' | 'ingredients' | 'dish' | 'dishes' | 'user' | 'users';
 
 @Injectable()
 export class RedisService {
 
     constructor(
-        @Inject(REDIS_CLIENT) private readonly redisClient: Redis,
-        private loggerService: LoggerService
+        @Inject(REDIS_CLIENT) private readonly redisClient: Redis
     ) {}
 
     encodeKey(documentData, documentType: DocumentType): RedisKeyType {
@@ -29,11 +27,11 @@ export class RedisService {
         return `${documentType}:${documentData._id}`;
     }
 
-    async hasMeal(mealId: string): Promise<boolean> {
-        const meal = await this.redisClient.get(`meal:${mealId}`);
-        const details = await this.redisClient.get(`meal-details:${mealId}`);
+    async hasDish(dishId: string): Promise<boolean> {
+        const dish = await this.redisClient.get(`dish:${dishId}`);
+        const details = await this.redisClient.get(`dish-details:${dishId}`);
 
-        return Boolean(meal !== null || details !== null);
+        return Boolean(dish !== null || details !== null);
     }
 
     async get<Document>(key: RedisKeyType): Promise<Document[] | Document | null> {
@@ -78,6 +76,7 @@ export class RedisService {
         await this.redisClient.expire(accessTokenKey, ACCESS_TOKEN_DURATION);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async unsetTokens(login: string, accessToken: string, refreshToken?: string): Promise<void> {
         const accessTokenKey: TokenKey = getAccessTokenKey(login);
         const refreshTokenKey: TokenKey = getRefreshTokenKey(login);
@@ -110,16 +109,16 @@ export class RedisService {
         return this.redisClient.get(key);
     }
 
-    async saveMealResult(apiName: ApiName, query: string, meals: RatedMeal[], secondsToExpire: number = 24 * HOUR): Promise<void> {
-        const key: MealResultQueryKey = getMealResultQueryKey(apiName, query);
-        const value = JSON.stringify(meals);
+    async saveDishResult(apiName: ApiName, query: string, dishes: RatedDish[], secondsToExpire: number = 24 * HOUR): Promise<void> {
+        const key: DishResultQueryKey = getDishResultQueryKey(apiName, query);
+        const value = JSON.stringify(dishes);
 
         await this.redisClient.set(key, value);
         await this.redisClient.expire(key, secondsToExpire);
     }
 
-    async getMealResult(apiName: ApiName, query: string): Promise<RatedMeal[] | null> {
-        const key: MealResultQueryKey = getMealResultQueryKey(apiName, query);
+    async getDishResult(apiName: ApiName, query: string): Promise<RatedDish[] | null> {
+        const key: DishResultQueryKey = getDishResultQueryKey(apiName, query);
         const value = await this.redisClient.get(key);
 
         if (!value) {
@@ -129,16 +128,16 @@ export class RedisService {
         return JSON.parse(value);
     }
 
-    async saveMealDetails(id: string, mealDetails: DetailedMeal): Promise<void> {
-        const key: MealDetailsQueryKey = getMealDetailsQueryKey(id);
-        const value = JSON.stringify(mealDetails);
+    async saveDishDetails(id: string, dishDetails: DetailedDish): Promise<void> {
+        const key: DishDetailsQueryKey = getDishDetailsQueryKey(id);
+        const value = JSON.stringify(dishDetails);
 
         await this.redisClient.set(key, value);
         await this.redisClient.expire(key, 24 * HOUR);
     }
 
-    async getMealDetails(id: string): Promise<DetailedMeal> {
-        const key: MealDetailsQueryKey = getMealDetailsQueryKey(id);
+    async getDishDetails(id: string): Promise<DetailedDish> {
+        const key: DishDetailsQueryKey = getDishDetailsQueryKey(id);
         const value = await this.redisClient.get(key);
 
         if (!value) {

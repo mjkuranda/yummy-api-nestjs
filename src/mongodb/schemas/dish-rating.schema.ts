@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
-export const MealRatingSchema = new mongoose.Schema({
-    mealId: {
+export const DishRatingSchema = new mongoose.Schema({
+    dishId: {
         type: String,
         required: true
     },

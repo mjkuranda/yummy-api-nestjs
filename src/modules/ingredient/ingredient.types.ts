@@ -7,14 +7,14 @@ export interface IngredientData {
     imageUrl?: string;
 }
 
-export interface MealIngredient {
+export interface DishIngredient {
     amount: number;
     imageUrl: string;
     name: IngredientType;
     unit: string;
 }
 
-export type MealIngredientWithoutImage = Omit<MealIngredient, 'imageUrl'> & { id: number };
+export type DishIngredientWithoutImage = Omit<DishIngredient, 'imageUrl'> & { id: number };
 
 export type IngredientCategory = 'breads' | 'dairy-and-eggs' | 'fish-and-seafood' | 'fruits' | 'meats' | 'oils-and-fats' | 'pasta' | 'seeds-and-nuts' | 'spices' | 'vegetables';
 

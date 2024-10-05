@@ -1,22 +1,22 @@
 import { Document } from 'mongoose';
-import { MealIngredient } from '../../modules/ingredient/ingredient.types';
-import { MealRecipeSections } from '../../modules/meal/meal.types';
+import { DishIngredient } from '../../modules/ingredient/ingredient.types';
+import { DishRecipeSections } from '../../modules/dish/dish.types';
 import { Language } from '../../common/types';
-import { DishType, MealType } from '../../common/enums';
+import { MealType, DishType } from '../../common/enums';
 
-export interface MealDocument extends Document {
+export interface DishDocument extends Document {
   readonly author: string;
   readonly description: string;
   readonly dishType: DishType;
   readonly imageUrl: string;
-  readonly ingredients: MealIngredient[];
+  readonly ingredients: DishIngredient[];
   readonly language: Language;
   readonly posted: number;
   readonly title: string;
   readonly type: MealType;
   readonly softAdded?: boolean;
   readonly softDeleted?: boolean;
-  readonly softEdited?: MealDocument;
+  readonly softEdited?: DishDocument;
   readonly readyInMinutes: number;
-  readonly recipeSections: MealRecipeSections;
+  readonly recipeSections: DishRecipeSections;
 }

@@ -3,8 +3,8 @@ import { TestApiService } from './test.api.service';
 import { RedisService } from '../modules/redis/redis.service';
 import { LoggerService } from '../modules/logger/logger.service';
 import { AxiosService } from './axios.service';
-import { DishType, IngredientName, MealType } from '../common/enums';
-import { RatedMeal } from '../modules/meal/meal.types';
+import { MealType, IngredientName, DishType } from '../common/enums';
+import { RatedDish } from '../modules/dish/dish.types';
 
 describe('TestApiService', () => {
     let testApiService: TestApiService;
@@ -16,8 +16,8 @@ describe('TestApiService', () => {
     };
 
     const redisServiceProvider = {
-        getMealResult: jest.fn(),
-        saveMealResult: jest.fn()
+        getDishResult: jest.fn(),
+        saveDishResult: jest.fn()
     };
 
     const loggerServiceProvider = {
@@ -45,18 +45,18 @@ describe('TestApiService', () => {
         expect(redisService).toBeDefined();
     });
 
-    describe('getMeals', () => {
+    describe('getDishes', () => {
         const apiKey = null;
         const endpointUrl = '';
         const ingredients = [IngredientName.CARROT, IngredientName.TOMATO];
         const mealType = MealType.LAUNCH;
-        const mockResult: RatedMeal[] = [
+        const mockResult: RatedDish[] = [
             {
                 id: 'some-id',
                 ingredients: [],
                 missingCount: 1,
                 relevance: 50,
-                title: 'some-meal',
+                title: 'some-dish',
                 provider: 'yummy',
                 type: MealType.ANY,
                 dishType: DishType.ANY
@@ -64,9 +64,9 @@ describe('TestApiService', () => {
         ];
 
         it('should return cached result when query is still in cache', async () => {
-            jest.spyOn(redisService, 'getMealResult').mockResolvedValueOnce(mockResult);
+            jest.spyOn(redisService, 'getDishResult').mockResolvedValueOnce(mockResult);
 
-            const result = await testApiService.getMeals(apiKey, endpointUrl, ingredients, mealType);
+            const result = await testApiService.getDishes(apiKey, endpointUrl, ingredients, mealType);
 
             expect(result).toStrictEqual(mockResult);
         });
@@ -74,33 +74,33 @@ describe('TestApiService', () => {
         it('should return empty array when cache is empty and external API returned error', async () => {
             const mockResult = [];
 
-            jest.spyOn(redisService, 'getMealResult').mockResolvedValueOnce(null);
+            jest.spyOn(redisService, 'getDishResult').mockResolvedValueOnce(null);
             jest.spyOn(axiosService, 'get').mockResolvedValueOnce({ status: 400 });
 
-            const result = await testApiService.getMeals(apiKey, endpointUrl, ingredients, mealType);
+            const result = await testApiService.getDishes(apiKey, endpointUrl, ingredients, mealType);
 
             expect(result).toStrictEqual(mockResult);
-            expect(redisService.getMealResult).toHaveBeenCalled();
+            expect(redisService.getDishResult).toHaveBeenCalled();
             expect(axiosService.get).toHaveBeenCalled();
         });
 
         it('should return external API result when there is no cached result and save to cache', async () => {
-            jest.spyOn(redisService, 'getMealResult').mockResolvedValueOnce(null);
+            jest.spyOn(redisService, 'getDishResult').mockResolvedValueOnce(null);
             jest.spyOn(axiosService, 'get').mockResolvedValueOnce({
                 status: 200,
                 data: mockResult
             });
 
-            const result = await testApiService.getMeals(apiKey, endpointUrl, ingredients, mealType);
+            const result = await testApiService.getDishes(apiKey, endpointUrl, ingredients, mealType);
 
             expect(result).toStrictEqual(mockResult);
-            expect(redisService.saveMealResult).toHaveBeenCalled();
+            expect(redisService.saveDishResult).toHaveBeenCalled();
         });
     });
 
-    describe('getMealDetails', () => {
-        it('should return a meal when everything went fine', async () => {
-            const mockMealFromExternalAPI = {
+    describe('getDishDetails', () => {
+        it('should return a dish when everything went fine', async () => {
+            const mockDishFromExternalAPI = {
                 id: 'id',
                 title: 'some title'
             };
@@ -110,19 +110,19 @@ describe('TestApiService', () => {
 
             jest.spyOn(axiosService, 'get').mockResolvedValueOnce({
                 status: 200,
-                data: mockMealFromExternalAPI
+                data: mockDishFromExternalAPI
             });
             jest.spyOn(axiosService, 'get').mockResolvedValueOnce({
                 status: 200,
                 data: mockInstructionFromExternalAPI
             });
 
-            const result = await testApiService.getMealDetails(mockApiUrl, mockInstructionUrl);
+            const result = await testApiService.getDishDetails(mockApiUrl, mockInstructionUrl);
 
-            expect(result).toStrictEqual({ ...mockMealFromExternalAPI, ...mockInstructionFromExternalAPI });
+            expect(result).toStrictEqual({ ...mockDishFromExternalAPI, ...mockInstructionFromExternalAPI });
         });
 
-        it('shouldn\'t return any meal when there is no such meal with provided id', async () => {
+        it('shouldn\'t return any dish when there is no such dish with provided id', async () => {
             const mockApiUrl = 'api-url';
             const mockInstructionUrl = 'instruction-url';
 
@@ -131,7 +131,7 @@ describe('TestApiService', () => {
                 data: null
             });
 
-            const result = await testApiService.getMealDetails(mockApiUrl, mockInstructionUrl);
+            const result = await testApiService.getDishDetails(mockApiUrl, mockInstructionUrl);
 
             expect(result).toStrictEqual(null);
         });

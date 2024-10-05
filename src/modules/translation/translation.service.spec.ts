@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TranslationService } from './translation.service';
 import translate from '@iamtraction/google-translate';
-import { DetailedMeal } from '../meal/meal.types';
-import { DishType, MealType } from '../../common/enums';
+import { DetailedDish } from '../dish/dish.types';
+import { MealType, DishType } from '../../common/enums';
 
 jest.mock('@iamtraction/google-translate', () =>
     jest.fn((text, opts) => {
@@ -29,13 +29,13 @@ describe('TranslationService', () => {
         expect(translationService).toBeDefined();
     });
 
-    describe('translateMeal', () => {
+    describe('translateDish', () => {
         afterEach(() => {
             jest.clearAllMocks();
         });
 
-        it('should translate a detailed meal', async () => {
-            const mockDetailedMeal: DetailedMeal = {
+        it('should translate a detailed dish', async () => {
+            const mockDetailedDish: DetailedDish = {
                 id: '123',
                 type: MealType.ANY,
                 dishType: DishType.ANY,
@@ -75,14 +75,14 @@ describe('TranslationService', () => {
                 ]
             };
 
-            const { description, ingredients, recipe } = await translationService.translateMeal(mockDetailedMeal, 'pl');
+            const { description, ingredients, recipe } = await translationService.translateDish(mockDetailedDish, 'pl');
 
             // NOTE: Only description contains `mocked translation of` regarding concatenating all string into one.
             // NOTE: Hence, ingredients, steps and section names do not contain that fragment.
 
-            expect(description).toEqual(`mocked translation of ${mockDetailedMeal.description}`);
-            expect(ingredients.length).toEqual(mockDetailedMeal.ingredients.length);
-            expect(recipe.length).toEqual(mockDetailedMeal.recipeSections.length);
+            expect(description).toEqual(`mocked translation of ${mockDetailedDish.description}`);
+            expect(ingredients.length).toEqual(mockDetailedDish.ingredients.length);
+            expect(recipe.length).toEqual(mockDetailedDish.recipeSections.length);
             expect(translate).toHaveBeenCalledTimes(1);
             expect(ingredients[0].text).toEqual('3 sticks of carrot');
             expect(ingredients[0].imageUrl).toEqual('1.jpg');

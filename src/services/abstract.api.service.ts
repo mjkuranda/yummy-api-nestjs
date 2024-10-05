@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { RedisService } from '../modules/redis/redis.service';
 import { MealType } from '../common/enums';
-import { DetailedMeal, RatedMeal } from '../modules/meal/meal.types';
-import { getQueryWithIngredientsAndMealType } from '../modules/meal/meal.utils';
+import { DetailedDish, RatedDish } from '../modules/dish/dish.types';
+import { getQueryWithIngredientsAndDishType } from '../modules/dish/dish.utils';
 import { AxiosResponse } from 'axios';
 import { ApiName } from '../modules/redis/redis.types';
 import { ContextString } from '../common/types';
 import { LoggerService } from '../modules/logger/logger.service';
 import { AxiosService } from './axios.service';
-import { IngredientType, MealIngredient } from '../modules/ingredient/ingredient.types';
+import { IngredientType, DishIngredient } from '../modules/ingredient/ingredient.types';
 
 @Injectable()
-export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStruct, GenericMealDetailsStruct, MealInstructionStruct> {
+export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStruct, GenericDishDetailsStruct, DishInstructionStruct> {
 
     constructor(
         protected readonly axiosService: AxiosService,
@@ -23,21 +23,21 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
 
     abstract getName(): ApiName;
 
-    abstract proceedDataToMeals(data: GenericMealStruct[], providedIngredients?: IngredientType[]): RatedMeal[];
+    abstract proceedDataToDishes(data: GenericDishStruct[], providedIngredients?: IngredientType[]): RatedDish[];
 
-    abstract proceedDataToMealDetails(data: GenericMealDetailsStruct, instructionData: MealInstructionStruct): DetailedMeal;
+    abstract proceedDataToDishDetails(data: GenericDishDetailsStruct, instructionData: DishInstructionStruct): DetailedDish;
 
-    abstract proceedDataToMealIngredients(ingredients: GenericIngredientStruct[]): MealIngredient[];
+    abstract proceedDataToDishIngredients(ingredients: GenericIngredientStruct[]): DishIngredient[];
 
     abstract proceedDataToIngredientList(ingredients: GenericIngredientStruct[]): IngredientType[];
 
-    async getMeals(apiKey: string, endpointUrl: string, ingredients: IngredientType[], mealType?: MealType): Promise<RatedMeal[]> {
-        const query = getQueryWithIngredientsAndMealType(ingredients, mealType, this.getName(), apiKey);
-        const cachedResult = await this.redisService.getMealResult(this.getName(), query);
-        const context: ContextString = 'AbstractApiService/getMeals';
+    async getDishes(apiKey: string, endpointUrl: string, ingredients: IngredientType[], mealType?: MealType): Promise<RatedDish[]> {
+        const query = getQueryWithIngredientsAndDishType(ingredients, mealType, this.getName(), apiKey);
+        const cachedResult = await this.redisService.getDishResult(this.getName(), query);
+        const context: ContextString = 'AbstractApiService/getDishes';
 
         if (cachedResult) {
-            this.loggerService.info(context, `Found cached query providing ${cachedResult.length} meals.`);
+            this.loggerService.info(context, `Found cached query providing ${cachedResult.length} dishes.`);
 
             return cachedResult;
         }
@@ -45,53 +45,53 @@ export abstract class AbstractApiService<GenericMealStruct, GenericIngredientStr
         const url: string = this.getFullApiUrl(endpointUrl, query);
 
         try {
-            const result: AxiosResponse<GenericMealStruct[], unknown> = await this.axiosService.get(url);
+            const result: AxiosResponse<GenericDishStruct[], unknown> = await this.axiosService.get(url);
 
             if (result.status < 200 || result.status >= 300) {
-                this.loggerService.error(context, `External API returned ${result.status} code with "${result.statusText}" message. Returned 0 meals.`);
+                this.loggerService.error(context, `External API returned ${result.status} code with "${result.statusText}" message. Returned 0 dishes.`);
 
                 return [];
             }
 
-            const meals: RatedMeal[] = this.proceedDataToMeals(result.data, ingredients);
-            await this.redisService.saveMealResult(this.getName(), query, meals);
-            this.loggerService.info(context, `Received ${meals.length} meals. Query "${query}" has been cached from "${this.getName()}" API.`);
+            const dishes: RatedDish[] = this.proceedDataToDishes(result.data, ingredients);
+            await this.redisService.saveDishResult(this.getName(), query, dishes);
+            this.loggerService.info(context, `Received ${dishes.length} dishes. Query "${query}" has been cached from "${this.getName()}" API.`);
 
-            return meals;
+            return dishes;
         } catch (err: any) {
-            this.loggerService.error(context, 'Error occurred during fetching from external API. Received 0 meals.');
+            this.loggerService.error(context, 'Error occurred during fetching from external API. Received 0 dishes.');
 
             return [];
         }
     }
 
-    async getMealDetails(apiUrl: string, apiInstructionUrl: string): Promise<DetailedMeal> {
+    async getDishDetails(apiUrl: string, apiInstructionUrl: string): Promise<DetailedDish> {
         const url: string = this.getFullApiUrl(apiUrl);
         const instructionUrl: string = this.getFullApiUrl(apiInstructionUrl);
-        const context = 'AbstractApiService/getMealDetails';
+        const context = 'AbstractApiService/getDishDetails';
 
         try {
-            const result: AxiosResponse<GenericMealDetailsStruct, unknown> = await this.axiosService.get(url);
-            const instruction: AxiosResponse<MealInstructionStruct, unknown> = await this.axiosService.get(instructionUrl);
+            const result: AxiosResponse<GenericDishDetailsStruct, unknown> = await this.axiosService.get(url);
+            const instruction: AxiosResponse<DishInstructionStruct, unknown> = await this.axiosService.get(instructionUrl);
 
             if (result.status < 200 || result.status >= 300) {
-                this.loggerService.error(context, `External API returned ${result.status} code with "${result.statusText}" message. Returned 0 meals.`);
+                this.loggerService.error(context, `External API returned ${result.status} code with "${result.statusText}" message. Returned 0 dishes.`);
 
                 return null;
             }
 
             if (instruction.status < 200 || instruction.status >= 300) {
-                this.loggerService.error(context, `External API returned ${instruction.status} code with "${instruction.statusText}" message. Returned 0 meals.`);
+                this.loggerService.error(context, `External API returned ${instruction.status} code with "${instruction.statusText}" message. Returned 0 dishes.`);
 
                 return null;
             }
 
-            const meal: DetailedMeal = this.proceedDataToMealDetails(result.data, instruction.data);
-            this.loggerService.info(context, `Received meal with details from "${this.getName()}" API.`);
+            const dish: DetailedDish = this.proceedDataToDishDetails(result.data, instruction.data);
+            this.loggerService.info(context, `Received dish with details from "${this.getName()}" API.`);
 
-            return meal;
+            return dish;
         } catch (err: any) {
-            this.loggerService.error(context, `Error occurred during fetching a meal from ${this.getName()} API: ${err.message}.`);
+            this.loggerService.error(context, `Error occurred during fetching a dish from ${this.getName()} API: ${err.message}.`);
 
             return null;
         }
