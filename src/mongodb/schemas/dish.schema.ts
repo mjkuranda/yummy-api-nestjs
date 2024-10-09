@@ -30,10 +30,6 @@ export const DishSchema = new mongoose.Schema({
     description: {
         type: String
     },
-    dishType: {
-        type: String,
-        required: true
-    },
     imageUrl: {
         type: String
     },
@@ -42,6 +38,10 @@ export const DishSchema = new mongoose.Schema({
         required: true
     },
     language: {
+        type: String,
+        required: true
+    },
+    mealType: {
         type: String,
         required: true
     },
