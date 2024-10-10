@@ -1,6 +1,6 @@
 import { SpoonacularIngredient } from '../modules/api/spoonacular/spoonacular.api.types';
 import { RatedDish } from '../modules/dish/dish.types';
-import { DishType } from './enums';
+import { DishType, MealType } from './enums';
 
 export function toFixNumber(relevance: number): number {
     const fixed = relevance.toFixed(2);
@@ -112,4 +112,12 @@ export function inferDishType(mealTitle: string): DishType {
     }
 
     return DishType.ANY;
+}
+
+export function inferMealType(dishType: DishType): MealType {
+    if ([DishType.SOUP, DishType.MAIN_COURSE, DishType.SALAD].includes(dishType)) {
+        return MealType.LAUNCH;
+    }
+
+    return MealType.ANY;
 }
