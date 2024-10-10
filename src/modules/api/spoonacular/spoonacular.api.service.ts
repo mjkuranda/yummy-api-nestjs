@@ -8,9 +8,8 @@ import {
     SpoonacularRecipeDetails,
     SpoonacularRecipeSections
 } from './spoonacular.api.types';
-import { IngredientType, DishIngredient } from '../../ingredient/ingredient.types';
-import { calculateCheckingAgain, inferDishType } from '../../../common/helpers';
-import { MealType } from '../../../common/enums';
+import { DishIngredient, IngredientType } from '../../ingredient/ingredient.types';
+import { calculateCheckingAgain, inferDishType, inferMealType } from '../../../common/helpers';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularRecipeSections> {
@@ -54,6 +53,8 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
     proceedDataToDishes(data: SpoonacularRecipe[], providedIngredients?: IngredientType[]): RatedDish[] {
         return data.map(recipe => {
             const { relevance, missingCount } = calculateCheckingAgain(providedIngredients, recipe.usedIngredients, recipe.missedIngredients);
+            const type = inferDishType(recipe.title);
+            const mealType = inferMealType(type);
 
             return {
                 id: recipe.id.toString(),
@@ -63,8 +64,8 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 relevance,
                 title: recipe.title,
                 provider: 'spoonacular',
-                type: inferDishType(recipe.title),
-                mealType: MealType.ANY
+                type,
+                mealType
             };
         });
     }
@@ -75,6 +76,8 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
             vegetarian, vegan, glutenFree, dairyFree, veryHealthy,
             readyInMinutes, sourceName
         } = data;
+        const type = inferDishType(title);
+        const mealType = inferMealType(type);
 
         return {
             id: id.toString(),
@@ -97,8 +100,8 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 name: section.name,
                 steps: section.steps.map(step => step.step)
             })),
-            type: inferDishType(title),
-            mealType: MealType.ANY
+            type,
+            mealType
         };
     }
 }
