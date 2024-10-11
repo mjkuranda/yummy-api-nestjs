@@ -1,6 +1,6 @@
 import { SpoonacularIngredient } from '../modules/api/spoonacular/spoonacular.api.types';
 import { RatedDish } from '../modules/dish/dish.types';
-import { DishType, MealType } from './enums';
+import { BeverageTypes, DessertTypes, DishType, MainCourseTypes, MealType, SaladTypes, SoupTypes } from './enums';
 
 export function toFixNumber(number: number, fractionDigits: number = 2): number {
     const fixed = number.toFixed(fractionDigits);
@@ -103,31 +103,23 @@ export function normalizeUnit(amount: number, unit: string): string {
 export function inferDishType(mealTitle: string): DishType {
     const title = mealTitle.toLowerCase();
 
-    if (title.includes('soup')) {
+    if (SoupTypes.some(type => title.includes(type))) {
         return DishType.SOUP;
     }
 
-    if (title.includes('main dish') || title.includes('stew')) {
+    if (MainCourseTypes.some(type => title.includes(type))) {
         return DishType.MAIN_COURSE;
     }
 
-    if (title.includes('baked') || title.includes('grilled') || title.includes('stewed') || title.includes('fried')) {
-        return DishType.MAIN_COURSE;
-    }
-
-    if (title.includes('pasta with')) {
-        return DishType.MAIN_COURSE;
-    }
-
-    if (title.includes('salad')) {
+    if (SaladTypes.some(type => title.includes(type))) {
         return DishType.SALAD;
     }
 
-    if (title.includes('dessert') || title.includes('cake') || title.includes('pie')) {
+    if (DessertTypes.some(type => title.includes(type))) {
         return DishType.DESSERT;
     }
 
-    if (title.includes('beverage')) {
+    if (BeverageTypes.some(type => title.includes(type))) {
         return DishType.BEVERAGE;
     }
 

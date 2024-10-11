@@ -16,6 +16,16 @@ export enum DishType {
     BEVERAGE = 'beverage'
 }
 
+export const SoupTypes = ['soup'] as const;
+
+export const MainCourseTypes = ['main course', 'stew', 'grilled', 'stewed', 'fried', 'pasta with'] as const;
+
+export const SaladTypes = ['salad'] as const;
+
+export const DessertTypes = ['dessert', 'cake', 'pie', 'pudding'] as const;
+
+export const BeverageTypes = ['beverage', 'smoothie', 'mojito', 'pina colada', 'juice', 'tea', 'chai', 'coffee'] as const;
+
 export enum IngredientName {
     BLUEBERRY = 'blueberry',
     CHERRY = 'cherry',
@@ -41,83 +51,71 @@ export enum IngredientName {
     ZUCCHINI = 'zucchini'
 }
 
+// https://en.wikipedia.org/wiki/Ounce
+const OunceUnitConverter: IngredientUnitConverter = {
+    multiplier: 28.349523125, // The international yard and pound agreement
+    targetUnit: 'g',
+    targetUnitBorder: 1000,
+    superiorUnit: 'kg'
+} as const;
+
+// https://en.wikipedia.org/wiki/Pound_(mass)
+const PoundUnitConverter: IngredientUnitConverter = {
+    multiplier: 453, // SI
+    targetUnit: 'g',
+    targetUnitBorder: 1000,
+    superiorUnit: 'kg'
+} as const;
+
+// https://en.wikipedia.org/wiki/Pint
+const PintUnitConverter: IngredientUnitConverter = {
+    multiplier: 568.261, // SI (imperial)
+    targetUnit: 'ml',
+    targetUnitBorder: 1000,
+    superiorUnit: 'l'
+} as const;
+
+// https://en.wikipedia.org/wiki/Quart
+const QuartUnitConverter: IngredientUnitConverter = {
+    multiplier: 1.13652, // SI
+    targetUnit: 'l',
+    targetUnitBorder: 100,
+    superiorUnit: 'hl'
+} as const;
+
+// https://en.wikipedia.org/wiki/Gallon
+const GallonUnitConverter: IngredientUnitConverter = {
+    multiplier: 4.54609, // SI
+    targetUnit: 'l',
+    targetUnitBorder: 100,
+    superiorUnit: 'hl'
+} as const;
+
+// https://en.wikipedia.org/wiki/Fluid_ounce
+const FluidOunceUnitConverter: IngredientUnitConverter = {
+    multiplier: 28.41306, // SI
+    targetUnit: 'ml',
+    targetUnitBorder: 1000,
+    superiorUnit: 'l'
+} as const;
+
 export const IngredientUnitConverters: Record<string, IngredientUnitConverter> = {
-    // https://en.wikipedia.org/wiki/Ounce
-    'ounces': {
-        multiplier: 28.349523125, // The international yard and pound agreement
-        targetUnit: 'g',
-        targetUnitBorder: 1000,
-        superiorUnit: 'kg'
-    },
-    'oz': {
-        multiplier: 28.349523125, // The international yard and pound agreement
-        targetUnit: 'g',
-        targetUnitBorder: 1000,
-        superiorUnit: 'kg'
-    },
-    // https://en.wikipedia.org/wiki/Pound_(mass)
-    'pounds': {
-        multiplier: 453, // SI
-        targetUnit: 'g',
-        targetUnitBorder: 1000,
-        superiorUnit: 'kg'
-    },
-    'lb': {
-        multiplier: 453, // SI
-        targetUnit: 'g',
-        targetUnitBorder: 1000,
-        superiorUnit: 'kg'
-    },
-    // https://en.wikipedia.org/wiki/Pint
-    'pints': {
-        multiplier: 568.261, // SI (imperial)
-        targetUnit: 'ml',
-        targetUnitBorder: 1000,
-        superiorUnit: 'l'
-    },
-    'pt': {
-        multiplier: 568.261, // SI (imperial)
-        targetUnit: 'ml',
-        targetUnitBorder: 1000,
-        superiorUnit: 'l'
-    },
-    // https://en.wikipedia.org/wiki/Quart
-    'quarts': {
-        multiplier: 1.13652, // SI
-        targetUnit: 'l',
-        targetUnitBorder: 100,
-        superiorUnit: 'hl'
-    },
-    'qt': {
-        multiplier: 1.13652, // SI
-        targetUnit: 'l',
-        targetUnitBorder: 100,
-        superiorUnit: 'hl'
-    },
-    // https://en.wikipedia.org/wiki/Gallon
-    'gallons': {
-        multiplier: 4.54609, // SI
-        targetUnit: 'l',
-        targetUnitBorder: 100,
-        superiorUnit: 'hl'
-    },
-    'gal': {
-        multiplier: 4.54609, // SI
-        targetUnit: 'l',
-        targetUnitBorder: 100,
-        superiorUnit: 'hl'
-    },
-    // https://en.wikipedia.org/wiki/Fluid_ounce
-    'fluid ounces':{
-        multiplier: 28.41306, // SI
-        targetUnit: 'ml',
-        targetUnitBorder: 1000,
-        superiorUnit: 'l'
-    },
-    'fl oz': {
-        multiplier: 28.41306, // SI
-        targetUnit: 'ml',
-        targetUnitBorder: 1000,
-        superiorUnit: 'l'
-    }
+    'ounces': OunceUnitConverter,
+    'ounce': OunceUnitConverter,
+    'oz': OunceUnitConverter,
+    'pounds': PoundUnitConverter,
+    'pound': PoundUnitConverter,
+    'lb': PoundUnitConverter,
+    'pints': PintUnitConverter,
+    'pint': PintUnitConverter,
+    'pt': PintUnitConverter,
+    'quarts': QuartUnitConverter,
+    'quart': QuartUnitConverter,
+    'qt': QuartUnitConverter,
+    'gallons': GallonUnitConverter,
+    'gallon': GallonUnitConverter,
+    'gal': GallonUnitConverter,
+    'fluid ounces': FluidOunceUnitConverter,
+    'fluid ounce': FluidOunceUnitConverter,
+    'fl oz': FluidOunceUnitConverter
 };
