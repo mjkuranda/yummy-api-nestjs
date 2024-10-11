@@ -37,3 +37,17 @@ export interface TransformedBody<TData> {
     data: TData;
     authenticatedUser: UserAccessTokenPayload;
 }
+
+/**
+ * Ingredient unit converter
+ * multiplier number 28.35
+ * targetUnit string g
+ * targetUnitBorder number 1000 - amount that requires conversion to superior unit
+ * superiorUnit string kg
+ */
+export interface IngredientUnitConverter {
+    multiplier: number;
+    targetUnit: string;
+    targetUnitBorder: number,
+    superiorUnit: string
+}

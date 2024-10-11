@@ -1,7 +1,8 @@
 import { SpoonacularIngredient, SpoonacularRecipe } from './spoonacular.api.types';
 import { RatedDish } from '../../dish/dish.types';
 import { IngredientType } from '../../ingredient/ingredient.types';
-import { inferDishType, inferMealType } from '../../../common/helpers';
+import { discardDecimalPoint, inferDishType, inferMealType, toFixNumber } from '../../../common/helpers';
+import { IngredientUnitConverters } from '../../../common/enums';
 
 export function proceedRecipesToDishes(recipes: SpoonacularRecipe[]): RatedDish[] {
     return recipes.map(recipe => {
@@ -24,4 +25,24 @@ export function proceedRecipesToDishes(recipes: SpoonacularRecipe[]): RatedDish[
 
 function proceedIngredients(ingredients: SpoonacularIngredient[]): IngredientType[] {
     return ingredients.map(ingredient => ingredient.name);
+}
+
+export function proceedIngredientUnit(ingredient: SpoonacularIngredient): SpoonacularIngredient {
+    const { multiplier, targetUnit, targetUnitBorder, superiorUnit } = IngredientUnitConverters[ingredient.unit];
+
+    const convertedAmount = ingredient.amount * multiplier;
+    const unit = convertedAmount > targetUnitBorder ? superiorUnit : targetUnit;
+    const amount = convertedAmount > targetUnitBorder ? convertedAmount / targetUnitBorder : convertedAmount;
+
+    return {
+        ...ingredient,
+        name: ingredient.name,
+        image: ingredient.image,
+        amount: ['g', 'ml'].includes(unit) ? discardDecimalPoint(amount) : toFixNumber(amount, 1),
+        unit
+    };
+}
+
+export function proceedSummarySpaces(summary: string): string {
+    return summary.replace(/<\/\s*([abi])\s*>/g, '</$1>');
 }
