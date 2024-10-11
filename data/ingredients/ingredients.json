@@ -373,7 +373,8 @@
         "pl": "oliwa z oliwek extra vergine"
     },
     "carrot": {
-        "id": "11124",
+        "id": 11124,
+        "imageUrl": "sliced-carrot.png",
         "en": "carrot",
         "pl": "marchewka"
     },

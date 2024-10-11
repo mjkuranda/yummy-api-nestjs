@@ -6,7 +6,6 @@ import {
     Length,
     Max,
     Min,
-    MinLength,
     ValidateNested
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -43,8 +42,7 @@ export class CreateDishDto<Ingredient> {
     @Min(1, { message: 'Preparation time must last at least 1 minute' })
     readonly readyInMinutes: number;
 
-    @IsNotEmpty({ message: 'Dish should have a recipe' })
-    @MinLength(1, { message: 'Dish should have at least one recipe' })
+    @IsNotEmpty({ message: 'Dish should have at least one recipe' })
     readonly recipeSections: DishRecipeSections;
 
     @IsNotEmpty({ message: 'Dish should have a title' })
