@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Password requirements.
 - [Marek Kurańda](https://github.com/mjkuranda): Missing dish constraints.
+- [Marek Kurańda](https://github.com/mjkuranda): New dish types such as `dessert` and `beverage`.
 
 ## [2.2.1] - 2024-10-11
 ### Fixed
