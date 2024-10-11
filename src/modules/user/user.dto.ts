@@ -1,4 +1,5 @@
 import { CapabilityType } from './user.types';
+import { IsNotEmpty, IsOptional, Length, Matches, MinLength } from 'class-validator';
 
 export class UserDto {
     readonly _id: string;
@@ -15,9 +16,20 @@ export class UserLoginDto {
 }
 
 export class CreateUserDto {
+    @IsNotEmpty({ message: 'User should have a defined email' })
+    @Length(6, 48)
     readonly email: string;
+
+    @IsNotEmpty({ message: 'User should have a defined login' })
+    @Length(4, 32)
     readonly login: string;
+
+    @IsNotEmpty({ message: 'User should have a defined password' })
+    @MinLength(8, { message: 'Password must have 8 or more characters long' })
+    @Matches(/(?=.*[0-9])(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?`~])/, { message: 'Password must contain at least one number and one special character' })
     readonly password: string;
+
+    @IsOptional()
     readonly salt: string;
 }
 
