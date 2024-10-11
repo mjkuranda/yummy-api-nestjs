@@ -21,7 +21,7 @@ export class CreateDishDto<Ingredient> {
     readonly description: string;
 
     @IsOptional()
-    @Length(3, 64)
+    @Length(3, 256)
     readonly imageUrl: string;
 
     @IsArray()
