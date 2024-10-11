@@ -5,7 +5,7 @@ export interface TranslatedIngredient {
     imageUrl: string;
 }
 
-export interface TranslatedDetailedMeal {
+export interface TranslatedDetailedDish {
     description: string;
     ingredients: TranslatedIngredient[];
     recipe: DishRecipeSections;

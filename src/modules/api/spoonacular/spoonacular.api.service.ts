@@ -10,7 +10,7 @@ import {
 } from './spoonacular.api.types';
 import { DishIngredient, IngredientType } from '../../ingredient/ingredient.types';
 import { calculateCheckingAgain, inferDishType, inferMealType } from '../../../common/helpers';
-import { proceedIngredientUnit, proceedSummarySpaces } from './spoonacular.api.utils';
+import { proceedIngredientUnit } from './spoonacular.api.utils';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularRecipeSections> {
@@ -77,7 +77,6 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
             vegetarian, vegan, glutenFree, dairyFree, veryHealthy,
             readyInMinutes, sourceName
         } = data;
-        const description = proceedSummarySpaces(summary);
         const type = inferDishType(title);
         const mealType = inferMealType(type);
 
@@ -87,7 +86,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
             ingredients: this.proceedDataToDishIngredients(extendedIngredients),
             language: 'en',
             title,
-            description,
+            description: summary,
             readyInMinutes,
             sourceOrAuthor: sourceName,
             properties: {

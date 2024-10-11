@@ -28,7 +28,13 @@ function proceedIngredients(ingredients: SpoonacularIngredient[]): IngredientTyp
 }
 
 export function proceedIngredientUnit(ingredient: SpoonacularIngredient): SpoonacularIngredient {
-    const { multiplier, targetUnit, targetUnitBorder, superiorUnit } = IngredientUnitConverters[ingredient.unit];
+    const converter = IngredientUnitConverters[ingredient.unit];
+
+    if (!converter) {
+        return ingredient;
+    }
+
+    const { multiplier, targetUnit, targetUnitBorder, superiorUnit } = converter;
 
     const convertedAmount = ingredient.amount * multiplier;
     const unit = convertedAmount > targetUnitBorder ? superiorUnit : targetUnit;
@@ -43,6 +49,6 @@ export function proceedIngredientUnit(ingredient: SpoonacularIngredient): Spoona
     };
 }
 
-export function proceedSummarySpaces(summary: string): string {
-    return summary.replace(/<\/\s*([abi])\s*>/g, '</$1>');
+export function proceedTagsSpaces(dishDescription: string): string {
+    return dishDescription.replaceAll(/<\s*\/\s*([abi])\s*>/g, '</$1>');
 }
