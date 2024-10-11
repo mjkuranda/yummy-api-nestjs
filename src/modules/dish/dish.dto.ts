@@ -1,4 +1,14 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, IsOptional, Length, Max, Min, ValidateNested } from 'class-validator';
+import {
+    ArrayMinSize,
+    IsArray,
+    IsNotEmpty,
+    IsOptional,
+    Length,
+    Max,
+    Min,
+    MinLength,
+    ValidateNested
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { UserDto } from '../user/user.dto';
 import { DishProvider, DishRecipeSections } from './dish.types';
@@ -12,7 +22,7 @@ export class CreateDishDto<Ingredient> {
     readonly description: string;
 
     @IsOptional()
-    @Length(3, 48)
+    @Length(3, 64)
     readonly imageUrl: string;
 
     @IsArray()
@@ -30,13 +40,15 @@ export class CreateDishDto<Ingredient> {
     readonly provider: DishProvider;
 
     @IsNotEmpty({ message: 'Dish should have a time preparation defined' })
+    @Min(1, { message: 'Preparation time must last at least 1 minute' })
     readonly readyInMinutes: number;
 
     @IsNotEmpty({ message: 'Dish should have a recipe' })
+    @MinLength(1, { message: 'Dish should have at least one recipe' })
     readonly recipeSections: DishRecipeSections;
 
     @IsNotEmpty({ message: 'Dish should have a title' })
-    @Length(3, 16)
+    @Length(3, 64)
     readonly title: string;
 
     @IsNotEmpty({ message: 'Dish should have a dish type' })
@@ -67,8 +79,8 @@ export class CreateDishBodyDto {
 export class DishEditDto<Ingredient> {
     readonly title?: string;
     readonly description?: string;
-    readonly type?: MealType;
-    readonly dishType?: DishType;
+    readonly type?: DishType;
+    readonly mealType?: MealType;
     readonly ingredients?: Ingredient[];
     readonly readyInMinutes?: number;
     readonly recipeSections?: DishRecipeSections;

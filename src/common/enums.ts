@@ -11,7 +11,9 @@ export enum DishType {
     ANY = 'any',
     SOUP = 'soup',
     MAIN_COURSE = 'main course',
-    SALAD = 'salad'
+    SALAD = 'salad',
+    DESSERT = 'dessert',
+    BEVERAGE = 'beverage'
 }
 
 export enum IngredientName {

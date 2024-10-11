@@ -103,23 +103,39 @@ export function normalizeUnit(amount: number, unit: string): string {
 export function inferDishType(mealTitle: string): DishType {
     const title = mealTitle.toLowerCase();
 
-    if (title.includes('soup') || title.includes('stew')) {
+    if (title.includes('soup')) {
         return DishType.SOUP;
+    }
+
+    if (title.includes('main dish') || title.includes('stew')) {
+        return DishType.MAIN_COURSE;
+    }
+
+    if (title.includes('baked') || title.includes('grilled') || title.includes('stewed') || title.includes('fried')) {
+        return DishType.MAIN_COURSE;
+    }
+
+    if (title.includes('pasta with')) {
+        return DishType.MAIN_COURSE;
     }
 
     if (title.includes('salad')) {
         return DishType.SALAD;
     }
 
-    if (title.includes('main dish')) {
-        return DishType.MAIN_COURSE;
+    if (title.includes('dessert') || title.includes('cake') || title.includes('pie')) {
+        return DishType.DESSERT;
+    }
+
+    if (title.includes('beverage')) {
+        return DishType.BEVERAGE;
     }
 
     return DishType.ANY;
 }
 
 export function inferMealType(dishType: DishType): MealType {
-    if ([DishType.SOUP, DishType.MAIN_COURSE, DishType.SALAD].includes(dishType)) {
+    if ([DishType.SOUP, DishType.MAIN_COURSE, DishType.SALAD, DishType.DESSERT].includes(dishType)) {
         return MealType.LAUNCH;
     }
 
