@@ -10,6 +10,7 @@ import {
 } from './spoonacular.api.types';
 import { DishIngredient, IngredientType } from '../../ingredient/ingredient.types';
 import { calculateCheckingAgain, inferDishType, inferMealType } from '../../../common/helpers';
+import { proceedIngredientUnit } from './spoonacular.api.utils';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularRecipeSections> {
@@ -42,7 +43,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
             return true;
         };
 
-        return ingredients.filter(removeDuplicates).map(ingredient => ({
+        return ingredients.filter(removeDuplicates).map(proceedIngredientUnit).map(ingredient => ({
             amount: ingredient.amount,
             imageUrl: `https://img.spoonacular.com/ingredients_250x250/${ingredient.image}`,
             name: ingredient.name,

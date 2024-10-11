@@ -2,10 +2,14 @@ import { SpoonacularIngredient } from '../modules/api/spoonacular/spoonacular.ap
 import { RatedDish } from '../modules/dish/dish.types';
 import { DishType, MealType } from './enums';
 
-export function toFixNumber(relevance: number): number {
-    const fixed = relevance.toFixed(2);
+export function toFixNumber(number: number, fractionDigits: number = 2): number {
+    const fixed = number.toFixed(fractionDigits);
 
     return Number(fixed);
+}
+
+export function discardDecimalPoint(number: number): number {
+    return Number(number.toString().split('.')[0]);
 }
 
 export function calculateRelevance(providedIngredients: string[], mealIngredients: string[]): number {
