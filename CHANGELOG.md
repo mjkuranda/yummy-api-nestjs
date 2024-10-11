@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `Spoonacular` ingredient unit conversions to `g`, `kg`, `ml` and `l`.
 
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): Space within breaking tags located in ingredient `summary`.
+
 ## [2.1.0] - 2024-10-10
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Inferring `MealType` basing on `DishType`.

@@ -42,3 +42,7 @@ export function proceedIngredientUnit(ingredient: SpoonacularIngredient): Spoona
         unit
     };
 }
+
+export function proceedSummarySpaces(summary: string): string {
+    return summary.replace(/<\/\s*([abi])\s*>/g, '</$1>');
+}
