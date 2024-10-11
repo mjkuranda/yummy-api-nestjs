@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Language } from '../../common/types';
-import { TranslatedDetailedMeal, TranslatedIngredient } from './translation.types';
+import { TranslatedDetailedDish, TranslatedIngredient } from './translation.types';
 import { DetailedDish, DishRecipeSections } from '../dish/dish.types';
 import { compoundTextToTranslate, convertAmountToText, normalizeName, normalizeUnit } from '../../common/helpers';
 import translate from '@iamtraction/google-translate';
+import { proceedTagsSpaces } from '../api/spoonacular/spoonacular.api.utils';
 
 @Injectable()
 export class TranslationService {
 
-    async translateDish(meal: DetailedDish, targetLanguage?: Language): Promise<TranslatedDetailedMeal> {
+    async translateDish(dish: DetailedDish, targetLanguage?: Language): Promise<TranslatedDetailedDish> {
         // NOTE: Do not translate when your language is English
         if (['en', 'en-US'].includes(targetLanguage)) {
             return {
@@ -18,7 +19,7 @@ export class TranslationService {
             };
         }
 
-        const { description, ingredients, recipeSections } = meal;
+        const { description, ingredients, recipeSections } = dish;
         const recipeNewSectionIndexes: number[] = recipeSections.reduce((acc, curr, idx) => {
             if (acc.length === 0) {
                 return [0];
@@ -73,7 +74,7 @@ export class TranslationService {
         });
 
         return {
-            description: translatedDescription,
+            description: proceedTagsSpaces(translatedDescription),
             ingredients: ingredientList,
             recipe: translatedRecipeSections
         };
