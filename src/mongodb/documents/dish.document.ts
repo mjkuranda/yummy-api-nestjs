@@ -15,8 +15,8 @@ export interface DishDocument extends Document {
   readonly type: DishType;
   readonly mealType: MealType;
   readonly softAdded?: boolean;
-  readonly softDeleted?: boolean;
   readonly softEdited?: DishDocument;
+  readonly softDeleted?: boolean;
   readonly readyInMinutes: number;
   readonly recipeSections: DishRecipeSections;
 }
