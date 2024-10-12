@@ -381,7 +381,7 @@ export class DishService {
     }
 
     async getDishesSoftEdited(): Promise<DishDocument[]> {
-        return await this.dishRepository.findAll({ softEdited: { $eq: true }});
+        return await this.dishRepository.findAll({ softEdited: { $exists: true }});
     }
 
     async getDishesSoftDeleted(): Promise<DishDocument[]> {
