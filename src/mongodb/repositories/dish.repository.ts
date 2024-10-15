@@ -14,6 +14,10 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishW
         super(model);
     }
 
+    async delete(id: string): Promise<void> {
+        await this.model.deleteOne({ _id: id });
+    }
+
     async getDishes(providedIngredients: string[]): Promise<RatedDish[]> {
         const dishes = await this.findAll({
             'ingredients.name': { $in: providedIngredients },

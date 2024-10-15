@@ -12,6 +12,10 @@ export class DishRatingRepository extends AbstractRepository<DishRatingDocument,
         super(model);
     }
 
+    async deleteAll(dishId: string): Promise<void> {
+        await this.model.deleteMany({ dishId });
+    }
+
     async getAverageRatingForDish(dishId: string): Promise<DishRating> {
         const pipeline: PipelineStage[] = [
             { $match: { dishId }},

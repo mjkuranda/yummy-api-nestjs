@@ -184,7 +184,7 @@ export class DishService {
             throw new NotFoundException(context, message);
         }
 
-        await this.redisService.unset<DishDocument>(dish, 'dish');
+        await this.redisService.deleteDish(dish._id);
         await this.dishRepository.updateOne({ _id: dish._id }, {
             $set: {
                 softDeleted: true
@@ -215,8 +215,11 @@ export class DishService {
             throw new NotFoundException(context, message);
         }
 
-        await this.dishRepository.deleteOne({ _id: dish._id });
-        const deletedDish = await this.dishRepository.findById(dish._id) as DishDocument;
+        await this.redisService.deleteDish(dish._id);
+        await this.dishCommentRepository.deleteAll(dish._id);
+        await this.dishRatingRepository.deleteAll(dish._id);
+        await this.dishRepository.delete(dish._id);
+        const deletedDish = await this.dishRepository.findById(dish._id) as DishDocument; // FIXME: Is it null always? It's just after deletion O.O
 
         this.loggerService.info(context, `Dish with id "${dish._id}" (titled: "${dish.title}") has been confirmed deleting by "${user.login}" user.`);
 
@@ -244,6 +247,10 @@ export class DishService {
             if (dishDocument) {
                 if (dishDocument.softAdded) {
                     throw new ForbiddenException(context, `Dish with "${id}" id was not confirmed by admin. Therefore, it is impossible to see its content.`);
+                }
+
+                if (dishDocument.softDeleted) {
+                    throw new ForbiddenException(context, `Dish with "${id}" id is labeled to be deleted. Therefore, it is impossible to see its content.`);
                 }
 
                 const dishDetails: DetailedDish = proceedDishDocumentToDishDetails(dishDocument);
