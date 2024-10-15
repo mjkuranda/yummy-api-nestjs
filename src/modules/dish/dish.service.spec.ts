@@ -45,10 +45,21 @@ describe('DishService', () => {
         getDishes: jest.fn()
     };
 
+    const mockDishRepository = {
+        ...mockDishService,
+        delete: jest.fn()
+    };
+
+    const mockDishCommentRepository = {
+        ...mockDishService,
+        deleteAll: jest.fn()
+    };
+
     const mockDishRatingRepository = {
         ...mockDishService,
         getAverageRatingForDish: jest.fn(),
-        updateAndReturnDocument: jest.fn()
+        updateAndReturnDocument: jest.fn(),
+        deleteAll: jest.fn()
     };
 
     const mockSpoonacularApiService = {
@@ -66,6 +77,7 @@ describe('DishService', () => {
         set: jest.fn(),
         unset: jest.fn(),
         hasDish: jest.fn(),
+        deleteDish: jest.fn(),
         encodeKey: jest.fn(),
         getDishResult: jest.fn(),
         saveDishResult: jest.fn(),
@@ -82,8 +94,8 @@ describe('DishService', () => {
             providers: [
                 DishService,
                 IngredientService,
-                { provide: DishRepository, useValue: mockDishService },
-                { provide: DishCommentRepository, useValue: mockDishService },
+                { provide: DishRepository, useValue: mockDishRepository },
+                { provide: DishCommentRepository, useValue: mockDishCommentRepository },
                 { provide: DishRatingRepository, useValue: mockDishRatingRepository },
                 { provide: SearchQueryRepository, useValue: mockDishService },
                 { provide: JwtService, useClass: JwtService },
@@ -289,8 +301,8 @@ describe('DishService', () => {
             const result = await dishService.delete(mockId);
 
             expect(result).toBe(mockDeletedDish);
-            expect(redisService.unset).toHaveBeenCalled();
-            expect(redisService.unset).toHaveBeenCalledWith(mockDish, 'dish');
+            expect(redisService.deleteDish).toHaveBeenCalled();
+            expect(redisService.deleteDish).toHaveBeenCalledWith(mockId);
         });
     });
 
@@ -395,7 +407,7 @@ describe('DishService', () => {
 
         it('should return a dish when found its in local database and cache it', async () => {
             const mockDish: any = {
-                id: 'xyz',
+                id: '5cabe64dcf0d4447fa60f5e2',
                 ingredients: [
                     { name: 'x', amount: 1, unit: 'y' }
                 ]
@@ -409,6 +421,7 @@ describe('DishService', () => {
             const result = await dishService.getDishDetails(mockId);
 
             expect(result).toStrictEqual(resultDish);
+            expect(dishRepository.findById).toHaveBeenCalledWith(mockId);
             expect(redisService.saveDishDetails).toHaveBeenCalled();
         });
 
