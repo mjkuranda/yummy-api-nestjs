@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2024-10-15
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Throwing an error when dish is marked as `soft-deleted`.
+- [Marek Kurańda](https://github.com/mjkuranda): Unsetting `dish` and `dish-details` cache records related to deleted dish.
+- [Marek Kurańda](https://github.com/mjkuranda): Unsetting `dish` and `dish-details` cache records related to edited dish.
+- [Marek Kurańda](https://github.com/mjkuranda): Deleting all comments and ratings related to deleted dish.
+
 ## [2.3.4] - 2024-10-12
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): Detecting edited dishes.

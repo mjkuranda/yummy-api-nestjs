@@ -10,4 +10,8 @@ export class DishCommentRepository extends AbstractRepository<DishCommentDocumen
     constructor(@InjectModel(models.DISH_COMMENT_MODEL) model: Model<DishCommentDocument>) {
         super(model);
     }
+
+    async deleteAll(dishId: string): Promise<void> {
+        await this.model.deleteMany({ dishId });
+    }
 }

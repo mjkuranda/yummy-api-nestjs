@@ -10,7 +10,7 @@ import { ACCESS_TOKEN_DURATION, REFRESH_TOKEN_DURATION } from '../../constants/t
 
 type RedisKeyType = string | `${string}:${string}`;
 
-type DocumentType = 'ingredient' | 'ingredients' | 'dish' | 'dishes' | 'user' | 'users';
+type DocumentType = 'ingredient' | 'ingredients' | 'dish' | 'dishes' | 'dish-details' | 'user' | 'users';
 
 @Injectable()
 export class RedisService {
@@ -32,6 +32,11 @@ export class RedisService {
         const details = await this.redisClient.get(`dish-details:${dishId}`);
 
         return Boolean(dish !== null || details !== null);
+    }
+
+    async deleteDish(dishId: string): Promise<void> {
+        await this.redisClient.del(`dish:${dishId}`);
+        await this.redisClient.del(`dish-details:${dishId}`);
     }
 
     async get<Document>(key: RedisKeyType): Promise<Document[] | Document | null> {
