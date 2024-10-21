@@ -164,8 +164,8 @@ All above endpoints excluding `GET /dishes` and `GET /dishes/:id` require `acces
 * `serverUrl/images/dishes/${filename}` - returns image as a static file.
 
 ## Environmental variables
-
 To set up this backend application, you need to define the following variables:
+
 To connect with local database, you need:
 - `DB_HOSTNAME` (hostname for MongoDB)
 - `DB_PORT` (port for MongoDB)
@@ -190,6 +190,9 @@ To connect to Spoonacular API, provide:
 - `SPOONACULAR_API_KEY` (API key defined for a particular account on Spoonacular)
 
 Provide `PASSWORD_PEPPER` to protect all user account passwords.
+
+Provide `FRONTEND_WEB`, `FRONTEND_MOBILE` URLs to enable CORS for themselves, e.g. `http://localhost:3000`.
+Also, you can add `FRONTEND_OTHERS` URLs providing a string, concatenated with `,` character, i.e. `http://localhost:3000,http://localhost:3001`.
 
 ## Development
 You need to change version in `package.json` and add a record to the `CHANGELOG.md`.

@@ -109,7 +109,7 @@ describe('UserService', () => {
                 {
                     provide: MailManagerService,
                     useValue: {
-                        sendActivationMail: jest.fn().mockImplementation((email, id) => {})
+                        sendActivationMail: jest.fn()
                     }
                 },
                 {
@@ -328,7 +328,7 @@ describe('UserService', () => {
 
             expect(result).toBe(mockCreatedUser);
             expect(userActionRepository.create).toBeCalled();
-            expect(mailManagerService.sendActivationMail).toBeCalledWith(mockCreatedUser.email, mockUserAction._id);
+            expect(mailManagerService.sendActivationMail).toBeCalledWith(mockCreatedUser.email, mockCreatedUser.login, mockUserAction._id);
         });
 
         it('should throw an error when the user exist', async () => {

@@ -63,6 +63,7 @@ export class UserService {
             throw new BadRequestException(context, message);
         }
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const accessToken = await this.jwtManagerService.generateAccessToken({ login, isAdmin: user.isAdmin, capabilities: user.capabilities });
         const refreshToken = await this.jwtManagerService.generateRefreshToken({ login });
@@ -142,20 +143,12 @@ export class UserService {
             userId: newUser._id,
             type: 'activate'
         }) as UserActionDocument;
-        await this.mailManagerService.sendActivationMail(newUser.email, userActionRecord._id);
+        await this.mailManagerService.sendActivationMail(newUser.email, newUser.login, userActionRecord._id);
         const message = `Created user "${newUser.login}" with id "${newUser._id}". To activate its, use: "${userActionRecord._id}" activation code.`;
         this.loggerService.info(context, message);
 
         return newUser;
     }
-
-    // async getHashedPassword(password: string): Promise<string> {
-    //     return await bcrypt.hash(password, 12);
-    // }
-    //
-    // async areSameHashedPasswords(password: string, hashedPassword: string): Promise<boolean> {
-    //     return await bcrypt.compare(password, hashedPassword);
-    // }
 
     async grantPermission(user: UserDto, byUser: UserDto, capability: CapabilityType): Promise<boolean> {
         const context = 'UserService/grantPermission';

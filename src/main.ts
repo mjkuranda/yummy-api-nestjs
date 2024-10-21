@@ -3,11 +3,12 @@ import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { ValidationPipe } from './pipes/validation.pipe';
+import { getCorsOrigins } from './utils';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.enableCors({
-        origin: ['http://localhost:3000', 'exp://192.168.1.111:8081', 'http://localhost:8081'],
+        origin: getCorsOrigins(),
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
         credentials: true
     });
