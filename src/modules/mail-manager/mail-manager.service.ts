@@ -24,7 +24,7 @@ export class MailManagerService {
                 subject,
                 context: {
                     username,
-                    link: `${process.env.FRONTEND_WEB}/users/${activationCode}/activate`
+                    link: `${process.env.FRONTEND_WEB}/users/activate/${activationCode}`
                 },
                 template: 'activation'
             });

@@ -16,4 +16,18 @@ export class UserRepository extends AbstractRepository<UserDocument, CreateUserD
     async findByLogin(login: string): Promise<UserDocument | null> {
         return this.model.findOne({ login });
     }
+
+    async getAllNotActivated(): Promise<UserDocument[]> {
+        return this.model.find({
+            $or: [
+                { activated: { $eq: false }},
+                { activated: { $exists: false }}
+            ]
+        },
+        {
+            _id: 1,
+            email: 1,
+            login: 1
+        });
+    }
 }

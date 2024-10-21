@@ -266,13 +266,7 @@ export class UserService {
     }
 
     async getNotActivated() {
-        // FIXME: Should return _id and login only !!! Security... (salt and other fields are returned)
-        return await this.userRepository.findAll({
-            $or: [
-                { activated: { $eq: false }},
-                { activated: { $exists: false }}
-            ]
-        });
+        return await this.userRepository.getAllNotActivated();
     }
 
     async activateViaId(id: string): Promise<void> {
