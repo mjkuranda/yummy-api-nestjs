@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): `API_URL/users/:activationCode/activate` to `API_URL/users/activate/:activationCode` within email message.
 
+### Security
+- [Marek Kurańda](https://github.com/mjkuranda): Only `_id`, `email` and `login` are returned as user objects at user activation manage page.
+
 ## [2.5.0] - 2024-10-21
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `Handlebars` library for templates.
