@@ -1,11 +1,13 @@
 {
     "quadrucci": {
         "en": "quadrucci",
-        "pl": "łazanki"
+        "pl": "łazanki",
+        "id": "2100000"
     },
     "vermicelli": {
         "en": "vermicelli",
-        "pl": "nitki"
+        "pl": "nitki",
+        "id": "2100001"
     },
     "fusilli pasta": {
         "id": "11320420",
@@ -14,11 +16,14 @@
     },
     "penne": {
         "en": "penne",
-        "pl": "rurki"
+        "pl": "rurki",
+        "id": "11120420",
+        "imageUrl": "penne-pasta.jpg"
     },
     "tagliatelle": {
         "en": "tagliatelle",
-        "pl": "wstążki"
+        "pl": "wstążki",
+        "id": "10220409"
     },
     "puff pastry shell": {
         "id": "10018337",
@@ -32,14 +37,17 @@
     },
     "spaghetti": {
         "en": "spaghetti",
-        "pl": "spaghetti"
+        "pl": "spaghetti",
+        "id": "11420420"
     },
     "cannelloni": {
         "en": "cannelloni",
-        "pl": "grube rurki"
+        "pl": "grube rurki",
+        "id": "2100002"
     },
     "farfalle": {
         "en": "farfalle",
-        "pl": "kokardki"
+        "pl": "kokardki",
+        "id": "10120420"
     }
 }

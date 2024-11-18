@@ -2,32 +2,38 @@
     "cod": {
         "id": "15015",
         "en": "cod",
-        "pl": "dorsz"
+        "pl": "dorsz",
+        "imageUrl": "cod-fillet.jpg"
     },
     "trout": {
         "id": "10115261",
         "en": "trout",
-        "pl": "pstrąg"
+        "pl": "pstrąg",
+        "imageUrl": "fish-fillet.jpg"
     },
     "herring": {
         "id": "15039",
         "en": "herring",
-        "pl": "śledź"
+        "pl": "śledź",
+        "imageUrl": "mackerel-fresh.jpg"
     },
     "mackerel": {
         "id": "15050",
         "en": "mackerel",
-        "pl": "makrela"
+        "pl": "makrela",
+        "imageUrl": "mackerel-fresh.jpg"
     },
     "sardines": {
         "id": "15088",
         "en": "sardines",
-        "pl": "sardynki"
+        "pl": "sardynki",
+        "imageUrl": "sardines-canned.jpg"
     },
     "pike": {
         "id": "98906",
         "en": "pike",
-        "pl": "szczupak"
+        "pl": "szczupak",
+        "imageUrl": "fish-fillet.jpg"
     },
     "zander": {
         "id": "1000000",
@@ -37,22 +43,26 @@
     "carp": {
         "id": "15008",
         "en": "carp",
-        "pl": "karp"
+        "pl": "karp",
+        "imageUrl": "fish-fillet.jpg"
     },
     "cat fish": {
         "id": "15010",
         "en": "cat fish",
-        "pl": "sum"
+        "pl": "sum",
+        "imageUrl": "catfish.jpg"
     },
     "lox": {
         "id": "15077",
         "en": "lox",
-        "pl": "łosoś"
+        "pl": "łosoś",
+        "imageUrl": "smoked-salmon.png"
     },
     "crayfish": {
         "id": "15243",
         "en": "crayfish",
-        "pl": "rak"
+        "pl": "rak",
+        "imageUrl": "crayfish.jpg"
     },
     "prawn": {
         "id": "15152",

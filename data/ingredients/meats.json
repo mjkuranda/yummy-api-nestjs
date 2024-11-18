@@ -1,82 +1,98 @@
 {
     "beef": {
         "en": "beef",
-        "pl": "wołowina"
+        "pl": "wołowina",
+        "id": "23572"
     },
     "chicken": {
         "en": "chicken",
-        "pl": "kurczak"
+        "pl": "kurczak",
+        "id": "1025006"
     },
     "pork": {
         "en": "pork",
-        "pl": "wieprzowina"
+        "pl": "wieprzowina",
+        "id": "10010219"
     },
     "lamb": {
         "en": "lamb",
-        "pl": "jagnięcina"
+        "pl": "jagnięcina",
+        "id": "10017224"
     },
     "veal": {
         "en": "veal",
-        "pl": "cielęcina"
+        "pl": "cielęcina",
+        "id": "17142"
     },
     "duck": {
         "en": "duck",
-        "pl": "kaczka"
+        "pl": "kaczka",
+        "id": "5139"
     },
     "turkey": {
         "en": "turkey",
-        "pl": "indyk"
+        "pl": "indyk",
+        "id": "5165"
     },
     "goose": {
         "en": "goose",
-        "pl": "gęś"
+        "pl": "gęś",
+        "id": "93714"
     },
     "rabbit": {
         "en": "rabbit",
-        "pl": "królik"
+        "pl": "królik",
+        "id": "17180"
     },
     "quail": {
         "en": "quail",
-        "pl": "przepiórka"
-    },
-    "elk": {
-        "en": "elk",
-        "pl": "łoś"
+        "pl": "przepiórka",
+        "id": "5157"
     },
     "boar": {
         "en": "boar",
-        "pl": "dzik"
+        "pl": "dzik",
+        "id": "17158",
+        "imageUrl": "beef-cubes-raw.png"
     },
     "pheasant": {
         "en": "pheasant",
-        "pl": "bażant"
+        "pl": "bażant",
+        "id": "5153"
     },
     "squab": {
         "en": "squab",
-        "pl": "gołąbek"
+        "pl": "gołąbek",
+        "id": "4000000"
     },
     "guinea hen": {
         "en": "guinea hen",
-        "pl": "perliczka"
+        "pl": "perliczka",
+        "id": "4000001"
     },
     "partridge": {
         "en": "partridge",
-        "pl": "kuropatwa"
+        "pl": "kuropatwa",
+        "id": "4000002"
     },
     "goat": {
         "en": "goat",
-        "pl": "koza"
+        "pl": "koza",
+        "id": "4000003"
     },
     "frog legs": {
         "en": "frog legs",
-        "pl": "żabie udka"
+        "pl": "żabie udka",
+        "id": "80200"
     },
     "crab": {
         "en": "crab",
-        "pl": "krab"
+        "pl": "krab",
+        "id": "15136"
     },
     "snail": {
         "en": "snail",
-        "pl": "ślimak"
+        "pl": "ślimak",
+        "id": "90560"
     }
 }

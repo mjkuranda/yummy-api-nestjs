@@ -22,11 +22,13 @@
     "mushrooms": {
         "id": "11260",
         "en": "mushrooms",
-        "pl": "pieczarki"
+        "pl": "pieczarki",
+        "imageUrl": "mushrooms-white.jpg"
     },
     "armillaria": {
         "en": "armillaria",
-        "pl": "opieńka"
+        "pl": "opieńka",
+        "id": "1100003"
     },
     "morel mushrooms": {
         "id": "11240",

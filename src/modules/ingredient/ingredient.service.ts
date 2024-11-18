@@ -111,4 +111,30 @@ export class IngredientService {
             }))
         };
     }
+
+    public async fetchAllImages() {
+        const categories = ['breads', 'cereal-products', 'dairy-and-eggs', 'fish-and-seafood', 'fruits', 'meats', 'mushrooms', 'oils-and-fats', 'pasta', 'seeds-and-nuts', 'spices', 'vegetables'];
+
+        for (const category of categories) {
+            const rawData = fs.readFileSync(`data/ingredients/${category}.json`, 'utf-8');
+            const json = JSON.parse(rawData);
+
+            const keys = Object.keys(json);
+
+            for (const key of keys) {
+                if (!json[key].id) {
+                    json[key].id = this.ingredients.get(key).id.toString();
+                }
+
+                try {
+                    const { data } = await this.axiosService.get<SpoonacularIngredient>(`https://api.spoonacular.com/food/ingredients/${json[key].id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`);
+                    json[key].imageUrl = data.image;
+                } catch (err) {}
+            }
+
+            const jsonData = JSON.stringify(json, null, 4);
+
+            fs.writeFile(`data/ingredients/${category}.json`, jsonData, { encoding: 'utf-8' }, () => console.log(`Category ${category} updated.`));
+        }
+    }
 }

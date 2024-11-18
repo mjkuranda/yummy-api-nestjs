@@ -8,32 +8,38 @@
     "hard-boiled egg": {
         "id": "1129",
         "en": "hard-boiled egg",
-        "pl": "jajko na twardo"
+        "pl": "jajko na twardo",
+        "imageUrl": "hard-boiled-egg.png"
     },
     "yogurt": {
         "id": "1116",
         "en": "yogurt",
-        "pl": "jogurt"
+        "pl": "jogurt",
+        "imageUrl": "plain-yogurt.jpg"
     },
     "natural yogurt": {
         "id": "1116",
         "en": "natural yogurt",
-        "pl": "jogurt naturalny"
+        "pl": "jogurt naturalny",
+        "imageUrl": "plain-yogurt.jpg"
     },
     "butter": {
         "id": "1001",
         "en": "butter",
-        "pl": "masło"
+        "pl": "masło",
+        "imageUrl": "butter-sliced.jpg"
     },
     "margarine": {
         "id": "4073",
         "en": "margarine",
-        "pl": "margaryna"
+        "pl": "margaryna",
+        "imageUrl": "butter-sliced.jpg"
     },
     "milk": {
         "id": "1077",
         "en": "milk",
-        "pl": "mleko"
+        "pl": "mleko",
+        "imageUrl": "milk.png"
     },
     "soy milk": {
         "id": "16235",
@@ -43,51 +49,61 @@
     "cheese": {
         "id": "1041009",
         "en": "cheese",
-        "pl": "ser"
+        "pl": "ser",
+        "imageUrl": "cheddar-cheese.png"
     },
     "cheese curd": {
         "id": "98921",
         "en": "cheese curd",
-        "pl": "twaróg serowy"
+        "pl": "twaróg serowy",
+        "imageUrl": "cheese-curds.png"
     },
     "cheddar cheese": {
         "id": "1009",
         "en": "cheddar cheese",
-        "pl": "ser cheddar"
+        "pl": "ser cheddar",
+        "imageUrl": "cheddar-cheese.png"
     },
     "feta cheese": {
         "id": "1019",
         "en": "feta cheese",
-        "pl": "ser feta"
+        "pl": "ser feta",
+        "imageUrl": "feta.png"
     },
     "mascarpone cheese": {
         "id": "93820",
         "en": "mascarpone cheese",
-        "pl": "ser mascarpone"
+        "pl": "ser mascarpone",
+        "imageUrl": "white-cream-fluffy.jpg"
     },
     "mozzarella cheese": {
         "id": "1026",
         "en": "mozzarella cheese",
-        "pl": "ser mozzarella"
+        "pl": "ser mozzarella",
+        "imageUrl": "mozzarella.png"
     },
     "parmesan cheese": {
         "id": "1033",
         "en": "parmesan cheese",
-        "pl": "parmezan"
+        "pl": "parmezan",
+        "imageUrl": "parmesan.jpg"
     },
     "swiss cheese": {
         "id": "1040",
         "en": "swiss cheese",
-        "pl": "ser szwajcarski"
+        "pl": "ser szwajcarski",
+        "imageUrl": "Swiss-cheese.jpg"
     },
     "cream": {
         "id": "1053",
         "en": "cream",
-        "pl": "śmietana"
+        "pl": "śmietana",
+        "imageUrl": "fluid-cream.jpg"
     },
     "whipped cream": {
         "id": "1054",
         "en": "whipped cream",
-        "pl": "bita śmietana"
+        "pl": "bita śmietana",
+        "imageUrl": "whipped-cream.jpg"
     }
 }

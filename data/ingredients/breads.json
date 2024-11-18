@@ -3,36 +3,42 @@
         "id": "18033",
         "en": "baguette",
         "pl": "bagietka",
-        "imageUrl": "baguette.png"
+        "imageUrl": "half-baguette.jpg"
     },
     "roll": {
         "id": "18064",
         "en": "roll",
-        "pl": "bułka"
+        "pl": "bułka",
+        "imageUrl": "white-bread.jpg"
     },
     "bread": {
         "id": "18064",
         "en": "bread",
-        "pl": "chleb"
+        "pl": "chleb",
+        "imageUrl": "white-bread.jpg"
     },
     "whole wheat bread": {
         "id": "18075",
         "en": "whole wheat bread",
-        "pl": "chleb pełnoziarnisty"
+        "pl": "chleb pełnoziarnisty",
+        "imageUrl": "multigrain-bread.png"
     },
     "multi-grain bread": {
         "id": "18075",
         "en": "multi-grain bread",
-        "pl": "chleb wieloziarnisty"
+        "pl": "chleb wieloziarnisty",
+        "imageUrl": "multigrain-bread.png"
     },
     "tortilla": {
         "id": "18364",
         "en": "tortilla",
-        "pl": "tortilla"
+        "pl": "tortilla",
+        "imageUrl": "flour-tortilla.jpg"
     },
     "toast bread": {
         "id": "18070",
         "en": "toast bread",
-        "pl": "chleb tostowy"
+        "pl": "chleb tostowy",
+        "imageUrl": "toast.jpg"
     }
 }

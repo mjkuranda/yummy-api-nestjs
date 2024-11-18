@@ -1,71 +1,89 @@
 {
     "almonds": {
         "en": "almonds",
-        "pl": "migdały"
+        "pl": "migdały",
+        "id": "12061"
     },
     "walnuts": {
         "en": "walnuts",
-        "pl": "orzechy włoskie"
+        "pl": "orzechy włoskie",
+        "id": "12155"
     },
     "pecans": {
         "en": "pecans",
-        "pl": "orzechy pekan"
+        "pl": "orzechy pekan",
+        "id": "12142"
     },
     "pistachios": {
         "en": "pistachios",
-        "pl": "pistacje"
+        "pl": "pistacje",
+        "id": "12151"
     },
     "cashews": {
         "en": "cashews",
-        "pl": "nerkowce"
+        "pl": "nerkowce",
+        "id": "12087"
     },
     "macadamia nuts": {
         "en": "macadamia nuts",
-        "pl": "orzechy makadamia"
+        "pl": "orzechy makadamia",
+        "id": "12131"
     },
     "peanuts": {
         "en": "peanuts",
-        "pl": "orzeszki ziemne"
+        "pl": "orzeszki ziemne",
+        "id": "16091"
     },
     "hazelnuts": {
         "en": "hazelnuts",
-        "pl": "orzechy laskowe"
+        "pl": "orzechy laskowe",
+        "id": "12120",
+        "imageUrl": "hazelnuts.jpg"
     },
     "brazil nuts": {
         "en": "brazil nuts",
-        "pl": "orzechy brazylijskie"
+        "pl": "orzechy brazylijskie",
+        "id": "93710"
     },
     "pine nuts": {
         "en": "pine nuts",
-        "pl": "orzeszki piniowe"
+        "pl": "orzeszki piniowe",
+        "id": "12147"
     },
     "sesame seeds": {
         "en": "sesame seeds",
-        "pl": "sezam"
+        "pl": "sezam",
+        "id": "12023"
     },
     "flaxseeds": {
         "en": "flaxseeds",
-        "pl": "siemię lniane"
+        "pl": "siemię lniane",
+        "id": "10012220"
     },
     "sunflower seeds": {
         "en": "sunflower seeds",
-        "pl": "słonecznik"
+        "pl": "słonecznik",
+        "id": "12036"
     },
     "pumpkin seeds": {
         "en": "pumpkin seeds",
-        "pl": "nasiona dyni"
+        "pl": "nasiona dyni",
+        "id": "12014"
     },
     "poppy seeds": {
         "en": "poppy seeds",
-        "pl": "mak"
+        "pl": "mak",
+        "id": "2033"
     },
     "amaranth": {
         "en": "amaranth",
-        "pl": "amarantus"
+        "pl": "amarantus",
+        "id": "20001"
     },
     "buckwheat": {
         "en": "buckwheat",
-        "pl": "gryka"
+        "pl": "gryka",
+        "id": "20008"
     },
     "coriander": {
         "id": "2012",

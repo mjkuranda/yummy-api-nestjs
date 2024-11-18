@@ -1,142 +1,153 @@
 {
     "olive oil": {
         "en": "olive oil",
-        "pl": "oliwa z oliwek"
+        "pl": "oliwa z oliwek",
+        "id": "4053"
     },
     "vegetable oil": {
         "en": "vegetable oil",
-        "pl": "olej roślinny"
+        "pl": "olej roślinny",
+        "id": "4513"
     },
     "coconut oil": {
         "en": "coconut oil",
-        "pl": "olej kokosowy"
+        "pl": "olej kokosowy",
+        "id": "4047"
     },
     "canola oil": {
         "en": "canola oil",
-        "pl": "olej rzepakowy"
+        "pl": "olej rzepakowy",
+        "id": "4582"
     },
     "sunflower oil": {
         "en": "sunflower oil",
-        "pl": "olej słonecznikowy"
+        "pl": "olej słonecznikowy",
+        "id": "4584"
     },
     "peanut oil": {
         "en": "peanut oil",
-        "pl": "olej arachidowy"
+        "pl": "olej arachidowy",
+        "id": "4042"
     },
     "sesame oil": {
         "en": "sesame oil",
-        "pl": "olej sezamowy"
+        "pl": "olej sezamowy",
+        "id": "4058"
     },
     "corn oil": {
         "en": "corn oil",
-        "pl": "olej kukurydziany"
+        "pl": "olej kukurydziany",
+        "id": "42289"
     },
     "grapeseed oil": {
         "en": "grapeseed oil",
-        "pl": "olej z pestek winogron"
+        "pl": "olej z pestek winogron",
+        "id": "4517",
+        "imageUrl": "vegetable-oil.jpg"
     },
     "avocado oil": {
         "en": "avocado oil",
-        "pl": "olej awokado"
+        "pl": "olej awokado",
+        "id": "4581"
     },
     "soybean oil": {
         "en": "soybean oil",
-        "pl": "olej sojowy"
+        "pl": "olej sojowy",
+        "id": "1110000"
     },
     "walnut oil": {
         "en": "walnut oil",
-        "pl": "olej orzechowy"
+        "pl": "olej orzechowy",
+        "id": "4528"
     },
     "flaxseed oil": {
         "en": "flaxseed oil",
-        "pl": "olej lniany"
+        "pl": "olej lniany",
+        "id": "98934"
     },
     "palm oil": {
         "en": "palm oil",
-        "pl": "olej palmowy"
+        "pl": "olej palmowy",
+        "id": "4055"
     },
     "sesame seed oil": {
         "en": "sesame seed oil",
-        "pl": "olej sezamowy"
+        "pl": "olej sezamowy",
+        "id": "4058"
     },
     "rice bran oil": {
         "en": "rice bran oil",
-        "pl": "olej z otrąb ryżowych"
+        "pl": "olej z otrąb ryżowych",
+        "id": "4037"
     },
     "hemp oil": {
         "en": "hemp oil",
-        "pl": "olej konopny"
+        "pl": "olej konopny",
+        "id": "99134"
     },
     "almond oil": {
         "en": "almond oil",
-        "pl": "olej migdałowy"
-    },
-    "macadamia nut oil": {
-        "en": "macadamia nut oil",
-        "pl": "olej z orzechów makadamia"
-    },
-    "pumpkin seed oil": {
-        "en": "pumpkin seed oil",
-        "pl": "olej z pestek dyni"
+        "pl": "olej migdałowy",
+        "id": "4529"
     },
     "pistachio oil": {
         "en": "pistachio oil",
-        "pl": "olej pistacjowy"
+        "pl": "olej pistacjowy",
+        "id": "93800"
     },
     "poppyseed oil": {
         "en": "poppyseed oil",
-        "pl": "olej makowy"
-    },
-    "safflower oil": {
-        "en": "safflower oil",
-        "pl": "olej krokoszowy"
+        "pl": "olej makowy",
+        "id": "1110001"
     },
     "mustard oil": {
         "en": "mustard oil",
-        "pl": "olej musztardowy"
+        "pl": "olej musztardowy",
+        "id": "4583"
     },
     "black seed oil": {
         "en": "black seed oil",
-        "pl": "olej z czarnuszki"
-    },
-    "apricot kernel oil": {
-        "en": "apricot kernel oil",
-        "pl": "olej z pestek moreli"
+        "pl": "olej z czarnuszki",
+        "id": "1110002"
     },
     "argan oil": {
         "en": "argan oil",
-        "pl": "olej arganowy"
+        "pl": "olej arganowy",
+        "id": "1110003"
     },
     "lard": {
         "en": "lard",
-        "pl": "smalec"
-    },
-    "shortening": {
-        "en": "shortening",
-        "pl": "tłuszcz kaczy"
+        "pl": "smalec",
+        "id": "4002"
     },
     "duck fat": {
         "en": "duck fat",
-        "pl": "łój wołowy"
+        "pl": "tłuszcz kaczy",
+        "id": "4574"
     },
     "chicken fat": {
         "en": "chicken fat",
-        "pl": "tłuszcz z kurczaka"
+        "pl": "tłuszcz z kurczaka",
+        "id": "4542"
     },
     "bacon grease": {
         "en": "bacon grease",
-        "pl": "smar z boczku"
+        "pl": "smar z boczku",
+        "id": "4609"
     },
     "vegetable shortening": {
         "en": "vegetable shortening",
-        "pl": "tłuszcz roślinny"
+        "pl": "tłuszcz roślinny",
+        "id": "4615"
     },
     "coconut butter": {
         "en": "coconut butter",
-        "pl": "masło kokosowe"
+        "pl": "masło kokosowe",
+        "id": "93746"
     },
     "cocoa butter": {
         "en": "cocoa butter",
-        "pl": "masło kakaowe"
+        "pl": "masło kakaowe",
+        "id": "1110004"
     }
 }

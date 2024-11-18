@@ -1,20 +1,24 @@
 {
     "garlic powder": {
         "en": "garlic powder",
-        "pl": "czosnek w proszku"
+        "pl": "czosnek w proszku",
+        "id": "1022020"
     },
     "onion powder": {
         "en": "onion powder",
-        "pl": "cebula w proszku"
+        "pl": "cebula w proszku",
+        "id": "2026"
     },
     "red sweet peppers": {
         "id": "11821",
         "en": "red sweet peppers",
-        "pl": "papryka słodka"
+        "pl": "papryka słodka",
+        "imageUrl": "red-pepper.jpg"
     },
     "cumin": {
         "en": "cumin",
-        "pl": "kminek"
+        "pl": "kminek",
+        "id": "1002014"
     },
     "black cumin seed": {
         "id": "1200000",
@@ -23,151 +27,190 @@
     },
     "cinnamon": {
         "en": "cinnamon",
-        "pl": "cynamon"
+        "pl": "cynamon",
+        "id": "2010"
     },
     "ginger": {
         "en": "ginger",
-        "pl": "imbir"
+        "pl": "imbir",
+        "id": "11216"
     },
     "oregano": {
         "en": "oregano",
-        "pl": "oregano"
+        "pl": "oregano",
+        "id": "2027"
     },
     "thyme": {
         "en": "thyme",
-        "pl": "tymianek"
+        "pl": "tymianek",
+        "id": "2049"
     },
     "rosemary": {
         "en": "rosemary",
-        "pl": "rozmaryn"
+        "pl": "rozmaryn",
+        "id": "2036"
     },
     "nutmeg": {
         "en": "nutmeg",
-        "pl": "gałka muszkatołowa"
+        "pl": "gałka muszkatołowa",
+        "id": "2025"
     },
     "coriander": {
         "en": "coriander",
-        "pl": "kolendra"
+        "pl": "kolendra",
+        "id": "2012"
     },
     "cayenne pepper": {
         "en": "cayenne pepper",
-        "pl": "pieprz cayenne"
+        "pl": "pieprz cayenne",
+        "id": "2031"
     },
     "chili powder": {
         "en": "chili powder",
-        "pl": "chili w proszku"
+        "pl": "chili w proszku",
+        "id": "2009"
     },
     "turmeric": {
         "en": "turmeric",
-        "pl": "kurkuma"
+        "pl": "kurkuma",
+        "id": "2043"
     },
     "cloves": {
         "en": "cloves",
-        "pl": "goździki"
+        "pl": "goździki",
+        "id": "1002011",
+        "imageUrl": "cloves.jpg"
     },
     "fennel seeds": {
         "en": "fennel seeds",
-        "pl": "nasiona kopru włoskiego"
+        "pl": "nasiona kopru włoskiego",
+        "id": "2018"
     },
     "mustard seeds": {
         "en": "mustard seeds",
-        "pl": "nasiona gorczycy"
+        "pl": "nasiona gorczycy",
+        "id": "2024"
     },
     "celery seed": {
         "en": "celery seed",
-        "pl": "nasiona selera"
+        "pl": "nasiona selera",
+        "id": "2007"
     },
     "bay leaf": {
         "en": "bay leaf",
-        "pl": "liść laurowy"
+        "pl": "liść laurowy",
+        "id": "2004"
     },
     "allspice": {
         "en": "allspice",
-        "pl": "ziele angielskie"
+        "pl": "ziele angielskie",
+        "id": "2001"
     },
     "poppy seeds": {
         "en": "poppy seeds",
-        "pl": "nasiona maku"
+        "pl": "nasiona maku",
+        "id": "2033"
     },
     "dill": {
         "en": "dill",
-        "pl": "koperek"
+        "pl": "koperek",
+        "id": "2045"
     },
     "basil": {
         "en": "basil",
-        "pl": "bazylia"
+        "pl": "bazylia",
+        "id": "2044"
     },
     "cilantro": {
         "en": "cilantro",
-        "pl": "kolendra"
+        "pl": "kolendra",
+        "id": "11165"
     },
     "marjoram": {
         "en": "marjoram",
-        "pl": "majeranek"
+        "pl": "majeranek",
+        "id": "2023"
     },
     "tarragon": {
         "en": "tarragon",
-        "pl": "estragon"
+        "pl": "estragon",
+        "id": "2041",
+        "imageUrl": "tarragon.jpg"
     },
     "sage": {
         "en": "sage",
-        "pl": "szałwia"
+        "pl": "szałwia",
+        "id": "2038"
     },
     "mint": {
         "en": "mint",
-        "pl": "mięta"
+        "pl": "mięta",
+        "id": "2064"
     },
     "vanilla bean": {
         "en": "vanilla bean",
-        "pl": "laski wanilii"
+        "pl": "laski wanilii",
+        "id": "93622"
     },
     "saffron": {
         "en": "saffron",
-        "pl": "szafran"
+        "pl": "szafran",
+        "id": "2037"
     },
     "fenugreek": {
         "en": "fenugreek",
-        "pl": "kozieradka"
+        "pl": "kozieradka",
+        "id": "2200000"
     },
     "caraway seeds": {
         "en": "caraway seeds",
-        "pl": "kminek"
+        "pl": "kminek",
+        "id": "2005"
     },
     "wasabi": {
         "en": "wasabi",
-        "pl": "wasabi"
+        "pl": "wasabi",
+        "id": "11990"
     },
     "sesame seeds": {
         "en": "sesame seeds",
-        "pl": "nasiona sezamu"
+        "pl": "nasiona sezamu",
+        "id": "12023"
     },
     "ground cloves": {
         "en": "ground cloves",
-        "pl": "mielone goździki"
+        "pl": "mielone goździki",
+        "id": "2011"
     },
     "anise": {
         "en": "anise",
-        "pl": "anyż"
+        "pl": "anyż",
+        "id": "2002"
     },
     "pink peppercorns": {
         "en": "pink peppercorns",
-        "pl": "różowy pieprz w ziarnach"
+        "pl": "różowy pieprz w ziarnach",
+        "id": "2200001"
     },
     "juniper berries": {
         "en": "juniper berries",
-        "pl": "jagody jałowca"
+        "pl": "jagody jałowca",
+        "id": "93613"
     },
     "lavender": {
         "en": "lavender",
-        "pl": "lawenda"
+        "pl": "lawenda",
+        "id": "93811"
     },
     "lemon pepper": {
         "en": "lemon pepper",
-        "pl": "pieprz cytrynowy"
+        "pl": "pieprz cytrynowy",
+        "id": "1012030"
     },
     "curry powder": {
         "en": "curry powder",
-        "pl": "proszek curry"
+        "pl": "proszek curry",
+        "id": "2015"
     },
     "herbes de provence": {
         "id": "1012042",
