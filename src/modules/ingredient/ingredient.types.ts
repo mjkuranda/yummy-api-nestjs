@@ -16,7 +16,7 @@ export interface DishIngredient {
 
 export type DishIngredientWithoutImage = Omit<DishIngredient, 'imageUrl'> & { id: number };
 
-export type IngredientCategory = 'breads' | 'dairy-and-eggs' | 'fish-and-seafood' | 'fruits' | 'meats' | 'oils-and-fats' | 'pasta' | 'seeds-and-nuts' | 'spices' | 'vegetables';
+export type IngredientCategory = 'breads' | 'cereal-products' | 'dairy-and-eggs' | 'fish-and-seafood' | 'fruits' | 'meats' | 'mushrooms' | 'oils-and-fats' | 'pasta' | 'seeds-and-nuts' | 'spices' | 'vegetables';
 
 export type IngredientDataObject = Record<IngredientCategory, IngredientType[]>;
 

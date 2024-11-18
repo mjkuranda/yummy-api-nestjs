@@ -39,18 +39,6 @@
         "en": "quail",
         "pl": "przepiórka"
     },
-    "venison": {
-        "en": "venison",
-        "pl": "sarnina"
-    },
-    "buffalo": {
-        "en": "buffalo",
-        "pl": "bawół"
-    },
-    "bison": {
-        "en": "bison",
-        "pl": "bizon"
-    },
     "elk": {
         "en": "elk",
         "pl": "łoś"
@@ -62,14 +50,6 @@
     "pheasant": {
         "en": "pheasant",
         "pl": "bażant"
-    },
-    "ostrich": {
-        "en": "ostrich",
-        "pl": "struś"
-    },
-    "emu": {
-        "en": "emu",
-        "pl": "emu"
     },
     "squab": {
         "en": "squab",
@@ -87,104 +67,16 @@
         "en": "goat",
         "pl": "koza"
     },
-    "kangaroo": {
-        "en": "kangaroo",
-        "pl": "kangur"
-    },
-    "alligator": {
-        "en": "alligator",
-        "pl": "aligator"
-    },
-    "snake": {
-        "en": "snake",
-        "pl": "wąż"
-    },
     "frog legs": {
         "en": "frog legs",
         "pl": "żabie udka"
-    },
-    "escargot": {
-        "en": "escargot",
-        "pl": "ślimak"
     },
     "crab": {
         "en": "crab",
         "pl": "krab"
     },
-    "lobster": {
-        "en": "lobster",
-        "pl": "homar"
-    },
-    "shrimp": {
-        "en": "shrimp",
-        "pl": "krewetka"
-    },
-    "prawn": {
-        "en": "prawn",
-        "pl": "krewetka (prawn)"
-    },
-    "crawfish": {
-        "en": "crawfish",
-        "pl": "rak"
-    },
-    "clams": {
-        "en": "clams",
-        "pl": "małże"
-    },
-    "oysters": {
-        "en": "oysters",
-        "pl": "ostrygi"
-    },
-    "octopus": {
-        "en": "octopus",
-        "pl": "ośmiornica"
-    },
-    "squid": {
-        "en": "squid",
-        "pl": "kalmary"
-    },
-    "cuttlefish": {
-        "en": "cuttlefish",
-        "pl": "mątwy"
-    },
-    "scallops": {
-        "en": "scallops",
-        "pl": "przegrzebki"
-    },
-    "abalone": {
-        "en": "abalone",
-        "pl": "abalone"
-    },
     "snail": {
         "en": "snail",
         "pl": "ślimak"
-    },
-    "anchovy": {
-        "en": "anchovy",
-        "pl": "anchois"
-    },
-    "sardine": {
-        "en": "sardine",
-        "pl": "sardynka"
-    },
-    "mackerel": {
-        "en": "mackerel",
-        "pl": "makrela"
-    },
-    "trout": {
-        "en": "trout",
-        "pl": "pstrąg"
-    },
-    "salmon": {
-        "en": "salmon",
-        "pl": "łosoś"
-    },
-    "tuna": {
-        "en": "tuna",
-        "pl": "tuńczyk"
-    },
-    "herring": {
-        "en": "herring",
-        "pl": "śledź"
     }
 }

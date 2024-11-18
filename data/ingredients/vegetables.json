@@ -29,7 +29,7 @@
     },
     "broccoli": {
         "en": "broccoli",
-        "pl": "brokułą"
+        "pl": "brokuła"
     },
     "spinach": {
         "en": "spinach",
@@ -54,10 +54,6 @@
     "celery": {
         "en": "celery",
         "pl": "seler"
-    },
-    "mushroom": {
-        "en": "mushroom",
-        "pl": "grzyb"
     },
     "green bean": {
         "en": "green bean",
@@ -101,15 +97,11 @@
     },
     "beet": {
         "en": "beet",
-        "pl": "buraczany"
+        "pl": "burak"
     },
     "pumpkin": {
         "en": "pumpkin",
         "pl": "dynia"
-    },
-    "butternut squash": {
-        "en": "butternut squash",
-        "pl": "dynia zwyczajna"
     },
     "fennel": {
         "en": "fennel",
@@ -131,10 +123,6 @@
         "en": "chili pepper",
         "pl": "papryczka chili"
     },
-    "okra": {
-        "en": "okra",
-        "pl": "piżmian jadalny"
-    },
     "chard": {
         "en": "chard",
         "pl": "boćwina"
@@ -143,40 +131,36 @@
         "en": "arugula",
         "pl": "rukola"
     },
-    "endive": {
-        "en": "endive",
-        "pl": "endywia"
-    },
-    "watercress": {
-        "en": "watercress",
-        "pl": "watercress"
-    },
     "kohlrabi": {
         "en": "kohlrabi",
         "pl": "kalarepa"
-    },
-    "collard greens": {
-        "en": "collard greens",
-        "pl": "jarmuż"
-    },
-    "chicory": {
-        "en": "chicory",
-        "pl": "cykoria"
-    },
-    "snow pea": {
-        "en": "snow pea",
-        "pl": "groszek cukrowy"
-    },
-    "chayote": {
-        "en": "chayote",
-        "pl": "kolczoch"
     },
     "rutabaga": {
         "en": "rutabaga",
         "pl": "brukiew"
     },
-    "lotus root": {
-        "en": "lotus root",
-        "pl": "korzeń lotosu"
+    "paprika": {
+        "en": "paprika",
+        "pl": "papryka"
+    },
+    "kidney beans": {
+        "id": "16033",
+        "en": "kidney beans",
+        "pl": "fasola szparagowa"
+    },
+    "beans": {
+        "id": "16069",
+        "en": "beans",
+        "pl": "fasola"
+    },
+    "green grams": {
+        "id": "16080",
+        "en": "green grams",
+        "pl": "groszek zielony"
+    },
+    "parsley": {
+        "id": "11297",
+        "en": "parsley",
+        "pl": "pietruszka"
     }
 }

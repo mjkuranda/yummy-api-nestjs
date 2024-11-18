@@ -11493,7 +11493,7 @@
     "red sweet peppers": {
         "id": "11821",
         "en": "red sweet peppers",
-        "pl": "czerwona papryka słodka"
+        "pl": "papryka słodka"
     },
     "green onion tops": {
         "id": "11291",
@@ -12753,7 +12753,7 @@
     "green grams": {
         "id": "16080",
         "en": "green grams",
-        "pl": "zielony groszek"
+        "pl": "groszek zielony"
     },
     "curly parsley": {
         "id": "11297",
@@ -25005,5 +25005,40 @@
         "id": "10028033",
         "en": "italian loaves",
         "pl": "włoskie bochenki"
+    },
+    "potato flour": {
+        "id": "1300000",
+        "en": "potato flour",
+        "pl": "mąka ziemniaczana"
+    },
+    "zander": {
+        "id": "1000000",
+        "en": "zander",
+        "pl": "sandacz"
+    },
+    "porcini mushroom": {
+        "id": "1100000",
+        "en": "porcini mushroom",
+        "pl": "borowik"
+    },
+    "bolete mushroom": {
+        "id": "1100001",
+        "en": "bolete mushroom",
+        "pl": "podgrzybek"
+    },
+    "red pine mushroom": {
+        "id": "1100002",
+        "en": "red pine mushroom",
+        "pl": "rydz"
+    },
+    "black cumin seed": {
+        "id": "1200000",
+        "en": "black cumin seed",
+        "pl": "czarnuszka"
+    },
+    "vegeta": {
+        "id": "2000000",
+        "en": "vegeta",
+        "pl": "vegeta"
     }
 }

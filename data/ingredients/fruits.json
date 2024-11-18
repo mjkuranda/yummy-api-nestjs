@@ -87,10 +87,6 @@
         "en": "fig",
         "pl": "figa"
     },
-    "guava": {
-        "en": "guava",
-        "pl": "guawa"
-    },
     "nectarine": {
         "en": "nectarine",
         "pl": "nektarynka"
@@ -103,10 +99,6 @@
         "en": "dragon fruit",
         "pl": "smoczy owoc"
     },
-    "lychee": {
-        "en": "lychee",
-        "pl": "liczi"
-    },
     "passion fruit": {
         "en": "passion fruit",
         "pl": "marakuja"
@@ -114,22 +106,6 @@
     "tangerine": {
         "en": "tangerine",
         "pl": "mandarynka"
-    },
-    "cantaloupe": {
-        "en": "cantaloupe",
-        "pl": "kantalupa"
-    },
-    "honeydew melon": {
-        "en": "honeydew melon",
-        "pl": "melon miodowy"
-    },
-    "persimmon": {
-        "en": "persimmon",
-        "pl": "kakismon"
-    },
-    "star fruit": {
-        "en": "star fruit",
-        "pl": "owoc karamboli"
     },
     "grapefruit": {
         "en": "grapefruit",
@@ -146,10 +122,6 @@
     "cranberry": {
         "en": "cranberry",
         "pl": "żurawina"
-    },
-    "mulberry": {
-        "en": "mulberry",
-        "pl": "morwa"
     },
     "gooseberry": {
         "en": "gooseberry",
@@ -178,21 +150,5 @@
     "rhubarb": {
         "en": "rhubarb",
         "pl": "rabarbar"
-    },
-    "soursop": {
-        "en": "soursop",
-        "pl": "miękkociernista"
-    },
-    "kumquat": {
-        "en": "kumquat",
-        "pl": "kumkwat"
-    },
-    "acai berry": {
-        "en": "acai berry",
-        "pl": "jagody acai"
-    },
-    "mangosteen": {
-        "en": "mangosteen",
-        "pl": "mangostan"
     }
 }

@@ -3,10 +3,6 @@
         "en": "olive oil",
         "pl": "oliwa z oliwek"
     },
-    "extra virgin olive oil": {
-        "en": "extra virgin olive oil",
-        "pl": "oliwa z oliwek extra vergine"
-    },
     "vegetable oil": {
         "en": "vegetable oil",
         "pl": "olej roślinny"
@@ -111,14 +107,6 @@
         "en": "argan oil",
         "pl": "olej arganowy"
     },
-    "butter": {
-        "en": "butter",
-        "pl": "masło"
-    },
-    "ghee": {
-        "en": "ghee",
-        "pl": "ghee"
-    },
     "lard": {
         "en": "lard",
         "pl": "smalec"
@@ -135,17 +123,9 @@
         "en": "chicken fat",
         "pl": "tłuszcz z kurczaka"
     },
-    "schmaltz": {
-        "en": "schmaltz",
-        "pl": "schmaltz"
-    },
     "bacon grease": {
         "en": "bacon grease",
         "pl": "smar z boczku"
-    },
-    "margarine": {
-        "en": "margarine",
-        "pl": "margaryna"
     },
     "vegetable shortening": {
         "en": "vegetable shortening",
@@ -158,21 +138,5 @@
     "cocoa butter": {
         "en": "cocoa butter",
         "pl": "masło kakaowe"
-    },
-    "shea butter": {
-        "en": "shea butter",
-        "pl": "masło shea"
-    },
-    "tahini": {
-        "en": "tahini",
-        "pl": "tahini"
-    },
-    "clarified butter": {
-        "en": "clarified butter",
-        "pl": "masło klarowane"
-    },
-    "avocado": {
-        "en": "avocado",
-        "pl": "awokado"
     }
 }

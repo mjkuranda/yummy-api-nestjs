@@ -1,12 +1,4 @@
 {
-    "salt": {
-        "en": "salt",
-        "pl": "sól"
-    },
-    "black pepper": {
-        "en": "black pepper",
-        "pl": "czarny pieprz"
-    },
     "garlic powder": {
         "en": "garlic powder",
         "pl": "czosnek w proszku"
@@ -15,13 +7,19 @@
         "en": "onion powder",
         "pl": "cebula w proszku"
     },
-    "paprika": {
-        "en": "paprika",
-        "pl": "papryka"
+    "red sweet peppers": {
+        "id": "11821",
+        "en": "red sweet peppers",
+        "pl": "papryka słodka"
     },
     "cumin": {
         "en": "cumin",
         "pl": "kminek"
+    },
+    "black cumin seed": {
+        "id": "1200000",
+        "en": "black cumin seed",
+        "pl": "czarnuszka"
     },
     "cinnamon": {
         "en": "cinnamon",
@@ -67,10 +65,6 @@
         "en": "cloves",
         "pl": "goździki"
     },
-    "cardamom": {
-        "en": "cardamom",
-        "pl": "kardamon"
-    },
     "fennel seeds": {
         "en": "fennel seeds",
         "pl": "nasiona kopru włoskiego"
@@ -103,10 +97,6 @@
         "en": "basil",
         "pl": "bazylia"
     },
-    "parsley": {
-        "en": "parsley",
-        "pl": "pietruszka"
-    },
     "cilantro": {
         "en": "cilantro",
         "pl": "kolendra"
@@ -135,14 +125,6 @@
         "en": "saffron",
         "pl": "szafran"
     },
-    "star anise": {
-        "en": "star anise",
-        "pl": "anyż gwiaździsty"
-    },
-    "sumac": {
-        "en": "sumac",
-        "pl": "sumak"
-    },
     "fenugreek": {
         "en": "fenugreek",
         "pl": "kozieradka"
@@ -150,10 +132,6 @@
     "caraway seeds": {
         "en": "caraway seeds",
         "pl": "kminek"
-    },
-    "chia seeds": {
-        "en": "chia seeds",
-        "pl": "nasiona chia"
     },
     "wasabi": {
         "en": "wasabi",
@@ -187,12 +165,18 @@
         "en": "lemon pepper",
         "pl": "pieprz cytrynowy"
     },
-    "garam masala": {
-        "en": "garam masala",
-        "pl": "garam masala"
-    },
     "curry powder": {
         "en": "curry powder",
         "pl": "proszek curry"
+    },
+    "herbes de provence": {
+        "id": "1012042",
+        "en": "herbes de provence",
+        "pl": "zioła prowansalskie"
+    },
+    "vegeta": {
+        "id": "2000000",
+        "en": "vegeta",
+        "pl": "vegeta"
     }
 }

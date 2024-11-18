@@ -1,0 +1,36 @@
+{
+    "porcini mushroom": {
+        "id": "1100000",
+        "en": "porcini mushroom",
+        "pl": "borowik"
+    },
+    "bolete mushroom": {
+        "id": "1100001",
+        "en": "bolete mushroom",
+        "pl": "podgrzybek"
+    },
+    "chanterelle mushrooms": {
+        "id": "11239",
+        "en": "chanterelle mushrooms",
+        "pl": "kurki"
+    },
+    "red pine mushroom": {
+        "id": "1100002",
+        "en": "red pine mushroom",
+        "pl": "rydz"
+    },
+    "mushrooms": {
+        "id": "11260",
+        "en": "mushrooms",
+        "pl": "pieczarki"
+    },
+    "armillaria": {
+        "en": "armillaria",
+        "pl": "opieńka"
+    },
+    "morel mushrooms": {
+        "id": "11240",
+        "en": "morel mushrooms",
+        "pl": "smardze"
+    }
+}

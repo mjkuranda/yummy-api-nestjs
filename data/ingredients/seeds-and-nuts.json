@@ -41,11 +41,7 @@
     },
     "sesame seeds": {
         "en": "sesame seeds",
-        "pl": "nasiona sezamu"
-    },
-    "chia seeds": {
-        "en": "chia seeds",
-        "pl": "nasiona chia"
+        "pl": "sezam"
     },
     "flaxseeds": {
         "en": "flaxseeds",
@@ -53,23 +49,15 @@
     },
     "sunflower seeds": {
         "en": "sunflower seeds",
-        "pl": "nasiona słonecznika"
+        "pl": "słonecznik"
     },
     "pumpkin seeds": {
         "en": "pumpkin seeds",
         "pl": "nasiona dyni"
     },
-    "hemp seeds": {
-        "en": "hemp seeds",
-        "pl": "nasiona konopi"
-    },
     "poppy seeds": {
         "en": "poppy seeds",
-        "pl": "nasiona maku"
-    },
-    "quinoa": {
-        "en": "quinoa",
-        "pl": "komosa ryżowa"
+        "pl": "mak"
     },
     "amaranth": {
         "en": "amaranth",
@@ -78,5 +66,10 @@
     "buckwheat": {
         "en": "buckwheat",
         "pl": "gryka"
+    },
+    "coriander": {
+        "id": "2012",
+        "en": "coriander",
+        "pl": "kolendra"
     }
 }

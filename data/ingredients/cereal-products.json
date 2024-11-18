@@ -1,0 +1,57 @@
+{
+    "flour": {
+        "id": "20081",
+        "en": "flour",
+        "pl": "mąka"
+    },
+    "plain flour": {
+        "id": "20081",
+        "en": "plain flour",
+        "pl": "mąka pszenna"
+    },
+    "rye flour": {
+        "id": "20064",
+        "en": "rye flour",
+        "pl": "mąka żytnia"
+    },
+    "maize flour": {
+        "id": "20019",
+        "en": "maize flour",
+        "pl": "mąka kukurydziana"
+    },
+    "potato flour": {
+        "id": "1300000",
+        "en": "potato flour",
+        "pl": "mąka ziemniaczana"
+    },
+    "rice flour": {
+        "id": "20061",
+        "en": "rice flour",
+        "pl": "mąka ryżowa"
+    },
+    "oatmeal": {
+        "id": "8121",
+        "en": "oatmeal",
+        "pl": "mąka owsiana"
+    },
+    "grits": {
+        "id": "8160",
+        "en": "grits",
+        "pl": "kasza"
+    },
+    "rice": {
+        "id": "20444",
+        "en": "rice",
+        "pl": "ryż"
+    },
+    "rolled oats": {
+        "id": "8120",
+        "en": "rolled oats",
+        "pl": "płatki owsiane"
+    },
+    "breadcrumbs": {
+        "id": "18079",
+        "en": "breadcrumbs",
+        "pl": "bułka tarta"
+    }
+}
