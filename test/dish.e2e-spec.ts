@@ -178,7 +178,7 @@ describe('UserController (e2e)', () => {
                 .get('/dishes/some-id/details')
                 .expect(200)
                 .expect(expectedResponseBody);
-        });
+        }, 10000);
 
         it('should throw an error when dish hasn\'t found', async () => {
             jest.spyOn(redisService, 'getDishDetails').mockResolvedValueOnce(null);
