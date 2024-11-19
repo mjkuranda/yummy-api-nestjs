@@ -86,6 +86,7 @@ export class IngredientService {
         const ingredientWithoutImages: IngredientData[] = ingredientsFromJson.filter(ingredient => !ingredient.imageUrl || ingredient.imageUrl?.length === 0);
 
         // 3. Send requests for them
+        // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
         const ingredientsWithImagesResponse: Awaited<AxiosResponse<SpoonacularIngredient>>[] = await Promise.all(
             ingredientWithoutImages.map(ingredient =>
                 this.axiosService.get<SpoonacularIngredient>(`https://api.spoonacular.com/food/ingredients/${ingredient.id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`)

@@ -7,7 +7,7 @@ import { LoggerService } from '../logger/logger.service';
 import { CreateUserDto, UserDto } from './user.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { CapabilityType } from './user.types';
+import { CapabilityType, UserObject } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import mongoose from 'mongoose';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
@@ -41,7 +41,8 @@ describe('UserService', () => {
         findOne: jest.fn(),
         findByLogin: jest.fn(),
         create: jest.fn(),
-        updateOne: jest.fn()
+        updateOne: jest.fn(),
+        getAll: jest.fn()
     };
 
     const mockUserActionRepository = {
@@ -132,6 +133,21 @@ describe('UserService', () => {
         expect(userService).toBeDefined();
         expect(userRepository).toBeDefined();
         expect(jwtManagerService).toBeDefined();
+    });
+
+    describe('getAllUsers', () => {
+        it('should return all users', async () => {
+            const mockUsers: UserObject[] = [
+                { email: 'x@q.com', login: 'x', isAdmin: true, capabilities: { canAdd: true }},
+                { email: 'y@q.com', login: 'y', capabilities: { canDelete: true }}
+            ];
+
+            jest.spyOn(userRepository, 'getAll').mockReturnValueOnce(Promise.resolve(mockUsers));
+
+            const result = await userService.getAllUsers();
+
+            expect(result).toHaveLength(2);
+        });
     });
 
     describe('loginUser', () => {
@@ -244,7 +260,7 @@ describe('UserService', () => {
             expect(result).toBeUndefined();
             expect(jwtManagerService.generateRefreshToken).not.toHaveBeenCalled();
             expect(redisService.setTokens).toHaveBeenCalledWith(mockAccessTokenPayload.login, mockNewAccessToken, null);
-            expect(mockResponse.cookie).toHaveBeenCalledWith('accessToken', mockNewAccessToken, { httpOnly: true, sameSite: 'none', secure: false });
+            expect(mockResponse.cookie).toHaveBeenCalledWith('accessToken', mockNewAccessToken, { httpOnly: true, sameSite: 'none', secure: true });
             expect(mockResponse.cookie).not.toHaveBeenCalledWith('refreshToken');
         });
 
@@ -292,8 +308,8 @@ describe('UserService', () => {
 
             expect(result).toBeUndefined();
             expect(redisService.setTokens).toHaveBeenCalledWith(mockAccessTokenPayload.login, mockNewAccessToken, mockNewRefreshToken);
-            expect(mockResponse.cookie).toHaveBeenCalledWith('accessToken', mockNewAccessToken, { httpOnly: true, sameSite: 'none', secure: false });
-            expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', mockNewRefreshToken, { httpOnly: true, sameSite: 'none', secure: false });
+            expect(mockResponse.cookie).toHaveBeenCalledWith('accessToken', mockNewAccessToken, { httpOnly: true, sameSite: 'none', secure: true });
+            expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', mockNewRefreshToken, { httpOnly: true, sameSite: 'none', secure: true });
         });
     });
 
@@ -378,7 +394,7 @@ describe('UserService', () => {
                 capabilities: {
                     'canAdd': true,
                     'canEdit': false,
-                    'canRemove': false
+                    'canDelete': false
                 }
             };
 
@@ -408,7 +424,7 @@ describe('UserService', () => {
                 capabilities: {
                     canAdd: true,
                     canEdit: false,
-                    canRemove: false
+                    canDelete: false
                 }
             };
             mockAdminUser = {

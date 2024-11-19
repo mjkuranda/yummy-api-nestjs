@@ -261,6 +261,7 @@ export class DishService {
             }
         }
 
+        // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
         const datasets: Array<DetailedDish | null> = await Promise.all([
             this.spoonacularApiService.getDishDetails(`recipes/${id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`, `recipes/${id}/analyzedInstructions?apiKey=${process.env.SPOONACULAR_API_KEY}`)
         ]);
@@ -346,6 +347,7 @@ export class DishService {
 
         const ingredients = [...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()];
 
+        // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
         const datasets: Array<RatedDish[] | null> = await Promise.all([
             this.dishRepository.getDishes(ingredients),
             this.spoonacularApiService.getDishes(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ingredients, type)
@@ -365,6 +367,7 @@ export class DishService {
         const searchQueries: SearchQueryDocument[] = await this.searchQueryRepository.findAll({ date: { $gte: dateFilter }, login: user.login });
         const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(searchQueries);
         const ingredientsList = Object.keys(mergedSearchQueries);
+        // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
         const datasets: Array<RatedDish[] | null> = await Promise.all([
             this.dishRepository.getDishes(ingredientsList),
             this.spoonacularApiService.getDishes(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ingredientsList)
@@ -414,6 +417,7 @@ export class DishService {
                 return true;
             }
         } else {
+            // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
             const datasets: Array<DetailedDish | null> = await Promise.all([
                 this.spoonacularApiService.getDishDetails(`recipes/${dishId}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`, `recipes/${dishId}/analyzedInstructions?apiKey=${process.env.SPOONACULAR_API_KEY}`)
             ]);

@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2024-11-19
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `GET /users` for receiving all users.
+
 ## [2.6.0] - 2024-11-18
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): New ingredient category elements.
@@ -13,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): Ingredient elements within each category.
 - [Marek Kurańda](https://github.com/mjkuranda): Path to dish images from `/data/images/meals` to `/data/images/dishes`
 - [Marek Kurańda](https://github.com/mjkuranda): Update for `axios` and `nodemailer` packages.
+- [Marek Kurańda](https://github.com/mjkuranda): Back to `secure: true` due to browser policy.
 
 ## [2.5.1] - 2024-10-21
 ### Changed

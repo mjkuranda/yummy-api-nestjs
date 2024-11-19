@@ -12,6 +12,7 @@ import { RedisService } from '../src/modules/redis/redis.service';
 import { UserAccessTokenPayload, UserRefreshTokenPayload } from '../src/modules/jwt-manager/jwt-manager.types';
 import { PasswordManagerService } from '../src/modules/password-manager/password-manager.service';
 import { UserActionRepository } from '../src/mongodb/repositories/user.action.repository';
+import { UserObject } from '../src/modules/user/user.types';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -41,7 +42,8 @@ describe('UserController (e2e)', () => {
         updateOne: () => {},
         find: () => {},
         findById: () => {},
-        findByLogin: () => {}
+        findByLogin: () => {},
+        getAll: () => {}
     };
 
     const mockUserActionRepositoryProvider = {
@@ -97,6 +99,32 @@ describe('UserController (e2e)', () => {
         jwtManagerService = moduleRef.get(JwtManagerService);
         redisService = moduleRef.get(RedisService);
         passwordManagerService = moduleRef.get(PasswordManagerService);
+    });
+
+    it('/users/ (POST)', () => {
+        const mockAdminUser = {
+            _id: '635981f6e40f61599e839ddb',
+            login: 'XNAME',
+            password: 'hashed',
+            isAdmin: true
+        } as any;
+        const mockUsers: UserObject[] = [
+            { email: 'x@q.com', login: 'x', isAdmin: true, capabilities: { canAdd: true }},
+            { email: 'y@q.com', login: 'y', capabilities: { canDelete: true }}
+        ];
+
+        jest.clearAllMocks();
+        jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockAdminUser);
+        jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
+        jest.spyOn(userRepository, 'getAll').mockReturnValueOnce(Promise.resolve(mockUsers));
+
+        return request(app.getHttpServer())
+            .get('/users')
+            .set('Cookie', ['accessToken=token'])
+            .set('Authorization', 'Bearer token')
+            .set('Accept', 'application/json')
+            .expect(200)
+            .expect(mockUsers);
     });
 
     it('/users/create (POST)', () => {

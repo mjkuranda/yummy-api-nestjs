@@ -13,6 +13,13 @@ export class UserController {
     constructor(private readonly userService: UserService,
                 private readonly userRepository: UserRepository) {}
 
+    @Get()
+    @HttpCode(200)
+    @UseGuards(AuthenticationGuard, AdminGuard)
+    public async allUsers() {
+        return await this.userService.getAllUsers();
+    }
+
     @Post('/login')
     @HttpCode(200)
     public async login(@Body() loginBody: UserLoginDto, @Response({ passthrough: true }) res) {
