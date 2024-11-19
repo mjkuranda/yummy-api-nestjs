@@ -33,13 +33,17 @@ export class UserRepository extends AbstractRepository<UserDocument, CreateUserD
     }
 
     async getAll(): Promise<UserObject[]> {
-        return this.model.find({}, {
-            _id: 0,
-            id: '$_id',
-            email: 1,
-            login: 1,
-            isAdmin: 1,
-            capabilities: 1
-        });
+        return this.model.aggregate([
+            {
+                $project: {
+                    id: '$_id',
+                    email: 1,
+                    login: 1,
+                    isAdmin: 1,
+                    capabilities: 1,
+                    _id: 0
+                },
+            },
+        ]);
     }
 }
