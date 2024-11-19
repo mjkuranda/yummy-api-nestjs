@@ -6,7 +6,7 @@ import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { LoggerService } from '../logger/logger.service';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { CapabilityType, UserPermissions } from './user.types';
+import { CapabilityType, UserObject, UserPermissions } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserActionDocument } from '../../mongodb/documents/user-action.document';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
@@ -30,6 +30,10 @@ export class UserService {
         private readonly mailManagerService: MailManagerService,
         private readonly passwordManagerService: PasswordManagerService
     ) {}
+
+    async getAllUsers(): Promise<UserObject[]> {
+        return await this.userRepository.getAll();
+    }
 
     async loginUser(userLoginDto: UserLoginDto, res: Response): Promise<UserPermissions> {
         const { login, password } = userLoginDto;

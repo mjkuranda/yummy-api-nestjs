@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { CapabilityType } from '../../modules/user/user.types';
+import { UserCapabilities } from '../../modules/user/user.types';
 
 export interface UserDocument extends Document {
     readonly email: string;
@@ -7,6 +7,6 @@ export interface UserDocument extends Document {
     readonly password: string;
     readonly salt: string;
     readonly isAdmin?: boolean;
-    readonly capabilities?: Record<keyof CapabilityType, boolean>;
+    readonly capabilities?: Partial<UserCapabilities>;
     readonly activated?: number;
 }
