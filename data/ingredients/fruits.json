@@ -146,12 +146,14 @@
     "dragon fruit": {
         "id": "93662",
         "en": "dragon fruit",
-        "pl": "smoczy owoc"
+        "pl": "smoczy owoc",
+        "imageUrl": "dragon-fruit.png"
     },
     "passion fruit": {
         "id": "9231",
         "en": "passion fruit",
-        "pl": "marakuja"
+        "pl": "marakuja",
+        "imageUrl": "passion-fruit.jpg"
     },
     "tangerine": {
         "id": "1019218",
@@ -161,17 +163,20 @@
     "grapefruit": {
         "en": "grapefruit",
         "pl": "grejpfrut",
-        "id": "9112"
+        "id": "9112",
+        "imageUrl": "grapefruit.png"
     },
     "date": {
         "en": "date",
         "pl": "daktyl",
-        "id": "9087"
+        "id": "9087",
+        "imageUrl": "dates.jpg"
     },
     "kiwifruit": {
         "en": "kiwifruit",
         "pl": "kiwi",
-        "id": "9148"
+        "id": "9148",
+        "imageUrl": "kiwi.png"
     },
     "cranberry": {
         "en": "cranberry",
@@ -186,17 +191,20 @@
     "black currant": {
         "id": "9083",
         "en": "black currant",
-        "pl": "czarna porzeczka"
+        "pl": "czarna porzeczka",
+        "imageUrl": "black-currants.png"
     },
     "red currants": {
         "id": "9084",
         "en": "red currant",
-        "pl": "czerwona porzeczka"
+        "pl": "czerwona porzeczka",
+        "imageUrl": "currants.jpg"
     },
     "elderberry": {
         "id": "9088",
         "en": "elderberry",
-        "pl": "czarny bez"
+        "pl": "czarny bez",
+        "imageUrl": "elderberries.jpg"
     },
     "quince": {
         "en": "quince",
@@ -207,6 +215,7 @@
     "rhubarb": {
         "en": "rhubarb",
         "pl": "rabarbar",
-        "id": "9307"
+        "id": "9307",
+        "imageUrl": "rhubarb.jpg"
     }
 }

@@ -2,7 +2,8 @@
     "carrot": {
         "en": "carrot",
         "pl": "marchewka",
-        "id": "11124"
+        "id": "11124",
+        "imageUrl": "sliced-carrot.png"
     },
     "potato": {
         "en": "potato",
@@ -12,7 +13,8 @@
     "tomato": {
         "en": "tomato",
         "pl": "pomidor",
-        "id": "11529"
+        "id": "11529",
+        "imageUrl": "tomato.png"
     },
     "onion": {
         "en": "onion",
@@ -23,52 +25,62 @@
     "cucumber": {
         "en": "cucumber",
         "pl": "ogórek",
-        "id": "11206"
+        "id": "11206",
+        "imageUrl": "cucumber.jpg"
     },
     "lettuce": {
         "en": "lettuce",
         "pl": "sałata",
-        "id": "11252"
+        "id": "11252",
+        "imageUrl": "iceberg-lettuce.jpg"
     },
     "bell pepper": {
         "en": "bell pepper",
         "pl": "papryka",
-        "id": "10211821"
+        "id": "10211821",
+        "imageUrl": "bell-pepper-orange.png"
     },
     "broccoli": {
         "en": "broccoli",
         "pl": "brokuła",
-        "id": "11090"
+        "id": "11090",
+        "imageUrl": "broccoli.jpg"
     },
     "spinach": {
         "en": "spinach",
         "pl": "szpinak",
-        "id": "10011457"
+        "id": "10011457",
+        "imageUrl": "spinach.jpg"
     },
     "zucchini": {
         "en": "zucchini",
         "pl": "cukinia",
-        "id": "11477"
+        "id": "11477",
+        "imageUrl": "zucchini.jpg"
     },
     "cabbage": {
         "en": "cabbage",
         "pl": "kapusta",
-        "id": "11109"
+        "id": "11109",
+        "imageUrl": "cabbage.jpg"
     },
     "cauliflower": {
         "en": "cauliflower",
         "pl": "kalafior",
-        "id": "11135"
+        "id": "11135",
+        "imageUrl": "cauliflower.jpg"
     },
     "garlic": {
         "en": "garlic",
         "pl": "czosnek",
-        "id": "11215"
+        "id": "11215",
+        "imageUrl": "garlic.png"
     },
     "celery": {
         "en": "celery",
         "pl": "seler",
-        "id": "11143"
+        "id": "11143",
+        "imageUrl": "celery.jpg"
     },
     "green bean": {
         "en": "green bean",
@@ -84,22 +96,26 @@
     "sweet potato": {
         "en": "sweet potato",
         "pl": "batat",
-        "id": "11507"
+        "id": "11507",
+        "imageUrl": "sweet-potato.png"
     },
     "radish": {
         "en": "radish",
         "pl": "rzodkiewka",
-        "id": "11429"
+        "id": "11429",
+        "imageUrl": "radishes.jpg"
     },
     "corn": {
         "en": "corn",
         "pl": "kukurydza",
-        "id": "11168"
+        "id": "11168",
+        "imageUrl": "corn.png"
     },
     "eggplant": {
         "en": "eggplant",
         "pl": "bakłażan",
-        "id": "11209"
+        "id": "11209",
+        "imageUrl": "eggplant.png"
     },
     "pea": {
         "en": "pea",
@@ -109,37 +125,44 @@
     "kale": {
         "en": "kale",
         "pl": "kapusta włoska",
-        "id": "11233"
+        "id": "11233",
+        "imageUrl": "kale.jpg"
     },
     "brussels sprouts": {
         "en": "brussels sprouts",
         "pl": "brukselka",
-        "id": "11098"
+        "id": "11098",
+        "imageUrl": "brussels-sprouts.jpg"
     },
     "artichoke": {
         "en": "artichoke",
         "pl": "karczoch",
-        "id": "11007"
+        "id": "11007",
+        "imageUrl": "artichokes.png"
     },
     "beet": {
         "en": "beet",
         "pl": "burak",
-        "id": "11080"
+        "id": "11080",
+        "imageUrl": "beets.jpg"
     },
     "pumpkin": {
         "en": "pumpkin",
         "pl": "dynia",
-        "id": "11422"
+        "id": "11422",
+        "imageUrl": "pumpkin.png"
     },
     "fennel": {
         "en": "fennel",
         "pl": "koper włoski",
-        "id": "11957"
+        "id": "11957",
+        "imageUrl": "fennel.png"
     },
     "leek": {
         "en": "leek",
         "pl": "por",
-        "id": "11246"
+        "id": "11246",
+        "imageUrl": "leeks.jpg"
     },
     "turnip": {
         "en": "turnip",
@@ -150,56 +173,67 @@
     "rhubarb": {
         "en": "rhubarb",
         "pl": "rabarbar",
-        "id": "9307"
+        "id": "9307",
+        "imageUrl": "rhubarb.jpg"
     },
     "chili pepper": {
         "en": "chili pepper",
         "pl": "papryczka chili",
-        "id": "11819"
+        "id": "11819",
+        "imageUrl": "red-chili.jpg"
     },
     "chard": {
         "en": "chard",
         "pl": "boćwina",
-        "id": "11147"
+        "id": "11147",
+        "imageUrl": "swiss-chard.jpg"
     },
     "arugula": {
         "en": "arugula",
         "pl": "rukola",
-        "id": "11959"
+        "id": "11959",
+        "imageUrl": "arugula-or-rocket-salad.jpg"
     },
     "kohlrabi": {
         "en": "kohlrabi",
         "pl": "kalarepa",
-        "id": "11241"
+        "id": "11241",
+        "imageUrl": "kohlrabi.jpg"
     },
     "rutabaga": {
         "en": "rutabaga",
         "pl": "brukiew",
-        "id": "11435"
+        "id": "11435",
+        "imageUrl": "rutabaga.jpg"
     },
     "paprika": {
         "en": "paprika",
         "pl": "papryka",
-        "id": "2028"
+        "id": "2028",
+        "imageUrl": "paprika.jpg"
     },
     "kidney beans": {
         "id": "16033",
         "en": "kidney beans",
-        "pl": "fasola szparagowa"
+        "pl": "fasola szparagowa",
+        "imageUrl": "kidney-beans.jpg"
     },
     "beans": {
         "id": "16069",
         "en": "beans",
-        "pl": "fasola"
+        "pl": "fasola",
+        "imageUrl": "lentils-green.jpg"
     },
     "green grams": {
         "id": "16080",
         "en": "green grams",
-        "pl": "groszek zielony"
+        "pl": "groszek zielony",
+        "imageUrl": "mung-beans.png"
     },
     "parsley": {
         "id": "11297",
         "en": "parsley",
-        "pl": "pietruszka"
+        "pl": "pietruszka",
+        "imageUrl": "parsley.jpg"
     }
 }

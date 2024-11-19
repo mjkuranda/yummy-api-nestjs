@@ -126,10 +126,20 @@ export class IngredientService {
                     json[key].id = this.ingredients.get(key).id.toString();
                 }
 
-                try {
-                    const { data } = await this.axiosService.get<SpoonacularIngredient>(`https://api.spoonacular.com/food/ingredients/${json[key].id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`);
-                    json[key].imageUrl = data.image;
-                } catch (err) {}
+                const id = Number(json[key].id);
+
+                if (id >= 1000000 && id <= 9999999) {
+                    continue;
+                }
+
+                if (!json[key].imageUrl) {
+                    try {
+                        const { data } = await this.axiosService.get<SpoonacularIngredient>(`https://api.spoonacular.com/food/ingredients/${json[key].id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`);
+                        json[key].imageUrl = data.image;
+                    } catch (err) {
+                        console.error('Error:', err.message);
+                    }
+                }
             }
 
             const jsonData = JSON.stringify(json, null, 4);

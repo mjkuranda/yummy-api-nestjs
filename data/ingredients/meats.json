@@ -2,52 +2,62 @@
     "beef": {
         "en": "beef",
         "pl": "wołowina",
-        "id": "23572"
+        "id": "23572",
+        "imageUrl": "beef-cubes-raw.png"
     },
     "chicken": {
         "en": "chicken",
         "pl": "kurczak",
-        "id": "1025006"
+        "id": "1025006",
+        "imageUrl": "whole-chicken.jpg"
     },
     "pork": {
         "en": "pork",
         "pl": "wieprzowina",
-        "id": "10010219"
+        "id": "10010219",
+        "imageUrl": "pork-tenderloin-raw.png"
     },
     "lamb": {
         "en": "lamb",
         "pl": "jagnięcina",
-        "id": "10017224"
+        "id": "10017224",
+        "imageUrl": "lamb-shanks.jpg"
     },
     "veal": {
         "en": "veal",
         "pl": "cielęcina",
-        "id": "17142"
+        "id": "17142",
+        "imageUrl": "meat-ground.jpg"
     },
     "duck": {
         "en": "duck",
         "pl": "kaczka",
-        "id": "5139"
+        "id": "5139",
+        "imageUrl": "duck.png"
     },
     "turkey": {
         "en": "turkey",
         "pl": "indyk",
-        "id": "5165"
+        "id": "5165",
+        "imageUrl": "turkey-raw-whole.jpg"
     },
     "goose": {
         "en": "goose",
         "pl": "gęś",
-        "id": "93714"
+        "id": "93714",
+        "imageUrl": "duck.png"
     },
     "rabbit": {
         "en": "rabbit",
         "pl": "królik",
-        "id": "17180"
+        "id": "17180",
+        "imageUrl": "whole-rabbit.png"
     },
     "quail": {
         "en": "quail",
         "pl": "przepiórka",
-        "id": "5157"
+        "id": "5157",
+        "imageUrl": "quail.png"
     },
     "boar": {
         "en": "boar",
@@ -58,7 +68,8 @@
     "pheasant": {
         "en": "pheasant",
         "pl": "bażant",
-        "id": "5153"
+        "id": "5153",
+        "imageUrl": "guinea-fowl.png"
     },
     "squab": {
         "en": "squab",
@@ -83,16 +94,19 @@
     "frog legs": {
         "en": "frog legs",
         "pl": "żabie udka",
-        "id": "80200"
+        "id": "80200",
+        "imageUrl": "frog-legs.jpg"
     },
     "crab": {
         "en": "crab",
         "pl": "krab",
-        "id": "15136"
+        "id": "15136",
+        "imageUrl": "crabmeat.jpg"
     },
     "snail": {
         "en": "snail",
         "pl": "ślimak",
-        "id": "90560"
+        "id": "90560",
+        "imageUrl": "escargot.png"
     }
 }

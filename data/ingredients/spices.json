@@ -2,12 +2,14 @@
     "garlic powder": {
         "en": "garlic powder",
         "pl": "czosnek w proszku",
-        "id": "1022020"
+        "id": "1022020",
+        "imageUrl": "garlic-powder.png"
     },
     "onion powder": {
         "en": "onion powder",
         "pl": "cebula w proszku",
-        "id": "2026"
+        "id": "2026",
+        "imageUrl": "onion-powder.jpg"
     },
     "red sweet peppers": {
         "id": "11821",
@@ -18,7 +20,8 @@
     "cumin": {
         "en": "cumin",
         "pl": "kminek",
-        "id": "1002014"
+        "id": "1002014",
+        "imageUrl": "ground-cumin.jpg"
     },
     "black cumin seed": {
         "id": "1200000",
@@ -28,52 +31,62 @@
     "cinnamon": {
         "en": "cinnamon",
         "pl": "cynamon",
-        "id": "2010"
+        "id": "2010",
+        "imageUrl": "cinnamon.jpg"
     },
     "ginger": {
         "en": "ginger",
         "pl": "imbir",
-        "id": "11216"
+        "id": "11216",
+        "imageUrl": "ginger.png"
     },
     "oregano": {
         "en": "oregano",
         "pl": "oregano",
-        "id": "2027"
+        "id": "2027",
+        "imageUrl": "oregano.jpg"
     },
     "thyme": {
         "en": "thyme",
         "pl": "tymianek",
-        "id": "2049"
+        "id": "2049",
+        "imageUrl": "thyme.jpg"
     },
     "rosemary": {
         "en": "rosemary",
         "pl": "rozmaryn",
-        "id": "2036"
+        "id": "2036",
+        "imageUrl": "rosemary.jpg"
     },
     "nutmeg": {
         "en": "nutmeg",
         "pl": "gałka muszkatołowa",
-        "id": "2025"
+        "id": "2025",
+        "imageUrl": "ground-nutmeg.jpg"
     },
     "coriander": {
         "en": "coriander",
         "pl": "kolendra",
-        "id": "2012"
+        "id": "2012",
+        "imageUrl": "ground-coriander.jpg"
     },
     "cayenne pepper": {
         "en": "cayenne pepper",
         "pl": "pieprz cayenne",
-        "id": "2031"
+        "id": "2031",
+        "imageUrl": "chili-powder.jpg"
     },
     "chili powder": {
         "en": "chili powder",
         "pl": "chili w proszku",
-        "id": "2009"
+        "id": "2009",
+        "imageUrl": "chili-powder.jpg"
     },
     "turmeric": {
         "en": "turmeric",
         "pl": "kurkuma",
-        "id": "2043"
+        "id": "2043",
+        "imageUrl": "turmeric.jpg"
     },
     "cloves": {
         "en": "cloves",
@@ -84,52 +97,62 @@
     "fennel seeds": {
         "en": "fennel seeds",
         "pl": "nasiona kopru włoskiego",
-        "id": "2018"
+        "id": "2018",
+        "imageUrl": "fennel-seeds.jpg"
     },
     "mustard seeds": {
         "en": "mustard seeds",
         "pl": "nasiona gorczycy",
-        "id": "2024"
+        "id": "2024",
+        "imageUrl": "mustard-seeds.png"
     },
     "celery seed": {
         "en": "celery seed",
         "pl": "nasiona selera",
-        "id": "2007"
+        "id": "2007",
+        "imageUrl": "celery-seed.jpg"
     },
     "bay leaf": {
         "en": "bay leaf",
         "pl": "liść laurowy",
-        "id": "2004"
+        "id": "2004",
+        "imageUrl": "bay-leaves.jpg"
     },
     "allspice": {
         "en": "allspice",
         "pl": "ziele angielskie",
-        "id": "2001"
+        "id": "2001",
+        "imageUrl": "allspice-ground.jpg"
     },
     "poppy seeds": {
         "en": "poppy seeds",
         "pl": "nasiona maku",
-        "id": "2033"
+        "id": "2033",
+        "imageUrl": "poppyseed.png"
     },
     "dill": {
         "en": "dill",
         "pl": "koperek",
-        "id": "2045"
+        "id": "2045",
+        "imageUrl": "dill.jpg"
     },
     "basil": {
         "en": "basil",
         "pl": "bazylia",
-        "id": "2044"
+        "id": "2044",
+        "imageUrl": "basil.jpg"
     },
     "cilantro": {
         "en": "cilantro",
         "pl": "kolendra",
-        "id": "11165"
+        "id": "11165",
+        "imageUrl": "cilantro.png"
     },
     "marjoram": {
         "en": "marjoram",
         "pl": "majeranek",
-        "id": "2023"
+        "id": "2023",
+        "imageUrl": "marjoram.jpg"
     },
     "tarragon": {
         "en": "tarragon",
@@ -140,22 +163,26 @@
     "sage": {
         "en": "sage",
         "pl": "szałwia",
-        "id": "2038"
+        "id": "2038",
+        "imageUrl": "dried-sage.png"
     },
     "mint": {
         "en": "mint",
         "pl": "mięta",
-        "id": "2064"
+        "id": "2064",
+        "imageUrl": "mint.jpg"
     },
     "vanilla bean": {
         "en": "vanilla bean",
         "pl": "laski wanilii",
-        "id": "93622"
+        "id": "93622",
+        "imageUrl": "vanilla.jpg"
     },
     "saffron": {
         "en": "saffron",
         "pl": "szafran",
-        "id": "2037"
+        "id": "2037",
+        "imageUrl": "saffron.jpg"
     },
     "fenugreek": {
         "en": "fenugreek",
@@ -165,27 +192,32 @@
     "caraway seeds": {
         "en": "caraway seeds",
         "pl": "kminek",
-        "id": "2005"
+        "id": "2005",
+        "imageUrl": "caraway-seeds.jpg"
     },
     "wasabi": {
         "en": "wasabi",
         "pl": "wasabi",
-        "id": "11990"
+        "id": "11990",
+        "imageUrl": "wasabi.jpg"
     },
     "sesame seeds": {
         "en": "sesame seeds",
         "pl": "nasiona sezamu",
-        "id": "12023"
+        "id": "12023",
+        "imageUrl": "sesame-seeds.png"
     },
     "ground cloves": {
         "en": "ground cloves",
         "pl": "mielone goździki",
-        "id": "2011"
+        "id": "2011",
+        "imageUrl": "cloves.jpg"
     },
     "anise": {
         "en": "anise",
         "pl": "anyż",
-        "id": "2002"
+        "id": "2002",
+        "imageUrl": "aniseed-or-anise.jpg"
     },
     "pink peppercorns": {
         "en": "pink peppercorns",
@@ -195,22 +227,26 @@
     "juniper berries": {
         "en": "juniper berries",
         "pl": "jagody jałowca",
-        "id": "93613"
+        "id": "93613",
+        "imageUrl": "juniper-berries.jpg"
     },
     "lavender": {
         "en": "lavender",
         "pl": "lawenda",
-        "id": "93811"
+        "id": "93811",
+        "imageUrl": "lavender.jpg"
     },
     "lemon pepper": {
         "en": "lemon pepper",
         "pl": "pieprz cytrynowy",
-        "id": "1012030"
+        "id": "1012030",
+        "imageUrl": "seasoning.png"
     },
     "curry powder": {
         "en": "curry powder",
         "pl": "proszek curry",
-        "id": "2015"
+        "id": "2015",
+        "imageUrl": "curry-powder.jpg"
     },
     "herbes de provence": {
         "id": "1012042",

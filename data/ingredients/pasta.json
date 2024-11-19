@@ -12,7 +12,8 @@
     "fusilli pasta": {
         "id": "11320420",
         "en": "fusilli pasta",
-        "pl": "świderki"
+        "pl": "świderki",
+        "imageUrl": "fusilli.jpg"
     },
     "penne": {
         "en": "penne",
@@ -23,22 +24,26 @@
     "tagliatelle": {
         "en": "tagliatelle",
         "pl": "wstążki",
-        "id": "10220409"
+        "id": "10220409",
+        "imageUrl": "tagliatelle.jpg"
     },
     "puff pastry shell": {
         "id": "10018337",
         "en": "puff pastry shell",
-        "pl": "ciasto francuskie"
+        "pl": "ciasto francuskie",
+        "imageUrl": "pastry-shells.jpg"
     },
     "elbow noodles": {
         "id": "10120499",
         "en": "elbow noodles",
-        "pl": "kolanka"
+        "pl": "kolanka",
+        "imageUrl": "elbow.jpg"
     },
     "spaghetti": {
         "en": "spaghetti",
         "pl": "spaghetti",
-        "id": "11420420"
+        "id": "11420420",
+        "imageUrl": "spaghetti.jpg"
     },
     "cannelloni": {
         "en": "cannelloni",
@@ -48,6 +53,7 @@
     "farfalle": {
         "en": "farfalle",
         "pl": "kokardki",
-        "id": "10120420"
+        "id": "10120420",
+        "imageUrl": "farfalle.png"
     }
 }
