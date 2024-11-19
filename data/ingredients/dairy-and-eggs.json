@@ -1,206 +1,109 @@
 {
-    "milk": {
-        "en": "milk",
-        "pl": "mleko"
+    "egg": {
+        "id": "1123",
+        "imageUrl": "egg.png",
+        "en": "egg",
+        "pl": "jajko"
     },
-    "butter": {
-        "en": "butter",
-        "pl": "masło"
-    },
-    "cheese": {
-        "en": "cheese",
-        "pl": "ser"
+    "hard-boiled egg": {
+        "id": "1129",
+        "en": "hard-boiled egg",
+        "pl": "jajko na twardo",
+        "imageUrl": "hard-boiled-egg.png"
     },
     "yogurt": {
+        "id": "1116",
         "en": "yogurt",
-        "pl": "jogurt"
+        "pl": "jogurt",
+        "imageUrl": "plain-yogurt.jpg"
     },
-    "eggs": {
-        "en": "eggs",
-        "pl": "jajka"
+    "natural yogurt": {
+        "id": "1116",
+        "en": "natural yogurt",
+        "pl": "jogurt naturalny",
+        "imageUrl": "plain-yogurt.jpg"
     },
-    "cream": {
-        "en": "cream",
-        "pl": "śmietana"
+    "butter": {
+        "id": "1001",
+        "en": "butter",
+        "pl": "masło",
+        "imageUrl": "butter-sliced.jpg"
     },
-    "sour cream": {
-        "en": "sour cream",
-        "pl": "śmietana kwaśna"
+    "margarine": {
+        "id": "4073",
+        "en": "margarine",
+        "pl": "margaryna",
+        "imageUrl": "butter-sliced.jpg"
     },
-    "cream cheese": {
-        "en": "cream cheese",
-        "pl": "ser śmietankowy"
-    },
-    "cottage cheese": {
-        "en": "cottage cheese",
-        "pl": "ser wiejski"
-    },
-    "whipped cream": {
-        "en": "whipped cream",
-        "pl": "śmietana bita"
-    },
-    "half and half": {
-        "en": "half and half",
-        "pl": "pół na pół"
-    },
-    "heavy cream": {
-        "en": "heavy cream",
-        "pl": "śmietana kremówka"
-    },
-    "goat cheese": {
-        "en": "goat cheese",
-        "pl": "ser kozi"
-    },
-    "feta cheese": {
-        "en": "feta cheese",
-        "pl": "ser feta"
-    },
-    "mozzarella cheese": {
-        "en": "mozzarella cheese",
-        "pl": "ser mozzarella"
-    },
-    "cheddar cheese": {
-        "en": "cheddar cheese",
-        "pl": "ser cheddar"
-    },
-    "parmesan cheese": {
-        "en": "parmesan cheese",
-        "pl": "ser parmezan"
-    },
-    "ricotta cheese": {
-        "en": "ricotta cheese",
-        "pl": "ser ricotta"
-    },
-    "brie cheese": {
-        "en": "brie cheese",
-        "pl": "ser brie"
-    },
-    "gouda cheese": {
-        "en": "gouda cheese",
-        "pl": "ser gouda"
-    },
-    "swiss cheese": {
-        "en": "swiss cheese",
-        "pl": "ser szwajcarski"
-    },
-    "provolone cheese": {
-        "en": "provolone cheese",
-        "pl": "ser provolone"
-    },
-    "blue cheese": {
-        "en": "blue cheese",
-        "pl": "ser pleśniowy"
-    },
-    "american cheese": {
-        "en": "american cheese",
-        "pl": "ser amerykański"
-    },
-    "monterey jack cheese": {
-        "en": "monterey jack cheese",
-        "pl": "ser monterey jack"
-    },
-    "burrata cheese": {
-        "en": "burrata cheese",
-        "pl": "ser burrata"
-    },
-    "camembert cheese": {
-        "en": "camembert cheese",
-        "pl": "ser camembert"
-    },
-    "mascarpone cheese": {
-        "en": "mascarpone cheese",
-        "pl": "ser mascarpone"
-    },
-    "queso fresco": {
-        "en": "queso fresco",
-        "pl": "queso fresco"
-    },
-    "queso blanco": {
-        "en": "queso blanco",
-        "pl": "queso blanco"
-    },
-    "havarti cheese": {
-        "en": "havarti cheese",
-        "pl": "ser havarti"
-    },
-    "asiago cheese": {
-        "en": "asiago cheese",
-        "pl": "ser asiago"
-    },
-    "halloumi cheese": {
-        "en": "halloumi cheese",
-        "pl": "ser halloumi"
-    },
-    "fontina cheese": {
-        "en": "fontina cheese",
-        "pl": "ser fontina"
-    },
-    "pecorino cheese": {
-        "en": "pecorino cheese",
-        "pl": "ser pecorino"
-    },
-    "gruyere cheese": {
-        "en": "gruyere cheese",
-        "pl": "ser gruyere"
-    },
-    "colby cheese": {
-        "en": "colby cheese",
-        "pl": "ser colby"
-    },
-    "manchego cheese": {
-        "en": "manchego cheese",
-        "pl": "ser manchego"
-    },
-    "boursin cheese": {
-        "en": "boursin cheese",
-        "pl": "ser boursin"
-    },
-    "quark cheese": {
-        "en": "quark cheese",
-        "pl": "ser twarogowy"
-    },
-    "fromage blanc": {
-        "en": "fromage blanc",
-        "pl": "fromage blanc"
-    },
-    "clotted cream": {
-        "en": "clotted cream",
-        "pl": "śmietana kremówka"
-    },
-    "condensed milk": {
-        "en": "condensed milk",
-        "pl": "mleko skondensowane"
-    },
-    "evaporated milk": {
-        "en": "evaporated milk",
-        "pl": "mleko odparowane"
-    },
-    "powdered milk": {
-        "en": "powdered milk",
-        "pl": "mleko w proszku"
+    "milk": {
+        "id": "1077",
+        "en": "milk",
+        "pl": "mleko",
+        "imageUrl": "milk.png"
     },
     "soy milk": {
+        "id": "16235",
         "en": "soy milk",
         "pl": "mleko sojowe"
     },
-    "almond milk": {
-        "en": "almond milk",
-        "pl": "mleko migdałowe"
+    "cheese": {
+        "id": "1041009",
+        "en": "cheese",
+        "pl": "ser",
+        "imageUrl": "cheddar-cheese.png"
     },
-    "coconut milk": {
-        "en": "coconut milk",
-        "pl": "mleko kokosowe"
+    "cheese curd": {
+        "id": "98921",
+        "en": "cheese curd",
+        "pl": "twaróg serowy",
+        "imageUrl": "cheese-curds.png"
     },
-    "rice milk": {
-        "en": "rice milk",
-        "pl": "mleko ryżowe"
+    "cheddar cheese": {
+        "id": "1009",
+        "en": "cheddar cheese",
+        "pl": "ser cheddar",
+        "imageUrl": "cheddar-cheese.png"
     },
-    "oat milk": {
-        "en": "oat milk",
-        "pl": "mleko owsiane"
+    "feta cheese": {
+        "id": "1019",
+        "en": "feta cheese",
+        "pl": "ser feta",
+        "imageUrl": "feta.png"
     },
-    "cashew milk": {
-        "en": "cashew milk",
-        "pl": "mleko z nerkowców"
+    "mascarpone cheese": {
+        "id": "93820",
+        "en": "mascarpone cheese",
+        "pl": "ser mascarpone",
+        "imageUrl": "white-cream-fluffy.jpg"
+    },
+    "mozzarella cheese": {
+        "id": "1026",
+        "en": "mozzarella cheese",
+        "pl": "ser mozzarella",
+        "imageUrl": "mozzarella.png"
+    },
+    "parmesan cheese": {
+        "id": "1033",
+        "en": "parmesan cheese",
+        "pl": "parmezan",
+        "imageUrl": "parmesan.jpg"
+    },
+    "swiss cheese": {
+        "id": "1040",
+        "en": "swiss cheese",
+        "pl": "ser szwajcarski",
+        "imageUrl": "Swiss-cheese.jpg"
+    },
+    "cream": {
+        "id": "1053",
+        "en": "cream",
+        "pl": "śmietana",
+        "imageUrl": "fluid-cream.jpg"
+    },
+    "whipped cream": {
+        "id": "1054",
+        "en": "whipped cream",
+        "pl": "bita śmietana",
+        "imageUrl": "whipped-cream.jpg"
     }
 }

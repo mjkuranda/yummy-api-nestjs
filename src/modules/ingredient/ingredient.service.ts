@@ -18,15 +18,19 @@ export class IngredientService {
 
     private ingredients: IngredientDataset;
 
+    private pantryIngredients: string[];
+
     constructor(
         private readonly loggerService: LoggerService,
         private readonly axiosService: AxiosService
     ) {
         this.ingredients = new Map();
+        this.pantryIngredients = [];
     }
 
     onModuleInit() {
         this.loadIngredients();
+        this.loadPantryIngredients();
     }
 
     public filterIngredients(ingredients: IngredientType[]): IngredientType[] {
@@ -49,6 +53,24 @@ export class IngredientService {
         } catch (err: unknown) {
             this.loggerService.error(context, `Error while loading all ingredients: ${typeof err === 'object' && err['message']}`);
         }
+    }
+
+    private loadPantryIngredients(): void {
+        const context: ContextString = 'IngredientService/loadPantryIngredients';
+
+        try {
+            const rawData = fs.readFileSync('data/ingredients/pantry.json', 'utf-8');
+            const json = JSON.parse(rawData);
+
+            this.pantryIngredients = json;
+            this.loggerService.info(context, `All ${json.length} pantry ingredients has been loaded.`);
+        } catch (err: unknown) {
+            this.loggerService.error(context, `Error while loading all pantry ingredients: ${typeof err === 'object' && err['message']}`);
+        }
+    }
+
+    public getAllPantryIngredients(): string[] {
+        return this.pantryIngredients;
     }
 
     async wrapIngredientsWithImages(ingredients: DishIngredientWithoutImage[]): Promise<DishIngredient[]> {
@@ -110,5 +132,41 @@ export class IngredientService {
                 imageUrl: this.ingredients.get(ingredient.name).imageUrl
             }))
         };
+    }
+
+    public async fetchAllImages() {
+        const categories = ['breads', 'cereal-products', 'dairy-and-eggs', 'fish-and-seafood', 'fruits', 'meats', 'mushrooms', 'oils-and-fats', 'pasta', 'seeds-and-nuts', 'spices', 'vegetables'];
+
+        for (const category of categories) {
+            const rawData = fs.readFileSync(`data/ingredients/${category}.json`, 'utf-8');
+            const json = JSON.parse(rawData);
+
+            const keys = Object.keys(json);
+
+            for (const key of keys) {
+                if (!json[key].id) {
+                    json[key].id = this.ingredients.get(key).id.toString();
+                }
+
+                const id = Number(json[key].id);
+
+                if (id >= 1000000 && id <= 9999999) {
+                    continue;
+                }
+
+                if (!json[key].imageUrl) {
+                    try {
+                        const { data } = await this.axiosService.get<SpoonacularIngredient>(`https://api.spoonacular.com/food/ingredients/${json[key].id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`);
+                        json[key].imageUrl = data.image;
+                    } catch (err) {
+                        console.error('Error:', err.message);
+                    }
+                }
+            }
+
+            const jsonData = JSON.stringify(json, null, 4);
+
+            fs.writeFile(`data/ingredients/${category}.json`, jsonData, { encoding: 'utf-8' }, () => console.log(`Category ${category} updated.`));
+        }
     }
 }

@@ -16,7 +16,7 @@ export class ImageInterceptor implements NestInterceptor {
         const isTestEnvironment = process.env.NODE_ENV === 'test';
         const multerOptions = {
             storage: isTestEnvironment ? memoryStorage() : diskStorage({
-                destination: './data/images/meals',
+                destination: './data/images/dishes',
                 filename: (req, file, callback) => {
                     const uuid = crypto.randomUUID();
                     const fileExt = extname(file.originalname);

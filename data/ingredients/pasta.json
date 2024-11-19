@@ -1,198 +1,59 @@
 {
-    "spaghetti": {
-        "en": "spaghetti",
-        "pl": "spaghetti"
-    },
-    "penne": {
-        "en": "penne",
-        "pl": "penne"
-    },
-    "fettuccine": {
-        "en": "fettuccine",
-        "pl": "fettuccine"
-    },
-    "linguine": {
-        "en": "linguine",
-        "pl": "linguine"
-    },
-    "rigatoni": {
-        "en": "rigatoni",
-        "pl": "rigatoni"
-    },
-    "farfalle": {
-        "en": "farfalle",
-        "pl": "farfalle"
-    },
-    "macaroni": {
-        "en": "macaroni",
-        "pl": "macaroni"
-    },
-    "rotini": {
-        "en": "rotini",
-        "pl": "rotini"
-    },
-    "angel hair": {
-        "en": "angel hair",
-        "pl": "angel hair"
-    },
-    "cavatappi": {
-        "en": "cavatappi",
-        "pl": "cavatappi"
-    },
-    "shells": {
-        "en": "shells",
-        "pl": "shells"
-    },
-    "lasagna": {
-        "en": "lasagna",
-        "pl": "lasagna"
-    },
-    "tagliatelle": {
-        "en": "tagliatelle",
-        "pl": "tagliatelle"
-    },
-    "orecchiette": {
-        "en": "orecchiette",
-        "pl": "orecchiette"
-    },
-    "bucatini": {
-        "en": "bucatini",
-        "pl": "bucatini"
-    },
-    "conchiglie": {
-        "en": "conchiglie",
-        "pl": "conchiglie"
-    },
-    "campanelle": {
-        "en": "campanelle",
-        "pl": "campanelle"
-    },
-    "strozzapreti": {
-        "en": "strozzapreti",
-        "pl": "strozzapreti"
-    },
-    "gemelli": {
-        "en": "gemelli",
-        "pl": "gemelli"
-    },
-    "pappardelle": {
-        "en": "pappardelle",
-        "pl": "pappardelle"
-    },
-    "gnocchi": {
-        "en": "gnocchi",
-        "pl": "gnocchi"
-    },
-    "cannelloni": {
-        "en": "cannelloni",
-        "pl": "cannelloni"
-    },
-    "manicotti": {
-        "en": "manicotti",
-        "pl": "manicotti"
-    },
-    "spätzle": {
-        "en": "spätzle",
-        "pl": "spätzle"
+    "quadrucci": {
+        "en": "quadrucci",
+        "pl": "łazanki",
+        "id": "2100000"
     },
     "vermicelli": {
         "en": "vermicelli",
-        "pl": "vermicelli"
+        "pl": "nitki",
+        "id": "2100001"
     },
-    "cappelletti": {
-        "en": "cappelletti",
-        "pl": "cappelletti"
+    "fusilli pasta": {
+        "id": "11320420",
+        "en": "fusilli pasta",
+        "pl": "świderki",
+        "imageUrl": "fusilli.jpg"
     },
-    "tortellini": {
-        "en": "tortellini",
-        "pl": "tortellini"
+    "penne": {
+        "en": "penne",
+        "pl": "rurki",
+        "id": "11120420",
+        "imageUrl": "penne-pasta.jpg"
     },
-    "ravioli": {
-        "en": "ravioli",
-        "pl": "ravioli"
+    "tagliatelle": {
+        "en": "tagliatelle",
+        "pl": "wstążki",
+        "id": "10220409",
+        "imageUrl": "tagliatelle.jpg"
     },
-    "ramen": {
-        "en": "ramen",
-        "pl": "ramen"
+    "puff pastry shell": {
+        "id": "10018337",
+        "en": "puff pastry shell",
+        "pl": "ciasto francuskie",
+        "imageUrl": "pastry-shells.jpg"
     },
-    "udon": {
-        "en": "udon",
-        "pl": "udon"
+    "elbow noodles": {
+        "id": "10120499",
+        "en": "elbow noodles",
+        "pl": "kolanka",
+        "imageUrl": "elbow.jpg"
     },
-    "soba": {
-        "en": "soba",
-        "pl": "soba"
+    "spaghetti": {
+        "en": "spaghetti",
+        "pl": "spaghetti",
+        "id": "11420420",
+        "imageUrl": "spaghetti.jpg"
     },
-    "rice noodles": {
-        "en": "rice noodles",
-        "pl": "rice noodles"
+    "cannelloni": {
+        "en": "cannelloni",
+        "pl": "grube rurki",
+        "id": "2100002"
     },
-    "egg noodles": {
-        "en": "egg noodles",
-        "pl": "egg noodles"
-    },
-    "somen": {
-        "en": "somen",
-        "pl": "somen"
-    },
-    "couscous": {
-        "en": "couscous",
-        "pl": "couscous"
-    },
-    "orzo": {
-        "en": "orzo",
-        "pl": "orzo"
-    },
-    "acini di pepe": {
-        "en": "acini di pepe",
-        "pl": "acini di pepe"
-    },
-    "ditalini": {
-        "en": "ditalini",
-        "pl": "ditalini"
-    },
-    "fregola": {
-        "en": "fregola",
-        "pl": "fregola"
-    },
-    "mafalda": {
-        "en": "mafalda",
-        "pl": "mafalda"
-    },
-    "mafalda corta": {
-        "en": "mafalda corta",
-        "pl": "mafalda corta"
-    },
-    "gemelli rigati": {
-        "en": "gemelli rigati",
-        "pl": "gemelli rigati"
-    },
-    "fiorentine": {
-        "en": "fiorentine",
-        "pl": "fiorentine"
-    },
-    "linguine fini": {
-        "en": "linguine fini",
-        "pl": "linguine fini"
-    },
-    "fusilli bucati": {
-        "en": "fusilli bucati",
-        "pl": "fusilli bucati"
-    },
-    "trofie": {
-        "en": "trofie",
-        "pl": "trofie"
-    },
-    "fideo": {
-        "en": "fideo",
-        "pl": "fideo"
-    },
-    "maltagliati": {
-        "en": "maltagliati",
-        "pl": "maltagliati"
-    },
-    "quadrucci": {
-        "en": "quadrucci",
-        "pl": "quadrucci"
+    "farfalle": {
+        "en": "farfalle",
+        "pl": "kokardki",
+        "id": "10120420",
+        "imageUrl": "farfalle.png"
     }
 }

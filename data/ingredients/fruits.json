@@ -1,198 +1,221 @@
 {
     "apple": {
+        "id": "9003",
         "en": "apple",
-        "pl": "jabłko"
+        "pl": "jabłko",
+        "imageUrl": "apple.jpg"
     },
     "banana": {
+        "id": "9040",
         "en": "banana",
-        "pl": "banan"
+        "pl": "banan",
+        "imageUrl": "bananas.jpg"
     },
     "orange": {
+        "id": "9200",
         "en": "orange",
-        "pl": "pomarańcza"
+        "pl": "pomarańcza",
+        "imageUrl": "orange.png"
     },
     "strawberry": {
+        "id": "9316",
         "en": "strawberry",
-        "pl": "truskawka"
+        "pl": "truskawka",
+        "imageUrl": "strawberries.png"
     },
     "grape": {
+        "id": "9132",
         "en": "grape",
-        "pl": "winogrono"
+        "pl": "winogrono",
+        "imageUrl": "red-grapes.jpg"
     },
     "watermelon": {
+        "id": "9326",
         "en": "watermelon",
-        "pl": "arbuz"
+        "pl": "arbuz",
+        "imageUrl": "watermelon.png"
     },
     "kiwi": {
+        "id": "9148",
         "en": "kiwi",
-        "pl": "kiwi"
+        "pl": "kiwi",
+        "imageUrl": "kiwi.png"
     },
     "pear": {
+        "id": "9252",
         "en": "pear",
-        "pl": "gruszka"
+        "pl": "gruszka",
+        "imageUrl": "pears-bosc.jpg"
     },
     "pineapple": {
+        "id": "9266",
         "en": "pineapple",
-        "pl": "ananas"
+        "pl": "ananas",
+        "imageUrl": "pineapple.jpg"
     },
     "mango": {
+        "id": "9176",
         "en": "mango",
-        "pl": "mango"
+        "pl": "mango",
+        "imageUrl": "mango.jpg"
     },
     "peach": {
+        "id": "9236",
         "en": "peach",
-        "pl": "brzoskwinia"
+        "pl": "brzoskwinia",
+        "imageUrl": "peach.png"
     },
     "lemon": {
+        "id": "9150",
         "en": "lemon",
-        "pl": "cytryna"
+        "pl": "cytryna",
+        "imageUrl": "lemon.png"
     },
     "lime": {
+        "id": "9159",
         "en": "lime",
-        "pl": "limonka"
+        "pl": "limonka",
+        "imageUrl": "lime.jpg"
     },
     "blueberry": {
+        "id": "9050",
         "en": "blueberry",
-        "pl": "borówka"
+        "pl": "borówka",
+        "imageUrl": "blueberries.jpg"
     },
     "raspberry": {
+        "id": "9302",
         "en": "raspberry",
-        "pl": "malina"
+        "pl": "malina",
+        "imageUrl": "raspberries.jpg"
     },
     "blackberry": {
+        "id": "9042",
         "en": "blackberry",
-        "pl": "jeżyna"
+        "pl": "jeżyna",
+        "imageUrl": "blackberries.jpg"
     },
     "cherry": {
+        "id": "9070",
         "en": "cherry",
-        "pl": "wiśnia"
+        "pl": "wiśnia",
+        "imageUrl": "cherries.jpg"
     },
     "plum": {
+        "id": "9279",
         "en": "plum",
-        "pl": "śliwka"
+        "pl": "śliwka",
+        "imageUrl": "plum.jpg"
     },
     "apricot": {
+        "id": "9021",
         "en": "apricot",
-        "pl": "morela"
+        "pl": "morela",
+        "imageUrl": "apricot.jpg"
     },
     "pomegranate": {
+        "id": "1009286",
         "en": "pomegranate",
-        "pl": "granat"
+        "pl": "granat",
+        "imageUrl": "pomegranate.jpg"
     },
     "coconut": {
+        "id": "12104",
         "en": "coconut",
-        "pl": "kokos"
+        "pl": "kokos",
+        "imageUrl": "coconut.jpg"
     },
     "fig": {
+        "id": "9089",
         "en": "fig",
-        "pl": "figa"
-    },
-    "guava": {
-        "en": "guava",
-        "pl": "guawa"
+        "pl": "figa",
+        "imageUrl": "figs-fresh.jpg"
     },
     "nectarine": {
+        "id": "9191",
         "en": "nectarine",
-        "pl": "nektarynka"
+        "pl": "nektarynka",
+        "imageUrl": "nectarines.jpg"
     },
     "papaya": {
+        "id": "9226",
         "en": "papaya",
-        "pl": "papaja"
+        "pl": "papaja",
+        "imageUrl": "papaya.png"
     },
     "dragon fruit": {
+        "id": "93662",
         "en": "dragon fruit",
-        "pl": "smoczy owoc"
-    },
-    "lychee": {
-        "en": "lychee",
-        "pl": "liczi"
+        "pl": "smoczy owoc",
+        "imageUrl": "dragon-fruit.png"
     },
     "passion fruit": {
+        "id": "9231",
         "en": "passion fruit",
-        "pl": "marakuja"
+        "pl": "marakuja",
+        "imageUrl": "passion-fruit.jpg"
     },
     "tangerine": {
+        "id": "1019218",
         "en": "tangerine",
         "pl": "mandarynka"
     },
-    "cantaloupe": {
-        "en": "cantaloupe",
-        "pl": "kantalupa"
-    },
-    "honeydew melon": {
-        "en": "honeydew melon",
-        "pl": "melon miodowy"
-    },
-    "persimmon": {
-        "en": "persimmon",
-        "pl": "kakismon"
-    },
-    "star fruit": {
-        "en": "star fruit",
-        "pl": "owoc karamboli"
-    },
     "grapefruit": {
         "en": "grapefruit",
-        "pl": "grejpfrut"
+        "pl": "grejpfrut",
+        "id": "9112",
+        "imageUrl": "grapefruit.png"
     },
     "date": {
         "en": "date",
-        "pl": "daktyl"
+        "pl": "daktyl",
+        "id": "9087",
+        "imageUrl": "dates.jpg"
     },
     "kiwifruit": {
         "en": "kiwifruit",
-        "pl": "kiwi"
+        "pl": "kiwi",
+        "id": "9148",
+        "imageUrl": "kiwi.png"
     },
     "cranberry": {
         "en": "cranberry",
-        "pl": "żurawina"
-    },
-    "mulberry": {
-        "en": "mulberry",
-        "pl": "morwa"
+        "pl": "żurawina",
+        "id": "3000000"
     },
     "gooseberry": {
         "en": "gooseberry",
-        "pl": "agrest"
+        "pl": "agrest",
+        "id": "3000001"
     },
     "black currant": {
+        "id": "9083",
         "en": "black currant",
-        "pl": "czarna porzeczka"
+        "pl": "czarna porzeczka",
+        "imageUrl": "black-currants.png"
     },
-    "red currant": {
+    "red currants": {
+        "id": "9084",
         "en": "red currant",
-        "pl": "czerwona porzeczka"
+        "pl": "czerwona porzeczka",
+        "imageUrl": "currants.jpg"
     },
     "elderberry": {
+        "id": "9088",
         "en": "elderberry",
-        "pl": "czarny bez"
-    },
-    "boysenberry": {
-        "en": "boysenberry",
-        "pl": "jeżyna"
+        "pl": "czarny bez",
+        "imageUrl": "elderberries.jpg"
     },
     "quince": {
         "en": "quince",
-        "pl": "pigwa"
+        "pl": "pigwa",
+        "id": "9296",
+        "imageUrl": "quince.jpg"
     },
     "rhubarb": {
         "en": "rhubarb",
-        "pl": "rabarbar"
-    },
-    "soursop": {
-        "en": "soursop",
-        "pl": "miękkociernista"
-    },
-    "kumquat": {
-        "en": "kumquat",
-        "pl": "kumkwat"
-    },
-    "acai berry": {
-        "en": "acai berry",
-        "pl": "jagody acai"
-    },
-    "mangosteen": {
-        "en": "mangosteen",
-        "pl": "mangostan"
+        "pl": "rabarbar",
+        "id": "9307",
+        "imageUrl": "rhubarb.jpg"
     }
 }

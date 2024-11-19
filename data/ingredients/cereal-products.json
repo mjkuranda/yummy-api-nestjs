@@ -1,0 +1,67 @@
+{
+    "flour": {
+        "id": "20081",
+        "en": "flour",
+        "pl": "mąka",
+        "imageUrl": "flour.png"
+    },
+    "plain flour": {
+        "id": "20081",
+        "en": "plain flour",
+        "pl": "mąka pszenna",
+        "imageUrl": "flour.png"
+    },
+    "rye flour": {
+        "id": "20064",
+        "en": "rye flour",
+        "pl": "mąka żytnia",
+        "imageUrl": "brown-flour.jpg"
+    },
+    "maize flour": {
+        "id": "20019",
+        "en": "maize flour",
+        "pl": "mąka kukurydziana",
+        "imageUrl": "corn-flour.jpg"
+    },
+    "potato flour": {
+        "id": "1300000",
+        "en": "potato flour",
+        "pl": "mąka ziemniaczana"
+    },
+    "rice flour": {
+        "id": "20061",
+        "en": "rice flour",
+        "pl": "mąka ryżowa",
+        "imageUrl": "white-powder.jpg"
+    },
+    "oatmeal": {
+        "id": "8121",
+        "en": "oatmeal",
+        "pl": "mąka owsiana",
+        "imageUrl": "porridge-or-cream-of-wheat.png"
+    },
+    "grits": {
+        "id": "8160",
+        "en": "grits",
+        "pl": "kasza",
+        "imageUrl": "cornmeal.png"
+    },
+    "rice": {
+        "id": "20444",
+        "en": "rice",
+        "pl": "ryż",
+        "imageUrl": "uncooked-white-rice.png"
+    },
+    "rolled oats": {
+        "id": "8120",
+        "en": "rolled oats",
+        "pl": "płatki owsiane",
+        "imageUrl": "rolled-oats.jpg"
+    },
+    "breadcrumbs": {
+        "id": "18079",
+        "en": "breadcrumbs",
+        "pl": "bułka tarta",
+        "imageUrl": "breadcrumbs.jpg"
+    }
+}

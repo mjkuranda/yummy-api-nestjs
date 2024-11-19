@@ -1,82 +1,110 @@
 {
     "almonds": {
         "en": "almonds",
-        "pl": "migdały"
+        "pl": "migdały",
+        "id": "12061",
+        "imageUrl": "almonds.jpg"
     },
     "walnuts": {
         "en": "walnuts",
-        "pl": "orzechy włoskie"
+        "pl": "orzechy włoskie",
+        "id": "12155",
+        "imageUrl": "walnuts.jpg"
     },
     "pecans": {
         "en": "pecans",
-        "pl": "orzechy pekan"
+        "pl": "orzechy pekan",
+        "id": "12142",
+        "imageUrl": "pecans.jpg"
     },
     "pistachios": {
         "en": "pistachios",
-        "pl": "pistacje"
+        "pl": "pistacje",
+        "id": "12151",
+        "imageUrl": "pistachios.jpg"
     },
     "cashews": {
         "en": "cashews",
-        "pl": "nerkowce"
+        "pl": "nerkowce",
+        "id": "12087",
+        "imageUrl": "cashews.jpg"
     },
     "macadamia nuts": {
         "en": "macadamia nuts",
-        "pl": "orzechy makadamia"
+        "pl": "orzechy makadamia",
+        "id": "12131",
+        "imageUrl": "macadamia-nuts.png"
     },
     "peanuts": {
         "en": "peanuts",
-        "pl": "orzeszki ziemne"
+        "pl": "orzeszki ziemne",
+        "id": "16091",
+        "imageUrl": "peanuts.png"
     },
     "hazelnuts": {
         "en": "hazelnuts",
-        "pl": "orzechy laskowe"
+        "pl": "orzechy laskowe",
+        "id": "12120",
+        "imageUrl": "hazelnuts.jpg"
     },
     "brazil nuts": {
         "en": "brazil nuts",
-        "pl": "orzechy brazylijskie"
+        "pl": "orzechy brazylijskie",
+        "id": "93710",
+        "imageUrl": "brazil-nuts.jpg"
     },
     "pine nuts": {
         "en": "pine nuts",
-        "pl": "orzeszki piniowe"
+        "pl": "orzeszki piniowe",
+        "id": "12147",
+        "imageUrl": "pine-nuts.png"
     },
     "sesame seeds": {
         "en": "sesame seeds",
-        "pl": "nasiona sezamu"
-    },
-    "chia seeds": {
-        "en": "chia seeds",
-        "pl": "nasiona chia"
+        "pl": "sezam",
+        "id": "12023",
+        "imageUrl": "sesame-seeds.png"
     },
     "flaxseeds": {
         "en": "flaxseeds",
-        "pl": "siemię lniane"
+        "pl": "siemię lniane",
+        "id": "10012220",
+        "imageUrl": "flax-seeds.png"
     },
     "sunflower seeds": {
         "en": "sunflower seeds",
-        "pl": "nasiona słonecznika"
+        "pl": "słonecznik",
+        "id": "12036",
+        "imageUrl": "sunflower-seeds.jpg"
     },
     "pumpkin seeds": {
         "en": "pumpkin seeds",
-        "pl": "nasiona dyni"
-    },
-    "hemp seeds": {
-        "en": "hemp seeds",
-        "pl": "nasiona konopi"
+        "pl": "nasiona dyni",
+        "id": "12014",
+        "imageUrl": "pumpkin-seeds.jpg"
     },
     "poppy seeds": {
         "en": "poppy seeds",
-        "pl": "nasiona maku"
-    },
-    "quinoa": {
-        "en": "quinoa",
-        "pl": "komosa ryżowa"
+        "pl": "mak",
+        "id": "2033",
+        "imageUrl": "poppyseed.png"
     },
     "amaranth": {
         "en": "amaranth",
-        "pl": "amarantus"
+        "pl": "amarantus",
+        "id": "20001",
+        "imageUrl": "amaranth.jpg"
     },
     "buckwheat": {
         "en": "buckwheat",
-        "pl": "gryka"
+        "pl": "gryka",
+        "id": "20008",
+        "imageUrl": "raw-buckwheat.jpg"
+    },
+    "coriander": {
+        "id": "2012",
+        "en": "coriander",
+        "pl": "kolendra",
+        "imageUrl": "ground-coriander.jpg"
     }
 }

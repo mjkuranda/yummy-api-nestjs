@@ -2936,8 +2936,8 @@
     },
     "penne pasta": {
         "id": "11120420",
-        "en": "penne pasta",
-        "pl": "makaron penne"
+        "en": "penne",
+        "pl": "rurki"
     },
     "cooked ham": {
         "id": "7214",
@@ -11493,7 +11493,7 @@
     "red sweet peppers": {
         "id": "11821",
         "en": "red sweet peppers",
-        "pl": "czerwona papryka słodka"
+        "pl": "papryka słodka"
     },
     "green onion tops": {
         "id": "11291",
@@ -12753,7 +12753,7 @@
     "green grams": {
         "id": "16080",
         "en": "green grams",
-        "pl": "zielony groszek"
+        "pl": "groszek zielony"
     },
     "curly parsley": {
         "id": "11297",
@@ -12788,7 +12788,7 @@
     "farfalle": {
         "id": "10120420",
         "en": "farfalle",
-        "pl": "farfalle"
+        "pl": "kokardki"
     },
     "vinaigrette dressing": {
         "id": "4135",
@@ -16298,7 +16298,7 @@
     "tagliatelle": {
         "id": "10220409",
         "en": "tagliatelle",
-        "pl": "tagliatelle"
+        "pl": "wstążki"
     },
     "microgreens": {
         "id": "11001",
@@ -25005,5 +25005,140 @@
         "id": "10028033",
         "en": "italian loaves",
         "pl": "włoskie bochenki"
+    },
+    "potato flour": {
+        "id": "1300000",
+        "en": "potato flour",
+        "pl": "mąka ziemniaczana"
+    },
+    "zander": {
+        "id": "1000000",
+        "en": "zander",
+        "pl": "sandacz"
+    },
+    "porcini mushroom": {
+        "id": "1100000",
+        "en": "porcini mushroom",
+        "pl": "borowik"
+    },
+    "bolete mushroom": {
+        "id": "1100001",
+        "en": "bolete mushroom",
+        "pl": "podgrzybek"
+    },
+    "red pine mushroom": {
+        "id": "1100002",
+        "en": "red pine mushroom",
+        "pl": "rydz"
+    },
+    "black cumin seed": {
+        "id": "1200000",
+        "en": "black cumin seed",
+        "pl": "czarnuszka"
+    },
+    "vegeta": {
+        "id": "2000000",
+        "en": "vegeta",
+        "pl": "vegeta"
+    },
+    "cranberry": {
+        "id": "3000000",
+        "en": "cranberry",
+        "pl": "żurawina"
+    },
+    "gooseberry": {
+        "id": "3000001",
+        "en": "gooseberry",
+        "pl": "agrest"
+    },
+    "squab": {
+        "id": "4000000",
+        "en": "squab",
+        "pl": "gołąbek"
+    },
+    "guinea hen": {
+        "id": "4000001",
+        "en": "guinea hen",
+        "pl": "perliczka"
+    },
+    "partridge": {
+        "id": "4000002",
+        "en": "partridge",
+        "pl": "kuropatwa"
+    },
+    "goat": {
+        "id": "4000003",
+        "en": "goat",
+        "pl": "koza"
+    },
+    "snail": {
+        "id": "90560",
+        "en": "snail",
+        "pl": "ślimak"
+    },
+    "armillaria": {
+        "id": "1100003",
+        "en": "armillaria",
+        "pl": "opieńka"
+    },
+    "soybean oil": {
+        "id": "1110000",
+        "en": "soybean oil",
+        "pl": "olej sojowy"
+    },
+    "poppyseed oil": {
+        "id": "1110001",
+        "en": "poppyseed oil",
+        "pl": "olej makowy"
+    },
+    "black seed oil": {
+        "id": "1110002",
+        "en": "black seed oil",
+        "pl": "olej z czarnuszki"
+    },
+    "argan oil": {
+        "id": "1110003",
+        "en": "argan oil",
+        "pl": "olej arganowy"
+    },
+    "cocoa butter": {
+        "id": "1110004",
+        "en": "cocoa butter",
+        "pl": "masło kakaowe"
+    },
+    "quadrucci": {
+        "id": "2100000",
+        "en": "quadrucci",
+        "pl": "łazanki"
+    },
+    "vermicelli": {
+        "id": "2100001",
+        "en": "vermicelli",
+        "pl": "nitki"
+    },
+    "cannelloni": {
+        "id": "2100002",
+        "en": "cannelloni",
+        "pl": "grube rurki"
+    },
+    "fenugreek": {
+        "id": "2200000",
+        "en": "fenugreek",
+        "pl": "kozieradka"
+    },
+    "pink peppercorns": {
+        "id": "2200001",
+        "en": "pink peppercorns",
+        "pl": "różowy pieprz w ziarnach"
+    },
+    "green bean": {
+        "id": "2300000",
+        "en": "green bean",
+        "pl": "zielona fasolka"
+    },
+    "pea": {
+        "id": "2300001",
+        "en": "pea",
+        "pl": "groch"
     }
 }

@@ -1,198 +1,261 @@
 {
-    "salt": {
-        "en": "salt",
-        "pl": "sól"
-    },
-    "black pepper": {
-        "en": "black pepper",
-        "pl": "czarny pieprz"
-    },
     "garlic powder": {
         "en": "garlic powder",
-        "pl": "czosnek w proszku"
+        "pl": "czosnek w proszku",
+        "id": "1022020",
+        "imageUrl": "garlic-powder.png"
     },
     "onion powder": {
         "en": "onion powder",
-        "pl": "cebula w proszku"
+        "pl": "cebula w proszku",
+        "id": "2026",
+        "imageUrl": "onion-powder.jpg"
     },
-    "paprika": {
-        "en": "paprika",
-        "pl": "papryka"
+    "red sweet peppers": {
+        "id": "11821",
+        "en": "red sweet peppers",
+        "pl": "papryka słodka",
+        "imageUrl": "red-pepper.jpg"
     },
     "cumin": {
         "en": "cumin",
-        "pl": "kminek"
+        "pl": "kminek",
+        "id": "1002014",
+        "imageUrl": "ground-cumin.jpg"
+    },
+    "black cumin seed": {
+        "id": "1200000",
+        "en": "black cumin seed",
+        "pl": "czarnuszka"
     },
     "cinnamon": {
         "en": "cinnamon",
-        "pl": "cynamon"
+        "pl": "cynamon",
+        "id": "2010",
+        "imageUrl": "cinnamon.jpg"
     },
     "ginger": {
         "en": "ginger",
-        "pl": "imbir"
+        "pl": "imbir",
+        "id": "11216",
+        "imageUrl": "ginger.png"
     },
     "oregano": {
         "en": "oregano",
-        "pl": "oregano"
+        "pl": "oregano",
+        "id": "2027",
+        "imageUrl": "oregano.jpg"
     },
     "thyme": {
         "en": "thyme",
-        "pl": "tymianek"
+        "pl": "tymianek",
+        "id": "2049",
+        "imageUrl": "thyme.jpg"
     },
     "rosemary": {
         "en": "rosemary",
-        "pl": "rozmaryn"
+        "pl": "rozmaryn",
+        "id": "2036",
+        "imageUrl": "rosemary.jpg"
     },
     "nutmeg": {
         "en": "nutmeg",
-        "pl": "gałka muszkatołowa"
+        "pl": "gałka muszkatołowa",
+        "id": "2025",
+        "imageUrl": "ground-nutmeg.jpg"
     },
     "coriander": {
         "en": "coriander",
-        "pl": "kolendra"
+        "pl": "kolendra",
+        "id": "2012",
+        "imageUrl": "ground-coriander.jpg"
     },
     "cayenne pepper": {
         "en": "cayenne pepper",
-        "pl": "pieprz cayenne"
+        "pl": "pieprz cayenne",
+        "id": "2031",
+        "imageUrl": "chili-powder.jpg"
     },
     "chili powder": {
         "en": "chili powder",
-        "pl": "chili w proszku"
+        "pl": "chili w proszku",
+        "id": "2009",
+        "imageUrl": "chili-powder.jpg"
     },
     "turmeric": {
         "en": "turmeric",
-        "pl": "kurkuma"
+        "pl": "kurkuma",
+        "id": "2043",
+        "imageUrl": "turmeric.jpg"
     },
     "cloves": {
         "en": "cloves",
-        "pl": "goździki"
-    },
-    "cardamom": {
-        "en": "cardamom",
-        "pl": "kardamon"
+        "pl": "goździki",
+        "id": "1002011",
+        "imageUrl": "cloves.jpg"
     },
     "fennel seeds": {
         "en": "fennel seeds",
-        "pl": "nasiona kopru włoskiego"
+        "pl": "nasiona kopru włoskiego",
+        "id": "2018",
+        "imageUrl": "fennel-seeds.jpg"
     },
     "mustard seeds": {
         "en": "mustard seeds",
-        "pl": "nasiona gorczycy"
+        "pl": "nasiona gorczycy",
+        "id": "2024",
+        "imageUrl": "mustard-seeds.png"
     },
     "celery seed": {
         "en": "celery seed",
-        "pl": "nasiona selera"
+        "pl": "nasiona selera",
+        "id": "2007",
+        "imageUrl": "celery-seed.jpg"
     },
     "bay leaf": {
         "en": "bay leaf",
-        "pl": "liść laurowy"
+        "pl": "liść laurowy",
+        "id": "2004",
+        "imageUrl": "bay-leaves.jpg"
     },
     "allspice": {
         "en": "allspice",
-        "pl": "ziele angielskie"
+        "pl": "ziele angielskie",
+        "id": "2001",
+        "imageUrl": "allspice-ground.jpg"
     },
     "poppy seeds": {
         "en": "poppy seeds",
-        "pl": "nasiona maku"
+        "pl": "nasiona maku",
+        "id": "2033",
+        "imageUrl": "poppyseed.png"
     },
     "dill": {
         "en": "dill",
-        "pl": "koperek"
+        "pl": "koperek",
+        "id": "2045",
+        "imageUrl": "dill.jpg"
     },
     "basil": {
         "en": "basil",
-        "pl": "bazylia"
-    },
-    "parsley": {
-        "en": "parsley",
-        "pl": "pietruszka"
+        "pl": "bazylia",
+        "id": "2044",
+        "imageUrl": "basil.jpg"
     },
     "cilantro": {
         "en": "cilantro",
-        "pl": "kolendra"
+        "pl": "kolendra",
+        "id": "11165",
+        "imageUrl": "cilantro.png"
     },
     "marjoram": {
         "en": "marjoram",
-        "pl": "majeranek"
+        "pl": "majeranek",
+        "id": "2023",
+        "imageUrl": "marjoram.jpg"
     },
     "tarragon": {
         "en": "tarragon",
-        "pl": "estragon"
+        "pl": "estragon",
+        "id": "2041",
+        "imageUrl": "tarragon.jpg"
     },
     "sage": {
         "en": "sage",
-        "pl": "szałwia"
+        "pl": "szałwia",
+        "id": "2038",
+        "imageUrl": "dried-sage.png"
     },
     "mint": {
         "en": "mint",
-        "pl": "mięta"
+        "pl": "mięta",
+        "id": "2064",
+        "imageUrl": "mint.jpg"
     },
     "vanilla bean": {
         "en": "vanilla bean",
-        "pl": "laski wanilii"
+        "pl": "laski wanilii",
+        "id": "93622",
+        "imageUrl": "vanilla.jpg"
     },
     "saffron": {
         "en": "saffron",
-        "pl": "szafran"
-    },
-    "star anise": {
-        "en": "star anise",
-        "pl": "anyż gwiaździsty"
-    },
-    "sumac": {
-        "en": "sumac",
-        "pl": "sumak"
+        "pl": "szafran",
+        "id": "2037",
+        "imageUrl": "saffron.jpg"
     },
     "fenugreek": {
         "en": "fenugreek",
-        "pl": "kozieradka"
+        "pl": "kozieradka",
+        "id": "2200000"
     },
     "caraway seeds": {
         "en": "caraway seeds",
-        "pl": "kminek"
-    },
-    "chia seeds": {
-        "en": "chia seeds",
-        "pl": "nasiona chia"
+        "pl": "kminek",
+        "id": "2005",
+        "imageUrl": "caraway-seeds.jpg"
     },
     "wasabi": {
         "en": "wasabi",
-        "pl": "wasabi"
+        "pl": "wasabi",
+        "id": "11990",
+        "imageUrl": "wasabi.jpg"
     },
     "sesame seeds": {
         "en": "sesame seeds",
-        "pl": "nasiona sezamu"
+        "pl": "nasiona sezamu",
+        "id": "12023",
+        "imageUrl": "sesame-seeds.png"
     },
     "ground cloves": {
         "en": "ground cloves",
-        "pl": "mielone goździki"
+        "pl": "mielone goździki",
+        "id": "2011",
+        "imageUrl": "cloves.jpg"
     },
     "anise": {
         "en": "anise",
-        "pl": "anyż"
+        "pl": "anyż",
+        "id": "2002",
+        "imageUrl": "aniseed-or-anise.jpg"
     },
     "pink peppercorns": {
         "en": "pink peppercorns",
-        "pl": "różowy pieprz w ziarnach"
+        "pl": "różowy pieprz w ziarnach",
+        "id": "2200001"
     },
     "juniper berries": {
         "en": "juniper berries",
-        "pl": "jagody jałowca"
+        "pl": "jagody jałowca",
+        "id": "93613",
+        "imageUrl": "juniper-berries.jpg"
     },
     "lavender": {
         "en": "lavender",
-        "pl": "lawenda"
+        "pl": "lawenda",
+        "id": "93811",
+        "imageUrl": "lavender.jpg"
     },
     "lemon pepper": {
         "en": "lemon pepper",
-        "pl": "pieprz cytrynowy"
-    },
-    "garam masala": {
-        "en": "garam masala",
-        "pl": "garam masala"
+        "pl": "pieprz cytrynowy",
+        "id": "1012030",
+        "imageUrl": "seasoning.png"
     },
     "curry powder": {
         "en": "curry powder",
-        "pl": "proszek curry"
+        "pl": "proszek curry",
+        "id": "2015",
+        "imageUrl": "curry-powder.jpg"
+    },
+    "herbes de provence": {
+        "id": "1012042",
+        "en": "herbes de provence",
+        "pl": "zioła prowansalskie"
+    },
+    "vegeta": {
+        "id": "2000000",
+        "en": "vegeta",
+        "pl": "vegeta"
     }
 }

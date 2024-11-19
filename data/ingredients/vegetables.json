@@ -1,182 +1,239 @@
 {
     "carrot": {
         "en": "carrot",
-        "pl": "marchewka"
+        "pl": "marchewka",
+        "id": "11124",
+        "imageUrl": "sliced-carrot.png"
     },
     "potato": {
         "en": "potato",
-        "pl": "ziemniak"
+        "pl": "ziemniak",
+        "id": "11362"
     },
     "tomato": {
         "en": "tomato",
-        "pl": "pomidor"
+        "pl": "pomidor",
+        "id": "11529",
+        "imageUrl": "tomato.png"
     },
     "onion": {
         "en": "onion",
-        "pl": "cebula"
+        "pl": "cebula",
+        "id": "11282",
+        "imageUrl": "brown-onion.png"
     },
     "cucumber": {
         "en": "cucumber",
-        "pl": "ogórek"
+        "pl": "ogórek",
+        "id": "11206",
+        "imageUrl": "cucumber.jpg"
     },
     "lettuce": {
         "en": "lettuce",
-        "pl": "sałata"
+        "pl": "sałata",
+        "id": "11252",
+        "imageUrl": "iceberg-lettuce.jpg"
     },
     "bell pepper": {
         "en": "bell pepper",
-        "pl": "papryka"
+        "pl": "papryka",
+        "id": "10211821",
+        "imageUrl": "bell-pepper-orange.png"
     },
     "broccoli": {
         "en": "broccoli",
-        "pl": "brokułą"
+        "pl": "brokuła",
+        "id": "11090",
+        "imageUrl": "broccoli.jpg"
     },
     "spinach": {
         "en": "spinach",
-        "pl": "szpinak"
+        "pl": "szpinak",
+        "id": "10011457",
+        "imageUrl": "spinach.jpg"
     },
     "zucchini": {
         "en": "zucchini",
-        "pl": "cukinia"
+        "pl": "cukinia",
+        "id": "11477",
+        "imageUrl": "zucchini.jpg"
     },
     "cabbage": {
         "en": "cabbage",
-        "pl": "kapusta"
+        "pl": "kapusta",
+        "id": "11109",
+        "imageUrl": "cabbage.jpg"
     },
     "cauliflower": {
         "en": "cauliflower",
-        "pl": "kalafior"
+        "pl": "kalafior",
+        "id": "11135",
+        "imageUrl": "cauliflower.jpg"
     },
     "garlic": {
         "en": "garlic",
-        "pl": "czosnek"
+        "pl": "czosnek",
+        "id": "11215",
+        "imageUrl": "garlic.png"
     },
     "celery": {
         "en": "celery",
-        "pl": "seler"
-    },
-    "mushroom": {
-        "en": "mushroom",
-        "pl": "grzyb"
+        "pl": "seler",
+        "id": "11143",
+        "imageUrl": "celery.jpg"
     },
     "green bean": {
         "en": "green bean",
-        "pl": "zielona fasolka"
+        "pl": "zielona fasolka",
+        "id": "2300000"
     },
     "asparagus": {
         "en": "asparagus",
-        "pl": "szparag"
+        "pl": "szparag",
+        "id": "11011",
+        "imageUrl": "asparagus.png"
     },
     "sweet potato": {
         "en": "sweet potato",
-        "pl": "batat"
+        "pl": "batat",
+        "id": "11507",
+        "imageUrl": "sweet-potato.png"
     },
     "radish": {
         "en": "radish",
-        "pl": "rzodkiewka"
+        "pl": "rzodkiewka",
+        "id": "11429",
+        "imageUrl": "radishes.jpg"
     },
     "corn": {
         "en": "corn",
-        "pl": "kukurydza"
+        "pl": "kukurydza",
+        "id": "11168",
+        "imageUrl": "corn.png"
     },
     "eggplant": {
         "en": "eggplant",
-        "pl": "bakłażan"
+        "pl": "bakłażan",
+        "id": "11209",
+        "imageUrl": "eggplant.png"
     },
     "pea": {
         "en": "pea",
-        "pl": "groch"
+        "pl": "groch",
+        "id": "2300001"
     },
     "kale": {
         "en": "kale",
-        "pl": "kapusta włoska"
+        "pl": "kapusta włoska",
+        "id": "11233",
+        "imageUrl": "kale.jpg"
     },
-    "brussels sprout": {
-        "en": "brussels sprout",
-        "pl": "brukselka"
+    "brussels sprouts": {
+        "en": "brussels sprouts",
+        "pl": "brukselka",
+        "id": "11098",
+        "imageUrl": "brussels-sprouts.jpg"
     },
     "artichoke": {
         "en": "artichoke",
-        "pl": "karczoch"
+        "pl": "karczoch",
+        "id": "11007",
+        "imageUrl": "artichokes.png"
     },
     "beet": {
         "en": "beet",
-        "pl": "buraczany"
+        "pl": "burak",
+        "id": "11080",
+        "imageUrl": "beets.jpg"
     },
     "pumpkin": {
         "en": "pumpkin",
-        "pl": "dynia"
-    },
-    "butternut squash": {
-        "en": "butternut squash",
-        "pl": "dynia zwyczajna"
+        "pl": "dynia",
+        "id": "11422",
+        "imageUrl": "pumpkin.png"
     },
     "fennel": {
         "en": "fennel",
-        "pl": "koper włoski"
+        "pl": "koper włoski",
+        "id": "11957",
+        "imageUrl": "fennel.png"
     },
     "leek": {
         "en": "leek",
-        "pl": "por"
+        "pl": "por",
+        "id": "11246",
+        "imageUrl": "leeks.jpg"
     },
     "turnip": {
         "en": "turnip",
-        "pl": "rzepa"
+        "pl": "rzepa",
+        "id": "11564",
+        "imageUrl": "turnips.png"
     },
     "rhubarb": {
         "en": "rhubarb",
-        "pl": "rabarbar"
+        "pl": "rabarbar",
+        "id": "9307",
+        "imageUrl": "rhubarb.jpg"
     },
     "chili pepper": {
         "en": "chili pepper",
-        "pl": "papryczka chili"
-    },
-    "okra": {
-        "en": "okra",
-        "pl": "piżmian jadalny"
+        "pl": "papryczka chili",
+        "id": "11819",
+        "imageUrl": "red-chili.jpg"
     },
     "chard": {
         "en": "chard",
-        "pl": "boćwina"
+        "pl": "boćwina",
+        "id": "11147",
+        "imageUrl": "swiss-chard.jpg"
     },
     "arugula": {
         "en": "arugula",
-        "pl": "rukola"
-    },
-    "endive": {
-        "en": "endive",
-        "pl": "endywia"
-    },
-    "watercress": {
-        "en": "watercress",
-        "pl": "watercress"
+        "pl": "rukola",
+        "id": "11959",
+        "imageUrl": "arugula-or-rocket-salad.jpg"
     },
     "kohlrabi": {
         "en": "kohlrabi",
-        "pl": "kalarepa"
-    },
-    "collard greens": {
-        "en": "collard greens",
-        "pl": "jarmuż"
-    },
-    "chicory": {
-        "en": "chicory",
-        "pl": "cykoria"
-    },
-    "snow pea": {
-        "en": "snow pea",
-        "pl": "groszek cukrowy"
-    },
-    "chayote": {
-        "en": "chayote",
-        "pl": "kolczoch"
+        "pl": "kalarepa",
+        "id": "11241",
+        "imageUrl": "kohlrabi.jpg"
     },
     "rutabaga": {
         "en": "rutabaga",
-        "pl": "brukiew"
+        "pl": "brukiew",
+        "id": "11435",
+        "imageUrl": "rutabaga.jpg"
     },
-    "lotus root": {
-        "en": "lotus root",
-        "pl": "korzeń lotosu"
+    "paprika": {
+        "en": "paprika",
+        "pl": "papryka",
+        "id": "2028",
+        "imageUrl": "paprika.jpg"
+    },
+    "kidney beans": {
+        "id": "16033",
+        "en": "kidney beans",
+        "pl": "fasola szparagowa",
+        "imageUrl": "kidney-beans.jpg"
+    },
+    "beans": {
+        "id": "16069",
+        "en": "beans",
+        "pl": "fasola",
+        "imageUrl": "lentils-green.jpg"
+    },
+    "green grams": {
+        "id": "16080",
+        "en": "green grams",
+        "pl": "groszek zielony",
+        "imageUrl": "mung-beans.png"
+    },
+    "parsley": {
+        "id": "11297",
+        "en": "parsley",
+        "pl": "pietruszka",
+        "imageUrl": "parsley.jpg"
     }
 }
