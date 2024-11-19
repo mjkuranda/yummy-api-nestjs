@@ -344,9 +344,11 @@ export class DishService {
             return cachedResult;
         }
 
+        const ingredients = [...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()];
+
         const datasets: Array<RatedDish[] | null> = await Promise.all([
-            this.dishRepository.getDishes([...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()]),
-            this.spoonacularApiService.getDishes(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', filteredIngredients, type)
+            this.dishRepository.getDishes(ingredients),
+            this.spoonacularApiService.getDishes(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ingredients, type)
         ]);
 
         const dishes: RatedDish[] = datasets.flat().filter(dish => dish.relevance > 0).sort(sortDescendingRelevance);
