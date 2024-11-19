@@ -109,8 +109,8 @@ describe('UserController (e2e)', () => {
             isAdmin: true
         } as any;
         const mockUsers: UserObject[] = [
-            { email: 'x@q.com', login: 'x', isAdmin: true, capabilities: { canAdd: true }},
-            { email: 'y@q.com', login: 'y', capabilities: { canDelete: true }}
+            { id: 'abc123', email: 'x@q.com', login: 'x', isAdmin: true, capabilities: { canAdd: true }},
+            { id: 'cba321', email: 'y@q.com', login: 'y', capabilities: { canDelete: true }}
         ];
 
         jest.clearAllMocks();

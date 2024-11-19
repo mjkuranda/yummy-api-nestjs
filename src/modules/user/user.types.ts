@@ -6,4 +6,4 @@ export type UserCapabilities = Record<CapabilityType, boolean>;
 
 export type UserPermissions = Pick<UserDocument, 'isAdmin' | 'capabilities'>;
 
-export type UserObject = Pick<UserDocument, 'email' | 'login' | 'isAdmin' | 'capabilities'>;
+export type UserObject = Pick<UserDocument, 'email' | 'login' | 'isAdmin' | 'capabilities'> & { id: string };

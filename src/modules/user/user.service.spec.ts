@@ -138,8 +138,8 @@ describe('UserService', () => {
     describe('getAllUsers', () => {
         it('should return all users', async () => {
             const mockUsers: UserObject[] = [
-                { email: 'x@q.com', login: 'x', isAdmin: true, capabilities: { canAdd: true }},
-                { email: 'y@q.com', login: 'y', capabilities: { canDelete: true }}
+                { id: 'abc123', email: 'x@q.com', login: 'x', isAdmin: true, capabilities: { canAdd: true }},
+                { id: 'cba321', email: 'y@q.com', login: 'y', capabilities: { canDelete: true }}
             ];
 
             jest.spyOn(userRepository, 'getAll').mockReturnValueOnce(Promise.resolve(mockUsers));
