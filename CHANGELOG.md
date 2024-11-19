@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): New ingredient category elements.
 - [Marek Kurańda](https://github.com/mjkuranda): `mushrooms` and `cereal-products` as a new ingredient categories.
+- [Marek Kurańda](https://github.com/mjkuranda): List for `pantry ingredients`.
 
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): Ingredient elements within each category.

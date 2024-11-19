@@ -18,7 +18,7 @@ export function getQueryWithIngredientsAndDishType(ingredients: IngredientType[]
     case 'localmongo':
         return `ings=${ingredientList}${mealType ?? `&${mealType}`}`;
     case 'spoonacular':
-        return `apiKey=${apiKey}&ignorePantry=false&ingredients=${ingredientList}${mealType ?? `&${mealType}`}`;
+        return `apiKey=${apiKey}&ignorePantry=true&ingredients=${ingredientList}${mealType ?? `&${mealType}`}`;
     default:
         throw new Error('Unknown API name case.');
     }

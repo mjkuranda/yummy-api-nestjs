@@ -18,15 +18,19 @@ export class IngredientService {
 
     private ingredients: IngredientDataset;
 
+    private pantryIngredients: string[];
+
     constructor(
         private readonly loggerService: LoggerService,
         private readonly axiosService: AxiosService
     ) {
         this.ingredients = new Map();
+        this.pantryIngredients = [];
     }
 
     onModuleInit() {
         this.loadIngredients();
+        this.loadPantryIngredients();
     }
 
     public filterIngredients(ingredients: IngredientType[]): IngredientType[] {
@@ -49,6 +53,24 @@ export class IngredientService {
         } catch (err: unknown) {
             this.loggerService.error(context, `Error while loading all ingredients: ${typeof err === 'object' && err['message']}`);
         }
+    }
+
+    private loadPantryIngredients(): void {
+        const context: ContextString = 'IngredientService/loadPantryIngredients';
+
+        try {
+            const rawData = fs.readFileSync('data/ingredients/pantry.json', 'utf-8');
+            const json = JSON.parse(rawData);
+
+            this.pantryIngredients = json;
+            this.loggerService.info(context, `All ${json.length} pantry ingredients has been loaded.`);
+        } catch (err: unknown) {
+            this.loggerService.error(context, `Error while loading all pantry ingredients: ${typeof err === 'object' && err['message']}`);
+        }
+    }
+
+    public getAllPantryIngredients(): string[] {
+        return this.pantryIngredients;
     }
 
     async wrapIngredientsWithImages(ingredients: DishIngredientWithoutImage[]): Promise<DishIngredient[]> {

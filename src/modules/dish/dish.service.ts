@@ -345,7 +345,7 @@ export class DishService {
         }
 
         const datasets: Array<RatedDish[] | null> = await Promise.all([
-            this.dishRepository.getDishes(filteredIngredients),
+            this.dishRepository.getDishes([...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()]),
             this.spoonacularApiService.getDishes(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', filteredIngredients, type)
         ]);
 

@@ -179,9 +179,4 @@ export class DishController {
     public async getSoftDeletedDishes() {
         return await this.dishService.getDishesSoftDeleted();
     }
-
-    @Get('/x/ingredient-images')
-    public async getIngredientImages() {
-        return await this.ingredientService.fetchAllImages();
-    }
 }
