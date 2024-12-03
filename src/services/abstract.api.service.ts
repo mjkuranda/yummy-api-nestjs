@@ -21,6 +21,14 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
 
     abstract getApiUrl(): string;
 
+    abstract getApiKey(): string;
+
+    abstract getDishesEndpointUrl(): string;
+
+    abstract getDishDetailsEndpointUrl(id: string): string;
+
+    abstract getDishInstructionEndpointUrl(id: string): string;
+
     abstract getName(): ApiName;
 
     abstract proceedDataToDishes(data: GenericDishStruct[], providedIngredients?: IngredientType[]): RatedDish[];
@@ -31,8 +39,8 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
 
     abstract proceedDataToIngredientList(ingredients: GenericIngredientStruct[]): IngredientType[];
 
-    async getDishes(apiKey: string, endpointUrl: string, ingredients: IngredientType[], mealType?: MealType): Promise<RatedDish[]> {
-        const query = getQueryWithIngredientsAndDishType(ingredients, mealType, this.getName(), apiKey);
+    async getDishes(ingredients: IngredientType[], mealType?: MealType): Promise<RatedDish[]> {
+        const query = getQueryWithIngredientsAndDishType(ingredients, mealType, this.getName(), this.getApiKey());
         const cachedResult = await this.redisService.getDishResult(this.getName(), query);
         const context: ContextString = 'AbstractApiService/getDishes';
 
@@ -42,7 +50,7 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
             return cachedResult;
         }
 
-        const url: string = this.getFullApiUrl(endpointUrl, query);
+        const url: string = this.getFullApiUrl(this.getDishesEndpointUrl(), query);
 
         try {
             const result: AxiosResponse<GenericDishStruct[], unknown> = await this.axiosService.get(url);
@@ -65,9 +73,9 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
         }
     }
 
-    async getDishDetails(apiUrl: string, apiInstructionUrl: string): Promise<DetailedDish> {
-        const url: string = this.getFullApiUrl(apiUrl);
-        const instructionUrl: string = this.getFullApiUrl(apiInstructionUrl);
+    async getDishDetails(id: string): Promise<DetailedDish> {
+        const url: string = this.getFullApiUrl(this.getDishDetailsEndpointUrl(id));
+        const instructionUrl: string = this.getFullApiUrl(this.getDishInstructionEndpointUrl(id));
         const context = 'AbstractApiService/getDishDetails';
 
         try {

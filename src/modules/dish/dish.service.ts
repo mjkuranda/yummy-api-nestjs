@@ -10,7 +10,6 @@ import { UserDto } from '../user/user.dto';
 import { DishRepository } from '../../mongodb/repositories/dish.repository';
 import { MealType } from '../../common/enums';
 import { DetailedDish, DishRating, MergedSearchQueries, ProposedDish, RatedDish } from './dish.types';
-import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
 import {
     getQueryWithIngredientsAndDishType,
     mergeSearchQueries,
@@ -30,6 +29,7 @@ import { DishRatingRepository } from '../../mongodb/repositories/dish-rating.rep
 import { DishRatingDocument } from '../../mongodb/documents/dish-rating.document';
 import { sortDescendingRelevance } from '../../common/helpers';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
+import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
 
 @Injectable()
 export class DishService {
@@ -42,7 +42,9 @@ export class DishService {
         private redisService: RedisService,
         private loggerService: LoggerService,
         private ingredientService: IngredientService,
+        // private readonly dishProvider: ExternalApiService
         private spoonacularApiService: SpoonacularApiService
+        // private externalApiService: ExternalApiService
     ) {}
 
     async create(createDishDto: CreateDishDto<DishIngredientWithoutImage>, user: UserDto): Promise<DishDocument> {
@@ -263,7 +265,7 @@ export class DishService {
 
         // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
         const datasets: Array<DetailedDish | null> = await Promise.all([
-            this.spoonacularApiService.getDishDetails(`recipes/${id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`, `recipes/${id}/analyzedInstructions?apiKey=${process.env.SPOONACULAR_API_KEY}`)
+            this.spoonacularApiService.getDishDetails(id)
         ]);
 
         const filteredDish: DetailedDish = datasets.find(dish => dish !== null);
@@ -350,7 +352,7 @@ export class DishService {
         // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
         const datasets: Array<RatedDish[] | null> = await Promise.all([
             this.dishRepository.getDishes(ingredients),
-            this.spoonacularApiService.getDishes(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ingredients, type)
+            this.spoonacularApiService.getDishes(ingredients, type)
         ]);
 
         const dishes: RatedDish[] = datasets.flat().filter(dish => dish.relevance > 0).sort(sortDescendingRelevance);
@@ -370,7 +372,7 @@ export class DishService {
         // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
         const datasets: Array<RatedDish[] | null> = await Promise.all([
             this.dishRepository.getDishes(ingredientsList),
-            this.spoonacularApiService.getDishes(process.env.SPOONACULAR_API_KEY, 'recipes/findByIngredients', ingredientsList)
+            this.spoonacularApiService.getDishes(ingredientsList)
         ]);
         const dishes: RatedDish[] = datasets.flat().sort(sortDescendingRelevance);
         const proposedDishes: ProposedDish[] = proceedRatedDishesToProposedDishes(dishes, mergedSearchQueries);
@@ -419,7 +421,7 @@ export class DishService {
         } else {
             // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
             const datasets: Array<DetailedDish | null> = await Promise.all([
-                this.spoonacularApiService.getDishDetails(`recipes/${dishId}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`, `recipes/${dishId}/analyzedInstructions?apiKey=${process.env.SPOONACULAR_API_KEY}`)
+                this.spoonacularApiService.getDishDetails(dishId)
             ]);
 
             const filteredDish: DetailedDish = datasets.find(dish => dish !== null);

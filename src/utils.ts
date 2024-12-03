@@ -15,3 +15,9 @@ export function getCorsOrigins(): string[] {
 
     return origins;
 }
+
+export async function getAllFulfilledResults<T>(promises: Promise<T>[]): Promise<PromiseSettledResult<Awaited<Promise<T>>>[]> {
+    const results = await Promise.allSettled<T>(promises);
+
+    return results.filter(result => result.status === 'fulfilled');
+}
