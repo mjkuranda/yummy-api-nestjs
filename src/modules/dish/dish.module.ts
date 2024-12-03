@@ -7,12 +7,12 @@ import { RedisModule } from '../redis/redis.module';
 import { DishRepository } from '../../mongodb/repositories/dish.repository';
 import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
-import { SpoonacularApiModule } from '../api/spoonacular/spoonacular.api.module';
 import { IngredientModule } from '../ingredient/ingredient.module';
 import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
 import { TranslationModule } from '../translation/translation.module';
 import { DishCommentRepository } from '../../mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../../mongodb/repositories/dish-rating.repository';
+import { ExternalApiModule } from '../api/external-api.module';
 
 @Module({
     imports: [
@@ -20,7 +20,7 @@ import { DishRatingRepository } from '../../mongodb/repositories/dish-rating.rep
         RedisModule,
         JwtManagerModule,
         IngredientModule,
-        SpoonacularApiModule,
+        ExternalApiModule,
         TranslationModule
     ],
     controllers: [DishController],

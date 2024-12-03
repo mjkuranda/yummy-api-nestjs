@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.0] - 2024-12-03
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `ExternalApiModule` to manage different external APIs.
+
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): Simplified external API services management and added `getDatasets` method to `DishService`.
+
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): Avoided `402 Payment Required` HTTP status code from external APIs, replacing `Promise.all` with `Promise.allSettled`.
+
+## [2.7.2] - 2024-11-19
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): For `GET /users` projection to get `id`.
+
 ## [2.7.2] - 2024-11-19
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): For `GET /users` projection to get `id`.

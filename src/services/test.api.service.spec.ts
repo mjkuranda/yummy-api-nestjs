@@ -46,8 +46,6 @@ describe('TestApiService', () => {
     });
 
     describe('getDishes', () => {
-        const apiKey = null;
-        const endpointUrl = '';
         const ingredients = [IngredientName.CARROT, IngredientName.TOMATO];
         const mealType = MealType.LAUNCH;
         const mockResult: RatedDish[] = [
@@ -66,7 +64,7 @@ describe('TestApiService', () => {
         it('should return cached result when query is still in cache', async () => {
             jest.spyOn(redisService, 'getDishResult').mockResolvedValueOnce(mockResult);
 
-            const result = await testApiService.getDishes(apiKey, endpointUrl, ingredients, mealType);
+            const result = await testApiService.getDishes(ingredients, mealType);
 
             expect(result).toStrictEqual(mockResult);
         });
@@ -77,7 +75,7 @@ describe('TestApiService', () => {
             jest.spyOn(redisService, 'getDishResult').mockResolvedValueOnce(null);
             jest.spyOn(axiosService, 'get').mockResolvedValueOnce({ status: 400 });
 
-            const result = await testApiService.getDishes(apiKey, endpointUrl, ingredients, mealType);
+            const result = await testApiService.getDishes(ingredients, mealType);
 
             expect(result).toStrictEqual(mockResult);
             expect(redisService.getDishResult).toHaveBeenCalled();
@@ -91,7 +89,7 @@ describe('TestApiService', () => {
                 data: mockResult
             });
 
-            const result = await testApiService.getDishes(apiKey, endpointUrl, ingredients, mealType);
+            const result = await testApiService.getDishes(ingredients, mealType);
 
             expect(result).toStrictEqual(mockResult);
             expect(redisService.saveDishResult).toHaveBeenCalled();
@@ -105,8 +103,6 @@ describe('TestApiService', () => {
                 title: 'some title'
             };
             const mockInstructionFromExternalAPI = [ 1 ];
-            const mockApiUrl = 'api-url';
-            const mockInstructionUrl = 'instruction-url';
 
             jest.spyOn(axiosService, 'get').mockResolvedValueOnce({
                 status: 200,
@@ -117,21 +113,18 @@ describe('TestApiService', () => {
                 data: mockInstructionFromExternalAPI
             });
 
-            const result = await testApiService.getDishDetails(mockApiUrl, mockInstructionUrl);
+            const result = await testApiService.getDishDetails(mockDishFromExternalAPI.id);
 
             expect(result).toStrictEqual({ ...mockDishFromExternalAPI, ...mockInstructionFromExternalAPI });
         });
 
         it('shouldn\'t return any dish when there is no such dish with provided id', async () => {
-            const mockApiUrl = 'api-url';
-            const mockInstructionUrl = 'instruction-url';
-
             jest.spyOn(axiosService, 'get').mockResolvedValueOnce({
                 status: 404,
                 data: null
             });
 
-            const result = await testApiService.getDishDetails(mockApiUrl, mockInstructionUrl);
+            const result = await testApiService.getDishDetails('123');
 
             expect(result).toStrictEqual(null);
         });

@@ -9,7 +9,6 @@ import { NotFoundException } from '../../exceptions/not-found.exception';
 import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
 import { DishRepository } from '../../mongodb/repositories/dish.repository';
-import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
 import { DishType, IngredientName, MealType } from '../../common/enums';
 import { DishRating, ProposedDish, RatedDish } from './dish.types';
 import { proceedDishDocumentToDishDetails } from './dish.utils';
@@ -21,6 +20,7 @@ import { DishCommentDocument } from '../../mongodb/documents/dish-comment.docume
 import { DishRatingRepository } from '../../mongodb/repositories/dish-rating.repository';
 import { DishRatingDocument } from '../../mongodb/documents/dish-rating.document';
 import { AxiosService } from '../../services/axios.service';
+import { ExternalApiService } from '../api/external-api.service';
 
 describe('DishService', () => {
     let dishService: DishService;
@@ -30,7 +30,7 @@ describe('DishService', () => {
     let searchQueryRepository: SearchQueryRepository;
     let redisService: RedisService;
     let ingredientService: IngredientService;
-    let spoonacularApiService: SpoonacularApiService;
+    let externalApiService: ExternalApiService;
     let axiosService: AxiosService;
 
     const mockDishService = {
@@ -62,7 +62,7 @@ describe('DishService', () => {
         deleteAll: jest.fn()
     };
 
-    const mockSpoonacularApiService = {
+    const mockExternalApiService = {
         getDishes: jest.fn(),
         getDishDetails: jest.fn()
     };
@@ -102,7 +102,7 @@ describe('DishService', () => {
                 { provide: JwtManagerService, useClass: JwtManagerService },
                 { provide: LoggerService, useValue: mockLoggerService },
                 { provide: RedisService, useValue: mockRedisService },
-                { provide: SpoonacularApiService, useValue: mockSpoonacularApiService },
+                { provide: ExternalApiService, useValue: mockExternalApiService },
                 { provide: AxiosService, useValue: mockAxiosService }
             ],
         }).compile();
@@ -114,7 +114,7 @@ describe('DishService', () => {
         searchQueryRepository = module.get(SearchQueryRepository);
         redisService = module.get(RedisService);
         ingredientService = module.get(IngredientService);
-        spoonacularApiService = module.get(SpoonacularApiService);
+        externalApiService = module.get(ExternalApiService);
         axiosService = module.get(AxiosService);
     });
 
@@ -126,7 +126,7 @@ describe('DishService', () => {
         expect(searchQueryRepository).toBeDefined();
         expect(redisService).toBeDefined();
         expect(ingredientService).toBeDefined();
-        expect(spoonacularApiService).toBeDefined();
+        expect(externalApiService).toBeDefined();
         expect(axiosService).toBeDefined();
     });
 
@@ -379,7 +379,7 @@ describe('DishService', () => {
 
             jest.spyOn(redisService, 'getDishResult').mockResolvedValue(cachedResult);
             jest.spyOn(dishRepository, 'getDishes').mockResolvedValue([]);
-            jest.spyOn(spoonacularApiService, 'getDishes').mockResolvedValue(mockResult);
+            jest.spyOn(externalApiService, 'getDishes').mockReturnValue([Promise.resolve(mockResult)]);
             jest.spyOn(redisService, 'saveDishResult').mockResolvedValue();
 
             const result = await dishService.getDishes(ings, mealType);
@@ -437,7 +437,7 @@ describe('DishService', () => {
 
             jest.spyOn(redisService, 'getDishDetails').mockResolvedValueOnce(null);
             jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(null);
-            jest.spyOn(spoonacularApiService, 'getDishDetails').mockResolvedValueOnce(resultDish);
+            jest.spyOn(externalApiService, 'getDishDetails').mockReturnValueOnce([Promise.resolve(resultDish)]);
 
             const result = await dishService.getDishDetails(mockId);
 
@@ -450,7 +450,7 @@ describe('DishService', () => {
 
             jest.spyOn(redisService, 'getDishDetails').mockResolvedValueOnce(null);
             jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(null);
-            jest.spyOn(spoonacularApiService, 'getDishDetails').mockResolvedValueOnce(null);
+            jest.spyOn(externalApiService, 'getDishDetails').mockReturnValueOnce([]);
 
             await expect(dishService.getDishDetails(mockId)).rejects.toThrow(NotFoundException);
         });
@@ -542,7 +542,7 @@ describe('DishService', () => {
             ];
 
             jest.spyOn(searchQueryRepository, 'findAll').mockResolvedValueOnce(mockSearchQueries);
-            jest.spyOn(spoonacularApiService, 'getDishes').mockResolvedValueOnce(mockDishes);
+            jest.spyOn(externalApiService, 'getDishes').mockReturnValueOnce(mockDishes);
 
             const result = await dishService.getDishProposal(user);
 
@@ -594,7 +594,7 @@ describe('DishService', () => {
 
             jest.spyOn(redisService, 'hasDish').mockResolvedValueOnce(false);
             jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(false);
-            jest.spyOn(spoonacularApiService, 'getDishDetails').mockResolvedValueOnce(mockDish);
+            jest.spyOn(externalApiService, 'getDishDetails').mockReturnValueOnce([mockDish]);
 
             const hasDish = await dishService.hasDish(mockDishId);
 
