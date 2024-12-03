@@ -29,7 +29,8 @@ import { DishRatingRepository } from '../../mongodb/repositories/dish-rating.rep
 import { DishRatingDocument } from '../../mongodb/documents/dish-rating.document';
 import { sortDescendingRelevance } from '../../common/helpers';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
-import { SpoonacularApiService } from '../api/spoonacular/spoonacular.api.service';
+import { ExternalApiService } from '../api/external-api.service';
+import { getFulfilledPromiseResults } from '../../utils';
 
 @Injectable()
 export class DishService {
@@ -42,9 +43,7 @@ export class DishService {
         private redisService: RedisService,
         private loggerService: LoggerService,
         private ingredientService: IngredientService,
-        // private readonly dishProvider: ExternalApiService
-        private spoonacularApiService: SpoonacularApiService
-        // private externalApiService: ExternalApiService
+        private externalApiService: ExternalApiService
     ) {}
 
     async create(createDishDto: CreateDishDto<DishIngredientWithoutImage>, user: UserDto): Promise<DishDocument> {
@@ -264,9 +263,10 @@ export class DishService {
         }
 
         // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
-        const datasets: Array<DetailedDish | null> = await Promise.all([
-            this.spoonacularApiService.getDishDetails(id)
-        ]);
+        // const datasets: Array<DetailedDish | null> = await Promise.all([
+        //     this.spoonacularApiService.getDishDetails(id)
+        // ]);
+        const datasets = await this.getDatasets<DetailedDish>(...this.externalApiService.getDishDetails(id));
 
         const filteredDish: DetailedDish = datasets.find(dish => dish !== null);
 
@@ -350,10 +350,11 @@ export class DishService {
         const ingredients = [...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()];
 
         // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
-        const datasets: Array<RatedDish[] | null> = await Promise.all([
-            this.dishRepository.getDishes(ingredients),
-            this.spoonacularApiService.getDishes(ingredients, type)
-        ]);
+        // const datasets: Array<RatedDish[] | null> = await Promise.all([
+        //     this.dishRepository.getDishes(ingredients),
+        //     this.spoonacularApiService.getDishes(ingredients, type)
+        // ]);
+        const datasets = await this.getDatasets(this.dishRepository.getDishes(ingredients), ...this.externalApiService.getDishes(ingredients, type));
 
         const dishes: RatedDish[] = datasets.flat().filter(dish => dish.relevance > 0).sort(sortDescendingRelevance);
         await this.redisService.saveDishResult('merged', query, dishes, 12 * HOUR);
@@ -370,10 +371,11 @@ export class DishService {
         const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(searchQueries);
         const ingredientsList = Object.keys(mergedSearchQueries);
         // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
-        const datasets: Array<RatedDish[] | null> = await Promise.all([
-            this.dishRepository.getDishes(ingredientsList),
-            this.spoonacularApiService.getDishes(ingredientsList)
-        ]);
+        // const datasets: Array<RatedDish[] | null> = await Promise.all([
+        //     this.dishRepository.getDishes(ingredientsList),
+        //     this.spoonacularApiService.getDishes(ingredientsList)
+        // ]);
+        const datasets = await this.getDatasets(this.dishRepository.getDishes(ingredientsList), ...this.externalApiService.getDishes(ingredientsList));
         const dishes: RatedDish[] = datasets.flat().sort(sortDescendingRelevance);
         const proposedDishes: ProposedDish[] = proceedRatedDishesToProposedDishes(dishes, mergedSearchQueries);
 
@@ -420,9 +422,10 @@ export class DishService {
             }
         } else {
             // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
-            const datasets: Array<DetailedDish | null> = await Promise.all([
-                this.spoonacularApiService.getDishDetails(dishId)
-            ]);
+            // const datasets: Array<DetailedDish | null> = await Promise.all([
+            //     this.spoonacularApiService.getDishDetails(dishId)
+            // ]);
+            const datasets = await this.getDatasets(...this.externalApiService.getDishDetails(dishId));
 
             const filteredDish: DetailedDish = datasets.find(dish => dish !== null);
 
@@ -518,5 +521,9 @@ export class DishService {
         this.loggerService.info(context, `Successfully added a new rating for "${createRatingBody.dishId}" dish by "${user}" user.`);
 
         return await this.dishRatingRepository.create({ ...createRatingBody, user, posted: Date.now() });
+    }
+
+    private getDatasets<T>(...datasets: Promise<T>[]): Promise<T[]> {
+        return getFulfilledPromiseResults<T>(datasets);
     }
 }
