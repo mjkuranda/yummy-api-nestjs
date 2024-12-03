@@ -8,13 +8,13 @@ import { DishService } from '../src/modules/dish/dish.service';
 import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
 import { RedisService } from '../src/modules/redis/redis.service';
 import { DishRepository } from '../src/mongodb/repositories/dish.repository';
-import { SpoonacularApiService } from '../src/modules/api/spoonacular/spoonacular.api.service';
 import { DetailedDish, DetailedDishWithTranslations, DishRating, RatedDish } from '../src/modules/dish/dish.types';
 import { SearchQueryRepository } from '../src/mongodb/repositories/search-query.repository';
 import { DishCommentRepository } from '../src/mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../src/mongodb/repositories/dish-rating.repository';
 import { IngredientService } from '../src/modules/ingredient/ingredient.service';
 import { MealType, DishType } from '../src/common/enums';
+import { ExternalApiService } from '../src/modules/api/external-api.service';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -25,7 +25,7 @@ describe('UserController (e2e)', () => {
     let searchQueryRepository: SearchQueryRepository;
     let jwtManagerService: JwtManagerService;
     let redisService: RedisService;
-    let spoonacularApiService: SpoonacularApiService;
+    let externalApiService: ExternalApiService;
     let ingredientService: IngredientService;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -72,7 +72,8 @@ describe('UserController (e2e)', () => {
         generateAccessToken: jest.fn(),
         verifyAccessToken: jest.fn()
     };
-    const spoonacularApiServiceProvider = {
+    const externalApiServiceProvider = {
+        getAll: jest.fn().mockReturnValue([]),
         getDishes: jest.fn(),
         getDishDetails: jest.fn()
     };
@@ -93,7 +94,7 @@ describe('UserController (e2e)', () => {
             .overrideProvider(SearchQueryRepository).useValue(mockDishRepositoryProvider)
             .overrideProvider(RedisService).useValue(redisServiceProvider)
             .overrideProvider(JwtManagerService).useValue(jwtManagerServiceProvider)
-            .overrideProvider(SpoonacularApiService).useValue(spoonacularApiServiceProvider)
+            .overrideProvider(ExternalApiService).useValue(externalApiServiceProvider)
             .overrideProvider(IngredientService).useValue(ingredientServiceProvider)
             .compile();
 
@@ -108,7 +109,7 @@ describe('UserController (e2e)', () => {
         searchQueryRepository = moduleRef.get(SearchQueryRepository);
         jwtManagerService = moduleRef.get(JwtManagerService);
         redisService = moduleRef.get(RedisService);
-        spoonacularApiService = moduleRef.get(SpoonacularApiService);
+        externalApiService = moduleRef.get(ExternalApiService);
         ingredientService = moduleRef.get(IngredientService);
     });
 
@@ -183,7 +184,7 @@ describe('UserController (e2e)', () => {
         it('should throw an error when dish hasn\'t found', async () => {
             jest.spyOn(redisService, 'getDishDetails').mockResolvedValueOnce(null);
             jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(null);
-            jest.spyOn(spoonacularApiService, 'getDishDetails').mockResolvedValueOnce(null);
+            jest.spyOn(externalApiService, 'getDishDetails').mockReturnValueOnce([]);
 
             return request(app.getHttpServer())
                 .get('/dishes/some-id/details')
@@ -681,7 +682,7 @@ describe('UserController (e2e)', () => {
             jest.spyOn(dishRepository, 'getDishes').mockResolvedValue([]);
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
             jest.spyOn(searchQueryRepository, 'findAll').mockResolvedValueOnce(mockSearchQueries);
-            jest.spyOn(spoonacularApiService, 'getDishes').mockResolvedValueOnce(mockDishes);
+            jest.spyOn(externalApiService, 'getDishes').mockReturnValueOnce(mockDishes);
 
             return request(app.getHttpServer())
                 .get('/dishes/proposal/all')

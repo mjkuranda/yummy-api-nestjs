@@ -13,6 +13,22 @@ export class TestApiService extends AbstractApiService<any, any, any, any> {
         return undefined;
     }
 
+    getApiKey(): string {
+        return 'my-key';
+    }
+
+    getDishDetailsEndpointUrl(id: string): string {
+        return `endpoint/${id}`;
+    }
+
+    getDishInstructionEndpointUrl(id: string): string {
+        return `instruction-endpoint/${id}`;
+    }
+
+    getDishesEndpointUrl(): string {
+        return 'dish-endpoint';
+    }
+
     proceedDataToIngredientList(ingredients: any[]): IngredientType[] {
         return [...ingredients];
     }

@@ -23,6 +23,22 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         return 'spoonacular';
     }
 
+    getApiKey(): string {
+        return process.env.SPOONACULAR_API_KEY;
+    }
+
+    getDishDetailsEndpointUrl(id: string): string {
+        return `recipes/${id}/information?apiKey=${this.getApiKey()}`;
+    }
+
+    getDishInstructionEndpointUrl(id: string): string {
+        return `recipes/${id}/analyzedInstructions?apiKey=${this.getApiKey()}`;
+    }
+
+    getDishesEndpointUrl(): string {
+        return 'recipes/findByIngredients';
+    }
+
     proceedDataToIngredientList(ingredients: SpoonacularIngredient[]): IngredientType[] {
         return ingredients.map(ingredient => ingredient.name);
     }
