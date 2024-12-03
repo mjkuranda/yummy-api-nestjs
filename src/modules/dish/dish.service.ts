@@ -262,10 +262,6 @@ export class DishService {
             }
         }
 
-        // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
-        // const datasets: Array<DetailedDish | null> = await Promise.all([
-        //     this.spoonacularApiService.getDishDetails(id)
-        // ]);
         const datasets = await this.getDatasets<DetailedDish>(...this.externalApiService.getDishDetails(id));
 
         const filteredDish: DetailedDish = datasets.find(dish => dish !== null);
@@ -349,11 +345,6 @@ export class DishService {
 
         const ingredients = [...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()];
 
-        // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
-        // const datasets: Array<RatedDish[] | null> = await Promise.all([
-        //     this.dishRepository.getDishes(ingredients),
-        //     this.spoonacularApiService.getDishes(ingredients, type)
-        // ]);
         const datasets = await this.getDatasets(this.dishRepository.getDishes(ingredients), ...this.externalApiService.getDishes(ingredients, type));
 
         const dishes: RatedDish[] = datasets.flat().filter(dish => dish.relevance > 0).sort(sortDescendingRelevance);
@@ -370,11 +361,6 @@ export class DishService {
         const searchQueries: SearchQueryDocument[] = await this.searchQueryRepository.findAll({ date: { $gte: dateFilter }, login: user.login });
         const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(searchQueries);
         const ingredientsList = Object.keys(mergedSearchQueries);
-        // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
-        // const datasets: Array<RatedDish[] | null> = await Promise.all([
-        //     this.dishRepository.getDishes(ingredientsList),
-        //     this.spoonacularApiService.getDishes(ingredientsList)
-        // ]);
         const datasets = await this.getDatasets(this.dishRepository.getDishes(ingredientsList), ...this.externalApiService.getDishes(ingredientsList));
         const dishes: RatedDish[] = datasets.flat().sort(sortDescendingRelevance);
         const proposedDishes: ProposedDish[] = proceedRatedDishesToProposedDishes(dishes, mergedSearchQueries);
@@ -421,10 +407,6 @@ export class DishService {
                 return true;
             }
         } else {
-            // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
-            // const datasets: Array<DetailedDish | null> = await Promise.all([
-            //     this.spoonacularApiService.getDishDetails(dishId)
-            // ]);
             const datasets = await this.getDatasets(...this.externalApiService.getDishDetails(dishId));
 
             const filteredDish: DetailedDish = datasets.find(dish => dish !== null);
