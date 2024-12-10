@@ -17,6 +17,7 @@ export class UserLoginDto {
 
 export class CreateUserDto {
     @IsNotEmpty({ message: 'User should have a defined email' })
+    @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g, { message: 'Email address has incorrect format' })
     @Length(6, 48)
     readonly email: string;
 
