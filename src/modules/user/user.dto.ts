@@ -1,5 +1,7 @@
 import { CapabilityType } from './user.types';
 import { IsNotEmpty, IsOptional, Length, Matches, MinLength } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
+import { Transform } from 'class-transformer';
 
 export class UserDto {
     readonly _id: string;
@@ -32,6 +34,10 @@ export class CreateUserDto {
 
     @IsOptional()
     readonly salt: string;
+}
+
+export class UserNewPasswordDto extends PickType(CreateUserDto, ['password'] as const) {
+    @Transform(({ value }) => value, { toClassOnly: true }) readonly newPassword: string;
 }
 
 export class UserTokens {

@@ -156,6 +156,13 @@ Technologies:
 
 * `POST /users/:id/activate` - activates a user. `id` indicates which user should be activated only by admin.
 
+* `POST /users/change-password` - changes password. Include `newPassword` within a body to define its.
+```json
+{
+    "newPassword": "my new password"
+}
+```
+
 All above endpoints excluding `GET /dishes` and `GET /dishes/:id` require `accessToken` as a cookie.
 
 ### Images
