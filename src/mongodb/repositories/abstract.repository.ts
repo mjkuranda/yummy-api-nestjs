@@ -24,6 +24,10 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
         return this.model.create(createData);
     }
 
+    async insertMany(data: T[]) {
+        return this.model.insertMany(data);
+    }
+
     async updateOne(filterQuery: FilterQuery<T>, updateQuery: UpdateQuery<T> | UpdateWithAggregationPipeline) {
         return this.model.updateOne(filterQuery, updateQuery);
     }
