@@ -61,7 +61,7 @@ export class UserService {
         }, user.password);
 
         if (!areTheSamePasswords) {
-            const message = `Incorrect credentials for user ${login}`;
+            const message = `Incorrect credentials for user "${login}".`;
             this.loggerService.error(context, message);
 
             throw new BadRequestException(context, message);
@@ -319,5 +319,6 @@ export class UserService {
         });
 
         await this.userRepository.changePassword(login, hashedPassword, salt);
+        this.loggerService.info('UserService/changePassword', `User "${login}" has successfully changed its password!`);
     }
 }

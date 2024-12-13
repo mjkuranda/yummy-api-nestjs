@@ -48,9 +48,7 @@ export class UserRepository extends AbstractRepository<UserDocument, CreateUserD
     }
 
     async changePassword(login: string, hashedPassword: string, salt: string): Promise<void> {
-        this.model.updateOne({
-            login
-        }, {
+        await this.model.updateOne({ login }, {
             $set: {
                 password: hashedPassword,
                 salt
