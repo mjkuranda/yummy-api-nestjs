@@ -156,7 +156,7 @@ Technologies:
 
 * `POST /users/:id/activate` - activates a user. `id` indicates which user should be activated only by admin.
 
-* `POST /users/change-password` - changes password. Include `newPassword` within a body to define its.
+* `POST /users/change-password` - changes password and generates new salt for the user. Include `newPassword` within a body to define its.
 ```json
 {
     "newPassword": "my new password"

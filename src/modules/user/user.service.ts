@@ -310,7 +310,7 @@ export class UserService {
         this.loggerService.info(context, `User "${id}" has been successfully activated!`);
     }
 
-    async changePassword(user: UserAccessTokenPayload, password: string): Promise<void> {
+    async changePassword(login: string, password: string): Promise<void> {
         const salt = await this.passwordManagerService.generateSalt();
         const hashedPassword = await this.passwordManagerService.getHashedPassword({
             password,
@@ -318,6 +318,6 @@ export class UserService {
             pepper: process.env.PASSWORD_PEPPER
         });
 
-        await this.userRepository.changePassword(user.login, hashedPassword, salt);
+        await this.userRepository.changePassword(login, hashedPassword, salt);
     }
 }

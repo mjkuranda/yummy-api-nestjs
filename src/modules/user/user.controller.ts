@@ -97,6 +97,6 @@ export class UserController {
     public async changePassword(@Body() body: AuthenticatedUserRequestBody<UserNewPasswordDto>): Promise<void> {
         const { authenticatedUser, data } = body;
 
-        return await this.userService.changePassword(authenticatedUser, data.newPassword);
+        return await this.userService.changePassword(authenticatedUser.login, data.newPassword);
     }
 }
