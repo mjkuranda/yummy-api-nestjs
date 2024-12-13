@@ -61,7 +61,7 @@ export class UserService {
         }, user.password);
 
         if (!areTheSamePasswords) {
-            const message = `Incorrect credentials for user ${login}`;
+            const message = `Incorrect credentials for user "${login}".`;
             this.loggerService.error(context, message);
 
             throw new BadRequestException(context, message);
@@ -308,5 +308,17 @@ export class UserService {
             }
         });
         this.loggerService.info(context, `User "${id}" has been successfully activated!`);
+    }
+
+    async changePassword(login: string, password: string): Promise<void> {
+        const salt = await this.passwordManagerService.generateSalt();
+        const hashedPassword = await this.passwordManagerService.getHashedPassword({
+            password,
+            salt,
+            pepper: process.env.PASSWORD_PEPPER
+        });
+
+        await this.userRepository.changePassword(login, hashedPassword, salt);
+        this.loggerService.info('UserService/changePassword', `User "${login}" has successfully changed its password!`);
     }
 }

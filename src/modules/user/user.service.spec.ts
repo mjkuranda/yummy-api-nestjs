@@ -42,7 +42,8 @@ describe('UserService', () => {
         findByLogin: jest.fn(),
         create: jest.fn(),
         updateOne: jest.fn(),
-        getAll: jest.fn()
+        getAll: jest.fn(),
+        changePassword: jest.fn()
     };
 
     const mockUserActionRepository = {
@@ -618,6 +619,29 @@ describe('UserService', () => {
             const result = await userService.activateViaId(mockUserId);
 
             expect(result).toBeUndefined();
+        });
+    });
+
+    describe('changePassword', () => {
+        it('should change password and salt', async () => {
+            const mockLogin = 'login';
+            const mockNewPassword = 'new password';
+            const mockSalt = 'new salt';
+            const mockHashedPassword = 'hashed password';
+
+            jest.spyOn(passwordManagerService, 'generateSalt').mockResolvedValueOnce(mockSalt);
+            jest.spyOn(passwordManagerService, 'getHashedPassword').mockResolvedValueOnce(mockHashedPassword);
+
+            const result = await userService.changePassword(mockLogin, mockNewPassword);
+
+            expect(result).toBeUndefined();
+            expect(passwordManagerService.generateSalt).toHaveBeenCalled();
+            expect(passwordManagerService.getHashedPassword).toHaveBeenCalledWith({
+                password: mockNewPassword,
+                salt: mockSalt,
+                pepper: process.env.PASSWORD_PEPPER
+            });
+            expect(userRepository.changePassword).toHaveBeenCalledWith(mockLogin, mockHashedPassword, mockSalt);
         });
     });
 });

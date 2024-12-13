@@ -1,6 +1,6 @@
 {
   "name": "yummy-api-nestjs",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "REST API for Yummy application",
   "author": "mjkuranda",
   "private": false,
@@ -27,6 +27,7 @@
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/jwt": "^10.1.0",
+    "@nestjs/mapped-types": "^2.0.6",
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/platform-express": "^10.4.1",
     "@nestjs/serve-static": "^4.0.2",

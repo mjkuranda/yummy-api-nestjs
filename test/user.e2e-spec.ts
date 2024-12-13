@@ -43,7 +43,8 @@ describe('UserController (e2e)', () => {
         find: () => {},
         findById: () => {},
         findByLogin: () => {},
-        getAll: () => {}
+        getAll: () => {},
+        changePassword: () => {}
     };
 
     const mockUserActionRepositoryProvider = {
@@ -513,6 +514,33 @@ describe('UserController (e2e)', () => {
                 .post('/users/user-id/activate')
                 .set('Cookie', ['accessToken=token'])
                 .set('Authorization', 'Bearer token')
+                .expect(204);
+        });
+    });
+
+    describe('/users/change-password (POST)', () => {
+        it('should change password', async () => {
+            const mockRequestBody = {
+                newPassword: 'my new password'
+            };
+            const mockUser = {
+                _id: '635981f6e40f61599e839ddb',
+                login: 'login',
+                password: 'hashed',
+                isAdmin: true
+            } as any;
+            const mockToken = 'token';
+
+            jest.clearAllMocks();
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue(mockToken);
+            jest.spyOn(userRepository, 'findByLogin').mockReturnValueOnce(mockUser);
+
+            return request(app.getHttpServer())
+                .post('/users/change-password')
+                .set('Cookie', [`accessToken=${mockToken}`])
+                .set('Authorization', 'Bearer token')
+                .send(mockRequestBody)
                 .expect(204);
         });
     });
