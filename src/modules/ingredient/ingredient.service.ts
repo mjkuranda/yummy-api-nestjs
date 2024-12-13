@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from '../logger/logger.service';
-import * as fs from 'fs';
 import {
     IngredientData,
     IngredientDataset,
     IngredientType, DishIngredient,
-    DishIngredientWithoutImage
+    DishIngredientWithoutImage, IngredientCategory
 } from './ingredient.types';
 import { ContextString } from '../../common/types';
 import { AxiosService } from '../../services/axios.service';
 import { SpoonacularIngredient } from '../api/spoonacular/spoonacular.api.types';
 import { AxiosResponse } from 'axios';
 import { DishEditDto } from '../dish/dish.dto';
+import { loadDataFile, saveDataFile } from '../../common/utils';
 
 @Injectable()
 export class IngredientService {
@@ -28,9 +28,11 @@ export class IngredientService {
         this.pantryIngredients = [];
     }
 
-    onModuleInit() {
-        this.loadIngredients();
-        this.loadPantryIngredients();
+    async onModuleInit(): Promise<void> {
+        await Promise.all([
+            this.loadIngredients(),
+            this.loadPantryIngredients()
+        ]);
     }
 
     public filterIngredients(ingredients: IngredientType[]): IngredientType[] {
@@ -41,12 +43,11 @@ export class IngredientService {
         return ingredients.filter(ingredient => this.ingredients.has(ingredient));
     }
 
-    private loadIngredients(): void {
+    private async loadIngredients(): Promise<void> {
         const context: ContextString = 'IngredientService/loadIngredients';
 
         try {
-            const rawData = fs.readFileSync('data/ingredients/ingredients.json', 'utf-8');
-            const json = JSON.parse(rawData);
+            const json = await loadDataFile('ingredients/ingredients');
 
             this.ingredients = new Map(Object.entries(json));
             this.loggerService.info(context, `All ${Object.keys(json).length} ingredients has been loaded.`);
@@ -55,15 +56,14 @@ export class IngredientService {
         }
     }
 
-    private loadPantryIngredients(): void {
+    private async loadPantryIngredients(): Promise<void> {
         const context: ContextString = 'IngredientService/loadPantryIngredients';
 
         try {
-            const rawData = fs.readFileSync('data/ingredients/pantry.json', 'utf-8');
-            const json = JSON.parse(rawData);
+            const pantry = await loadDataFile<string[]>('ingredients/pantry');
 
-            this.pantryIngredients = json;
-            this.loggerService.info(context, `All ${json.length} pantry ingredients has been loaded.`);
+            this.pantryIngredients = pantry;
+            this.loggerService.info(context, `All ${pantry.length} pantry ingredients has been loaded.`);
         } catch (err: unknown) {
             this.loggerService.error(context, `Error while loading all pantry ingredients: ${typeof err === 'object' && err['message']}`);
         }
@@ -104,9 +104,8 @@ export class IngredientService {
         const context: ContextString = 'IngredientService/wrapIngredientsWithImages';
         try {
             const jsonObj = Object.fromEntries(this.ingredients);
-            const jsonData = JSON.stringify(jsonObj, null, 4);
 
-            fs.writeFile('data/ingredients/ingredients.json', jsonData, { encoding: 'utf-8' }, () => this.loggerService.info(context, 'Ingredients has been updated successfully.'));
+            await saveDataFile('ingredients/ingredients', jsonObj);
             this.loggerService.info(context, 'Ingredients has been updated successfully.');
         } catch (err: any) {
             this.loggerService.error(context, `An error occurred while updating the ingredient file: ${err.message}`);
@@ -136,12 +135,10 @@ export class IngredientService {
     }
 
     public async fetchAllImages() {
-        const categories = ['breads', 'cereal-products', 'dairy-and-eggs', 'fish-and-seafood', 'fruits', 'meats', 'mushrooms', 'oils-and-fats', 'pasta', 'seeds-and-nuts', 'spices', 'vegetables'];
+        const categories: IngredientCategory[] = ['breads', 'cereal-products', 'dairy-and-eggs', 'fish-and-seafood', 'fruits', 'meats', 'mushrooms', 'oils-and-fats', 'pasta', 'seeds-and-nuts', 'spices', 'vegetables'];
 
         for (const category of categories) {
-            const rawData = fs.readFileSync(`data/ingredients/${category}.json`, 'utf-8');
-            const json = JSON.parse(rawData);
-
+            const json = await loadDataFile(`ingredients/${category}`);
             const keys = Object.keys(json);
 
             for (const key of keys) {
@@ -160,14 +157,15 @@ export class IngredientService {
                         const { data } = await this.axiosService.get<SpoonacularIngredient>(`https://api.spoonacular.com/food/ingredients/${json[key].id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`);
                         json[key].imageUrl = data.image;
                     } catch (err) {
+                        // FIXME: Logger error
                         console.error('Error:', err.message);
                     }
                 }
             }
 
-            const jsonData = JSON.stringify(json, null, 4);
-
-            fs.writeFile(`data/ingredients/${category}.json`, jsonData, { encoding: 'utf-8' }, () => console.log(`Category ${category} updated.`));
+            await saveDataFile(`ingredients/${category}`, json);
+            // FIXME: Logger info
+            console.log(`Category ${category} updated.`);
         }
     }
 }

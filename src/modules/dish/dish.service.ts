@@ -31,6 +31,7 @@ import { sortDescendingRelevance } from '../../common/helpers';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { ExternalApiService } from '../api/external-api.service';
 import { getFulfilledPromiseResults } from '../../utils';
+import { loadDataFile } from '../../common/utils';
 
 @Injectable()
 export class DishService {
@@ -503,6 +504,12 @@ export class DishService {
         this.loggerService.info(context, `Successfully added a new rating for "${createRatingBody.dishId}" dish by "${user}" user.`);
 
         return await this.dishRatingRepository.create({ ...createRatingBody, user, posted: Date.now() });
+    }
+
+    async addInitialDishes(): Promise<void> {
+        const data = await loadDataFile<DishDocument[]>('initial-dishes');
+
+        await this.dishRepository.insertMany(data);
     }
 
     private getDatasets<T>(...datasets: Promise<T>[]): Promise<T[]> {

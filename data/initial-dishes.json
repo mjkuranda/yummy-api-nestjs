@@ -1,0 +1,773 @@
+[
+  {
+    "author": "yummy-test",
+    "description": "Pyszne i łatwe w przygotowaniu danie idealne na obiad.",
+    "imageUrl": "https://example.com/image1.jpg",
+    "ingredients": [
+      {
+        "name": "Pierś z kurczaka",
+        "amount": 500,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient1.jpg"
+      },
+      {
+        "name": "Sól",
+        "amount": 1,
+        "unit": "tsp",
+        "imageUrl": "https://example.com/ingredient2.jpg"
+      },
+      {
+        "name": "Oliwa z oliwek",
+        "amount": 2,
+        "unit": "tbsp",
+        "imageUrl": "https://example.com/ingredient3.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dinner",
+    "posted": 1670000000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Rozgrzej piekarnik do 200°C.",
+          "Dopraw kurczaka solą.",
+          "Rozgrzej oliwę na patelni i obsmaż kurczaka na złoty kolor.",
+          "Przełóż kurczaka do naczynia żaroodpornego i piecz przez 20 minut."
+        ]
+      },
+      {
+        "name": "Przygotowanie sosu",
+        "steps": [
+          "Na małej patelni rozgrzej oliwę z oliwek.",
+          "Dodaj posiekany czosnek i podsmaż, aż będzie aromatyczny.",
+          "Wlej śmietanę i dodaj starty ser.",
+          "Gotuj na wolnym ogniu przez 5 minut i podawaj na kurczaku."
+        ]
+      }
+    ],
+    "readyInMinutes": 40,
+    "title": "Pieczony kurczak z sosem śmietanowym",
+    "type": "main course"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Tradycyjna polska zupa pomidorowa z ryżem.",
+    "imageUrl": "https://example.com/image2.jpg",
+    "ingredients": [
+      {
+        "name": "Pomidory",
+        "amount": 400,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient4.jpg"
+      },
+      {
+        "name": "Bulion warzywny",
+        "amount": 1,
+        "unit": "l",
+        "imageUrl": "https://example.com/ingredient5.jpg"
+      },
+      {
+        "name": "Ryż",
+        "amount": 100,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient6.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "lunch",
+    "posted": 1670100000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Pomidory zmiksuj na gładką masę.",
+          "Podgrzej bulion i dodaj pomidory.",
+          "Wsyp ryż i gotuj na małym ogniu przez 15 minut.",
+          "Dopraw solą i pieprzem do smaku."
+        ]
+      }
+    ],
+    "readyInMinutes": 30,
+    "title": "Zupa pomidorowa z ryżem",
+    "type": "soup"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Szybki i smaczny deser z truskawek i bitej śmietany.",
+    "imageUrl": "https://example.com/image3.jpg",
+    "ingredients": [
+      {
+        "name": "Truskawki",
+        "amount": 250,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient7.jpg"
+      },
+      {
+        "name": "Bita śmietana",
+        "amount": 200,
+        "unit": "ml",
+        "imageUrl": "https://example.com/ingredient8.jpg"
+      },
+      {
+        "name": "Cukier puder",
+        "amount": 2,
+        "unit": "tbsp",
+        "imageUrl": "https://example.com/ingredient9.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dessert",
+    "posted": 1670200000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Umyj i oczyść truskawki.",
+          "Ubij bitą śmietanę z cukrem pudrem.",
+          "Nałóż warstwy truskawek i bitej śmietany do pucharków.",
+          "Podawaj od razu po przygotowaniu."
+        ]
+      }
+    ],
+    "readyInMinutes": 10,
+    "title": "Truskawki z bitą śmietaną",
+    "type": "dessert"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Klasyczne spaghetti bolognese - idealne na każdą okazję.",
+    "imageUrl": "https://example.com/image4.jpg",
+    "ingredients": [
+      {
+        "name": "Makaron spaghetti",
+        "amount": 200,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient10.jpg"
+      },
+      {
+        "name": "Mięso mielone",
+        "amount": 300,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient11.jpg"
+      },
+      {
+        "name": "Sos pomidorowy",
+        "amount": 500,
+        "unit": "ml",
+        "imageUrl": "https://example.com/ingredient12.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dinner",
+    "posted": 1670300000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Ugotuj makaron al dente zgodnie z instrukcją na opakowaniu.",
+          "Podsmaż mięso mielone na patelni.",
+          "Dodaj sos pomidorowy i gotuj na wolnym ogniu przez 10 minut.",
+          "Podawaj z makaronem, posypane parmezanem."
+        ]
+      }
+    ],
+    "readyInMinutes": 25,
+    "title": "Spaghetti Bolognese",
+    "type": "main course"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Pyszne i łatwe w przygotowaniu danie idealne na obiad.",
+    "imageUrl": "https://example.com/image1.jpg",
+    "ingredients": [
+      {
+        "name": "Pierś z kurczaka",
+        "amount": 500,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient1.jpg"
+      },
+      {
+        "name": "Sól",
+        "amount": 1,
+        "unit": "tsp",
+        "imageUrl": "https://example.com/ingredient2.jpg"
+      },
+      {
+        "name": "Oliwa z oliwek",
+        "amount": 2,
+        "unit": "tbsp",
+        "imageUrl": "https://example.com/ingredient3.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dinner",
+    "posted": 1670000000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Rozgrzej piekarnik do 200°C.",
+          "Dopraw kurczaka solą.",
+          "Rozgrzej oliwę na patelni i obsmaż kurczaka na złoty kolor.",
+          "Przełóż kurczaka do naczynia żaroodpornego i piecz przez 20 minut."
+        ]
+      },
+      {
+        "name": "Przygotowanie sosu",
+        "steps": [
+          "Na małej patelni rozgrzej oliwę z oliwek.",
+          "Dodaj posiekany czosnek i podsmaż, aż będzie aromatyczny.",
+          "Wlej śmietanę i dodaj starty ser.",
+          "Gotuj na wolnym ogniu przez 5 minut i podawaj na kurczaku."
+        ]
+      }
+    ],
+    "readyInMinutes": 40,
+    "title": "Pieczony kurczak z sosem śmietanowym",
+    "type": "main course"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Tradycyjna polska zupa pomidorowa z ryżem.",
+    "imageUrl": "https://example.com/image2.jpg",
+    "ingredients": [
+      {
+        "name": "Pomidory",
+        "amount": 400,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient4.jpg"
+      },
+      {
+        "name": "Bulion warzywny",
+        "amount": 1,
+        "unit": "l",
+        "imageUrl": "https://example.com/ingredient5.jpg"
+      },
+      {
+        "name": "Ryż",
+        "amount": 100,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient6.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "lunch",
+    "posted": 1670100000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Pomidory zmiksuj na gładką masę.",
+          "Podgrzej bulion i dodaj pomidory.",
+          "Wsyp ryż i gotuj na małym ogniu przez 15 minut.",
+          "Dopraw solą i pieprzem do smaku."
+        ]
+      }
+    ],
+    "readyInMinutes": 30,
+    "title": "Zupa pomidorowa z ryżem",
+    "type": "soup"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Szybki i smaczny deser z truskawek i bitej śmietany.",
+    "imageUrl": "https://example.com/image3.jpg",
+    "ingredients": [
+      {
+        "name": "Truskawki",
+        "amount": 250,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient7.jpg"
+      },
+      {
+        "name": "Bita śmietana",
+        "amount": 200,
+        "unit": "ml",
+        "imageUrl": "https://example.com/ingredient8.jpg"
+      },
+      {
+        "name": "Cukier puder",
+        "amount": 2,
+        "unit": "tbsp",
+        "imageUrl": "https://example.com/ingredient9.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dessert",
+    "posted": 1670200000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Umyj i oczyść truskawki.",
+          "Ubij bitą śmietanę z cukrem pudrem.",
+          "Nałóż warstwy truskawek i bitej śmietany do pucharków.",
+          "Podawaj od razu po przygotowaniu."
+        ]
+      }
+    ],
+    "readyInMinutes": 10,
+    "title": "Truskawki z bitą śmietaną",
+    "type": "dessert"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Klasyczne spaghetti bolognese - idealne na każdą okazję.",
+    "imageUrl": "https://example.com/image4.jpg",
+    "ingredients": [
+      {
+        "name": "Makaron spaghetti",
+        "amount": 200,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient10.jpg"
+      },
+      {
+        "name": "Mięso mielone",
+        "amount": 300,
+        "unit": "g",
+        "imageUrl": "https://example.com/ingredient11.jpg"
+      },
+      {
+        "name": "Sos pomidorowy",
+        "amount": 500,
+        "unit": "ml",
+        "imageUrl": "https://example.com/ingredient12.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dinner",
+    "posted": 1670300000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Ugotuj makaron al dente zgodnie z instrukcją na opakowaniu.",
+          "Podsmaż mięso mielone na patelni.",
+          "Dodaj sos pomidorowy i gotuj na wolnym ogniu przez 10 minut.",
+          "Podawaj z makaronem, posypane parmezanem."
+        ]
+      }
+    ],
+    "readyInMinutes": 25,
+    "title": "Spaghetti Bolognese",
+    "type": "main course"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Aromatyczna zupa pomidorowa z bazylią i czosnkiem, idealna na obiad.",
+    "imageUrl": "https://example.com/image1.jpg",
+    "ingredients": [
+      {
+        "name": "tomato",
+        "amount": 500,
+        "unit": "g",
+        "imageUrl": "https://example.com/tomato.jpg"
+      },
+      {
+        "name": "basil",
+        "amount": 10,
+        "unit": "g",
+        "imageUrl": "https://example.com/basil.jpg"
+      },
+      {
+        "name": "garlic",
+        "amount": 2,
+        "unit": "cloves",
+        "imageUrl": "https://example.com/garlic.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "lunch",
+    "posted": 1670000000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Obierz i posiekaj czosnek.",
+          "Podsmaż czosnek na oliwie, dodaj pomidory.",
+          "Gotuj na małym ogniu przez 20 minut.",
+          "Dodaj świeżą bazylię i zmiksuj zupę blenderem."
+        ]
+      }
+    ],
+    "readyInMinutes": 30,
+    "title": "Zupa pomidorowa z bazylią",
+    "type": "soup"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Klasyczne spaghetti z sosem pomidorowym, czosnkiem i cebulą.",
+    "imageUrl": "https://example.com/image2.jpg",
+    "ingredients": [
+      {
+        "name": "tomato",
+        "amount": 400,
+        "unit": "g",
+        "imageUrl": "https://example.com/tomato.jpg"
+      },
+      {
+        "name": "garlic",
+        "amount": 3,
+        "unit": "cloves",
+        "imageUrl": "https://example.com/garlic.jpg"
+      },
+      {
+        "name": "onion",
+        "amount": 1,
+        "unit": "piece",
+        "imageUrl": "https://example.com/onion.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dinner",
+    "posted": 1670000000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Posiekaj cebulę i czosnek.",
+          "Podsmaż cebulę na oliwie, dodaj czosnek.",
+          "Dodaj pomidory i gotuj przez 15 minut.",
+          "Podawaj z ugotowanym spaghetti."
+        ]
+      }
+    ],
+    "readyInMinutes": 25,
+    "title": "Spaghetti z sosem pomidorowym",
+    "type": "main course"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Pieczony kurczak z serem, papryką i czosnkiem.",
+    "imageUrl": "https://example.com/image3.jpg",
+    "ingredients": [
+      {
+        "name": "chicken",
+        "amount": 500,
+        "unit": "g",
+        "imageUrl": "https://example.com/chicken.jpg"
+      },
+      {
+        "name": "cheese",
+        "amount": 100,
+        "unit": "g",
+        "imageUrl": "https://example.com/cheese.jpg"
+      },
+      {
+        "name": "pepper",
+        "amount": 1,
+        "unit": "piece",
+        "imageUrl": "https://example.com/pepper.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dinner",
+    "posted": 1670000000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Pokrój kurczaka na kawałki.",
+          "Ułóż kurczaka w naczyniu żaroodpornym.",
+          "Dodaj pokrojoną paprykę i posyp startym serem.",
+          "Piecz w temperaturze 180°C przez 25 minut."
+        ]
+      }
+    ],
+    "readyInMinutes": 40,
+    "title": "Pieczony kurczak z serem i papryką",
+    "type": "main course"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Chrupiąca pizza z serem, pomidorami i świeżą bazylią.",
+    "imageUrl": "https://example.com/image4.jpg",
+    "ingredients": [
+      {
+        "name": "tomato",
+        "amount": 200,
+        "unit": "g",
+        "imageUrl": "https://example.com/tomato.jpg"
+      },
+      {
+        "name": "cheese",
+        "amount": 150,
+        "unit": "g",
+        "imageUrl": "https://example.com/cheese.jpg"
+      },
+      {
+        "name": "basil",
+        "amount": 5,
+        "unit": "g",
+        "imageUrl": "https://example.com/basil.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dinner",
+    "posted": 1670000000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Rozwałkuj ciasto na pizzę.",
+          "Rozprowadź sos pomidorowy na cieście.",
+          "Posyp startym serem i dodaj listki bazylii.",
+          "Piecz w piekarniku w temperaturze 220°C przez 12 minut."
+        ]
+      }
+    ],
+    "readyInMinutes": 30,
+    "title": "Pizza Margherita",
+    "type": "main course"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Sałatka z pomidorów, cebuli i świeżej bazylii z oliwą z oliwek.",
+    "imageUrl": "https://example.com/image5.jpg",
+    "ingredients": [
+      {
+        "name": "tomato",
+        "amount": 300,
+        "unit": "g",
+        "imageUrl": "https://example.com/tomato.jpg"
+      },
+      {
+        "name": "onion",
+        "amount": 1,
+        "unit": "piece",
+        "imageUrl": "https://example.com/onion.jpg"
+      },
+      {
+        "name": "basil",
+        "amount": 10,
+        "unit": "g",
+        "imageUrl": "https://example.com/basil.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "lunch",
+    "posted": 1670000000,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Pokrój pomidory na plasterki.",
+          "Posiekaj cebulę w cienkie pierścienie.",
+          "Wymieszaj składniki i polej oliwą z oliwek.",
+          "Dodaj listki świeżej bazylii."
+        ]
+      }
+    ],
+    "readyInMinutes": 15,
+    "title": "Sałatka caprese z cebulą",
+    "type": "salad"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Domowe pierogi z ziemniakami i serem, podane z jogurtem.",
+    "imageUrl": "https://example.com/image6.jpg",
+    "ingredients": [
+      {
+        "name": "potato",
+        "amount": 500,
+        "unit": "g",
+        "imageUrl": "https://example.com/potato.jpg"
+      },
+      {
+        "name": "cheese",
+        "amount": 200,
+        "unit": "g",
+        "imageUrl": "https://example.com/cheese.jpg"
+      },
+      {
+        "name": "yogurt",
+        "amount": 100,
+        "unit": "ml",
+        "imageUrl": "https://example.com/yogurt.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dinner",
+    "posted": 1670000001,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Ugotuj ziemniaki i rozgnieć je na puree.",
+          "Wymieszaj puree z serem, dopraw solą i pieprzem.",
+          "Przygotuj ciasto na pierogi, napełnij farszem i zlep brzegi.",
+          "Gotuj pierogi w osolonej wodzie przez 3-5 minut, podaj z jogurtem."
+        ]
+      }
+    ],
+    "readyInMinutes": 60,
+    "title": "Pierogi z ziemniakami i serem",
+    "type": "main course"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Kremowa zupa kalafiorowa z mlekiem i jogurtem.",
+    "imageUrl": "https://example.com/image7.jpg",
+    "ingredients": [
+      {
+        "name": "cauliflower",
+        "amount": 1,
+        "unit": "piece",
+        "imageUrl": "https://example.com/cauliflower.jpg"
+      },
+      {
+        "name": "milk",
+        "amount": 200,
+        "unit": "ml",
+        "imageUrl": "https://example.com/milk.jpg"
+      },
+      {
+        "name": "yogurt",
+        "amount": 50,
+        "unit": "ml",
+        "imageUrl": "https://example.com/yogurt.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "lunch",
+    "posted": 1670000002,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Ugotuj kalafior do miękkości.",
+          "Zmiksuj kalafior z mlekiem na krem.",
+          "Dodaj jogurt, dopraw solą i pieprzem, podawaj gorące."
+        ]
+      }
+    ],
+    "readyInMinutes": 40,
+    "title": "Zupa krem z kalafiora",
+    "type": "soup"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Soczyste kotlety mielone z wołowiny, podane z kapustą.",
+    "imageUrl": "https://example.com/image8.jpg",
+    "ingredients": [
+      {
+        "name": "beef",
+        "amount": 400,
+        "unit": "g",
+        "imageUrl": "https://example.com/beef.jpg"
+      },
+      {
+        "name": "cabbage",
+        "amount": 300,
+        "unit": "g",
+        "imageUrl": "https://example.com/cabbage.jpg"
+      },
+      {
+        "name": "onion",
+        "amount": 1,
+        "unit": "piece",
+        "imageUrl": "https://example.com/onion.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dinner",
+    "posted": 1670000003,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Posiekaj cebulę i wymieszaj z mieloną wołowiną.",
+          "Uformuj kotlety i usmaż na złoty kolor.",
+          "Podduś kapustę z odrobiną soli i podawaj jako dodatek."
+        ]
+      }
+    ],
+    "readyInMinutes": 50,
+    "title": "Kotlety mielone z kapustą",
+    "type": "main course"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Prosty i smaczny zapiekany chleb z serem i czosnkiem.",
+    "imageUrl": "https://example.com/image9.jpg",
+    "ingredients": [
+      {
+        "name": "white bread",
+        "amount": 1,
+        "unit": "piece",
+        "imageUrl": "https://example.com/white_bread.jpg"
+      },
+      {
+        "name": "cheese",
+        "amount": 150,
+        "unit": "g",
+        "imageUrl": "https://example.com/cheese.jpg"
+      },
+      {
+        "name": "garlic",
+        "amount": 2,
+        "unit": "cloves",
+        "imageUrl": "https://example.com/garlic.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "breakfast",
+    "posted": 1670000004,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Przekrój chleb na pół i posmaruj masłem czosnkowym.",
+          "Posyp startym serem i zapiecz w piekarniku przez 10 minut w 200°C.",
+          "Podawaj na ciepło."
+        ]
+      }
+    ],
+    "readyInMinutes": 20,
+    "title": "Zapiekany chleb z serem",
+    "type": "breakfast"
+  },
+  {
+    "author": "yummy-test",
+    "description": "Delikatne schabowe zapiekane z ziemniakami i serem.",
+    "imageUrl": "https://example.com/image10.jpg",
+    "ingredients": [
+      {
+        "name": "pork",
+        "amount": 500,
+        "unit": "g",
+        "imageUrl": "https://example.com/pork.jpg"
+      },
+      {
+        "name": "potato",
+        "amount": 400,
+        "unit": "g",
+        "imageUrl": "https://example.com/potato.jpg"
+      },
+      {
+        "name": "cheese",
+        "amount": 150,
+        "unit": "g",
+        "imageUrl": "https://example.com/cheese.jpg"
+      }
+    ],
+    "language": "pl",
+    "mealType": "dinner",
+    "posted": 1670000005,
+    "recipeSections": [
+      {
+        "name": "",
+        "steps": [
+          "Pokrój ziemniaki w plasterki i podgotuj.",
+          "Ułóż plastry schabu i ziemniaki w naczyniu żaroodpornym.",
+          "Posyp startym serem i piecz w 180°C przez 30 minut."
+        ]
+      }
+    ],
+    "readyInMinutes": 60,
+    "title": "Schabowe zapiekane z ziemniakami",
+    "type": "main course"
+  }
+]
+
