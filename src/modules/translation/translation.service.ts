@@ -10,9 +10,9 @@ import { DishIngredient } from '../ingredient/ingredient.types';
 @Injectable()
 export class TranslationService {
 
-    async translateDish(dish: DetailedDish, fromLanguage: Language, targetLanguage: Language): Promise<TranslatedDetailedDish> {
-        if (fromLanguage === targetLanguage) {
-            const translatedIngredients = await this.translateIngredients(dish.ingredients, fromLanguage, targetLanguage);
+    async translateDish(dish: DetailedDish, targetLanguage: Language): Promise<TranslatedDetailedDish> {
+        if (dish.language === targetLanguage) {
+            const translatedIngredients = await this.translateIngredients(dish.ingredients, targetLanguage);
 
             return {
                 description: '',
@@ -82,7 +82,7 @@ export class TranslationService {
         };
     }
 
-    async translateIngredients(ingredients: DishIngredient[], fromLanguage: Language, targetLanguage: Language): Promise<TranslatedIngredient[]> {
+    async translateIngredients(ingredients: DishIngredient[], targetLanguage: Language): Promise<TranslatedIngredient[]> {
         const ingredientImages: string[] = [];
         const ingredientsToTranslate = ingredients.map(ingredient => {
             const { amount, unit, name, imageUrl } = ingredient;
