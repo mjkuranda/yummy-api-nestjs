@@ -389,7 +389,8 @@
         "pl": "cukinia"
     },
     "strawberries": {
-        "id": "9316",
+        "id": 9316,
+        "imageUrl": "strawberries.png",
         "en": "strawberries",
         "pl": "truskawki"
     },
@@ -584,7 +585,8 @@
         "pl": "pieczarki"
     },
     "blueberries": {
-        "id": "9050",
+        "id": 9050,
+        "imageUrl": "blueberries.jpg",
         "en": "blueberries",
         "pl": "borówki"
     },
@@ -634,7 +636,8 @@
         "pl": "ogórek"
     },
     "banana": {
-        "id": "9040",
+        "id": 9040,
+        "imageUrl": "bananas.jpg",
         "en": "banana",
         "pl": "banan"
     },
@@ -779,7 +782,8 @@
         "pl": "mielone goździki"
     },
     "cream": {
-        "id": "1053",
+        "id": 1053,
+        "imageUrl": "fluid-cream.jpg",
         "en": "cream",
         "pl": "śmietana"
     },
