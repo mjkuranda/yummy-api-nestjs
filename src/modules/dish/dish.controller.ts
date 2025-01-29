@@ -52,7 +52,8 @@ export class DishController {
     @HttpCode(200)
     public async getDishDetails(@Param('id') id: string, @Headers('accept-language') lang: Language): Promise<DetailedDishWithTranslations> {
         const dish = await this.dishService.getDishDetails(id);
-        const { description, ingredients, recipe } = await this.translationService.translateDish(dish, lang);
+        // FIXME: Get fromLanguage from browser
+        const { description, ingredients, recipe } = await this.translationService.translateDish(dish, 'pl', lang);
 
         return { dish, description, ingredients, recipe };
     }
