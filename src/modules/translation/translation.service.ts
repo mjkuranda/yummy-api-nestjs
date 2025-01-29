@@ -5,16 +5,18 @@ import { DetailedDish, DishRecipeSections } from '../dish/dish.types';
 import { compoundTextToTranslate, convertAmountToText, normalizeName, normalizeUnit } from '../../common/helpers';
 import translate from '@iamtraction/google-translate';
 import { proceedTagsSpaces } from '../api/spoonacular/spoonacular.api.utils';
+import { DishIngredient } from '../ingredient/ingredient.types';
 
 @Injectable()
 export class TranslationService {
 
-    async translateDish(dish: DetailedDish, targetLanguage?: Language): Promise<TranslatedDetailedDish> {
-        // NOTE: Do not translate when your language is English
-        if (['en', 'en-US'].includes(targetLanguage)) {
+    async translateDish(dish: DetailedDish, targetLanguage: Language): Promise<TranslatedDetailedDish> {
+        if (dish.language === targetLanguage) {
+            const translatedIngredients = await this.translateIngredients(dish.ingredients, targetLanguage);
+
             return {
                 description: '',
-                ingredients: [],
+                ingredients: translatedIngredients,
                 recipe: []
             };
         }
@@ -78,6 +80,29 @@ export class TranslationService {
             ingredients: ingredientList,
             recipe: translatedRecipeSections
         };
+    }
+
+    async translateIngredients(ingredients: DishIngredient[], targetLanguage: Language): Promise<TranslatedIngredient[]> {
+        const ingredientImages: string[] = [];
+        const ingredientsToTranslate = ingredients.map(ingredient => {
+            const { amount, unit, name, imageUrl } = ingredient;
+            const normalizedName = normalizeName(name);
+            const normalizedUnit = normalizeUnit(amount, unit);
+            const textAmount = convertAmountToText(amount);
+            const compoundedText = compoundTextToTranslate(textAmount, normalizedUnit, normalizedName);
+
+            ingredientImages.push(imageUrl);
+
+            return compoundedText;
+        }).join('\n');
+
+        const translatedResult = await this.translate(ingredientsToTranslate, targetLanguage);
+        const translatedIngredients = translatedResult.split('\n');
+
+        return translatedIngredients.map((ingredientText, idx) => ({
+            text: ingredientText,
+            imageUrl: ingredientImages[idx]
+        }));
     }
 
     async translate(text: string, targetLanguage: Language): Promise<string> {
