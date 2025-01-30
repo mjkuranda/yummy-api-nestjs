@@ -25,7 +25,7 @@ describe('IngredientService', () => {
         }).compile();
 
         ingredientService = module.get(IngredientService);
-        ingredientService.onModuleInit();
+        await ingredientService.onModuleInit();
     });
 
     it('should be defined', () => {

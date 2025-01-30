@@ -19,7 +19,7 @@ import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CreationGuard } from '../../guards/creation.guard';
 import { EditionGuard } from '../../guards/edition.guard';
 import { DeletionGuard } from '../../guards/deletion.guard';
-import { DetailedDishWithTranslations, GetDishesQueryType } from './dish.types';
+import { DetailedDishWithTranslations, GetDishesQueryType, RatedDish } from './dish.types';
 import { IngredientName, MealType } from '../../common/enums';
 import { DishQueryValidationPipe } from '../../pipes/dish-query-validation.pipe';
 import { TranslationService } from '../translation/translation.service';
@@ -35,7 +35,7 @@ export class DishController {
     @Get()
     @HttpCode(200)
     @UsePipes(DishQueryValidationPipe)
-    public async getDishes(@Query() query: GetDishesQueryType) {
+    public async getDishes(@Query() query: GetDishesQueryType): Promise<RatedDish[]> {
         const { ings, type } = query;
         const ingredients = ings.split(',');
 
