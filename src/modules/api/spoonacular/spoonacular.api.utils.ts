@@ -13,6 +13,7 @@ export function proceedRecipesToDishes(recipes: SpoonacularRecipe[]): RatedDish[
             id: recipe.id.toString(),
             imgUrl: recipe.image,
             ingredients: [...proceedIngredients(recipe.usedIngredients), ...proceedIngredients(recipe.missedIngredients)],
+            language: 'en',
             missingCount: recipe.missedIngredients.length,
             relevance: recipe.usedIngredients.length / (recipe.usedIngredients.length + recipe.missedIngredients.length),
             title: recipe.title,

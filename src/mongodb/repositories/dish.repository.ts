@@ -28,12 +28,12 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishW
         });
 
         return dishes.map(dish => {
-            const { id, title, imageUrl, type, mealType, ingredients } = dish;
+            const { id, title, imageUrl, type, mealType, ingredients, language } = dish;
             const mealIngredients = ingredients.map(ingredient => ingredient.name);
             const relevance = calculateRelevance(providedIngredients, mealIngredients);
             const missingCount = calculateMissing(providedIngredients, mealIngredients);
 
-            return { id, title, imgUrl: imageUrl, type, mealType, ingredients: mealIngredients, provider: 'yummy', relevance, missingCount };
+            return { id, title, imgUrl: imageUrl, type, mealType, ingredients: mealIngredients, language, provider: 'yummy', relevance, missingCount };
         });
     }
 }

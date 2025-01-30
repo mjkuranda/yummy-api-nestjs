@@ -8,6 +8,7 @@ export type RatedDish = {
     imgUrl?: string,
     ingredients: IngredientType[],
     missingCount: number,
+    language: Language,
     provider: DishProvider,
     title: string,
     relevance: number,
