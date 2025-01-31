@@ -12,7 +12,7 @@ import { RedisService } from '../src/modules/redis/redis.service';
 import { UserAccessTokenPayload, UserRefreshTokenPayload } from '../src/modules/jwt-manager/jwt-manager.types';
 import { PasswordManagerService } from '../src/modules/password-manager/password-manager.service';
 import { UserActionRepository } from '../src/mongodb/repositories/user.action.repository';
-import { UserObject } from '../src/modules/user/user.types';
+import { UserObject, UserProfile } from '../src/modules/user/user.types';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
@@ -38,13 +38,14 @@ describe('UserController (e2e)', () => {
             : undefined;
     };
     const mockUserModelProvider = {
-        create: () => {},
-        updateOne: () => {},
-        find: () => {},
-        findById: () => {},
-        findByLogin: () => {},
-        getAll: () => {},
-        changePassword: () => {}
+        create: jest.fn(),
+        updateOne: jest.fn(),
+        find: jest.fn(),
+        findById: jest.fn(),
+        findByLogin: jest.fn(),
+        getAll: jest.fn(),
+        changePassword: jest.fn(),
+        getProfile: jest.fn()
     };
 
     const mockUserActionRepositoryProvider = {
@@ -63,8 +64,8 @@ describe('UserController (e2e)', () => {
     };
 
     const mockRedisServiceProvider = {
-        set: jest.fn().mockImplementation((x, y, z, v) => {}),
-        get: jest.fn().mockImplementation((x) => x),
+        set: jest.fn(),
+        get: jest.fn(),
         setTokens: jest.fn(),
         unsetTokens: jest.fn(),
         getAccessToken: jest.fn(),
@@ -84,7 +85,7 @@ describe('UserController (e2e)', () => {
             .overrideProvider(LoggerService).useValue({ info: () => {}, error: () => {} })
             .overrideProvider(UserRepository).useValue(mockUserModelProvider)
             .overrideProvider(UserActionRepository).useValue(mockUserActionRepositoryProvider)
-            .overrideProvider(MailManagerService).useValue({ sendActivationMail: jest.fn((email, id) => {}) })
+            .overrideProvider(MailManagerService).useValue({ sendActivationMail: jest.fn() })
             .overrideProvider(JwtManagerService).useValue(mockJwtServiceProvider)
             .overrideProvider(RedisService).useValue(mockRedisServiceProvider)
             .overrideProvider(PasswordManagerService).useValue(mockPasswordManagerService)
@@ -542,6 +543,28 @@ describe('UserController (e2e)', () => {
                 .set('Authorization', 'Bearer token')
                 .send(mockRequestBody)
                 .expect(204);
+        });
+    });
+
+    describe('/users/my-user-login/profile (GET)', () => {
+        it('should return basic user profile info', async () => {
+            const mockLogin = 'my-user-login';
+            const mockUser: UserProfile = {
+                login: mockLogin,
+                activated: Date.now() - 5000,
+                capabilities: {
+                    canAdd: true
+                },
+                dishList: []
+            };
+
+            jest.clearAllMocks();
+            jest.spyOn(userRepository, 'getProfile').mockResolvedValueOnce(mockUser);
+
+            return request(app.getHttpServer())
+                .get(`/users/${mockLogin}/profile`)
+                .expect(200)
+                .expect(mockUser);
         });
     });
 });

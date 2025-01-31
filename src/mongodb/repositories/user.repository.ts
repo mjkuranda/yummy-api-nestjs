@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { models } from '../../constants/models.constant';
 import { CreateUserDto } from '../../modules/user/user.dto';
-import { UserObject } from '../../modules/user/user.types';
+import { UserObject, UserProfile } from '../../modules/user/user.types';
 
 @Injectable()
 export class UserRepository extends AbstractRepository<UserDocument, CreateUserDto> {
@@ -54,5 +54,44 @@ export class UserRepository extends AbstractRepository<UserDocument, CreateUserD
                 salt
             }
         });
+    }
+
+    async getProfile(login: string): Promise<UserProfile> {
+        const aggregatedUsers = this.model.aggregate<UserProfile>([
+            {
+                $match: { login }
+            },
+            {
+                $lookup: {
+                    from: 'dish_models',
+                    localField: 'login',
+                    foreignField: 'author',
+                    as: 'dishList'
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    login: 1,
+                    isAdmin: 1,
+                    capabilities: 1,
+                    activated: 1,
+                    dishList: {
+                        $map: {
+                            input: '$dishList',
+                            as: 'dish',
+                            in: {
+                                id: '$$dish._id',
+                                title: '$$dish.title'
+                            }
+                        }
+                    }
+                }
+            }
+        ]);
+
+        const users = await aggregatedUsers;
+
+        return users[0];
     }
 }

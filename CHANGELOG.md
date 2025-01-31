@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] - 2025-01-31
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `GET /users/:login/profile` endpoint for getting basic information about provided `:login` profile.
+- [Marek Kurańda](https://github.com/mjkuranda): `MongoIdValidationPipe` for validating MongoDB ObjectIds.
+
 ## [2.10.2] - 2025-01-30
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Language information along with dish results.

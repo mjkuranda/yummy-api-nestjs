@@ -6,7 +6,7 @@ import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { LoggerService } from '../logger/logger.service';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { CapabilityType, UserObject, UserPermissions } from './user.types';
+import { CapabilityType, UserObject, UserPermissions, UserProfile } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import { UserActionDocument } from '../../mongodb/documents/user-action.document';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
@@ -320,5 +320,15 @@ export class UserService {
 
         await this.userRepository.changePassword(login, hashedPassword, salt);
         this.loggerService.info('UserService/changePassword', `User "${login}" has successfully changed its password!`);
+    }
+
+    async getProfile(login: string): Promise<UserProfile> {
+        const user = await this.userRepository.getProfile(login);
+
+        if (!user) {
+            throw new NotFoundException('UserService/getProfile', `User with "${login}" login has not been found.`);
+        }
+
+        return user;
     }
 }
