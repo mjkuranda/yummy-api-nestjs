@@ -7,7 +7,7 @@ import { LoggerService } from '../logger/logger.service';
 import { CreateUserDto, UserDto } from './user.dto';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { CapabilityType, UserObject } from './user.types';
+import { CapabilityType, UserObject, UserProfile } from './user.types';
 import { MailManagerService } from '../mail-manager/mail-manager.service';
 import mongoose from 'mongoose';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
@@ -43,7 +43,8 @@ describe('UserService', () => {
         create: jest.fn(),
         updateOne: jest.fn(),
         getAll: jest.fn(),
-        changePassword: jest.fn()
+        changePassword: jest.fn(),
+        getProfile: jest.fn()
     };
 
     const mockUserActionRepository = {
@@ -642,6 +643,29 @@ describe('UserService', () => {
                 pepper: process.env.PASSWORD_PEPPER
             });
             expect(userRepository.changePassword).toHaveBeenCalledWith(mockLogin, mockHashedPassword, mockSalt);
+        });
+    });
+
+    describe('getProfile', () => {
+        it('should get information about profile about user',  async () => {
+            const mockLogin = 'login';
+            const expectedUserProfile: UserProfile = {
+                login: mockLogin,
+                activated: Date.now() - 5000,
+                dishList: []
+            };
+
+            jest.spyOn(userRepository, 'getProfile').mockResolvedValueOnce(expectedUserProfile);
+
+            const result = await userService.getProfile(mockLogin);
+
+            expect(result).toStrictEqual(expectedUserProfile);
+        });
+
+        it('should throw an error when user does not exist', async () => {
+            jest.spyOn(userRepository, 'getProfile').mockResolvedValueOnce(null);
+
+            await expect(userService.getProfile('nonExistingUserLogin')).rejects.toThrow(NotFoundException);
         });
     });
 });

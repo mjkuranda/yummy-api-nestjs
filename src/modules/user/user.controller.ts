@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, Post, Response, Param, UseGuards, Request, Get, } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UserDto, UserLoginDto, UserNewPasswordDto } from './user.dto';
-import { AuthenticatedUserRequestBody, CapabilityType } from './user.types';
+import { AuthenticatedUserRequestBody, CapabilityType, UserProfile } from './user.types';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CapabilityGuard } from '../../guards/capability.guard';
@@ -98,5 +98,11 @@ export class UserController {
         const { authenticatedUser, data } = body;
 
         return await this.userService.changePassword(authenticatedUser.login, data.newPassword);
+    }
+
+    @Get('/:login/profile')
+    @HttpCode(200)
+    public async getUserProfile(@Param('login') login: string): Promise<UserProfile> {
+        return await this.userService.getProfile(login);
     }
 }
