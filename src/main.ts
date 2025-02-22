@@ -9,16 +9,16 @@ import { CorsInterceptor } from './interceptors/cors.interceptor';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    // app.enableCors({
-    //     origin: getCorsOrigins(),
-    //     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    //     credentials: true
-    // });
+    app.enableCors({
+        origin: getCorsOrigins(),
+        methods: ['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        credentials: true
+    });
 
     app.use(cookieParser());
+    app.useGlobalInterceptors(new CorsInterceptor());
     app.useGlobalFilters(new HttpExceptionFilter());
     app.useGlobalPipes(new ValidationPipe());
-    app.useGlobalInterceptors(new CorsInterceptor());
 
     await app.listen(3001);
 }
