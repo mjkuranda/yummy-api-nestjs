@@ -5,6 +5,7 @@ import { getCorsOrigins } from '../utils';
 
 @Injectable()
 export class CorsInterceptor implements NestInterceptor {
+
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
         const ctx = context.switchToHttp();
         const res = ctx.getResponse();
@@ -18,12 +19,13 @@ export class CorsInterceptor implements NestInterceptor {
             res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
             res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
             res.setHeader('Access-Control-Allow-Credentials', 'true');
+        } else {
+            res.status(403).json({ message: 'CORS policy does not allow this origin' });
         }
 
         return next.handle().pipe(
             tap(() => {
                 // NOTE: Place for extra logics
-                res.status(403).json({ message: 'CORS policy does not allow this origin' });
             }),
         );
     }
