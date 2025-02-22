@@ -9,11 +9,11 @@ import { CorsInterceptor } from './interceptors/cors.interceptor';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    app.enableCors({
-        origin: getCorsOrigins(),
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-        credentials: true
-    });
+    // app.enableCors({
+    //     origin: getCorsOrigins(),
+    //     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    //     credentials: true
+    // });
 
     app.use(cookieParser());
     app.useGlobalFilters(new HttpExceptionFilter());
