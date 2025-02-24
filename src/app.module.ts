@@ -9,6 +9,7 @@ import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { UserModule } from './modules/user/user.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { ImageModule } from './modules/image/image.module';
+import { HealthcheckModule } from './modules/healthcheck/healthcheck.module';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import { ImageModule } from './modules/image/image.module';
                 serveRoot: '/ingredients'
             }
         ),
+        HealthcheckModule,
         LoggerModule,
         IngredientModule,
         DishModule,
