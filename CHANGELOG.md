@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.14.0] - 2025-02-27
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Global prefix `/api` for all routes and `v2` API version.
-- [Marek Kurańda](https://github.com/mjkuranda): `No Copyright` license.
+- [Marek Kurańda](https://github.com/mjkuranda): `Copyright` license.
 
 ## [2.13.0] - 2025-02-24
 ### Added
