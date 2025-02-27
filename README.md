@@ -1,4 +1,6 @@
 # Yummy API
+🚫 This source code is protected by copyright. Unauthorized copying, modification, distribution, or use is strictly prohibited.
+
 ## REST API for Yummy application
 
 Technologies:

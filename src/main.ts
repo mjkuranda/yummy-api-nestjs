@@ -5,9 +5,16 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { ValidationPipe } from './pipes/validation.pipe';
 import { getCorsOrigins } from './utils';
 import { CorsInterceptor } from './interceptors/cors.interceptor';
+import { VersioningType } from '@nestjs/common';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+
+    app.setGlobalPrefix('api');
+    app.enableVersioning({
+        type: VersioningType.URI,
+        defaultVersion: '2'
+    });
 
     app.enableCors({
         origin: getCorsOrigins(),
