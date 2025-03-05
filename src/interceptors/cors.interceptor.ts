@@ -13,7 +13,7 @@ export class CorsInterceptor implements NestInterceptor {
 
         const allowedOrigins = getCorsOrigins();
         const origin = req.headers.origin ?? '*'; // NOTE: '*' is dangerous but below is a flag defining the healthcheck
-        const isHealthcheck = req.path === '/healthcheck';
+        const isHealthcheck = req.path.includes('/health-check');
 
         if (!isHealthcheck && !allowedOrigins.includes(origin)) {
             throw new HttpException('CORS policy does not allow this origin', HttpStatus.FORBIDDEN);
