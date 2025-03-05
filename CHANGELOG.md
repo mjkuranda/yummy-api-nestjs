@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.14.1] - 2025-03-05
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): `/healthcheck` to `/health-check`.
+
+### Fixed
+- [Marek Kurańda](https://github.com/mjkuranda): Recognizing `/health-check` route as a part of pathname.
+
 ## [2.14.0] - 2025-02-27
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Global prefix `/api` for all routes and `v2` API version.
