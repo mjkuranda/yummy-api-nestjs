@@ -53,11 +53,16 @@ describe('UserController (e2e)', () => {
         findAll: () => {},
         findOne: () => {},
         findById: () => {},
-        getDishes: jest.fn()
+        getDishes: jest.fn(),
+        findOneAvailable: jest.fn()
     };
     const mockDishRatingRepositoryProvider = {
         ...mockDishRepositoryProvider,
         getAverageRatingForDish: jest.fn()
+    };
+    const mockSearchQueryRepositoryProvider = {
+        create: jest.fn(),
+        findAllRecentQueries: jest.fn()
     };
     const redisServiceProvider = {
         set: jest.fn(),
@@ -91,7 +96,7 @@ describe('UserController (e2e)', () => {
             .overrideProvider(DishRepository).useValue(mockDishRepositoryProvider)
             .overrideProvider(DishCommentRepository).useValue(mockDishRepositoryProvider)
             .overrideProvider(DishRatingRepository).useValue(mockDishRatingRepositoryProvider)
-            .overrideProvider(SearchQueryRepository).useValue(mockDishRepositoryProvider)
+            .overrideProvider(SearchQueryRepository).useValue(mockSearchQueryRepositoryProvider)
             .overrideProvider(RedisService).useValue(redisServiceProvider)
             .overrideProvider(JwtManagerService).useValue(jwtManagerServiceProvider)
             .overrideProvider(ExternalApiService).useValue(externalApiServiceProvider)
@@ -205,7 +210,7 @@ describe('UserController (e2e)', () => {
                 type: 'some type'
             } as any;
 
-            jest.spyOn(dishRepository, 'findOne').mockReturnValueOnce(mockDish);
+            jest.spyOn(dishRepository, 'findOneAvailable').mockReturnValueOnce(mockDish);
 
             return request(app.getHttpServer())
                 .get(`/dishes/${mockParamId}`)
@@ -217,7 +222,7 @@ describe('UserController (e2e)', () => {
             const mockParamId = '635981f6e40f61599e839ddb';
             const mockDish = null;
 
-            jest.spyOn(dishRepository, 'findOne').mockReturnValueOnce(mockDish);
+            jest.spyOn(dishRepository, 'findOneAvailable').mockReturnValueOnce(mockDish);
 
             return request(app.getHttpServer())
                 .get(`/dishes/${mockParamId}`)
@@ -681,7 +686,7 @@ describe('UserController (e2e)', () => {
 
             jest.spyOn(dishRepository, 'getDishes').mockResolvedValue([]);
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(searchQueryRepository, 'findAll').mockResolvedValueOnce(mockSearchQueries);
+            jest.spyOn(searchQueryRepository, 'findAllRecentQueries').mockResolvedValueOnce(mockSearchQueries);
             jest.spyOn(externalApiService, 'getDishes').mockReturnValueOnce(mockDishes);
 
             return request(app.getHttpServer())
