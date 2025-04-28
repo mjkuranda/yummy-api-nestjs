@@ -44,7 +44,10 @@ describe('UserService', () => {
         updateOne: jest.fn(),
         getAll: jest.fn(),
         changePassword: jest.fn(),
-        getProfile: jest.fn()
+        getProfile: jest.fn(),
+        grantPermission: jest.fn(),
+        denyPermission: jest.fn(),
+        markAsActivated: jest.fn()
     };
 
     const mockUserActionRepository = {
@@ -388,6 +391,7 @@ describe('UserService', () => {
             const result = await userService.grantPermission(mockUser, mockAdminUser, mockCapability);
 
             expect(result).toBe(true);
+            expect(userRepository.grantPermission).toHaveBeenCalledWith(mockUser, mockCapability);
         });
 
         it('should not grant a new permission when user has already had it', async () => {
@@ -444,6 +448,7 @@ describe('UserService', () => {
             const result = await userService.denyPermission(mockUser, mockAdminUser, mockCapability);
 
             expect(result).toBe(true);
+            expect(userRepository.denyPermission).toHaveBeenCalledWith(mockUser, mockCapability);
         });
 
         it('should not deny permission when user has not already had it', async () => {
@@ -546,6 +551,7 @@ describe('UserService', () => {
             const result = await userService.activate(mockValidId);
 
             expect(result).toBeUndefined();
+            expect(userRepository.markAsActivated).toHaveBeenCalledWith(mockUser._id);
         });
     });
 
@@ -620,6 +626,7 @@ describe('UserService', () => {
             const result = await userService.activateViaId(mockUserId);
 
             expect(result).toBeUndefined();
+            expect(userRepository.markAsActivated).toHaveBeenCalledWith(mockUser._id);
         });
     });
 

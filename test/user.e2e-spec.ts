@@ -45,7 +45,10 @@ describe('UserController (e2e)', () => {
         findByLogin: jest.fn(),
         getAll: jest.fn(),
         changePassword: jest.fn(),
-        getProfile: jest.fn()
+        getProfile: jest.fn(),
+        grantPermission: jest.fn(),
+        denyPermission: jest.fn(),
+        markAsActivated: jest.fn()
     };
 
     const mockUserActionRepositoryProvider = {

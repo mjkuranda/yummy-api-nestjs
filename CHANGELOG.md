@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.14.2] - 2025-04-28
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `getDishesWithSoftAdded`, `getDishesWithSoftEdited`, `getDishesWithSoftDeleted`, `findOneAvailable`, `unsetSoftAdded`, `insertEdition`, `confirmEdition` and `setSoftDeleted` methods to `DishRepository` replacing old model methods calls.
+- [Marek Kurańda](https://github.com/mjkuranda): `updateAndReturn` method to `DishRatingRepository` replacing old method call.
+- [Marek Kurańda](https://github.com/mjkuranda): `findAllRecentQueries` method to `SearchQueryRepository` replacing old method call.
+- [Marek Kurańda](https://github.com/mjkuranda): `grantPermission`, `denyPermission` and `markAsActivated` to `UserRepository` replacing old method calls.
+
 ## [2.14.1] - 2025-03-05
 ### Changed
 - [Marek Kurańda](https://github.com/mjkuranda): `/healthcheck` to `/health-check`.

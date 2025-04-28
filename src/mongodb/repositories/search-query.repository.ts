@@ -10,4 +10,20 @@ export class SearchQueryRepository extends AbstractRepository<SearchQueryDocumen
     constructor(@InjectModel(models.SEARCH_QUERY_MODEL) model: Model<SearchQueryDocument>) {
         super(model);
     }
+
+    async findAllRecentQueries(login: string): Promise<SearchQueryDocument[]> {
+        const dateFilter = new Date();
+        dateFilter.setDate(dateFilter.getDate() - 14);
+
+        const searchQueries: SearchQueryDocument[] = await this.findAll(
+            {
+                date: {
+                    $gte: dateFilter
+                },
+                login
+            }
+        );
+
+        return searchQueries;
+    }
 }

@@ -91,11 +91,7 @@ export class DishService {
             throw new NotFoundException(context, message);
         }
 
-        await this.dishRepository.updateOne({ _id: dish._id }, {
-            $unset: {
-                softAdded: true
-            }
-        });
+        await this.dishRepository.unsetSoftAdded(dish._id);
         const addedDish = await this.dishRepository.findById(dish._id) as DishDocument;
         await this.redisService.set<DishDocument>(addedDish, 'dish');
         this.loggerService.info(context, `Cached a dish with "${dish._id}" id.`);
@@ -124,11 +120,7 @@ export class DishService {
             throw new NotFoundException(context, message);
         }
 
-        await this.dishRepository.updateOne({ _id: dish._id }, {
-            $set: {
-                softEdited: dishEditDto
-            }
-        });
+        await this.dishRepository.insertEdition(dish._id, dishEditDto);
         const editedDish = await this.dishRepository.findById(dish._id) as DishDocument;
         this.loggerService.info(context, `Dish with id "${dish._id}" (titled: "${dish.title}") has been edited.`);
 
@@ -154,10 +146,7 @@ export class DishService {
             throw new NotFoundException(context, message);
         }
 
-        await this.dishRepository.updateOne({ _id: id }, {
-            $unset: { softEdited: {}},
-            $set: { ...dish.softEdited }
-        });
+        await this.dishRepository.confirmEdition(id, dish.softEdited);
         const updatedDish = await this.dishRepository.findById(id) as DishDocument;
         await this.redisService.set<DishDocument>(updatedDish, 'dish');
         this.loggerService.info(context, `Cached a dish with "${dish._id}" id.`);
@@ -187,11 +176,7 @@ export class DishService {
         }
 
         await this.redisService.deleteDish(dish._id);
-        await this.dishRepository.updateOne({ _id: dish._id }, {
-            $set: {
-                softDeleted: true
-            }
-        });
+        await this.dishRepository.setSoftDeleted(dish._id);
         const deletedDish = await this.dishRepository.findById(dish._id) as DishDocument;
         this.loggerService.info(context, `Dish with id "${dish._id}" (titled: "${dish.title}") has been marked as soft deleted.`);
 
@@ -303,11 +288,7 @@ export class DishService {
             return cachedDish;
         }
 
-        const dish = await this.dishRepository.findOne({
-            _id: id,
-            softAdded: { $exists: false },
-            softDeleted: { $exists: false }
-        }) as DishDocument;
+        const dish = await this.dishRepository.findOneAvailable(id);
 
         if (!dish) {
             const message = `Cannot find a dish with "${id}" id.`;
@@ -356,10 +337,7 @@ export class DishService {
     }
 
     async getDishProposal(user: UserAccessTokenPayload) {
-        const dateFilter = new Date();
-        dateFilter.setDate(dateFilter.getDate() - 14);
-
-        const searchQueries: SearchQueryDocument[] = await this.searchQueryRepository.findAll({ date: { $gte: dateFilter }, login: user.login });
+        const searchQueries: SearchQueryDocument[] = await this.searchQueryRepository.findAllRecentQueries(user.login);
         const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(searchQueries);
         const ingredientsList = Object.keys(mergedSearchQueries);
         const datasets = await this.getDatasets(this.dishRepository.getDishes(ingredientsList), ...this.externalApiService.getDishes(ingredientsList));
@@ -368,6 +346,7 @@ export class DishService {
 
         this.loggerService.info('DishService/getDishProposal', `Generated ${proposedDishes.length} dish proposal${proposedDishes.length > 1 ? 's' : ''}.`);
 
+        // FIXME: Could be simplified, because sorting is done earlier.
         return proposedDishes
             .filter(dish => dish.recommendationPoints > 0)
             .filter((dish, idx) => idx < 10);
@@ -379,16 +358,16 @@ export class DishService {
         this.loggerService.info('DishService/addDishProposal', `Added search query for user ${user.login}.`);
     }
 
-    async getDishesSoftAdded(): Promise<DishDocument[]> {
-        return await this.dishRepository.findAll({ softAdded: { $eq: true }});
+    async getDishesWithSoftAdded(): Promise<DishDocument[]> {
+        return await this.dishRepository.getDishesWithSoftAdded();
     }
 
-    async getDishesSoftEdited(): Promise<DishDocument[]> {
-        return await this.dishRepository.findAll({ softEdited: { $exists: true }});
+    async getDishesWithSoftEdited(): Promise<DishDocument[]> {
+        return await this.dishRepository.getDishesWithSoftEdited();
     }
 
-    async getDishesSoftDeleted(): Promise<DishDocument[]> {
-        return await this.dishRepository.findAll({ softDeleted: { $eq: true }});
+    async getDishesWithSoftDeleted(): Promise<DishDocument[]> {
+        return await this.dishRepository.getDishesWithSoftDeleted();
     }
 
     async hasDish(dishId: string): Promise<boolean> {
@@ -491,14 +470,7 @@ export class DishService {
         if (rating) {
             this.loggerService.info(context, `Successfully changed a rating for "${createRatingBody.dishId}" dish by "${user}" user.`);
 
-            return await this.dishRatingRepository.updateAndReturnDocument({
-                dishId: createRatingBody.dishId,
-                user
-            },
-            {
-                ...createRatingBody,
-                posted: Date.now()
-            });
+            return await this.dishRatingRepository.updateAndReturn(createRatingBody, user);
         }
 
         this.loggerService.info(context, `Successfully added a new rating for "${createRatingBody.dishId}" dish by "${user}" user.`);

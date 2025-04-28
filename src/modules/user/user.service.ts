@@ -170,20 +170,7 @@ export class UserService {
             return false;
         }
 
-        await this.userRepository.updateOne(
-            {
-                _id: user._id,
-                login: user.login
-            },
-            {
-                $set: {
-                    capabilities: {
-                        ...user.capabilities,
-                        [capability]: true
-                    }
-                }
-            }
-        );
+        await this.userRepository.grantPermission(user, capability);
         this.loggerService.info(context, `User "${byUser.login}" has granted permission "${capability}" to "${user.login}" user.`);
 
         return true;
@@ -205,20 +192,7 @@ export class UserService {
             return false;
         }
 
-        const newCapabilities = user.capabilities;
-        delete newCapabilities[capability];
-
-        await this.userRepository.updateOne(
-            {
-                _id: user._id,
-                login: user.login
-            },
-            {
-                $set: {
-                    capabilities: newCapabilities
-                }
-            }
-        );
+        await this.userRepository.denyPermission(user, capability);
         this.loggerService.info(context, `User "${byUser.login}" has denied permission "${capability}" to "${user.login}" user.`);
 
         return true;
@@ -261,11 +235,7 @@ export class UserService {
         }
 
         await this.userActionRepository.deleteOne({ _id: userActionId });
-        await this.userRepository.updateOne({ _id: user._id }, {
-            $set: {
-                activated: new Date().getTime()
-            }
-        });
+        await this.userRepository.markAsActivated(user._id);
         this.loggerService.info(context, `User "${user._id}" has been successfully activated!`);
     }
 
@@ -302,11 +272,7 @@ export class UserService {
         }
 
         await this.userActionRepository.deleteOne({ _id: userAction._id });
-        await this.userRepository.updateOne({ _id: user._id }, {
-            $set: {
-                activated: new Date().getTime()
-            }
-        });
+        await this.userRepository.markAsActivated(user._id);
         this.loggerService.info(context, `User "${id}" has been successfully activated!`);
     }
 
