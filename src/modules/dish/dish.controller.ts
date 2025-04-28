@@ -163,20 +163,20 @@ export class DishController {
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, CreationGuard)
     public async getSoftAddedDishes() {
-        return await this.dishService.getDishesSoftAdded();
+        return await this.dishService.getDishesWithSoftAdded();
     }
 
     @Get('/soft/edited')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, EditionGuard)
     public async getSoftEditedDishes() {
-        return await this.dishService.getDishesSoftEdited();
+        return await this.dishService.getDishesWithSoftEdited();
     }
 
     @Get('/soft/deleted')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, DeletionGuard)
     public async getSoftDeletedDishes() {
-        return await this.dishService.getDishesSoftDeleted();
+        return await this.dishService.getDishesWithSoftDeleted();
     }
 }

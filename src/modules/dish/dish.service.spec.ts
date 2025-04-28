@@ -47,6 +47,11 @@ describe('DishService', () => {
 
     const mockDishRepository = {
         ...mockDishService,
+        findOneAvailable: jest.fn(),
+        unsetSoftAdded: jest.fn(),
+        insertEdition: jest.fn(),
+        confirmEdition: jest.fn(),
+        setSoftDeleted: jest.fn(),
         delete: jest.fn()
     };
 
@@ -57,6 +62,7 @@ describe('DishService', () => {
 
     const mockDishRatingRepository = {
         ...mockDishService,
+        updateAndReturn: jest.fn(),
         getAverageRatingForDish: jest.fn(),
         updateAndReturnDocument: jest.fn(),
         deleteAll: jest.fn()
@@ -85,6 +91,11 @@ describe('DishService', () => {
         saveDishDetails: jest.fn()
     };
 
+    const mockSearchQueryRepository = {
+        create: jest.fn(),
+        findAllRecentQueries: jest.fn()
+    };
+
     const mockAxiosService = {
         get: jest.fn()
     };
@@ -97,7 +108,7 @@ describe('DishService', () => {
                 { provide: DishRepository, useValue: mockDishRepository },
                 { provide: DishCommentRepository, useValue: mockDishCommentRepository },
                 { provide: DishRatingRepository, useValue: mockDishRatingRepository },
-                { provide: SearchQueryRepository, useValue: mockDishService },
+                { provide: SearchQueryRepository, useValue: mockSearchQueryRepository },
                 { provide: JwtService, useClass: JwtService },
                 { provide: JwtManagerService, useClass: JwtManagerService },
                 { provide: LoggerService, useValue: mockLoggerService },
@@ -191,10 +202,13 @@ describe('DishService', () => {
             jest.spyOn(dishRepository, 'findById')
                 .mockReturnValueOnce(mockDish)
                 .mockReturnValueOnce(mockAddedDish);
+            jest.spyOn(dishRepository, 'unsetSoftAdded')
+                .mockReturnValueOnce(undefined);
 
             const result = await dishService.confirmCreating(mockId, mockUser);
 
             expect(result).toBe(mockAddedDish);
+            expect(dishRepository.unsetSoftAdded).toHaveBeenCalledWith(mockId);
             expect(redisService.set).toHaveBeenCalled();
             expect(redisService.set).toHaveBeenCalledWith(mockAddedDish, 'dish');
         });
@@ -230,10 +244,13 @@ describe('DishService', () => {
             jest.spyOn(dishRepository, 'findById')
                 .mockReturnValueOnce(mockDish)
                 .mockReturnValueOnce(mockEditedDish);
+            jest.spyOn(dishRepository, 'insertEdition')
+                .mockReturnValueOnce(undefined);
 
             const result = await dishService.edit(mockId, editedDishDto);
 
             expect(result).toBe(mockEditedDish);
+            expect(dishRepository.insertEdition).toHaveBeenCalledWith(mockId, editedDishDto);
         });
     });
 
@@ -268,10 +285,13 @@ describe('DishService', () => {
             jest.spyOn(dishRepository, 'findById')
                 .mockReturnValueOnce(mockDish)
                 .mockReturnValueOnce(mockEditedDish);
+            jest.spyOn(dishRepository, 'confirmEdition')
+                .mockReturnValueOnce(undefined);
 
             const result = await dishService.confirmEditing(mockId, mockUser);
 
             expect(result).toStrictEqual(mockEditedDish);
+            expect(dishRepository.confirmEdition).toHaveBeenCalledWith(mockId, mockDish.softEdited);
             expect(redisService.set).toHaveBeenCalled();
             expect(redisService.set).toHaveBeenCalledWith(mockEditedDish, 'dish');
         });
@@ -297,10 +317,13 @@ describe('DishService', () => {
             jest.spyOn(dishRepository, 'findById')
                 .mockReturnValueOnce(mockDish)
                 .mockReturnValueOnce(mockDeletedDish);
+            jest.spyOn(dishRepository, 'setSoftDeleted')
+                .mockReturnValueOnce(undefined);
 
             const result = await dishService.delete(mockId);
 
             expect(result).toBe(mockDeletedDish);
+            expect(dishRepository.setSoftDeleted).toHaveBeenCalledWith(mockId);
             expect(redisService.deleteDish).toHaveBeenCalled();
             expect(redisService.deleteDish).toHaveBeenCalledWith(mockId);
         });
@@ -469,19 +492,14 @@ describe('DishService', () => {
 
         it('should throw an error when dish with provided id not found', async () => {
             const mockId = '64e9f765d4e60ba693641aa1';
-            const mockFilter = {
-                _id: mockId,
-                softAdded: { $exists: false },
-                softDeleted: { $exists: false }
-            };
             const mockCachedDish = null;
             jest.spyOn(redisService, 'get').mockReturnValueOnce(mockCachedDish);
-            jest.spyOn(dishRepository, 'findOne').mockReturnValueOnce(null);
+            jest.spyOn(dishRepository, 'findOneAvailable').mockReturnValueOnce(null);
 
             await expect(dishService.find(mockId)).rejects.toThrow(NotFoundException);
             expect(redisService.get).toHaveBeenCalled();
             expect(redisService.get).toReturnWith(mockCachedDish);
-            expect(dishRepository.findOne).toHaveBeenCalledWith(mockFilter);
+            expect(dishRepository.findOneAvailable).toHaveBeenCalledWith(mockId);
         });
 
         it('should find a specific dish when cache is empty and save to the cache', async () => {
@@ -491,20 +509,15 @@ describe('DishService', () => {
                 _id: mockId,
                 name: 'Dish name'
             } as any;
-            const mockFilter = {
-                _id: mockId,
-                softAdded: { $exists: false },
-                softDeleted: { $exists: false }
-            };
             jest.spyOn(redisService, 'get').mockReturnValueOnce(mockCachedDish);
-            jest.spyOn(dishRepository, 'findOne').mockReturnValueOnce(mockDish);
+            jest.spyOn(dishRepository, 'findOneAvailable').mockReturnValueOnce(mockDish);
 
             const result = await dishService.find(mockId);
 
             expect(result).toBe(mockDish);
             expect(redisService.get).toHaveBeenCalled();
             expect(redisService.get).toReturnWith(mockCachedDish);
-            expect(dishRepository.findOne).toHaveBeenCalledWith(mockFilter);
+            expect(dishRepository.findOneAvailable).toHaveBeenCalledWith(mockId);
             expect(redisService.set).toHaveBeenCalled();
         });
     });
@@ -525,7 +538,7 @@ describe('DishService', () => {
 
     describe('getDishProposal', () => {
         it('should get received dishes from all integrated APIs', async () => {
-            const user: any = { login: 'login', expirationTimestamp: new Date(Date.now() + 50000) };
+            const mockUser: any = { login: 'login', expirationTimestamp: new Date(Date.now() + 50000) };
             const mockSearchQueries: any = [
                 { login: 'login', date: new Date(), ingredients: ['carrot', 'garlic'] },
                 { login: 'login', date: new Date(), ingredients: ['carrot', 'garlic'] },
@@ -543,12 +556,13 @@ describe('DishService', () => {
                 { id: '2', title: 'title2', ingredients: ['carrot', 'fish'], recommendationPoints: 5, provider: 'yummy', type: DishType.ANY, mealType: MealType.ANY }
             ];
 
-            jest.spyOn(searchQueryRepository, 'findAll').mockResolvedValueOnce(mockSearchQueries);
+            jest.spyOn(searchQueryRepository, 'findAllRecentQueries').mockResolvedValueOnce(mockSearchQueries);
             jest.spyOn(externalApiService, 'getDishes').mockReturnValueOnce(mockDishes);
 
-            const result = await dishService.getDishProposal(user);
+            const result = await dishService.getDishProposal(mockUser);
 
             expect(result).toStrictEqual(mockDishResult);
+            expect(searchQueryRepository.findAllRecentQueries).toHaveBeenCalledWith(mockUser.login);
         });
     });
 
@@ -724,6 +738,7 @@ describe('DishService', () => {
         });
 
         it('should change a rating when rating exists', async () => {
+            const mockUserLogin = 'user name';
             const createDishRatingDto: CreateDishRatingBody = {
                 dishId: 'mock dish id',
                 rating: 10
@@ -742,14 +757,14 @@ describe('DishService', () => {
 
             jest.spyOn(dishService, 'hasDish').mockResolvedValueOnce(true);
             jest.spyOn(dishRatingRepository, 'findOne').mockResolvedValueOnce(mockExistingRating);
-            jest.spyOn(dishRatingRepository, 'updateAndReturnDocument').mockResolvedValueOnce(mockDishRating);
+            jest.spyOn(dishRatingRepository, 'updateAndReturn').mockResolvedValueOnce(mockDishRating);
             jest.spyOn(dishRatingRepository, 'create').mockResolvedValueOnce(mockDishRating);
 
-            const rating = await dishService.addRating(createDishRatingDto, 'user name');
+            const rating = await dishService.addRating(createDishRatingDto, mockUserLogin);
 
             expect(rating).toStrictEqual(mockDishRating);
             expect(rating.rating).toEqual(mockDishRating.rating);
-            expect(dishRatingRepository.updateAndReturnDocument).toHaveBeenCalled();
+            expect(dishRatingRepository.updateAndReturn).toHaveBeenCalledWith(createDishRatingDto, mockUserLogin);
         });
 
         it('should throw an error when dish with provided ID does not exist', async () => {

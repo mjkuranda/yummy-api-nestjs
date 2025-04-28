@@ -3,13 +3,26 @@ import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { Model, PipelineStage } from 'mongoose';
 import { DishRatingDocument } from '../documents/dish-rating.document';
-import { CreateDishRatingDto } from '../../modules/dish/dish.dto';
+import { CreateDishRatingBody, CreateDishRatingDto } from '../../modules/dish/dish.dto';
 import { DishRating } from '../../modules/dish/dish.types';
 
 export class DishRatingRepository extends AbstractRepository<DishRatingDocument, CreateDishRatingDto> {
 
     constructor(@InjectModel(models.DISH_RATING_MODEL) model: Model<DishRatingDocument>) {
         super(model);
+    }
+
+    async updateAndReturn(createRatingBody: CreateDishRatingBody, userLogin: string): Promise<DishRatingDocument> {
+        return await this.updateAndReturnDocument(
+            {
+                dishId: createRatingBody.dishId,
+                user: userLogin
+            },
+            {
+                ...createRatingBody,
+                posted: Date.now()
+            }
+        );
     }
 
     async deleteAll(dishId: string): Promise<void> {
