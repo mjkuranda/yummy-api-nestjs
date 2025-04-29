@@ -51,8 +51,31 @@ export class RecipeService {
         }
 
         const createdRecipe = await this.recipeRepository.create(createRecipeDto);
-        this.loggerService.info(context, `New recipe "${createdRecipe._id}" created for dish "${dish.id}".`);
+        this.loggerService.info(context, `New recipe "${createdRecipe._id}" created for dish "${dish.id}"`);
 
         return createdRecipe;
+    }
+
+    async get(dishId: string): Promise<RecipeDocument> {
+        const context: ContextString = 'RecipeService/get';
+        const dish = await this.dishRepository.findById(dishId);
+
+        if (!dish) {
+            const message = `Not found any dish with "${dishId}" provided id`;
+            this.loggerService.error(context, message);
+
+            throw new BadRequestException(context, message);
+        }
+
+        const recipe = await this.recipeRepository.findByDishId(dishId);
+
+        if (!recipe) {
+            const message = `Recipe for "${dishId}" dish has not been found`;
+            this.loggerService.error(context, message);
+
+            throw new NotFoundException(context, message);
+        }
+
+        return recipe;
     }
 }

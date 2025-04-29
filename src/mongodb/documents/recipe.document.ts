@@ -4,5 +4,6 @@ import { DishRecipeSections } from '../../modules/dish/dish.types';
 
 export interface RecipeDocument extends Document {
     readonly language: Language;
-    readonly recipeSections: DishRecipeSections;
+    readonly dishId: string;
+    readonly sections: DishRecipeSections;
 }

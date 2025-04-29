@@ -4,7 +4,6 @@ import { CreateRecipeDto } from '../../modules/recipe/recipe.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { models } from '../../constants/models.constant';
 import { Model } from 'mongoose';
-import { DishDocument } from '../documents/dish.document';
 import { DishRepository } from './dish.repository';
 
 export class RecipeRepository extends AbstractRepository<RecipeDocument, CreateRecipeDto> {
@@ -14,7 +13,7 @@ export class RecipeRepository extends AbstractRepository<RecipeDocument, CreateR
         super(model);
     }
 
-    async findByDishId(dishId: string): Promise<DishDocument> {
-        return this.dishRepository.findById(dishId);
+    async findByDishId(dishId: string): Promise<RecipeDocument | null> {
+        return this.model.findOne({ dishId });
     }
 }

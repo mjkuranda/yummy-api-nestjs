@@ -140,4 +140,40 @@ describe('RecipeService', () => {
             expect(recipeRepository.create).toHaveBeenCalledWith(mockCreateRecipeDto);
         });
     });
+
+    describe('get', () => {
+        let mockDishId, mockDish, mockRecipe;
+
+        beforeAll(() => {
+            mockDishId = 'abc-123';
+            mockDish = {} as any;
+            mockRecipe = {
+                sections: [{}]
+            } as any;
+        });
+
+        it('should fail when dish does not exist', async () => {
+            jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(null);
+
+            await expect(recipeService.get(mockDishId)).rejects.toThrow(BadRequestException);
+        });
+
+        it('should fail when is not recipe assigned to the dish', async () => {
+            jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(mockDish);
+            jest.spyOn(recipeRepository, 'findByDishId').mockResolvedValueOnce(null);
+
+            await expect(recipeService.get(mockDishId)).rejects.toThrow(NotFoundException);
+        });
+
+        it('should return a recipe for a specific dish when dish and recipe exist', async () => {
+            jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(mockDish);
+            jest.spyOn(recipeRepository, 'findByDishId').mockResolvedValueOnce(mockRecipe);
+
+            const recipe = await recipeService.get(mockDishId);
+
+            expect(recipe).toBeDefined();
+            expect(recipe.sections).toBeDefined();
+            expect(recipe.sections.length).toBeGreaterThanOrEqual(1);
+        });
+    });
 });

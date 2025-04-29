@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CreateRecipeDto } from './recipe.dto';
 import { RecipeService } from './recipe.service';
@@ -18,4 +18,9 @@ export class RecipeController {
         return await this.recipeService.create(dishId, data, authenticatedUser);
     }
 
+    @Get(':dishId')
+    @HttpCode(200)
+    public async getRecipe(@Param('dishId') dishId: string) {
+        return await this.recipeService.get(dishId);
+    }
 }
