@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `GET /recipes/:dishId` endpoint for getting the recipe from a specific dish.
 - [Marek Kurańda](https://github.com/mjkuranda): Translating recipe as a separate function and getting recipe from external API modules.
 
+### Changed
+- [Marek Kurańda](https://github.com/mjkuranda): Since now, `GET /dishes/:id/details` returns language version of the dish only (`pl` by default). 
+
 ### Removed
 - [Marek Kurańda](https://github.com/mjkuranda): Recipe information from dish collection.
 

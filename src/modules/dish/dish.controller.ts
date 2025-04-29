@@ -59,9 +59,12 @@ export class DishController {
     @HttpCode(200)
     public async getDishDetails(@Param('id') id: string, @Headers('accept-language') lang: Language): Promise<DetailedDishWithTranslations> {
         const dish = await this.dishService.getDishDetails(id);
-        const { description, ingredients } = await this.translationService.translateDish(dish, lang);
+        const translatedDetailedDish = await this.translationService.translateDish(dish, lang);
 
-        return { dish, description, ingredients };
+        return {
+            ...dish,
+            ...translatedDetailedDish
+        };
     }
 
     @Post('/create')

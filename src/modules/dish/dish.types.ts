@@ -44,11 +44,9 @@ export type DetailedDish = {
     mealType: MealType
 };
 
-export interface DetailedDishWithTranslations {
-    dish: DetailedDish;
-    description: string;
+export type DetailedDishWithTranslations = Omit<DetailedDish, 'ingredients'> & {
     ingredients: TranslatedIngredient[];
-}
+};
 
 export type ProposedDish = {
     id: string,

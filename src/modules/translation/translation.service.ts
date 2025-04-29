@@ -11,17 +11,18 @@ import { DishRecipe } from '../recipe/recipe.types';
 @Injectable()
 export class TranslationService {
 
-    async translateDish(dish: DetailedDish, targetLanguage: Language): Promise<TranslatedDetailedDish> {
-        if (dish.language === targetLanguage) {
-            const translatedIngredients = await this.translateIngredients(dish.ingredients, targetLanguage);
+    async translateDish(dish: DetailedDish, targetLanguage: Language): Promise<TranslatedDetailedDish | null> {
+        const { description, ingredients, language } = dish;
+
+        if (language === targetLanguage) {
+            const translatedIngredients = await this.translateIngredients(ingredients, targetLanguage);
 
             return {
-                description: '',
+                description,
                 ingredients: translatedIngredients
             };
         }
 
-        const { description, ingredients } = dish;
         const ingredientImages: string[] = [];
         const startRecipeIdx: number = ingredients.length;
 

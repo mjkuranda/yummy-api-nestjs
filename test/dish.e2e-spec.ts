@@ -159,20 +159,16 @@ describe('UserController (e2e)', () => {
                 mealType: MealType.ANY
             };
             const expectedResponseBody: DetailedDishWithTranslations = {
-                dish: {
-                    id: 'some-id',
-                    title: 'some title',
-                    description: 'some description',
-                    language: 'en',
-                    readyInMinutes: 0,
-                    sourceOrAuthor: 'unknown',
-                    ingredients: [],
-                    provider: 'yummy',
-                    type: DishType.ANY,
-                    mealType: MealType.ANY
-                },
+                id: 'some-id',
+                title: 'some title',
                 description: 'some description',
-                ingredients: []
+                language: 'en',
+                readyInMinutes: 0,
+                sourceOrAuthor: 'unknown',
+                ingredients: [],
+                provider: 'yummy',
+                type: DishType.ANY,
+                mealType: MealType.ANY
             };
 
             jest.spyOn(redisService, 'getDishDetails').mockResolvedValueOnce(mockCachedDish);
