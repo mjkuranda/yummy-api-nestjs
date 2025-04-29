@@ -19,7 +19,6 @@ describe('RecipeService', () => {
     };
 
     const mockDishRepository = {
-        findOneAvailable: jest.fn(),
         findById: jest.fn()
     };
 
@@ -89,7 +88,7 @@ describe('RecipeService', () => {
         it('should fail when dish does not exist', async () => {
             const mockDishId = 'abc-123';
 
-            jest.spyOn(dishRepository, 'findOneAvailable').mockResolvedValueOnce(null);
+            jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(null);
 
             await expect(recipeService.create(mockDishId, mockCreateRecipeDto, mockUser)).rejects.toThrow(NotFoundException);
         });
@@ -97,7 +96,7 @@ describe('RecipeService', () => {
         it('should fail when user has not sufficient permission', async () => {
             const mockDishId = 'd-123';
 
-            jest.spyOn(dishRepository, 'findOneAvailable').mockResolvedValueOnce(mockDish);
+            jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(mockDish);
 
             await expect(recipeService.create(mockDishId, mockCreateRecipeDto, mockUser)).rejects.toThrow(ForbiddenException);
         });
@@ -105,7 +104,7 @@ describe('RecipeService', () => {
         it('should fail when recipe already exists', async () => {
             const mockDishId = 'd-123';
 
-            jest.spyOn(dishRepository, 'findOneAvailable').mockResolvedValueOnce(mockDishUser123);
+            jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(mockDishUser123);
             jest.spyOn(recipeRepository, 'findByDishId').mockResolvedValueOnce(mockExistingRecipe);
 
             await expect(recipeService.create(mockDishId, mockCreateRecipeDto, mockUser)).rejects.toThrow(BadRequestException);
@@ -114,14 +113,14 @@ describe('RecipeService', () => {
         it('should pass and add a new recipe', async () => {
             const mockDishId = 'd-123';
 
-            jest.spyOn(dishRepository, 'findOneAvailable').mockResolvedValueOnce(mockDishUser123);
+            jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(mockDishUser123);
             jest.spyOn(recipeRepository, 'findByDishId').mockResolvedValueOnce(null);
             jest.spyOn(recipeRepository, 'create').mockResolvedValueOnce(mockExistingRecipe);
 
             const recipe = await recipeService.create(mockDishId, mockCreateRecipeDto, mockUser);
 
             expect(recipe).toBeDefined();
-            expect(dishRepository.findOneAvailable).toHaveBeenCalledWith(mockDishId);
+            expect(dishRepository.findById).toHaveBeenCalledWith(mockDishId);
             expect(recipeRepository.findByDishId).toHaveBeenCalledWith(mockDishId);
             expect(recipeRepository.create).toHaveBeenCalledWith(mockCreateRecipeDto);
         });
@@ -129,14 +128,14 @@ describe('RecipeService', () => {
         it('should pass when admin adds missing recipe', async () => {
             const mockDishId = 'd-123';
 
-            jest.spyOn(dishRepository, 'findOneAvailable').mockResolvedValueOnce(mockDishUser123);
+            jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(mockDishUser123);
             jest.spyOn(recipeRepository, 'findByDishId').mockResolvedValueOnce(null);
             jest.spyOn(recipeRepository, 'create').mockResolvedValueOnce(mockExistingRecipe);
 
             const recipe = await recipeService.create(mockDishId, mockCreateRecipeDto, mockAdminUser);
 
             expect(recipe).toBeDefined();
-            expect(dishRepository.findOneAvailable).toHaveBeenCalledWith(mockDishId);
+            expect(dishRepository.findById).toHaveBeenCalledWith(mockDishId);
             expect(recipeRepository.findByDishId).toHaveBeenCalledWith(mockDishId);
             expect(recipeRepository.create).toHaveBeenCalledWith(mockCreateRecipeDto);
         });

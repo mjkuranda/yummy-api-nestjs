@@ -6,7 +6,7 @@ export const UserSchema = new mongoose.Schema({
     password: String,
     salt: String,
     isAdmin: Boolean,
-    capabilities: Object,
+    capabilities: Object, // FIXME: As a capability schema
     registeredTime: Number,
     activated: {
         type: Number

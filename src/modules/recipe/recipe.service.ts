@@ -6,7 +6,6 @@ import { DishRepository } from '../../mongodb/repositories/dish.repository';
 import { RecipeDocument } from '../../mongodb/documents/recipe.document';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { ContextString } from '../../common/types';
-import { TransformedBody } from '../../common/interfaces';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
@@ -23,7 +22,8 @@ export class RecipeService {
     async create(dishId: string, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<RecipeDocument> {
         const context: ContextString = 'RecipeService/create';
 
-        const dish = await this.dishRepository.findOneAvailable(dishId);
+        // NOTE: This dish can be unconfirmed because you add dish and recipe at once.
+        const dish = await this.dishRepository.findById(dishId);
 
         if (!dish) {
             const message = 'Dish does not exist';
