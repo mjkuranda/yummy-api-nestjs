@@ -1,0 +1,21 @@
+import { Body, Controller, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
+import { AuthenticationGuard } from '../../guards/authentication.guard';
+import { CreateRecipeDto } from './recipe.dto';
+import { RecipeService } from './recipe.service';
+import { TransformedBody } from '../../common/interfaces';
+
+@Controller('recipes')
+export class RecipeController {
+
+    constructor(private readonly recipeService: RecipeService) {}
+
+    @Post(':dishId')
+    @HttpCode(201)
+    @UseGuards(AuthenticationGuard)
+    public async createRecipe(@Param('dishId') dishId: string, @Body() createRecipeDto: TransformedBody<CreateRecipeDto>) {
+        const { data, authenticatedUser } = createRecipeDto;
+
+        return await this.recipeService.create(dishId, data, authenticatedUser);
+    }
+
+}

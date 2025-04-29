@@ -1,5 +1,11 @@
 import { IngredientUnitConverter } from './types';
 
+export enum LanguageName {
+    en = 'English',
+    'en-US' = 'American English',
+    pl = 'Polish'
+}
+
 export enum MealType {
     ANY = 'any',
     BREAKFAST = 'breakfast',

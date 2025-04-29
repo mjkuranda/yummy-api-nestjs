@@ -1,11 +1,12 @@
-import { Body, Controller, HttpCode, Post, Response, Param, UseGuards, Request, Get, } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Response, Param, UseGuards, Request, Get } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UserDto, UserLoginDto, UserNewPasswordDto } from './user.dto';
-import { AuthenticatedUserRequestBody, CapabilityType, UserProfile } from './user.types';
+import { CapabilityType, UserProfile } from './user.types';
 import { UserRepository } from '../../mongodb/repositories/user.repository';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CapabilityGuard } from '../../guards/capability.guard';
 import { AdminGuard } from '../../guards/admin.guard';
+import { TransformedBody } from '../../common/interfaces';
 
 @Controller('users')
 export class UserController {
@@ -94,7 +95,7 @@ export class UserController {
     @Post('/change-password')
     @HttpCode(204)
     @UseGuards(AuthenticationGuard)
-    public async changePassword(@Body() body: AuthenticatedUserRequestBody<UserNewPasswordDto>): Promise<void> {
+    public async changePassword(@Body() body: TransformedBody<UserNewPasswordDto>): Promise<void> {
         const { authenticatedUser, data } = body;
 
         return await this.userService.changePassword(authenticatedUser.login, data.newPassword);

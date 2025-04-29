@@ -14,7 +14,12 @@ import {
     UsePipes
 } from '@nestjs/common';
 import { DishService } from './dish.service';
-import { CreateDishBodyDto, CreateDishCommentBody, CreateDishRatingBody, EditDishBodyDto } from './dish.dto';
+import {
+    CreateDishCommentBody,
+    CreateDishDto,
+    CreateDishRatingBody,
+    EditDishBodyDto
+} from './dish.dto';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CreationGuard } from '../../guards/creation.guard';
 import { EditionGuard } from '../../guards/edition.guard';
@@ -25,6 +30,8 @@ import { DishQueryValidationPipe } from '../../pipes/dish-query-validation.pipe'
 import { TranslationService } from '../translation/translation.service';
 import { Language, TransformedBody } from '../../common/types';
 import { IngredientService } from '../ingredient/ingredient.service';
+import { TransformedBody } from '../../common/interfaces';
+import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
 
 @Controller('dishes')
 export class DishController {
@@ -60,7 +67,7 @@ export class DishController {
     @Post('/create')
     @HttpCode(201)
     @UseGuards(AuthenticationGuard)
-    public async createDish(@Body() body: CreateDishBodyDto) {
+    public async createDish(@Body() body: TransformedBody<CreateDishDto<DishIngredientWithoutImage>>) {
         const { data, authenticatedUser } = body;
 
         return await this.dishService.create(data, authenticatedUser);

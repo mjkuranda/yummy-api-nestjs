@@ -1,23 +1,22 @@
-import { IngredientName } from './enums';
-import { UserAccessTokenPayload } from '../modules/jwt-manager/jwt-manager.types';
+import { IngredientName, LanguageName } from './enums';
 
 /**
- * Equals to {}
+ * @description Equals to {}
  */
 export type EmptyDocument = Record<string, never>;
 
 /**
- * HTTP status codes.
+ * @description HTTP status codes.
  */
 export type StatusCodes = 200 | 201 | 204 | 205 | 400 | 403 | 404 | 500;
 
 /**
- * Context string format: ClassName/MethodName
+ * @description Context string format: ClassName/MethodName
  */
 export type ContextString = `${string}/${string}`;
 
 /**
- * Ingredient type
+ * @descritpion Ingredient type
  */
 export type IngredientType = {
     name: IngredientName,
@@ -26,24 +25,16 @@ export type IngredientType = {
 };
 
 /**
- * Language type
+ * @description Language type
  */
-export type Language = 'en' | 'en-US' | 'pl';
+export type Language = keyof typeof LanguageName;
 
 /**
- * Transformed endpoint body
- */
-export interface TransformedBody<TData> {
-    data: TData;
-    authenticatedUser: UserAccessTokenPayload;
-}
-
-/**
- * Ingredient unit converter
- * multiplier number 28.35
- * targetUnit string g
- * targetUnitBorder number 1000 - amount that requires conversion to superior unit
- * superiorUnit string kg
+ * @description Ingredient unit converter
+ * @param multiplier number, 28.35
+ * @param targetUnit string, g
+ * @param targetUnitBorder number, 1000 - amount that requires conversion to superior unit
+ * @param superiorUnit string, kg
  */
 export interface IngredientUnitConverter {
     multiplier: number;
@@ -51,3 +42,7 @@ export interface IngredientUnitConverter {
     targetUnitBorder: number,
     superiorUnit: string
 }
+
+/**
+ * @description
+ */

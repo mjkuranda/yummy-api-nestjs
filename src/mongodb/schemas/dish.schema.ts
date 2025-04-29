@@ -18,11 +18,6 @@ const IngredientDataSchema = new mongoose.Schema({
     }
 });
 
-const RecipeSectionSchema = new mongoose.Schema({
-    name: String,
-    steps: [String]
-});
-
 export const DishSchema = new mongoose.Schema({
     author: {
         type: String
@@ -47,10 +42,6 @@ export const DishSchema = new mongoose.Schema({
     },
     posted: {
         type: Number,
-        required: true
-    },
-    recipeSections: {
-        type: [RecipeSectionSchema],
         required: true
     },
     softAdded: {

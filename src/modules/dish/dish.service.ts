@@ -47,7 +47,7 @@ export class DishService {
         private externalApiService: ExternalApiService
     ) {}
 
-    async create(createDishDto: CreateDishDto<DishIngredientWithoutImage>, user: UserDto): Promise<DishDocument> {
+    async create(createDishDto: CreateDishDto<DishIngredientWithoutImage>, user: UserAccessTokenPayload): Promise<DishDocument> {
         const ingredients = await this.ingredientService.wrapIngredientsWithImages(createDishDto.ingredients);
 
         const createdDish = await this.dishRepository.create({

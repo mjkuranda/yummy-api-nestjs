@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2025-04-29
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): `Recipe` collection separating from `Dish` collection.
+- [Marek Kurańda](https://github.com/mjkuranda): `Recipe` module with definition of `document`, `repository` and `schema`, including unit tests.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /recipes/:dishId` endpoint for adding a new recipe to a specific dish.
+
+### Removed
+- [Marek Kurańda](https://github.com/mjkuranda): Recipe information from dish collection.
+
 ## [2.14.2] - 2025-04-28
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `getDishesWithSoftAdded`, `getDishesWithSoftEdited`, `getDishesWithSoftDeleted`, `findOneAvailable`, `unsetSoftAdded`, `insertEdition`, `confirmEdition` and `setSoftDeleted` methods to `DishRepository` replacing old model methods calls.
