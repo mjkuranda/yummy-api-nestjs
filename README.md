@@ -79,16 +79,6 @@ Technologies:
     ],
     "imageUrl": "https://some.domain/path/to/resource/image.ext",
     "readyInMinutes": 50,
-    "recipeSections": [
-        {
-            "name": "",
-            "steps": [
-                "Heat up to 100 degrees.",
-                "Mix everything",
-                "Enjoy your dish! :)"
-            ]
-        }
-    ],
     "type": "soup",
     "mealType": "launch"
 }
@@ -166,6 +156,27 @@ Technologies:
 ```
 
 All above endpoints excluding `GET /dishes` and `GET /dishes/:id` require `accessToken` as a cookie.
+
+### Recipes
+* `POST /recipes/:dishId` - applies a recipe to a specific dish. Requires to be an author of the dish or an admin. Throw an error when recipe for this dish exists.
+```json
+{
+    "language": "en",
+    "dishId": "ddd-123-ddd-444",
+    "sections": [
+        {
+            "name": "",
+            "steps": [
+                "Heat up to 100 degrees.",
+                "Mix everything",
+                "Enjoy your dish! :)"
+            ]
+        }
+    ]
+}
+```
+
+* `GET /recipes/:dishId` - returns a recipe for a specific dish.
 
 ### Images
 * `POST /images/upload` - uploads a new image. You need to be logged-in and have `caAdd` capability or be an admin. Image should be passed as `image` property in form data. The image constraint is 512 KB.

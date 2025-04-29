@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `Recipe` module with definition of `document`, `repository` and `schema`, including unit tests.
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /recipes/:dishId` endpoint for adding a new recipe to a specific dish.
 - [Marek Kurańda](https://github.com/mjkuranda): `GET /recipes/:dishId` endpoint for getting the recipe from a specific dish.
+- [Marek Kurańda](https://github.com/mjkuranda): Translating recipe as a separate function and getting recipe from external API modules.
 
 ### Removed
 - [Marek Kurańda](https://github.com/mjkuranda): Recipe information from dish collection.

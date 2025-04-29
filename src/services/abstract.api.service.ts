@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { RedisService } from '../modules/redis/redis.service';
 import { MealType } from '../common/enums';
-import { DetailedDish, RatedDish } from '../modules/dish/dish.types';
+import { DetailedDish, DishRecipeSections, RatedDish } from '../modules/dish/dish.types';
 import { getQueryWithIngredientsAndDishType } from '../modules/dish/dish.utils';
 import { AxiosResponse } from 'axios';
 import { ApiName } from '../modules/redis/redis.types';
-import { ContextString } from '../common/types';
+import { ContextString, Language } from '../common/types';
 import { LoggerService } from '../modules/logger/logger.service';
 import { AxiosService } from './axios.service';
 import { IngredientType, DishIngredient } from '../modules/ingredient/ingredient.types';
+import { DishRecipe } from '../modules/recipe/recipe.types';
 
 @Injectable()
 export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStruct, GenericDishDetailsStruct, DishInstructionStruct> {
@@ -33,7 +34,9 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
 
     abstract proceedDataToDishes(data: GenericDishStruct[], providedIngredients?: IngredientType[]): RatedDish[];
 
-    abstract proceedDataToDishDetails(data: GenericDishDetailsStruct, instructionData: DishInstructionStruct): DetailedDish;
+    abstract proceedDataToDishDetails(data: GenericDishDetailsStruct): DetailedDish;
+
+    abstract proceedDataToDishRecipeSections(instructionData: DishInstructionStruct): DishRecipeSections;
 
     abstract proceedDataToDishIngredients(ingredients: GenericIngredientStruct[]): DishIngredient[];
 
@@ -75,12 +78,10 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
 
     async getDishDetails(id: string): Promise<DetailedDish> {
         const url: string = this.getFullApiUrl(this.getDishDetailsEndpointUrl(id));
-        const instructionUrl: string = this.getFullApiUrl(this.getDishInstructionEndpointUrl(id));
         const context = 'AbstractApiService/getDishDetails';
 
         try {
             const result: AxiosResponse<GenericDishDetailsStruct, unknown> = await this.axiosService.get(url);
-            const instruction: AxiosResponse<DishInstructionStruct, unknown> = await this.axiosService.get(instructionUrl);
 
             if (result.status < 200 || result.status >= 300) {
                 this.loggerService.error(context, `External API returned ${result.status} code with "${result.statusText}" message. Returned 0 dishes.`);
@@ -88,16 +89,34 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
                 return null;
             }
 
-            if (instruction.status < 200 || instruction.status >= 300) {
-                this.loggerService.error(context, `External API returned ${instruction.status} code with "${instruction.statusText}" message. Returned 0 dishes.`);
+            const dish: DetailedDish = this.proceedDataToDishDetails(result.data);
+            this.loggerService.info(context, `Received dish with details from "${this.getName()}" API.`);
+
+            return dish;
+        } catch (err: any) {
+            this.loggerService.error(context, `Error occurred during fetching a dish from ${this.getName()} API: ${err.message}.`);
+
+            return null;
+        }
+    }
+
+    async getDishRecipe(dishId: string, language: Language): Promise<DishRecipe | null> {
+        const instructionUrl: string = this.getFullApiUrl(this.getDishInstructionEndpointUrl(dishId));
+        const context = 'AbstractApiService/getDishRecipe';
+
+        try {
+            const result: AxiosResponse<DishInstructionStruct, unknown> = await this.axiosService.get(instructionUrl);
+
+            if (result.status < 200 || result.status >= 300) {
+                this.loggerService.error(context, `External API returned ${result.status} code with "${result.statusText}" message. Returned 0 dishes.`);
 
                 return null;
             }
 
-            const dish: DetailedDish = this.proceedDataToDishDetails(result.data, instruction.data);
-            this.loggerService.info(context, `Received dish with details from "${this.getName()}" API.`);
+            const sections: DishRecipeSections = this.proceedDataToDishRecipeSections(result.data);
+            this.loggerService.info(context, `Received recipe for "${dishId}" dish with details from "${this.getName()}" API.`);
 
-            return dish;
+            return { dishId, language, sections };
         } catch (err: any) {
             this.loggerService.error(context, `Error occurred during fetching a dish from ${this.getName()} API: ${err.message}.`);
 

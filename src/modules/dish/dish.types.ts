@@ -40,7 +40,6 @@ export type DetailedDish = {
         veryHealthy?: boolean
     },
     provider: DishProvider,
-    recipeSections: DishRecipeSections,
     type: DishType,
     mealType: MealType
 };
@@ -49,7 +48,6 @@ export interface DetailedDishWithTranslations {
     dish: DetailedDish;
     description: string;
     ingredients: TranslatedIngredient[];
-    recipe: DishRecipeSections;
 }
 
 export type ProposedDish = {

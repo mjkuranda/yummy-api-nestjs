@@ -9,11 +9,17 @@ import { ContextString } from '../../common/types';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
+import { isValidObjectId } from 'mongoose';
+import { DishRecipe } from './recipe.types';
+import { getFulfilledPromiseResults } from '../../utils';
+import { ExternalApiService } from '../api/external-api.service';
+import { DetailedDish } from '../dish/dish.types';
 
 @Injectable()
 export class RecipeService {
 
     constructor(
+        private readonly externalApiService: ExternalApiService,
         private readonly recipeRepository: RecipeRepository,
         private readonly dishRepository: DishRepository,
         private readonly loggerService: LoggerService
@@ -56,26 +62,56 @@ export class RecipeService {
         return createdRecipe;
     }
 
-    async get(dishId: string): Promise<RecipeDocument> {
+    async get(dishId: string): Promise<DishRecipe> {
         const context: ContextString = 'RecipeService/get';
-        const dish = await this.dishRepository.findById(dishId);
 
-        if (!dish) {
+        if (isValidObjectId(dishId)) {
+            const dish = await this.dishRepository.findById(dishId);
+
+            if (!dish) {
+                const message = `Not found any dish with "${dishId}" provided id`;
+                this.loggerService.error(context, message);
+
+                throw new BadRequestException(context, message);
+            }
+
+            const recipe = await this.recipeRepository.findByDishId(dishId);
+
+            if (!recipe) {
+                const message = `Recipe for "${dishId}" dish has not been found`;
+                this.loggerService.error(context, message);
+
+                throw new NotFoundException(context, message);
+            }
+
+            return recipe;
+        }
+
+        const datasetResults = await this.getDatasets<DetailedDish>(...this.externalApiService.getDishDetails(dishId));
+        const filteredDetailedDish: DetailedDish = datasetResults.find(dish => dish !== null);
+
+        if (!filteredDetailedDish) {
             const message = `Not found any dish with "${dishId}" provided id`;
             this.loggerService.error(context, message);
 
             throw new BadRequestException(context, message);
         }
 
-        const recipe = await this.recipeRepository.findByDishId(dishId);
+        const datasets = await this.getDatasets<DishRecipe>(...this.externalApiService.getDishRecipe(dishId, filteredDetailedDish.language));
 
-        if (!recipe) {
-            const message = `Recipe for "${dishId}" dish has not been found`;
-            this.loggerService.error(context, message);
+        const filteredDishRecipe: DishRecipe = datasets.find(recipe => recipe !== null);
 
-            throw new NotFoundException(context, message);
+        if (filteredDishRecipe) {
+            // TODO: Consider cache
+            this.loggerService.info(context, `Found in external database a recipe for dish with id "${dishId}".` /* TODO: and cached. */);
+
+            return filteredDishRecipe;
         }
 
-        return recipe;
+        throw new NotFoundException(context, `Recipe for dish with "${dishId}" does not exist in any integrated API.`);
+    }
+
+    private getDatasets<T>(...datasets: Promise<T>[]): Promise<T[]> {
+        return getFulfilledPromiseResults<T>(datasets);
     }
 }

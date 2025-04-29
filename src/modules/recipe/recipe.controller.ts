@@ -3,11 +3,15 @@ import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CreateRecipeDto } from './recipe.dto';
 import { RecipeService } from './recipe.service';
 import { TransformedBody } from '../../common/interfaces';
+import { TranslationService } from '../translation/translation.service';
 
 @Controller('recipes')
 export class RecipeController {
 
-    constructor(private readonly recipeService: RecipeService) {}
+    constructor(
+        private readonly recipeService: RecipeService,
+        private readonly translationService: TranslationService
+    ) {}
 
     @Post(':dishId')
     @HttpCode(201)
@@ -21,6 +25,9 @@ export class RecipeController {
     @Get(':dishId')
     @HttpCode(200)
     public async getRecipe(@Param('dishId') dishId: string) {
-        return await this.recipeService.get(dishId);
+        const recipe = await this.recipeService.get(dishId);
+        const translatedRecipe = await this.translationService.translateRecipe(recipe, 'pl');
+
+        return translatedRecipe;
     }
 }

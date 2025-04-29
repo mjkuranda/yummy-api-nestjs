@@ -7,11 +7,19 @@ import { NotFoundException } from '../../exceptions/not-found.exception';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { RecipeRepository } from '../../mongodb/repositories/recipe.repository';
+import mongoose from 'mongoose';
+import { ExternalApiService } from '../api/external-api.service';
 
 describe('RecipeService', () => {
+    let externalApiService: ExternalApiService;
     let recipeService: RecipeService;
     let recipeRepository: RecipeRepository;
     let dishRepository: DishRepository;
+
+    const mockExternalApiService = {
+        getDishDetails: jest.fn(),
+        getDishRecipe: jest.fn()
+    };
 
     const mockRecipeRepository = {
         findByDishId: jest.fn(),
@@ -31,18 +39,21 @@ describe('RecipeService', () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 RecipeService,
+                { provide: ExternalApiService, useValue: mockExternalApiService },
                 { provide: RecipeRepository, useValue: mockRecipeRepository },
                 { provide: DishRepository, useValue: mockDishRepository },
                 { provide: LoggerService, useValue: mockLoggerService }
             ],
         }).compile();
 
+        externalApiService = module.get(ExternalApiService);
         recipeService = module.get(RecipeService);
         recipeRepository = module.get(RecipeRepository);
         dishRepository = module.get(DishRepository);
     });
 
     it('should be defined', () => {
+        expect(externalApiService).toBeDefined();
         expect(recipeService).toBeDefined();
         expect(recipeRepository).toBeDefined();
         expect(dishRepository).toBeDefined();
@@ -153,12 +164,14 @@ describe('RecipeService', () => {
         });
 
         it('should fail when dish does not exist', async () => {
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
             jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(null);
 
             await expect(recipeService.get(mockDishId)).rejects.toThrow(BadRequestException);
         });
 
         it('should fail when is not recipe assigned to the dish', async () => {
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
             jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(mockDish);
             jest.spyOn(recipeRepository, 'findByDishId').mockResolvedValueOnce(null);
 
@@ -166,6 +179,7 @@ describe('RecipeService', () => {
         });
 
         it('should return a recipe for a specific dish when dish and recipe exist', async () => {
+            jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
             jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(mockDish);
             jest.spyOn(recipeRepository, 'findByDishId').mockResolvedValueOnce(mockRecipe);
 

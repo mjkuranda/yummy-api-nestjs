@@ -27,7 +27,7 @@ export function getQueryWithIngredientsAndDishType(ingredients: IngredientType[]
 export function proceedDishDocumentToDishDetails(dish: DishDocument): DetailedDish {
     const {
         id, imageUrl, ingredients, language, title, description,
-        author, readyInMinutes, recipeSections, type, mealType
+        author, readyInMinutes, type, mealType
     } = dish;
 
     return {
@@ -45,7 +45,6 @@ export function proceedDishDocumentToDishDetails(dish: DishDocument): DetailedDi
         sourceOrAuthor: author,
         provider: 'yummy',
         readyInMinutes,
-        recipeSections,
         type,
         mealType
     };

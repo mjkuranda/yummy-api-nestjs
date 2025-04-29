@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DetailedDish, RatedDish } from '../../dish/dish.types';
+import { DetailedDish, DishRecipeSections, RatedDish } from '../../dish/dish.types';
 import { AbstractApiService } from '../../../services/abstract.api.service';
 import { ApiName } from '../../redis/redis.types';
 import {
@@ -88,7 +88,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         });
     }
 
-    proceedDataToDishDetails(data: SpoonacularRecipeDetails, recipeSections: SpoonacularRecipeSections): DetailedDish {
+    proceedDataToDishDetails(data: SpoonacularRecipeDetails): DetailedDish {
         const {
             id, image, title, extendedIngredients, summary,
             vegetarian, vegan, glutenFree, dairyFree, veryHealthy,
@@ -114,12 +114,15 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 veryHealthy
             },
             provider: 'spoonacular',
-            recipeSections: recipeSections.map(section => ({
-                name: section.name,
-                steps: section.steps.map(step => step.step)
-            })),
             type,
             mealType
         };
+    }
+
+    proceedDataToDishRecipeSections(instructionData: SpoonacularRecipeSections) : DishRecipeSections {
+        return instructionData.map(section => ({
+            name: section.name,
+            steps: section.steps.map(step => step.step)
+        }));
     }
 }

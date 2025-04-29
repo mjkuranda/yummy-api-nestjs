@@ -28,7 +28,7 @@ import { DetailedDishWithTranslations, GetDishesQueryType, RatedDish } from './d
 import { IngredientName, MealType } from '../../common/enums';
 import { DishQueryValidationPipe } from '../../pipes/dish-query-validation.pipe';
 import { TranslationService } from '../translation/translation.service';
-import { Language, TransformedBody } from '../../common/types';
+import { Language } from '../../common/types';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { TransformedBody } from '../../common/interfaces';
 import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
@@ -59,9 +59,9 @@ export class DishController {
     @HttpCode(200)
     public async getDishDetails(@Param('id') id: string, @Headers('accept-language') lang: Language): Promise<DetailedDishWithTranslations> {
         const dish = await this.dishService.getDishDetails(id);
-        const { description, ingredients, recipe } = await this.translationService.translateDish(dish, lang);
+        const { description, ingredients } = await this.translationService.translateDish(dish, lang);
 
-        return { dish, description, ingredients, recipe };
+        return { dish, description, ingredients };
     }
 
     @Post('/create')

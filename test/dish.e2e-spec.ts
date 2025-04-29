@@ -153,7 +153,6 @@ describe('UserController (e2e)', () => {
                 language: 'en',
                 readyInMinutes: 0,
                 sourceOrAuthor: 'unknown',
-                recipeSections: [],
                 ingredients: [],
                 provider: 'yummy',
                 type: DishType.ANY,
@@ -167,15 +166,13 @@ describe('UserController (e2e)', () => {
                     language: 'en',
                     readyInMinutes: 0,
                     sourceOrAuthor: 'unknown',
-                    recipeSections: [],
                     ingredients: [],
                     provider: 'yummy',
                     type: DishType.ANY,
                     mealType: MealType.ANY
                 },
                 description: 'some description',
-                ingredients: [],
-                recipe: []
+                ingredients: []
             };
 
             jest.spyOn(redisService, 'getDishDetails').mockResolvedValueOnce(mockCachedDish);
