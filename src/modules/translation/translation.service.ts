@@ -15,7 +15,7 @@ export class TranslationService {
         const { description, ingredients, language } = dish;
 
         if (language === targetLanguage) {
-            const translatedIngredients = await this.translateIngredients(ingredients, targetLanguage);
+            const translatedIngredients = await this.translateIngredients(ingredients, { originalLanguage: dish.language, targetLanguage });
 
             return {
                 description,
@@ -53,9 +53,11 @@ export class TranslationService {
         };
     }
 
-    async translateIngredients(ingredients: DishIngredient[], targetLanguage: Language): Promise<TranslatedIngredient[]> {
+    async translateIngredients(ingredients: DishIngredient[], options: { originalLanguage: Language, targetLanguage: Language }): Promise<TranslatedIngredient[]> {
+        const { originalLanguage, targetLanguage } = options;
+
         const ingredientImages: string[] = [];
-        const ingredientsToTranslate = ingredients.map(ingredient => {
+        const ingredientsList = ingredients.map(ingredient => {
             const { amount, unit, name, imageUrl } = ingredient;
             const normalizedName = normalizeName(name);
             const normalizedUnit = normalizeUnit(amount, unit);
@@ -65,8 +67,16 @@ export class TranslationService {
             ingredientImages.push(imageUrl);
 
             return compoundedText;
-        }).join('\n');
+        });
 
+        if (originalLanguage === targetLanguage) {
+            return ingredientsList.map((ingredientText, idx) => ({
+                text: ingredientText,
+                imageUrl: ingredientImages[idx]
+            }));
+        }
+
+        const ingredientsToTranslate = ingredientsList.join('\n');
         const translatedResult = await this.translate(ingredientsToTranslate, targetLanguage);
         const translatedIngredients = translatedResult.split('\n');
 
