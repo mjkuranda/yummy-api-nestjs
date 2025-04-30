@@ -45,7 +45,10 @@ export type DetailedDish = {
 };
 
 export type DetailedDishWithTranslations = Omit<DetailedDish, 'ingredients'> & {
-    ingredients: TranslatedIngredient[];
+    ingredients: {
+        original: DishIngredient[];
+        translated: TranslatedIngredient[]
+    };
 };
 
 export type ProposedDish = {
