@@ -17,7 +17,7 @@ Technologies:
 ### Dishes
 * `GET /dishes?ings=ingredient1,ingredient2,ingredientX&type=meal-type&dish=dish-type` - returns all dishes from the database that contain provided ingredients and type as `ings`, `type` and `dish` respectively being query params. Additionally, set `Accept-Language` header to define language of ingredients.
 * `GET /dishes/:id` - returns a specific dish defined by id parameter. It saves to the cache, if it does not exist there. Each request checks the cache.
-* `GET /dishes/:id/details` - returns details of a dish. It can be any dish provided by any external or local API.
+* `GET /dishes/:id/details` - returns details of a dish. It can be any dish provided by any external or local API. `Accept-Language` header defines language version of the dish.
 * `GET /dishes/:id/comments` - returns all comments for a specific dish.
 * `GET /dishes/:id/rating` - returns average rating for a specific dish.
 * `GET /dishes/proposal/all` - returns top 10 dish proposals for a specific user defined by `accessToken`.
@@ -176,7 +176,7 @@ All above endpoints excluding `GET /dishes` and `GET /dishes/:id` require `acces
 }
 ```
 
-* `GET /recipes/:dishId` - returns a recipe for a specific dish.
+* `GET /recipes/:dishId` - returns a recipe for a specific dish. `Accept-Language` header defines language version.
 
 ### Images
 * `POST /images/upload` - uploads a new image. You need to be logged-in and have `caAdd` capability or be an admin. Image should be passed as `image` property in form data. The image constraint is 512 KB.
