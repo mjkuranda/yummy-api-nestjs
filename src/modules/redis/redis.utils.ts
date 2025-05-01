@@ -1,4 +1,5 @@
-import { ApiName, DishDetailsQueryKey, DishResultQueryKey, TokenKey } from './redis.types';
+import { ApiName, DishDetailsQueryKey, DishRecipeQueryKey, DishResultQueryKey, TokenKey } from './redis.types';
+import { Language } from '../../common/types';
 
 export function getAccessTokenKey(login: string): TokenKey {
     return getTokenKey('accessToken', login);
@@ -18,4 +19,8 @@ export function getDishResultQueryKey(apiName: ApiName, query: string): DishResu
 
 export function getDishDetailsQueryKey(id: string): DishDetailsQueryKey {
     return `dish-details:${id}`;
+}
+
+export function getDishRecipeQueryKey(dishId: string, language?: Language): DishRecipeQueryKey {
+    return `dish:${dishId}:recipe:${language ?? 'en'}`;
 }

@@ -165,7 +165,10 @@ describe('UserController (e2e)', () => {
                 language: 'en',
                 readyInMinutes: 0,
                 sourceOrAuthor: 'unknown',
-                ingredients: [],
+                ingredients: {
+                    original: [],
+                    translated: []
+                },
                 provider: 'yummy',
                 type: DishType.ANY,
                 mealType: MealType.ANY
@@ -175,6 +178,7 @@ describe('UserController (e2e)', () => {
 
             return request(app.getHttpServer())
                 .get('/dishes/some-id/details')
+                .set('Accept-Language', 'en')
                 .expect(200)
                 .expect(expectedResponseBody);
         }, 10000);

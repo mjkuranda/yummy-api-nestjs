@@ -74,12 +74,21 @@ describe('DishController', () => {
             const id = '123';
             const lang: Language = 'en';
             const dish = { description: 'description', ingredients: ['ingredient1', 'ingredient2'] } as any;
-            const translatedDescription = 'translated description' as string;
-            const translatedIngredients = ['translated1', 'translated2'] as any;
-            const expectedResult = { dish, description: translatedDescription, ingredients: translatedIngredients };
+            const translatedDish = {
+                description: 'translated description',
+                ingredients: [...dish.ingredients]
+            } as any;
+            const expectedResult = {
+                ingredients: {
+                    original: [...dish.ingredients],
+                    translated: [...dish.ingredients]
+                },
+                description: 'translated description',
+                language: lang
+            } as any;
 
-            jest.spyOn(dishService, 'getDishDetails').mockResolvedValue(dish);
-            jest.spyOn(translationService, 'translateDish').mockResolvedValue(expectedResult);
+            jest.spyOn(dishService, 'getDishDetails').mockResolvedValueOnce(dish);
+            jest.spyOn(translationService, 'translateDish').mockResolvedValueOnce(translatedDish);
 
             const result = await controller.getDishDetails(id, lang);
 

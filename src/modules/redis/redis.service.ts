@@ -1,12 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
 import { REDIS_CLIENT, REDIS_TTL } from './redis.constants';
-import { ApiName, DishDetailsQueryKey, DishResultQueryKey, TokenKey } from './redis.types';
-import { getAccessTokenKey, getDishDetailsQueryKey, getDishResultQueryKey, getRefreshTokenKey } from './redis.utils';
+import { ApiName, DishDetailsQueryKey, DishRecipeQueryKey, DishResultQueryKey, TokenKey } from './redis.types';
+import {
+    getAccessTokenKey,
+    getDishDetailsQueryKey,
+    getDishRecipeQueryKey,
+    getDishResultQueryKey,
+    getRefreshTokenKey
+} from './redis.utils';
 import { HOUR } from '../../constants/times.constant';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { DetailedDish, RatedDish } from '../dish/dish.types';
 import { ACCESS_TOKEN_DURATION, REFRESH_TOKEN_DURATION } from '../../constants/tokens.constant';
+import { DishRecipe } from '../recipe/recipe.types';
+import { Language } from '../../common/types';
 
 type RedisKeyType = string | `${string}:${string}`;
 
@@ -150,5 +158,24 @@ export class RedisService {
         }
 
         return JSON.parse(value);
+    }
+
+    async getDishRecipe(dishId: string, language: Language): Promise<DishRecipe> {
+        const key: DishRecipeQueryKey = getDishRecipeQueryKey(dishId, language);
+        const value = await this.redisClient.get(key);
+
+        if (!value) {
+            return null;
+        }
+
+        return JSON.parse(value);
+    }
+
+    async saveDishRecipe(recipe: DishRecipe): Promise<void> {
+        const key: DishRecipeQueryKey = getDishRecipeQueryKey(recipe.dishId, recipe.language);
+        const value = JSON.stringify(recipe);
+
+        await this.redisClient.set(key, value);
+        await this.redisClient.expire(key, 24 * HOUR);
     }
 }

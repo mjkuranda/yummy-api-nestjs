@@ -5,7 +5,7 @@ import { CreateRecipeDto } from './recipe.dto';
 import { DishRepository } from '../../mongodb/repositories/dish.repository';
 import { RecipeDocument } from '../../mongodb/documents/recipe.document';
 import { NotFoundException } from '../../exceptions/not-found.exception';
-import { ContextString } from '../../common/types';
+import { ContextString, Language } from '../../common/types';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
@@ -14,6 +14,7 @@ import { DishRecipe } from './recipe.types';
 import { getFulfilledPromiseResults } from '../../utils';
 import { ExternalApiService } from '../api/external-api.service';
 import { DetailedDish } from '../dish/dish.types';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class RecipeService {
@@ -22,7 +23,8 @@ export class RecipeService {
         private readonly externalApiService: ExternalApiService,
         private readonly recipeRepository: RecipeRepository,
         private readonly dishRepository: DishRepository,
-        private readonly loggerService: LoggerService
+        private readonly loggerService: LoggerService,
+        private readonly redisService: RedisService
     ) {}
 
     async create(dishId: string, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<RecipeDocument> {
@@ -62,11 +64,20 @@ export class RecipeService {
         return createdRecipe;
     }
 
-    async get(dishId: string): Promise<DishRecipe> {
+    async get(dishId: string, language: Language = 'en'): Promise<DishRecipe> {
         const context: ContextString = 'RecipeService/get';
+        const cachedRecipe = await this.redisService.getDishRecipe(dishId, language);
+
+        if (cachedRecipe) {
+            const message = `Found recipe in cache for dish "${dishId}"`;
+            this.loggerService.info(context, message);
+
+            return cachedRecipe;
+        }
 
         if (isValidObjectId(dishId)) {
-            const dish = await this.dishRepository.findById(dishId);
+            const cachedDish = await this.redisService.getDishDetails(dishId);
+            const dish = cachedDish ?? await this.dishRepository.findById(dishId);
 
             if (!dish) {
                 const message = `Not found any dish with "${dishId}" provided id`;
@@ -75,7 +86,10 @@ export class RecipeService {
                 throw new BadRequestException(context, message);
             }
 
-            const recipe = await this.recipeRepository.findByDishId(dishId);
+            // NOTE: To avoid leaking of daily points from external API, I cache dish result
+            await this.redisService.saveDishDetails(dishId, dish as DetailedDish);
+
+            const recipe = await this.recipeRepository.findByDishId(dishId, language);
 
             if (!recipe) {
                 const message = `Recipe for "${dishId}" dish has not been found`;
@@ -102,8 +116,8 @@ export class RecipeService {
         const filteredDishRecipe: DishRecipe = datasets.find(recipe => recipe !== null);
 
         if (filteredDishRecipe) {
-            // TODO: Consider cache
-            this.loggerService.info(context, `Found in external database a recipe for dish with id "${dishId}".` /* TODO: and cached. */);
+            await this.redisService.saveDishRecipe(filteredDishRecipe);
+            this.loggerService.info(context, `Found in external database a recipe for dish with id "${dishId}" and cached.`);
 
             return filteredDishRecipe;
         }

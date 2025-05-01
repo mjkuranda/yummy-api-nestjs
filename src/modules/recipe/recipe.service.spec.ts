@@ -9,12 +9,14 @@ import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { RecipeRepository } from '../../mongodb/repositories/recipe.repository';
 import mongoose from 'mongoose';
 import { ExternalApiService } from '../api/external-api.service';
+import { RedisService } from '../redis/redis.service';
 
 describe('RecipeService', () => {
     let externalApiService: ExternalApiService;
     let recipeService: RecipeService;
     let recipeRepository: RecipeRepository;
     let dishRepository: DishRepository;
+    let redisService: RedisService;
 
     const mockExternalApiService = {
         getDishDetails: jest.fn(),
@@ -35,6 +37,13 @@ describe('RecipeService', () => {
         error: jest.fn()
     };
 
+    const mockRedisService = {
+        getDishDetails: jest.fn(),
+        getDishRecipe: jest.fn(),
+        saveDishRecipe: jest.fn(),
+        saveDishDetails: jest.fn()
+    };
+
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
@@ -42,7 +51,8 @@ describe('RecipeService', () => {
                 { provide: ExternalApiService, useValue: mockExternalApiService },
                 { provide: RecipeRepository, useValue: mockRecipeRepository },
                 { provide: DishRepository, useValue: mockDishRepository },
-                { provide: LoggerService, useValue: mockLoggerService }
+                { provide: LoggerService, useValue: mockLoggerService },
+                { provide: RedisService, useValue: mockRedisService }
             ],
         }).compile();
 
@@ -50,6 +60,7 @@ describe('RecipeService', () => {
         recipeService = module.get(RecipeService);
         recipeRepository = module.get(RecipeRepository);
         dishRepository = module.get(DishRepository);
+        redisService = module.get(RedisService);
     });
 
     it('should be defined', () => {
@@ -57,6 +68,7 @@ describe('RecipeService', () => {
         expect(recipeService).toBeDefined();
         expect(recipeRepository).toBeDefined();
         expect(dishRepository).toBeDefined();
+        expect(redisService).toBeDefined();
     });
 
     describe('create', () => {
@@ -163,14 +175,24 @@ describe('RecipeService', () => {
             } as any;
         });
 
+        it('should pass when recipe found in cache', async () => {
+            jest.spyOn(redisService, 'getDishRecipe').mockResolvedValueOnce(mockRecipe);
+
+            const recipe = await recipeService.get(mockDishId);
+
+            expect(recipe).toBeDefined();
+        });
+
         it('should fail when dish does not exist', async () => {
+            jest.spyOn(redisService, 'getDishRecipe').mockResolvedValueOnce(null);
             jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
             jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(null);
 
             await expect(recipeService.get(mockDishId)).rejects.toThrow(BadRequestException);
         });
 
-        it('should fail when is not recipe assigned to the dish', async () => {
+        it('should fail when no recipe assigned to the dish', async () => {
+            jest.spyOn(redisService, 'getDishRecipe').mockResolvedValueOnce(null);
             jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
             jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(mockDish);
             jest.spyOn(recipeRepository, 'findByDishId').mockResolvedValueOnce(null);
@@ -179,7 +201,9 @@ describe('RecipeService', () => {
         });
 
         it('should return a recipe for a specific dish when dish and recipe exist', async () => {
+            jest.spyOn(redisService, 'getDishRecipe').mockResolvedValueOnce(null);
             jest.spyOn(mongoose, 'isValidObjectId').mockReturnValueOnce(true);
+            jest.spyOn(redisService, 'getDishDetails').mockResolvedValueOnce(null);
             jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(mockDish);
             jest.spyOn(recipeRepository, 'findByDishId').mockResolvedValueOnce(mockRecipe);
 
@@ -188,6 +212,7 @@ describe('RecipeService', () => {
             expect(recipe).toBeDefined();
             expect(recipe.sections).toBeDefined();
             expect(recipe.sections.length).toBeGreaterThanOrEqual(1);
+            expect(redisService.saveDishDetails).toHaveBeenCalledWith(mockDishId, mockDish);
         });
     });
 });
