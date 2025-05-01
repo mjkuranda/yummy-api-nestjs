@@ -1,6 +1,6 @@
 import {
     ArrayMinSize,
-    IsArray,
+    IsArray, IsEnum,
     IsNotEmpty,
     IsOptional,
     Length,
@@ -42,36 +42,23 @@ export class CreateDishDto<Ingredient> {
     @Min(1, { message: 'Preparation time must last at least 1 minute' })
     readonly readyInMinutes: number;
 
-    @IsNotEmpty({ message: 'Dish should have at least one recipe' })
-    readonly recipeSections: DishRecipeSections;
-
     @IsNotEmpty({ message: 'Dish should have a title' })
     @Length(3, 64)
     readonly title: string;
 
     @IsNotEmpty({ message: 'Dish should have a dish type' })
     @Length(3, 16)
-    readonly type: string;
+    readonly type: string; // FIXME: DishType with message which are allowed
 
     @IsNotEmpty({ message: 'Dish should have a meal type' })
     @Length(3, 16)
-    readonly mealType: string;
+    readonly mealType: string; // FIXME: MealType with message which are allowed
 }
 
 export class CreateDishWithAuthorDto<Ingredient> extends CreateDishDto<Ingredient> {
     @IsNotEmpty({ message: 'Dish should have an author' })
     @Length(3, 32)
     readonly author: string;
-}
-
-export class CreateDishBodyDto {
-    @Type(() => CreateDishDto)
-    @ValidateNested({ each: true })
-    readonly data: CreateDishDto<DishIngredientWithoutImage>;
-
-    @Type(() => UserDto)
-    @ValidateNested({ each: true })
-    readonly authenticatedUser: UserDto;
 }
 
 export class DishEditDto<Ingredient> {

@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { UnauthorizedException } from '../exceptions/unauthorized-exception';
 import { JwtManagerService } from '../modules/jwt-manager/jwt-manager.service';
 import { RedisService } from '../modules/redis/redis.service';
-import { AuthenticatedUserRequestBody } from '../modules/user/user.types';
+import { TransformedBody } from '../common/interfaces';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -35,7 +35,7 @@ export class AuthenticationGuard implements CanActivate {
                 ...req.body
             },
             authenticatedUser: user
-        } as AuthenticatedUserRequestBody<unknown>;
+        } as TransformedBody<unknown>;
 
         return true;
     }

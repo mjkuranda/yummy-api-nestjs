@@ -10,6 +10,7 @@ import { UserModule } from './modules/user/user.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { ImageModule } from './modules/image/image.module';
 import { HealthcheckModule } from './modules/healthcheck/healthcheck.module';
+import { RecipeModule } from './modules/recipe/recipe.module';
 
 @Module({
     imports: [
@@ -36,6 +37,7 @@ import { HealthcheckModule } from './modules/healthcheck/healthcheck.module';
         HealthcheckModule,
         LoggerModule,
         IngredientModule,
+        RecipeModule,
         DishModule,
         UserModule,
         ImageModule

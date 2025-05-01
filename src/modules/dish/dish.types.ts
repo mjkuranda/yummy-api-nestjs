@@ -40,17 +40,20 @@ export type DetailedDish = {
         veryHealthy?: boolean
     },
     provider: DishProvider,
-    recipeSections: DishRecipeSections,
     type: DishType,
     mealType: MealType
 };
 
-export interface DetailedDishWithTranslations {
-    dish: DetailedDish;
-    description: string;
-    ingredients: TranslatedIngredient[];
-    recipe: DishRecipeSections;
-}
+export type DetailedDishWithTranslations = Omit<DetailedDish, 'ingredients' | 'language'> & {
+    ingredients: {
+        original: DishIngredient[];
+        translated: TranslatedIngredient[]
+    };
+    language: {
+        original: Language;
+        translated: Language;
+    };
+};
 
 export type ProposedDish = {
     id: string,

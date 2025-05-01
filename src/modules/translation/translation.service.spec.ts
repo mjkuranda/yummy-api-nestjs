@@ -3,6 +3,7 @@ import { TranslationService } from './translation.service';
 import translate from '@iamtraction/google-translate';
 import { DetailedDish } from '../dish/dish.types';
 import { MealType, DishType } from '../../common/enums';
+import { DishRecipe } from '../recipe/recipe.types';
 
 jest.mock('@iamtraction/google-translate', () =>
     jest.fn((text, opts) => {
@@ -58,8 +59,34 @@ describe('TranslationService', () => {
                         amount: 200,
                         imageUrl: '2.jpg'
                     }
-                ],
-                recipeSections: [
+                ]
+            };
+
+            const { description, ingredients } = await translationService.translateDish(mockDetailedDish, 'pl');
+
+            // NOTE: Only description contains `mocked translation of` regarding concatenating all string into one.
+            // NOTE: Hence, ingredients does not contain that fragment.
+
+            expect(description).toEqual(`mocked translation of ${mockDetailedDish.description}`);
+            expect(ingredients.length).toEqual(mockDetailedDish.ingredients.length);
+            expect(translate).toHaveBeenCalledTimes(1);
+            expect(ingredients[0].text).toEqual('3 sticks of carrot');
+            expect(ingredients[0].imageUrl).toEqual('1.jpg');
+            expect(ingredients[1].text).toEqual('200 grams of butter');
+            expect(ingredients[1].imageUrl).toEqual('2.jpg');
+        });
+    });
+
+    describe('translateDishRecipe', () => {
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
+        it('should return correct translation', async () => {
+            const mockRecipe: DishRecipe = {
+                dishId: '123',
+                language: 'en',
+                sections: [
                     {
                         name: '',
                         steps: ['A', 'B', 'C']
@@ -74,39 +101,29 @@ describe('TranslationService', () => {
                     }
                 ]
             };
+            const expectedStartWith = 'mocked translation of ';
 
-            const { description, ingredients, recipe } = await translationService.translateDish(mockDetailedDish, 'pl');
+            const { translated: translatedRecipe } = await translationService.translateRecipe(mockRecipe, 'pl');
 
-            // NOTE: Only description contains `mocked translation of` regarding concatenating all string into one.
-            // NOTE: Hence, ingredients, steps and section names do not contain that fragment.
-
-            expect(description).toEqual(`mocked translation of ${mockDetailedDish.description}`);
-            expect(ingredients.length).toEqual(mockDetailedDish.ingredients.length);
-            expect(recipe.length).toEqual(mockDetailedDish.recipeSections.length);
-            expect(translate).toHaveBeenCalledTimes(1);
-            expect(ingredients[0].text).toEqual('3 sticks of carrot');
-            expect(ingredients[0].imageUrl).toEqual('1.jpg');
-            expect(ingredients[1].text).toEqual('200 grams of butter');
-            expect(ingredients[1].imageUrl).toEqual('2.jpg');
-            expect(recipe[0].name).toEqual('');
-            expect(recipe[0].steps.length).toEqual(3);
-            expect(recipe[0].steps[0]).toEqual('A');
-            expect(recipe[0].steps[1]).toEqual('B');
-            expect(recipe[0].steps[2]).toEqual('C');
-            expect(recipe[1].name).toEqual('Final recipe');
-            expect(recipe[1].steps.length).toEqual(6);
-            expect(recipe[1].steps[0]).toEqual('Q');
-            expect(recipe[1].steps[1]).toEqual('W');
-            expect(recipe[1].steps[2]).toEqual('E');
-            expect(recipe[1].steps[3]).toEqual('R');
-            expect(recipe[1].steps[4]).toEqual('T');
-            expect(recipe[1].steps[5]).toEqual('Y');
-            expect(recipe[2].name).toEqual('Yet another one');
-            expect(recipe[2].steps.length).toEqual(4);
-            expect(recipe[2].steps[0]).toEqual('Z');
-            expect(recipe[2].steps[1]).toEqual('X');
-            expect(recipe[2].steps[2]).toEqual('C');
-            expect(recipe[2].steps[3]).toEqual('V');
+            expect(translatedRecipe.sections[0].name).toEqual('');
+            expect(translatedRecipe.sections[0].steps.length).toEqual(3);
+            expect(translatedRecipe.sections[0].steps[0]).toEqual(expectedStartWith + 'A');
+            expect(translatedRecipe.sections[0].steps[1]).toEqual('B');
+            expect(translatedRecipe.sections[0].steps[2]).toEqual('C');
+            expect(translatedRecipe.sections[1].name).toEqual('Final recipe');
+            expect(translatedRecipe.sections[1].steps.length).toEqual(6);
+            expect(translatedRecipe.sections[1].steps[0]).toEqual('Q');
+            expect(translatedRecipe.sections[1].steps[1]).toEqual('W');
+            expect(translatedRecipe.sections[1].steps[2]).toEqual('E');
+            expect(translatedRecipe.sections[1].steps[3]).toEqual('R');
+            expect(translatedRecipe.sections[1].steps[4]).toEqual('T');
+            expect(translatedRecipe.sections[1].steps[5]).toEqual('Y');
+            expect(translatedRecipe.sections[2].name).toEqual('Yet another one');
+            expect(translatedRecipe.sections[2].steps.length).toEqual(4);
+            expect(translatedRecipe.sections[2].steps[0]).toEqual('Z');
+            expect(translatedRecipe.sections[2].steps[1]).toEqual('X');
+            expect(translatedRecipe.sections[2].steps[2]).toEqual('C');
+            expect(translatedRecipe.sections[2].steps[3]).toEqual('V');
         });
     });
 

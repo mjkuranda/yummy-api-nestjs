@@ -1,8 +1,9 @@
-import { DetailedDish, RatedDish } from '../modules/dish/dish.types';
-import { DishRepository } from '../mongodb/repositories/dish.repository';
-import { AbstractApiService } from '../services/abstract.api.service';
+import { UserAccessTokenPayload } from '../modules/jwt-manager/jwt-manager.types';
 
-export interface DishSourceService {
-    getDishes: (ingredients: string[]) => RatedDish[];
-    getDishDetails: (id: string) => DetailedDish;
+/**
+ * @description Transformed endpoint body
+ */
+export interface TransformedBody<TData> {
+    data: TData;
+    authenticatedUser: UserAccessTokenPayload;
 }

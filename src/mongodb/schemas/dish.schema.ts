@@ -10,17 +10,12 @@ const IngredientDataSchema = new mongoose.Schema({
         required: true
     },
     unit: {
-        type: String,
+        type: String, // FIXME: As a particular unit type
         required: true
     },
     imageUrl: {
         type: String
     }
-});
-
-const RecipeSectionSchema = new mongoose.Schema({
-    name: String,
-    steps: [String]
 });
 
 export const DishSchema = new mongoose.Schema({
@@ -38,19 +33,15 @@ export const DishSchema = new mongoose.Schema({
         required: true
     },
     language: {
-        type: String,
+        type: String, // FIXME: As a language type
         required: true
     },
     mealType: {
-        type: String,
+        type: String, // FIXME: As a meal type
         required: true
     },
     posted: {
         type: Number,
-        required: true
-    },
-    recipeSections: {
-        type: [RecipeSectionSchema],
         required: true
     },
     softAdded: {
@@ -71,7 +62,7 @@ export const DishSchema = new mongoose.Schema({
         required: true
     },
     type: {
-        type: String,
+        type: String, // FIXME: As a dish type
         required: true
     }
 });

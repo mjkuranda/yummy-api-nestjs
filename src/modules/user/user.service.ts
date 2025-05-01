@@ -239,7 +239,7 @@ export class UserService {
         this.loggerService.info(context, `User "${user._id}" has been successfully activated!`);
     }
 
-    async getNotActivated() {
+    async getNotActivated(): Promise<UserDocument[]> {
         return await this.userRepository.getAllNotActivated();
     }
 

@@ -14,7 +14,12 @@ import {
     UsePipes
 } from '@nestjs/common';
 import { DishService } from './dish.service';
-import { CreateDishBodyDto, CreateDishCommentBody, CreateDishRatingBody, EditDishBodyDto } from './dish.dto';
+import {
+    CreateDishCommentBody,
+    CreateDishDto,
+    CreateDishRatingBody,
+    EditDishBodyDto
+} from './dish.dto';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CreationGuard } from '../../guards/creation.guard';
 import { EditionGuard } from '../../guards/edition.guard';
@@ -23,8 +28,10 @@ import { DetailedDishWithTranslations, GetDishesQueryType, RatedDish } from './d
 import { IngredientName, MealType } from '../../common/enums';
 import { DishQueryValidationPipe } from '../../pipes/dish-query-validation.pipe';
 import { TranslationService } from '../translation/translation.service';
-import { Language, TransformedBody } from '../../common/types';
+import { Language } from '../../common/types';
 import { IngredientService } from '../ingredient/ingredient.service';
+import { TransformedBody } from '../../common/interfaces';
+import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
 
 @Controller('dishes')
 export class DishController {
@@ -50,17 +57,28 @@ export class DishController {
 
     @Get('/:id/details')
     @HttpCode(200)
-    public async getDishDetails(@Param('id') id: string, @Headers('accept-language') lang: Language): Promise<DetailedDishWithTranslations> {
+    public async getDishDetails(@Param('id') id: string, @Headers('accept-language') lang: Language = 'pl'): Promise<DetailedDishWithTranslations> {
         const dish = await this.dishService.getDishDetails(id);
-        const { description, ingredients, recipe } = await this.translationService.translateDish(dish, lang);
+        const translatedDetailedDish = await this.translationService.translateDish(dish, lang);
 
-        return { dish, description, ingredients, recipe };
+        return {
+            ...dish,
+            ...translatedDetailedDish,
+            language: {
+                original: dish.language,
+                translated: lang
+            },
+            ingredients: {
+                original: dish.ingredients,
+                translated: translatedDetailedDish.ingredients
+            }
+        };
     }
 
     @Post('/create')
     @HttpCode(201)
     @UseGuards(AuthenticationGuard)
-    public async createDish(@Body() body: CreateDishBodyDto) {
+    public async createDish(@Body() body: TransformedBody<CreateDishDto<DishIngredientWithoutImage>>) {
         const { data, authenticatedUser } = body;
 
         return await this.dishService.create(data, authenticatedUser);

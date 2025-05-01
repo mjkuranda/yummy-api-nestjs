@@ -150,38 +150,38 @@ describe('UserController (e2e)', () => {
                 id: 'some-id',
                 title: 'some title',
                 description: 'some description',
-                language: 'en',
+                language: 'en-US',
                 readyInMinutes: 0,
                 sourceOrAuthor: 'unknown',
-                recipeSections: [],
                 ingredients: [],
                 provider: 'yummy',
                 type: DishType.ANY,
                 mealType: MealType.ANY
             };
             const expectedResponseBody: DetailedDishWithTranslations = {
-                dish: {
-                    id: 'some-id',
-                    title: 'some title',
-                    description: 'some description',
-                    language: 'en',
-                    readyInMinutes: 0,
-                    sourceOrAuthor: 'unknown',
-                    recipeSections: [],
-                    ingredients: [],
-                    provider: 'yummy',
-                    type: DishType.ANY,
-                    mealType: MealType.ANY
-                },
+                id: 'some-id',
+                title: 'some title',
                 description: 'some description',
-                ingredients: [],
-                recipe: []
+                language: {
+                    original: 'en-US',
+                    translated: 'en'
+                },
+                readyInMinutes: 0,
+                sourceOrAuthor: 'unknown',
+                ingredients: {
+                    original: [],
+                    translated: []
+                },
+                provider: 'yummy',
+                type: DishType.ANY,
+                mealType: MealType.ANY
             };
 
             jest.spyOn(redisService, 'getDishDetails').mockResolvedValueOnce(mockCachedDish);
 
             return request(app.getHttpServer())
                 .get('/dishes/some-id/details')
+                .set('Accept-Language', 'en')
                 .expect(200)
                 .expect(expectedResponseBody);
         }, 10000);
