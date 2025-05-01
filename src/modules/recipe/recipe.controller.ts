@@ -1,9 +1,10 @@
-import { Body, Controller, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CreateRecipeDto } from './recipe.dto';
 import { RecipeService } from './recipe.service';
 import { TransformedBody } from '../../common/interfaces';
 import { TranslationService } from '../translation/translation.service';
+import { Language } from '../../common/types';
 
 @Controller('recipes')
 export class RecipeController {
@@ -24,9 +25,9 @@ export class RecipeController {
 
     @Get(':dishId')
     @HttpCode(200)
-    public async getRecipe(@Param('dishId') dishId: string) {
+    public async getRecipe(@Param('dishId') dishId: string, @Headers('accept-language') lang: Language = 'pl') {
         const recipe = await this.recipeService.get(dishId);
-        const translatedRecipe = await this.translationService.translateRecipe(recipe, 'pl');
+        const { translated: translatedRecipe } = await this.translationService.translateRecipe(recipe, lang);
 
         return translatedRecipe;
     }
