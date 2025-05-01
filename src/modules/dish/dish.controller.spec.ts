@@ -73,7 +73,7 @@ describe('DishController', () => {
         it('should return detailed dish with translated ingredients', async () => {
             const id = '123';
             const lang: Language = 'en';
-            const dish = { description: 'description', ingredients: ['ingredient1', 'ingredient2'] } as any;
+            const dish = { language: 'pl', description: 'description', ingredients: ['ingredient1', 'ingredient2'] } as any;
             const translatedDish = {
                 description: 'translated description',
                 ingredients: [...dish.ingredients]
@@ -84,7 +84,10 @@ describe('DishController', () => {
                     translated: [...dish.ingredients]
                 },
                 description: 'translated description',
-                language: lang
+                language: {
+                    original: 'pl',
+                    translated: lang
+                }
             } as any;
 
             jest.spyOn(dishService, 'getDishDetails').mockResolvedValueOnce(dish);

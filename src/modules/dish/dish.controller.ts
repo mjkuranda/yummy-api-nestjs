@@ -64,7 +64,10 @@ export class DishController {
         return {
             ...dish,
             ...translatedDetailedDish,
-            language: lang,
+            language: {
+                original: dish.language,
+                translated: lang
+            },
             ingredients: {
                 original: dish.ingredients,
                 translated: translatedDetailedDish.ingredients

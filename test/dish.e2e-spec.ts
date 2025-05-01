@@ -150,7 +150,7 @@ describe('UserController (e2e)', () => {
                 id: 'some-id',
                 title: 'some title',
                 description: 'some description',
-                language: 'en',
+                language: 'en-US',
                 readyInMinutes: 0,
                 sourceOrAuthor: 'unknown',
                 ingredients: [],
@@ -162,7 +162,10 @@ describe('UserController (e2e)', () => {
                 id: 'some-id',
                 title: 'some title',
                 description: 'some description',
-                language: 'en',
+                language: {
+                    original: 'en-US',
+                    translated: 'en'
+                },
                 readyInMinutes: 0,
                 sourceOrAuthor: 'unknown',
                 ingredients: {
