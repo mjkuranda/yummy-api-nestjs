@@ -91,7 +91,7 @@ describe('DishService', () => {
         saveDishDetails: jest.fn()
     };
 
-    const mockSearchQueryRepository = {
+    const mockUserSearchQueryRepository = {
         create: jest.fn(),
         findAllRecentQueries: jest.fn()
     };
@@ -108,7 +108,7 @@ describe('DishService', () => {
                 { provide: DishRepository, useValue: mockDishRepository },
                 { provide: DishCommentRepository, useValue: mockDishCommentRepository },
                 { provide: DishRatingRepository, useValue: mockDishRatingRepository },
-                { provide: UserSearchQueryRepository, useValue: mockSearchQueryRepository },
+                { provide: UserSearchQueryRepository, useValue: mockUserSearchQueryRepository },
                 { provide: JwtService, useClass: JwtService },
                 { provide: JwtManagerService, useClass: JwtManagerService },
                 { provide: LoggerService, useValue: mockLoggerService },
