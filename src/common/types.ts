@@ -1,4 +1,5 @@
-import { IngredientName, LanguageName } from './enums';
+import { IngredientName } from './enums';
+import { supportedLanguages } from '../constants/language.constant';
 
 /**
  * @description Equals to {}
@@ -27,7 +28,7 @@ export type IngredientType = {
 /**
  * @description Language type
  */
-export type Language = keyof typeof LanguageName;
+export type Language = typeof supportedLanguages[number];
 
 /**
  * @description Ingredient unit converter

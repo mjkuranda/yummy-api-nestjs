@@ -20,8 +20,8 @@ import { HOUR } from '../../constants/times.constant';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { IngredientType, DishIngredient, DishIngredientWithoutImage } from '../ingredient/ingredient.types';
 import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
-import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
-import { SearchQueryDocument } from '../../mongodb/documents/search-query.document';
+import { UserSearchQueryRepository } from '../../mongodb/repositories/user-search-query.repository';
+import { UserSearchQueryDocument } from '../../mongodb/documents/user-search-query.document';
 import { ContextString } from '../../common/types';
 import { DishCommentRepository } from '../../mongodb/repositories/dish-comment.repository';
 import { DishCommentDocument } from '../../mongodb/documents/dish-comment.document';
@@ -40,7 +40,7 @@ export class DishService {
         private dishRepository: DishRepository,
         private dishCommentRepository: DishCommentRepository,
         private dishRatingRepository: DishRatingRepository,
-        private searchQueryRepository: SearchQueryRepository,
+        private userSearchQueryRepository: UserSearchQueryRepository,
         private redisService: RedisService,
         private loggerService: LoggerService,
         private ingredientService: IngredientService,
@@ -337,8 +337,8 @@ export class DishService {
     }
 
     async getDishProposal(user: UserAccessTokenPayload) {
-        const searchQueries: SearchQueryDocument[] = await this.searchQueryRepository.findAllRecentQueries(user.login);
-        const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(searchQueries);
+        const userSearchQueries: UserSearchQueryDocument[] = await this.userSearchQueryRepository.findAllRecentQueries(user.login);
+        const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(userSearchQueries);
         const ingredientsList = Object.keys(mergedSearchQueries);
         const datasets = await this.getDatasets(this.dishRepository.getDishes(ingredientsList), ...this.externalApiService.getDishes(ingredientsList));
         const dishes: RatedDish[] = datasets.flat().sort(sortDescendingRelevance);
@@ -354,7 +354,7 @@ export class DishService {
 
     async addDishProposal(user: UserAccessTokenPayload, ingredients: string[]) {
         const filteredIngredients = this.ingredientService.filterIngredients(ingredients);
-        await this.searchQueryRepository.create({ ingredients: filteredIngredients, date: new Date(), login: user.login });
+        await this.userSearchQueryRepository.create({ ingredients: filteredIngredients, date: new Date(), login: user.login });
         this.loggerService.info('DishService/addDishProposal', `Added search query for user ${user.login}.`);
     }
 

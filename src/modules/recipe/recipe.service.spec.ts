@@ -6,7 +6,7 @@ import { CreateRecipeDto } from './recipe.dto';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
-import { RecipeRepository } from '../../mongodb/repositories/recipe.repository';
+import { DishRecipeRepository } from '../../mongodb/repositories/dish-recipe.repository';
 import mongoose from 'mongoose';
 import { ExternalApiService } from '../api/external-api.service';
 import { RedisService } from '../redis/redis.service';
@@ -14,7 +14,7 @@ import { RedisService } from '../redis/redis.service';
 describe('RecipeService', () => {
     let externalApiService: ExternalApiService;
     let recipeService: RecipeService;
-    let recipeRepository: RecipeRepository;
+    let recipeRepository: DishRecipeRepository;
     let dishRepository: DishRepository;
     let redisService: RedisService;
 
@@ -49,7 +49,7 @@ describe('RecipeService', () => {
             providers: [
                 RecipeService,
                 { provide: ExternalApiService, useValue: mockExternalApiService },
-                { provide: RecipeRepository, useValue: mockRecipeRepository },
+                { provide: DishRecipeRepository, useValue: mockRecipeRepository },
                 { provide: DishRepository, useValue: mockDishRepository },
                 { provide: LoggerService, useValue: mockLoggerService },
                 { provide: RedisService, useValue: mockRedisService }
@@ -58,7 +58,7 @@ describe('RecipeService', () => {
 
         externalApiService = module.get(ExternalApiService);
         recipeService = module.get(RecipeService);
-        recipeRepository = module.get(RecipeRepository);
+        recipeRepository = module.get(DishRecipeRepository);
         dishRepository = module.get(DishRepository);
         redisService = module.get(RedisService);
     });

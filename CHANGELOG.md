@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2025-05-02
+### Added
+- [Marek Kurańda](https://github.com/mjkuranda): Supported language list.
+- [Marek Kurańda](https://github.com/mjkuranda): Factory for creating mongoose models.
+- [Marek Kurańda](https://github.com/mjkuranda): Definitions for created mongoose models.
+- [Marek Kurańda](https://github.com/mjkuranda): Missing types in mongoose schema properties for `mealType`, `dishType` and `language`.
+- [Marek Kurańda](https://github.com/mjkuranda): Validation in DTOs regarding `mealType`, `dishType` and `language`.
+- [Marek Kurańda](https://github.com/mjkuranda): Synchronizing model indexes, adding `mongo-sync` script and module.
+
+### Removed
+- [Marek Kurańda](https://github.com/mjkuranda): Mongoose model constants' file.
+
 ## [3.0.0] - 2025-04-29
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `Recipe` collection separating from `Dish` collection.

@@ -1,7 +1,7 @@
 import { AbstractRepository } from './abstract.repository';
 import { DishDocument } from '../documents/dish.document';
 import { InjectModel } from '@nestjs/mongoose';
-import { models } from '../../constants/models.constant';
+import { dishModel } from '../../common/definitions/mongoose-model.definitions';
 import { Model } from 'mongoose';
 import { CreateDishWithAuthorDto, DishEditDto } from '../../modules/dish/dish.dto';
 import { DishIngredient } from '../../modules/ingredient/ingredient.types';
@@ -10,7 +10,7 @@ import { calculateMissing, calculateRelevance } from '../../common/helpers';
 
 export class DishRepository extends AbstractRepository<DishDocument, CreateDishWithAuthorDto<DishIngredient> | { softAdded: boolean }> {
 
-    constructor(@InjectModel(models.DISH_MODEL) model: Model<DishDocument>) {
+    constructor(@InjectModel(dishModel.name) model: Model<DishDocument>) {
         super(model);
     }
 

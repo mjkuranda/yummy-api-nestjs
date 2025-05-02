@@ -1,6 +1,6 @@
 import { AbstractRepository } from './abstract.repository';
 import { InjectModel } from '@nestjs/mongoose';
-import { models } from '../../constants/models.constant';
+import { dishRatingModel } from '../../common/definitions/mongoose-model.definitions';
 import { Model, PipelineStage } from 'mongoose';
 import { DishRatingDocument } from '../documents/dish-rating.document';
 import { CreateDishRatingBody, CreateDishRatingDto } from '../../modules/dish/dish.dto';
@@ -8,7 +8,7 @@ import { DishRating } from '../../modules/dish/dish.types';
 
 export class DishRatingRepository extends AbstractRepository<DishRatingDocument, CreateDishRatingDto> {
 
-    constructor(@InjectModel(models.DISH_RATING_MODEL) model: Model<DishRatingDocument>) {
+    constructor(@InjectModel(dishRatingModel.name) model: Model<DishRatingDocument>) {
         super(model);
     }
 

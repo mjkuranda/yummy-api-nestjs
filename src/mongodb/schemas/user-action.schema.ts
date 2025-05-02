@@ -4,3 +4,5 @@ export const UserActionSchema = new mongoose.Schema({
     userId: String,
     type: String
 });
+
+UserActionSchema.index({ userId: 1 });

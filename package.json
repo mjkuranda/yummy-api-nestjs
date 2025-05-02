@@ -1,6 +1,6 @@
 {
     "name": "yummy-api-nestjs",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "description": "REST API for Yummy application",
     "author": "mjkuranda",
     "private": true,
@@ -8,6 +8,7 @@
     "scripts": {
         "build": "nest build",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+        "mongo-sync":  "ts-node src/scripts/mongo-sync.ts",
         "start": "nest start",
         "start:dev": "nest start --watch",
         "start:debug": "nest start --debug --watch",
