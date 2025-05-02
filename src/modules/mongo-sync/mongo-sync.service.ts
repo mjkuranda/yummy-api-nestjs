@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Document } from 'mongoose';
 import {
@@ -50,7 +50,7 @@ export class MongoSyncService {
         const context: ContextString = 'MongoSyncService/synchronizeIndex';
 
         try {
-            await model.createIndexes();
+            await model.syncIndexes();
             this.loggerService.info(context, `Synchronized successfully "${model.modelName}" model.`);
         } catch (err) {
             this.loggerService.error(context, `Error during synchronizing model "${model.name}": ${err.message}.`);
