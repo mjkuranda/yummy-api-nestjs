@@ -11,6 +11,7 @@ import { LoggerModule } from './modules/logger/logger.module';
 import { ImageModule } from './modules/image/image.module';
 import { HealthcheckModule } from './modules/healthcheck/healthcheck.module';
 import { RecipeModule } from './modules/recipe/recipe.module';
+import { NotificationService } from './services/notification.service';
 
 @Module({
     imports: [
@@ -43,7 +44,7 @@ import { RecipeModule } from './modules/recipe/recipe.module';
         ImageModule
     ],
     controllers: [],
-    providers: [],
+    providers: [NotificationService],
 })
 export class AppModule implements NestModule {
 
