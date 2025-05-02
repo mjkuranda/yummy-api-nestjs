@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): Definitions for created mongoose models.
 - [Marek Kurańda](https://github.com/mjkuranda): Missing types in mongoose schema properties for `mealType`, `dishType` and `language`.
 - [Marek Kurańda](https://github.com/mjkuranda): Validation in DTOs regarding `mealType`, `dishType` and `language`.
+- [Marek Kurańda](https://github.com/mjkuranda): Synchronizing model indexes, adding `mongo-sync` script and module.
 
 ### Removed
 - [Marek Kurańda](https://github.com/mjkuranda): Mongoose model constants' file.

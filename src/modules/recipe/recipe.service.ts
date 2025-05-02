@@ -3,7 +3,7 @@ import { LoggerService } from '../logger/logger.service';
 import { DishRecipeRepository } from '../../mongodb/repositories/dish-recipe.repository';
 import { CreateRecipeDto } from './recipe.dto';
 import { DishRepository } from '../../mongodb/repositories/dish.repository';
-import { RecipeDocument } from '../../mongodb/documents/recipe.document';
+import { DishRecipeDocument } from '../../mongodb/documents/dish-recipe-document';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { ContextString, Language } from '../../common/types';
 import { ForbiddenException } from '../../exceptions/forbidden-exception';
@@ -27,7 +27,7 @@ export class RecipeService {
         private readonly redisService: RedisService
     ) {}
 
-    async create(dishId: string, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<RecipeDocument> {
+    async create(dishId: string, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<DishRecipeDocument> {
         const context: ContextString = 'RecipeService/create';
 
         // NOTE: This dish can be unconfirmed because you add dish and recipe at once.

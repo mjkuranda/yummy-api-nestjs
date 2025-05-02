@@ -18,3 +18,5 @@ export const DishRatingSchema = new mongoose.Schema({
         required: true
     }
 });
+
+DishRatingSchema.index({ dishId: 1 });

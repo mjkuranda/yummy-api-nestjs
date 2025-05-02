@@ -18,3 +18,5 @@ export const DishCommentSchema = new mongoose.Schema({
         required: true
     }
 });
+
+DishCommentSchema.index({ dishId: 1 });

@@ -71,3 +71,13 @@ export const DishSchema = new mongoose.Schema({
         required: true
     }
 });
+
+DishSchema.index(
+    { 'ingredients.name': 1 },
+    {
+        partialFilterExpression: {
+            softDeleted: false,
+            softAdded: false
+        }
+    }
+);

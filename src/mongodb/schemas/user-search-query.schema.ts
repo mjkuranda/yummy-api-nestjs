@@ -5,3 +5,5 @@ export const UserSearchQuerySchema = new mongoose.Schema({
     date: Date,
     login: String
 });
+
+UserSearchQuerySchema.index({ login: 1 });

@@ -12,3 +12,6 @@ export const UserSchema = new mongoose.Schema({
         type: Number
     }
 });
+
+UserSchema.index({ login: 1 }, { unique: true });
+UserSchema.index({ email: 1 }, { unique: true });

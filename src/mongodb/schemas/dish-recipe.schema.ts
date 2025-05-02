@@ -7,6 +7,7 @@ const DishRecipeSectionSchema = new mongoose.Schema({
 });
 
 export const DishRecipeSchema = new mongoose.Schema({
+    dishId: String,
     language: {
         type: String,
         enum: supportedLanguages,
@@ -14,3 +15,5 @@ export const DishRecipeSchema = new mongoose.Schema({
     },
     sections: [DishRecipeSectionSchema]
 });
+
+DishRecipeSchema.index({ dishId: 1 }, { unique: true });
