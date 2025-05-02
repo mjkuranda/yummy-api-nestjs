@@ -47,12 +47,12 @@ export class CreateDishDto<Ingredient> {
     readonly title: string;
 
     @IsNotEmpty({ message: 'Dish should have a dish type' })
-    @IsIn(Object.values(DishType), { message: `The following dish types are allowed: ${Object.values(DishType).join(', ')}` })
+    @IsIn(Object.values(DishType), { message: `Dish type should be defined as a one of allowed types: ${Object.values(DishType).join(', ')}` })
     @Length(3, 16)
     readonly type: DishType;
 
     @IsNotEmpty({ message: 'Dish should have a meal type' })
-    @IsIn(Object.values(MealType), { message: `The following meal types are allowed: ${Object.values(MealType).join(', ')}` })
+    @IsIn(Object.values(MealType), { message: `Meal type should be defined as a one of allowed types: ${Object.values(MealType).join(', ')}` })
     @Length(3, 16)
     readonly mealType: MealType;
 }
