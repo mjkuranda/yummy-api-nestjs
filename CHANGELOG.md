@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.1.0] - 2025-05-02
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Supported language list.
-- [Marek Kurańda](https://github.com/mjkuranda): Factories for creating mongoose and redis models.
+- [Marek Kurańda](https://github.com/mjkuranda): Factory for creating mongoose models.
 - [Marek Kurańda](https://github.com/mjkuranda): Definitions for created mongoose models.
 - [Marek Kurańda](https://github.com/mjkuranda): Missing types in mongoose schema properties for `mealType`, `dishType` and `language`.
 - [Marek Kurańda](https://github.com/mjkuranda): Validation in DTOs regarding `mealType`, `dishType` and `language`.
