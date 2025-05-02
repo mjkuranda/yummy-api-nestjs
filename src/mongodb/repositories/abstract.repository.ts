@@ -1,4 +1,5 @@
 import { Document, FilterQuery, Model, PipelineStage, UpdateQuery, UpdateWithAggregationPipeline } from 'mongoose';
+import { DeleteResult } from 'mongodb';
 
 export abstract class AbstractRepository<T extends Document, CreateDataType> {
 
@@ -40,11 +41,11 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
         return this.model.findOneAndUpdate(filterQuery, updateQuery, { new: true });
     }
 
-    async deleteOne(filterQuery: FilterQuery<T>) {
+    async deleteOne(filterQuery: FilterQuery<T>): Promise<DeleteResult> {
         return this.model.deleteOne(filterQuery);
     }
 
-    async deleteMany(filterQuery: FilterQuery<T>) {
+    async deleteMany(filterQuery: FilterQuery<T>): Promise<DeleteResult> {
         return this.model.deleteMany(filterQuery);
     }
 

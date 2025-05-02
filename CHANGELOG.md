@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): Out of memory error on the production.
-- [Marek Kurańda](https://github.com/mjkuranda): Bumped audited packages.
+- [Marek Kurańda](https://github.com/mjkuranda): Bumped `@nestjs/common@10.4.17`, `axios@1.9.0` and `mongoose@7.8.7` packages.
 
 ## [3.1.0] - 2025-05-02
 ### Added
