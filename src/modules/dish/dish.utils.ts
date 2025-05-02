@@ -3,7 +3,7 @@ import { ApiName } from '../redis/redis.types';
 import { IngredientType } from '../ingredient/ingredient.types';
 import { DishDocument } from '../../mongodb/documents/dish.document';
 import { DetailedDish, MergedSearchQueries, ProposedDish, RatedDish } from './dish.types';
-import { SearchQueryDocument } from '../../mongodb/documents/search-query.document';
+import { UserSearchQueryDocument } from '../../mongodb/documents/user-search-query.document';
 
 export function getQueryWithIngredientsAndDishType(ingredients: IngredientType[], type?: MealType, apiName?: ApiName, apiKey?: string): string {
     const ingredientList = ingredients.sort().join(',');
@@ -50,7 +50,7 @@ export function proceedDishDocumentToDishDetails(dish: DishDocument): DetailedDi
     };
 }
 
-export function mergeSearchQueries(searchQueries: SearchQueryDocument[]): MergedSearchQueries {
+export function mergeSearchQueries(searchQueries: UserSearchQueryDocument[]): MergedSearchQueries {
     const merged: MergedSearchQueries = {};
 
     for (const query of searchQueries) {

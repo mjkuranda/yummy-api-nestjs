@@ -3,14 +3,14 @@ import { UserDocument } from '../documents/user.document';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { models } from '../../constants/models.constant';
+import { userModel } from '../../common/definitions/mongoose-model.definitions';
 import { CreateUserDto, UserDto } from '../../modules/user/user.dto';
 import { CapabilityType, UserObject, UserProfile } from '../../modules/user/user.types';
 
 @Injectable()
 export class UserRepository extends AbstractRepository<UserDocument, CreateUserDto> {
 
-    constructor(@InjectModel(models.USER_MODEL) model: Model<UserDocument>) {
+    constructor(@InjectModel(userModel.name) model: Model<UserDocument>) {
         super(model);
     }
 

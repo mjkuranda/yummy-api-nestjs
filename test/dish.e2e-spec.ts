@@ -9,7 +9,7 @@ import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.servic
 import { RedisService } from '../src/modules/redis/redis.service';
 import { DishRepository } from '../src/mongodb/repositories/dish.repository';
 import { DetailedDish, DetailedDishWithTranslations, DishRating, RatedDish } from '../src/modules/dish/dish.types';
-import { SearchQueryRepository } from '../src/mongodb/repositories/search-query.repository';
+import { UserSearchQueryRepository } from '../src/mongodb/repositories/user-search-query.repository';
 import { DishCommentRepository } from '../src/mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../src/mongodb/repositories/dish-rating.repository';
 import { IngredientService } from '../src/modules/ingredient/ingredient.service';
@@ -22,7 +22,7 @@ describe('UserController (e2e)', () => {
     let dishRepository: DishRepository;
     let dishCommentRepository: DishCommentRepository;
     let dishRatingRepository: DishRatingRepository;
-    let searchQueryRepository: SearchQueryRepository;
+    let userSearchQueryRepository: UserSearchQueryRepository;
     let jwtManagerService: JwtManagerService;
     let redisService: RedisService;
     let externalApiService: ExternalApiService;
@@ -60,7 +60,7 @@ describe('UserController (e2e)', () => {
         ...mockDishRepositoryProvider,
         getAverageRatingForDish: jest.fn()
     };
-    const mockSearchQueryRepositoryProvider = {
+    const mockUserSearchQueryRepositoryProvider = {
         create: jest.fn(),
         findAllRecentQueries: jest.fn()
     };
@@ -96,7 +96,7 @@ describe('UserController (e2e)', () => {
             .overrideProvider(DishRepository).useValue(mockDishRepositoryProvider)
             .overrideProvider(DishCommentRepository).useValue(mockDishRepositoryProvider)
             .overrideProvider(DishRatingRepository).useValue(mockDishRatingRepositoryProvider)
-            .overrideProvider(SearchQueryRepository).useValue(mockSearchQueryRepositoryProvider)
+            .overrideProvider(UserSearchQueryRepository).useValue(mockUserSearchQueryRepositoryProvider)
             .overrideProvider(RedisService).useValue(redisServiceProvider)
             .overrideProvider(JwtManagerService).useValue(jwtManagerServiceProvider)
             .overrideProvider(ExternalApiService).useValue(externalApiServiceProvider)
@@ -111,7 +111,7 @@ describe('UserController (e2e)', () => {
         dishRepository = moduleRef.get(DishRepository);
         dishCommentRepository = moduleRef.get(DishCommentRepository);
         dishRatingRepository = moduleRef.get(DishRatingRepository);
-        searchQueryRepository = moduleRef.get(SearchQueryRepository);
+        userSearchQueryRepository = moduleRef.get(UserSearchQueryRepository);
         jwtManagerService = moduleRef.get(JwtManagerService);
         redisService = moduleRef.get(RedisService);
         externalApiService = moduleRef.get(ExternalApiService);
@@ -686,7 +686,7 @@ describe('UserController (e2e)', () => {
 
             jest.spyOn(dishRepository, 'getDishes').mockResolvedValue([]);
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(searchQueryRepository, 'findAllRecentQueries').mockResolvedValueOnce(mockSearchQueries);
+            jest.spyOn(userSearchQueryRepository, 'findAllRecentQueries').mockResolvedValueOnce(mockSearchQueries);
             jest.spyOn(externalApiService, 'getDishes').mockReturnValueOnce(mockDishes);
 
             return request(app.getHttpServer())

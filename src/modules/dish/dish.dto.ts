@@ -1,6 +1,6 @@
 import {
     ArrayMinSize,
-    IsArray, IsEnum,
+    IsArray, IsIn,
     IsNotEmpty,
     IsOptional,
     Length,
@@ -47,12 +47,14 @@ export class CreateDishDto<Ingredient> {
     readonly title: string;
 
     @IsNotEmpty({ message: 'Dish should have a dish type' })
+    @IsIn(Object.values(DishType), { message: `The following dish types are allowed: ${Object.values(DishType).join(', ')}` })
     @Length(3, 16)
-    readonly type: string; // FIXME: DishType with message which are allowed
+    readonly type: DishType;
 
     @IsNotEmpty({ message: 'Dish should have a meal type' })
+    @IsIn(Object.values(MealType), { message: `The following meal types are allowed: ${Object.values(MealType).join(', ')}` })
     @Length(3, 16)
-    readonly mealType: string; // FIXME: MealType with message which are allowed
+    readonly mealType: MealType;
 }
 
 export class CreateDishWithAuthorDto<Ingredient> extends CreateDishDto<Ingredient> {

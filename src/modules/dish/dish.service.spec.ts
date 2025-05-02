@@ -13,7 +13,7 @@ import { DishType, IngredientName, MealType } from '../../common/enums';
 import { DishRating, ProposedDish, RatedDish } from './dish.types';
 import { proceedDishDocumentToDishDetails } from './dish.utils';
 import { IngredientService } from '../ingredient/ingredient.service';
-import { SearchQueryRepository } from '../../mongodb/repositories/search-query.repository';
+import { UserSearchQueryRepository } from '../../mongodb/repositories/user-search-query.repository';
 import { DishCommentRepository } from '../../mongodb/repositories/dish-comment.repository';
 import { CreateDishCommentBody, CreateDishRatingBody } from './dish.dto';
 import { DishCommentDocument } from '../../mongodb/documents/dish-comment.document';
@@ -27,7 +27,7 @@ describe('DishService', () => {
     let dishRepository: DishRepository;
     let dishCommentRepository: DishCommentRepository;
     let dishRatingRepository: DishRatingRepository;
-    let searchQueryRepository: SearchQueryRepository;
+    let searchQueryRepository: UserSearchQueryRepository;
     let redisService: RedisService;
     let ingredientService: IngredientService;
     let externalApiService: ExternalApiService;
@@ -108,7 +108,7 @@ describe('DishService', () => {
                 { provide: DishRepository, useValue: mockDishRepository },
                 { provide: DishCommentRepository, useValue: mockDishCommentRepository },
                 { provide: DishRatingRepository, useValue: mockDishRatingRepository },
-                { provide: SearchQueryRepository, useValue: mockSearchQueryRepository },
+                { provide: UserSearchQueryRepository, useValue: mockSearchQueryRepository },
                 { provide: JwtService, useClass: JwtService },
                 { provide: JwtManagerService, useClass: JwtManagerService },
                 { provide: LoggerService, useValue: mockLoggerService },
@@ -122,7 +122,7 @@ describe('DishService', () => {
         dishRepository = module.get(DishRepository);
         dishCommentRepository = module.get(DishCommentRepository);
         dishRatingRepository = module.get(DishRatingRepository);
-        searchQueryRepository = module.get(SearchQueryRepository);
+        searchQueryRepository = module.get(UserSearchQueryRepository);
         redisService = module.get(RedisService);
         ingredientService = module.get(IngredientService);
         externalApiService = module.get(ExternalApiService);

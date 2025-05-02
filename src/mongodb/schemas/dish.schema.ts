@@ -1,4 +1,6 @@
 import * as mongoose from 'mongoose';
+import { supportedLanguages } from '../../constants/language.constant';
+import { DishType, MealType } from '../../common/enums';
 
 const IngredientDataSchema = new mongoose.Schema({
     name: {
@@ -33,11 +35,13 @@ export const DishSchema = new mongoose.Schema({
         required: true
     },
     language: {
-        type: String, // FIXME: As a language type
+        type: String,
+        enum: supportedLanguages,
         required: true
     },
     mealType: {
-        type: String, // FIXME: As a meal type
+        type: String,
+        enum: Object.values(MealType),
         required: true
     },
     posted: {
@@ -62,7 +66,8 @@ export const DishSchema = new mongoose.Schema({
         required: true
     },
     type: {
-        type: String, // FIXME: As a dish type
+        type: String,
+        enum: Object.values(DishType),
         required: true
     }
 });

@@ -1,10 +1,10 @@
-import { IngredientUnitConverter } from './types';
+import { IngredientUnitConverter, Language } from './types';
 
-export enum LanguageName {
-    en = 'English',
-    'en-US' = 'American English',
-    pl = 'Polish'
-}
+export const LanguageName: Record<Language, string> = {
+    en: 'English',
+    'en-US': 'American English',
+    pl: 'Polish'
+};
 
 export enum MealType {
     ANY = 'any',

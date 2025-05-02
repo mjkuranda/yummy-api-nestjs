@@ -1,11 +1,11 @@
-import { IsEnum, IsNotEmpty } from 'class-validator';
+import { IsIn, IsNotEmpty } from 'class-validator';
 import { DishRecipeSections } from '../dish/dish.types';
 import { Language } from '../../common/types';
-import { LanguageName } from '../../common/enums';
+import { supportedLanguages } from '../../constants/language.constant';
 
 export class CreateRecipeDto {
     @IsNotEmpty({ message: 'Recipe should have a specific language' })
-    @IsEnum(LanguageName, { message: 'Recipe should be defined in a one of supported languages: en, en-US, pl' })
+    @IsIn(supportedLanguages, { message: `Recipe should be defined in a one of supported languages: ${supportedLanguages.join(', ')}` })
     readonly language: Language;
 
     @IsNotEmpty({ message: 'Recipe should be assigned to a specific dish' })

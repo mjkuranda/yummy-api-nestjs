@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-export const SearchQuerySchema = new mongoose.Schema({
+export const UserSearchQuerySchema = new mongoose.Schema({
     ingredients: [String],
     date: Date,
     login: String

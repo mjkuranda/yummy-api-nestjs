@@ -2,13 +2,13 @@ import { AbstractRepository } from './abstract.repository';
 import { RecipeDocument } from '../documents/recipe.document';
 import { CreateRecipeDto } from '../../modules/recipe/recipe.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { models } from '../../constants/models.constant';
+import { dishRecipeModel } from '../../common/definitions/mongoose-model.definitions';
 import { Model } from 'mongoose';
 import { Language } from '../../common/types';
 
-export class RecipeRepository extends AbstractRepository<RecipeDocument, CreateRecipeDto> {
+export class DishRecipeRepository extends AbstractRepository<RecipeDocument, CreateRecipeDto> {
 
-    constructor(@InjectModel(models.RECIPE_MODEL) model: Model<RecipeDocument>) {
+    constructor(@InjectModel(dishRecipeModel.name) model: Model<RecipeDocument>) {
         super(model);
     }
 

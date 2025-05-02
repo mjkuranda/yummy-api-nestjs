@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from '../logger/logger.service';
-import { RecipeRepository } from '../../mongodb/repositories/recipe.repository';
+import { DishRecipeRepository } from '../../mongodb/repositories/dish-recipe.repository';
 import { CreateRecipeDto } from './recipe.dto';
 import { DishRepository } from '../../mongodb/repositories/dish.repository';
 import { RecipeDocument } from '../../mongodb/documents/recipe.document';
@@ -21,7 +21,7 @@ export class RecipeService {
 
     constructor(
         private readonly externalApiService: ExternalApiService,
-        private readonly recipeRepository: RecipeRepository,
+        private readonly recipeRepository: DishRecipeRepository,
         private readonly dishRepository: DishRepository,
         private readonly loggerService: LoggerService,
         private readonly redisService: RedisService
