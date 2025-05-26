@@ -8,7 +8,10 @@ graph TD
     AppModule --> UserModule
     AppModule --> RecipeModule
     AppModule --> ImageModule
-    AppModule --> LoggerModule
+    AppModule --> NotificationModule
+
+%% NotificationModule
+    NotificationModule --> LoggerModule
 
 %% ImageModule
     ImageModule --> JwtManagerModule

@@ -7,11 +7,10 @@ import { join } from 'path';
 import { getMongooseUri } from './utils';
 import { IngredientModule } from './modules/ingredient/ingredient.module';
 import { UserModule } from './modules/user/user.module';
-import { LoggerModule } from './modules/logger/logger.module';
 import { ImageModule } from './modules/image/image.module';
 import { HealthcheckModule } from './modules/healthcheck/healthcheck.module';
 import { RecipeModule } from './modules/recipe/recipe.module';
-import { NotificationService } from './services/notification.service';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
     imports: [
@@ -36,15 +35,13 @@ import { NotificationService } from './services/notification.service';
             }
         ),
         HealthcheckModule,
-        LoggerModule,
         IngredientModule,
         RecipeModule,
         DishModule,
         UserModule,
-        ImageModule
-    ],
-    controllers: [],
-    providers: [NotificationService],
+        ImageModule,
+        NotificationModule
+    ]
 })
 export class AppModule implements NestModule {
 

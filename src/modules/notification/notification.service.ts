@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { LoggerService } from '../modules/logger/logger.service';
-import { MEGABYTE } from '../constants/sizes.constant';
-import { SECOND_IN_MILLISECONDS } from '../constants/times.constant';
+import { LoggerService } from '../logger/logger.service';
+import { MEGABYTE } from '../../constants/sizes.constant';
+import { SECOND_IN_MILLISECONDS } from '../../constants/times.constant';
 
 @Injectable()
 export class NotificationService {

@@ -3,6 +3,7 @@ import { createClient } from '@redis/client';
 import { RedisService } from './redis.service';
 import { REDIS_CLIENT } from './redis.constants';
 
+// Deprecated
 @Module({
     providers: [
         {

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /dishes/encoded-id/confirm` returns `204` status code.
 - [Marek Kurańda](https://github.com/mjkuranda): Errors along with third layer aka domain layer.
 - [Marek Kurańda](https://github.com/mjkuranda): `docs/architecture` two documents: four-layer architecture and module graph.
+- [Marek Kurańda](https://github.com/mjkuranda): `NotificationModule` module.
 
 ## [3.1.2] - 2025-05-02
 ### Changed
