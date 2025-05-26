@@ -7,91 +7,99 @@ The graph:
 graph TD
 
 %% === Presentation Layer ===
-subgraph Presentation Layer
-  HealthcheckController
-  DishController
-  UserController
-  RecipeController
-  ImageController
-end
+    subgraph Presentation Layer
+        HealthcheckController
+        DishController
+        UserController
+        RecipeController
+        ImageController
+    end
 
 %% === Application Layer ===
-subgraph Application Layer
-  DishOrchestrator
-end
+    subgraph Application Layer
+        DishOrchestrator
+    end
 
 %% === Domain Layer ===
-subgraph Domain Layer
-  DishReadService
-  DishWriteService
-  UserService
-  RecipeService
-  ImageService
-end
+    subgraph Domain Layer
+        DishReadService
+        DishWriteService
+        DishAggregatorService
+        UserService
+        RecipeService
+        ImageService
+    end
 
 %% === Infrastructure Layer ===
-subgraph Infrastructure Layer
-  DishCommentRepository
-  DishRatingRepository
-  UserRepository
-  RecipeRepository
-  ImageRepository
-  CacheService
-  DishProviders
-  JwtManagerModule
-  RedisModule
-  ExternalApiModule
-  TranslationModule
-  MailManagerModule
-  PasswordManagerModule
-  LoggerModule
-end
+    subgraph Infrastructure Layer
+        DishCommentRepository
+        DishRatingRepository
+        UserSearchQueryRepository
+        UserRepository
+        RecipeRepository
+        ImageRepository
+        CacheService
+        DishCacheService
+        DishProviders
+        DishSourceRegistryService
+        JwtManagerService
+        RedisService
+        ExternalApiService
+        TranslationService
+        MailManagerService
+        PasswordManagerService
+        LoggerService
+        NotificationService
+    end
 
 %% === Connections ===
 
 %% Presentation → Application / Domain
-DishController --> DishOrchestrator
-UserController --> UserService
-RecipeController --> RecipeService
-ImageController --> ImageService
-%%HealthcheckController --> LoggerModule
+    DishController --> DishOrchestrator
+    UserController --> UserService
+    RecipeController --> RecipeService
+    ImageController --> ImageService
 
 %% Application → Domain
-DishOrchestrator --> DishReadService
-DishOrchestrator --> DishWriteService
+    DishOrchestrator --> DishReadService
+    DishOrchestrator --> DishWriteService
+
+%% Application → Infrastructure
+    DishOrchestrator --> DishCommentRepository
+    DishOrchestrator --> DishRatingRepository
+    DishOrchestrator --> UserSearchQueryRepository
 
 %% Domain → Infrastructure
-DishReadService --> DishProviders
-DishReadService --> CacheService
-DishWriteService --> DishCommentRepository
-DishWriteService --> DishRatingRepository
-DishWriteService --> DishProviders
-DishWriteService --> CacheService
-%%DishWriteService --> LoggerModule
+    DishReadService --> DishProviders
+    DishReadService --> DishCacheService
+    DishReadService --> DishAggregatorService
+    DishReadService --> DishSourceRegistryService
+    DishAggregatorService --> DishSourceRegistryService
 
-UserService --> UserRepository
-UserService --> JwtManagerModule
-UserService --> MailManagerModule
-UserService --> PasswordManagerModule
-UserService --> RedisModule
+    DishWriteService --> DishCommentRepository
+    DishWriteService --> DishRatingRepository
+    DishWriteService --> DishProviders
+    DishWriteService --> CacheService
 
-RecipeService --> RecipeRepository
-RecipeService --> JwtManagerModule
-RecipeService --> RedisModule
-RecipeService --> ExternalApiModule
-RecipeService --> TranslationModule
+    UserService --> UserRepository
+    UserService --> JwtManagerService
+    UserService --> MailManagerService
+    UserService --> PasswordManagerService
+    UserService --> RedisService
 
-ImageService --> ImageRepository
-ImageService --> JwtManagerModule
-ImageService --> RedisModule
+    RecipeService --> RecipeRepository
+    RecipeService --> JwtManagerService
+    RecipeService --> RedisService
+    RecipeService --> ExternalApiService
+    RecipeService --> TranslationService
 
-%% Logger used everywhere (optional)
-%%UserService --> LoggerModule
-%%RecipeService --> LoggerModule
-%%ImageService --> LoggerModule
+    ImageService --> ImageRepository
+    ImageService --> JwtManagerService
+    ImageService --> RedisService
 ```
 
 And coloured one:
+
 ```mermaid
 %%{ init: { 'theme': 'default', 'themeVariables': { 'lineColor': '#888' }, 'flowchart': { 'curve': 'linear' } } }%%
 
@@ -118,6 +126,7 @@ graph TD
         classDef domain fill:#e8f5e9,stroke:#43a047,color:#1b5e20,stroke-width:2;
         DishReadService:::domain
         DishWriteService:::domain
+        DishAggregatorService:::domain
         UserService:::domain
         RecipeService:::domain
         ImageService:::domain
@@ -133,7 +142,9 @@ graph TD
         RecipeRepository:::infra
         ImageRepository:::infra
         CacheService:::infra
+        DishCacheService:::infra
         DishProviders:::infra
+        DishSourceRegistryService:::infra
         JwtManagerService:::infra
         RedisService:::infra
         ExternalApiService:::infra
@@ -158,17 +169,21 @@ graph TD
     DishOrchestrator --> DishWriteService
 
 %% Application → Infrastructure
-    DishOrchestrator --> DishCommentRepository
-    DishOrchestrator --> DishRatingRepository
+%%    DishOrchestrator --> DishCommentRepository
+%%    DishOrchestrator --> DishRatingRepository
     DishOrchestrator --> UserSearchQueryRepository
 
 %% Domain → Infrastructure
-    DishReadService --> DishProviders
-    DishReadService --> CacheService
+%%    DishReadService --> DishProviders
+    DishReadService --> DishCacheService
+    DishReadService --> DishAggregatorService
+    DishReadService --> DishSourceRegistryService
+    DishAggregatorService --> DishSourceRegistryService
+
     DishWriteService --> DishCommentRepository
     DishWriteService --> DishRatingRepository
-    DishWriteService --> DishProviders
-    DishWriteService --> CacheService
+    DishWriteService --> DishSourceRegistryService
+    DishWriteService --> DishCacheService
 %%    DishWriteService --> LoggerService
 
     UserService --> UserRepository
