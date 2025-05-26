@@ -32,7 +32,6 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
 
     abstract getDishInstructionEndpointUrl(id: string): string;
 
-    // FIXME: Deprecated
     abstract getName(): ApiName;
 
     abstract proceedDataToDishes(data: GenericDishStruct[], providedIngredients?: IngredientType[]): RatedDish[];
