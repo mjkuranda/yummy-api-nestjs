@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `DishIdObfuscator` helper and `hashids` library to encode and decode dish IDs.
 - [Marek Kurańda](https://github.com/mjkuranda): New four-layer architecture: presentation, application, domain and information layer.
 - [Marek Kurańda](https://github.com/mjkuranda): `DishProvidable` interface to extract get methods.
+- [Marek Kurańda](https://github.com/mjkuranda): `POST /dishes/encoded-id/confirm` returns `204` status code.
+- [Marek Kurańda](https://github.com/mjkuranda): Errors along with third layer aka domain layer.
 
 ## [3.1.2] - 2025-05-02
 ### Changed

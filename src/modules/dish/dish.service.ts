@@ -68,33 +68,8 @@ export class DishService {
         return createdDish;
     }
 
-    async confirmCreating(id: string, user: UserDto): Promise<DishDocument> {
-        const context = 'DishService/confirmCreating';
-
-        if (!isValidObjectId(id)) {
-            const message = `Provided "${id}" that is not a correct MongoDB id.`;
-            this.loggerService.error(context, message);
-
-            throw new BadRequestException(context, message);
-        }
-
-        const dish = await this.dishRepository.findById(id) as DishDocument;
-
-        if (!dish) {
-            const message = `Cannot find a dish with "${id}" id.`;
-            this.loggerService.error(context, message);
-
-            throw new NotFoundException(context, message);
-        }
-
-        await this.dishRepository.unsetSoftAdded(dish._id);
-        const addedDish = await this.dishRepository.findById(dish._id) as DishDocument;
-        await this.redisService.set<DishDocument>(addedDish, 'dish');
-        this.loggerService.info(context, `Cached a dish with "${dish._id}" id.`);
-
-        this.loggerService.info(context, `Dish with id "${dish._id}" (titled: "${dish.title}") has been confirmed adding by "${user.login}" user.`);
-
-        return addedDish;
+    async confirmCreating(encodedDishId: EncodedDishId, user: UserDto): Promise<void> {
+        await this.dishWriteService.confirmCreating(encodedDishId, user);
     }
 
     async edit(id: string, dishEditDto: DishEditDto<DishIngredient>): Promise<DishDocument> {

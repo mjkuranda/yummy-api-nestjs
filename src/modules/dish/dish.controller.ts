@@ -102,13 +102,13 @@ export class DishController {
         return await this.dishService.edit(id, dataWithImages);
     }
 
-    @Post('/:id/create')
-    @HttpCode(200)
+    @Post('/:encoded-id/create')
+    @HttpCode(204)
     @UseGuards(AuthenticationGuard, CreationGuard)
-    public async confirmCreatingDish(@Param('id') id: string, @Body() body) {
+    public async confirmCreatingDish(@Param('encoded-id') encodedDishId: EncodedDishId, @Body() body) {
         const { authenticatedUser } = body;
 
-        return await this.dishService.confirmCreating(id, authenticatedUser);
+        return await this.dishService.confirmCreating(encodedDishId, authenticatedUser);
     }
 
     @Post('/:id/edit')
