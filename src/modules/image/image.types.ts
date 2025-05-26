@@ -3,6 +3,6 @@ export interface ImageValue {
     originalname: string;
     encoding: string;
     mimetype: 'image/jpg' | 'image/jpeg' | 'image/png';
-    buffer: any; // bytes
+    buffer: any; // NOTE: Bytes
     size: number;
 }

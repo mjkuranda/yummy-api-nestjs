@@ -11,9 +11,15 @@ import {
 import { DishIngredient, IngredientType } from '../../ingredient/ingredient.types';
 import { calculateCheckingAgain, inferDishType, inferMealType } from '../../../common/helpers';
 import { proceedIngredientUnit } from './spoonacular.api.utils';
+import { DishProvider } from '../../../common/enums';
+import { DishIdObfuscator } from '../../../common/helpers/dish-id-obfuscator.helper';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularRecipeSections> {
+
+    getProvider(): DishProvider {
+        return DishProvider.EXT_API_SPOONACULAR;
+    }
 
     getApiUrl(): string {
         return 'https://api.spoonacular.com';
@@ -70,18 +76,19 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
     proceedDataToDishes(data: SpoonacularRecipe[], providedIngredients?: IngredientType[]): RatedDish[] {
         return data.map(recipe => {
             const { relevance, missingCount } = calculateCheckingAgain(providedIngredients, recipe.usedIngredients, recipe.missedIngredients);
+            const encodedDishId = DishIdObfuscator.encode(DishProvider.EXT_API_SPOONACULAR, recipe.id.toString());
             const type = inferDishType(recipe.title);
             const mealType = inferMealType(type);
 
             return {
-                id: recipe.id.toString(),
+                encodedDishId,
                 imgUrl: recipe.image,
                 ingredients: [...this.proceedDataToIngredientList(recipe.usedIngredients), ...this.proceedDataToIngredientList(recipe.missedIngredients)],
                 language: 'en',
                 missingCount,
                 relevance,
                 title: recipe.title,
-                provider: 'spoonacular',
+                provider: DishProvider.EXT_API_SPOONACULAR,
                 type,
                 mealType
             };
@@ -90,7 +97,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
 
     proceedDataToDishDetails(data: SpoonacularRecipeDetails): DetailedDish {
         const {
-            id, image, title, extendedIngredients, summary,
+            image, title, extendedIngredients, summary,
             vegetarian, vegan, glutenFree, dairyFree, veryHealthy,
             readyInMinutes, sourceName
         } = data;
@@ -98,7 +105,6 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
         const mealType = inferMealType(type);
 
         return {
-            id: id.toString(),
             imgUrl: image,
             ingredients: this.proceedDataToDishIngredients(extendedIngredients),
             language: 'en',
@@ -113,7 +119,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 dairyFree,
                 veryHealthy
             },
-            provider: 'spoonacular',
+            provider: DishProvider.EXT_API_SPOONACULAR,
             type,
             mealType
         };

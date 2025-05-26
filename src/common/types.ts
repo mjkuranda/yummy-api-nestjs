@@ -1,5 +1,6 @@
-import { IngredientName } from './enums';
+import { DishProvider, IngredientName } from './enums';
 import { supportedLanguages } from '../constants/language.constant';
+import { DishProvidable } from './interfaces';
 
 /**
  * @description Equals to {}
@@ -45,5 +46,11 @@ export interface IngredientUnitConverter {
 }
 
 /**
- * @description
+ * @description All dish providers map type
  */
+export type DishProviderMap = Record<DishProvider, DishProvidable>;
+
+/**
+ * @description obfuscated dish ID and provider name
+ */
+export type EncodedDishId = string;

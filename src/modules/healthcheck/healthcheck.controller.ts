@@ -14,7 +14,7 @@ export class HealthcheckController {
 
     @Options()
     public handlePreflightOptionsCheck(@Res() res: Response): void {
-        res.header('Access-Control-Allow-Origin', '*'); // Zezwalamy na dowolny origin
+        res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Content-Type');
         res.sendStatus(204);

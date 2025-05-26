@@ -1,5 +1,4 @@
 import { SpoonacularIngredient } from '../modules/api/spoonacular/spoonacular.api.types';
-import { RatedDish } from '../modules/dish/dish.types';
 import { BeverageTypes, DessertTypes, DishType, MainCourseTypes, MealType, SaladTypes, SoupTypes } from './enums';
 
 export function toFixNumber(number: number, fractionDigits: number = 2): number {
@@ -45,10 +44,6 @@ export function calculateCheckingAgain(providedIngredients: string[], usedIngred
         relevance: calculateRelevance(providedIngredients, mealIngredients),
         missingCount: calculateMissing(providedIngredients, mealIngredients)
     };
-}
-
-export function sortDescendingRelevance(meal1: RatedDish, meal2: RatedDish): number {
-    return meal2.relevance - meal1.relevance;
 }
 
 export function convertAmountToText(amount: number): string {
