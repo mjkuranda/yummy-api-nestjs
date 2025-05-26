@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DishController } from './dish.controller';
-import { DishService } from './dish.service';
+import { DishOrchestrator } from './dish.orchestrator';
 import { TranslationService } from '../translation/translation.service';
 import { Language } from '../../common/types';
 import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
@@ -10,7 +10,7 @@ import { IngredientService } from '../ingredient/ingredient.service';
 
 describe('DishController', () => {
     let controller: DishController;
-    let dishService: DishService;
+    let dishService: DishOrchestrator;
     let translationService: TranslationService;
 
     beforeEach(async () => {
@@ -19,7 +19,7 @@ describe('DishController', () => {
             controllers: [DishController],
             providers: [
                 {
-                    provide: DishService,
+                    provide: DishOrchestrator,
                     useValue: {
                         getDishDetails: jest.fn()
                     },
@@ -59,7 +59,7 @@ describe('DishController', () => {
         }).compile();
 
         controller = module.get<DishController>(DishController);
-        dishService = module.get<DishService>(DishService);
+        dishService = module.get<DishOrchestrator>(DishOrchestrator);
         translationService = module.get<TranslationService>(TranslationService);
     });
 

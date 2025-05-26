@@ -24,10 +24,11 @@ import { DishWriteService } from './write/dish-write.service';
 import { UserSearchQueryDocument } from '../../mongodb/documents/user-search-query.document';
 import { mergeSearchQueries } from './dish.utils';
 import { DishIdObfuscator } from '../../common/helpers/dish-id-obfuscator.helper';
+import { InvalidMongooseIdError } from '../../errors/invalid-mongoose-id.error';
+import { NotFoundError } from '../../errors/not-found.error';
 
-// FIXME: Rename to DishOrchestrator
 @Injectable()
-export class DishService {
+export class DishOrchestrator {
     private dishRepository: DishRepository;
 
     constructor(
@@ -36,8 +37,6 @@ export class DishService {
         private readonly dishCommentRepository: DishCommentRepository,
         private readonly dishRatingRepository: DishRatingRepository,
         private readonly userSearchQueryRepository: UserSearchQueryRepository,
-        private readonly redisService: RedisService,
-        private readonly loggerService: LoggerService,
         private readonly ingredientService: IngredientService
     ) {}
 
@@ -60,7 +59,7 @@ export class DishService {
             softAdded: true
         });
 
-        const context = 'DishService/create';
+        const context = 'DishOrchestrator/create';
         const message = `New dish "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription} has been created by ${user.login}.`;
 
         this.loggerService.info(context, message);
@@ -74,37 +73,28 @@ export class DishService {
      * @param user user DTO data // TODO: Shoulb be simplified to have less information
      */
     async confirmCreating(encodedDishId: EncodedDishId, user: UserDto): Promise<void> {
-        await this.dishWriteService.confirmCreating(encodedDishId, user);
+        try {
+            await this.dishWriteService.confirmCreating(encodedDishId, user);
+        } catch (err) {
+            throw err;
+        }
     }
 
-    async edit(id: string, dishEditDto: DishEditDto<DishIngredient>): Promise<DishDocument> {
-        const context = 'DishService/edit';
-
-        if (!isValidObjectId(id)) {
-            const message = `Provided "${id}" that is not a correct MongoDB id.`;
-            this.loggerService.error(context, message);
-
-            throw new BadRequestException(context, message);
+    /**
+     * @description inserts a modification of the dish to the database
+     * @param encodedDishId encoded dish ID with its provider name
+     * @param dishEditDto dish edited data
+     */
+    async edit(encodedDishId: EncodedDishId, dishEditDto: DishEditDto<DishIngredient>): Promise<DishDocument> {
+        try {
+            return await this.dishWriteService.edit(encodedDishId, dishEditDto);
+        } catch (err) {
+            throw err;
         }
-
-        const dish = await this.dishRepository.findById(id) as DishDocument;
-
-        if (!dish) {
-            const message = `Cannot find a dish with "${id}" id.`;
-            this.loggerService.error(context, message);
-
-            throw new NotFoundException(context, message);
-        }
-
-        await this.dishRepository.insertEdition(dish._id, dishEditDto);
-        const editedDish = await this.dishRepository.findById(dish._id) as DishDocument;
-        this.loggerService.info(context, `Dish with id "${dish._id}" (titled: "${dish.title}") has been edited.`);
-
-        return editedDish;
     }
 
     async confirmEditing(id: string, user: UserDto): Promise<DishDocument> {
-        const context = 'DishService/confirmEditing';
+        const context = 'DishOrchestrator/confirmEditing';
 
         if (!isValidObjectId(id)) {
             const message = `Provided "${id}" that is not a correct MongoDB id.`;
@@ -133,7 +123,7 @@ export class DishService {
     }
 
     async delete(id: string): Promise<DishDocument> {
-        const context = 'DishService/delete';
+        const context = 'DishOrchestrator/delete';
 
         if (!isValidObjectId(id)) {
             const message = `Provided "${id}" that is not a correct MongoDB id.`;
@@ -160,7 +150,7 @@ export class DishService {
     }
 
     async confirmDeleting(id: string, user: UserDto): Promise<DishDocument | null> {
-        const context = 'DishService/confirmDeleting';
+        const context = 'DishOrchestrator/confirmDeleting';
 
         if (!isValidObjectId(id)) {
             const message = `Provided "${id}" that is not a correct MongoDB id.`;
@@ -203,7 +193,7 @@ export class DishService {
 
     // FIXME: Deprecated
     async find(id: string): Promise<DishDocument> {
-        const context = 'DishService/find';
+        const context = 'DishOrchestrator/find';
 
         if (!isValidObjectId(id)) {
             const message = `Provided "${id}" that is not a correct MongoDB id.`;
@@ -249,7 +239,7 @@ export class DishService {
         const dishes = (await this.dishRepository.findAll({ softDeleted: { $exists: false }})) as DishDocument[];
         const message = `Found ${dishes.length} dishes.`;
 
-        this.loggerService.info('DishService/findAll', message);
+        this.loggerService.info('DishOrchestrator/findAll', message);
 
         return dishes;
     }
@@ -260,7 +250,7 @@ export class DishService {
      * @param mealType filter dishes by meal type, e.g. breakfast, launch, beverage, etc...
      */
     async getDishes(ings: IngredientType[], mealType: MealType): Promise<RatedDish[]> {
-        const context = 'DishService/getDishes';
+        const context = 'DishOrchestrator/getDishes';
         const filteredIngredients = this.ingredientService.filterIngredients(ings);
         const allIngredients = [...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()];
 
@@ -286,7 +276,7 @@ export class DishService {
     async addDishProposal(user: UserAccessTokenPayload, ingredients: string[]) {
         const filteredIngredients = this.ingredientService.filterIngredients(ingredients);
         await this.userSearchQueryRepository.create({ ingredients: filteredIngredients, date: new Date(), login: user.login });
-        this.loggerService.info('DishService/addDishProposal', `Added search query for user ${user.login}.`);
+        this.loggerService.info('DishOrchestrator/addDishProposal', `Added search query for user ${user.login}.`);
     }
 
     /**
@@ -315,7 +305,7 @@ export class DishService {
      * @param encodedDishId
      */
     async getComments(encodedDishId: EncodedDishId): Promise<DishCommentDocument[]> {
-        const context: ContextString = 'DishService/getComments';
+        const context: ContextString = 'DishOrchestrator/getComments';
         const hasDish = await this.dishReadService.hasDish(encodedDishId);
 
         if (!hasDish) {
@@ -339,7 +329,7 @@ export class DishService {
      * @param user user login
      */
     async addComment(createCommentBody: CreateDishCommentBody, user: string): Promise<void> {
-        const context: ContextString = 'DishService/addComment';
+        const context: ContextString = 'DishOrchestrator/addComment';
         const hasDish = await this.dishReadService.hasDish(createCommentBody.encodedDishId);
 
         if (!hasDish) {
@@ -358,7 +348,7 @@ export class DishService {
      * @param encodedDishId encoded dish ID and its provider name
      */
     async calculateRating(encodedDishId: EncodedDishId): Promise<DishRating> {
-        const context: ContextString = 'DishService/calculateRating';
+        const context: ContextString = 'DishOrchestrator/calculateRating';
         const hasDish = await this.dishReadService.hasDish(encodedDishId);
 
         if (!hasDish) {
@@ -381,7 +371,7 @@ export class DishService {
      * @param user user login
      */
     async addRating(createRatingBody: CreateDishRatingBody, user: string): Promise<DishRatingDocument> {
-        const context: ContextString = 'DishService/addRating';
+        const context: ContextString = 'DishOrchestrator/addRating';
         const hasDish = await this.dishReadService.hasDish(createRatingBody.encodedDishId);
 
         if (!hasDish) {

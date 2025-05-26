@@ -65,12 +65,9 @@ graph TD
     DishOrchestrator --> DishWriteService
 
 %% Application → Infrastructure
-    DishOrchestrator --> DishCommentRepository
-    DishOrchestrator --> DishRatingRepository
     DishOrchestrator --> UserSearchQueryRepository
 
 %% Domain → Infrastructure
-    DishReadService --> DishProviders
     DishReadService --> DishCacheService
     DishReadService --> DishAggregatorService
     DishReadService --> DishSourceRegistryService
@@ -78,8 +75,10 @@ graph TD
 
     DishWriteService --> DishCommentRepository
     DishWriteService --> DishRatingRepository
-    DishWriteService --> DishProviders
-    DishWriteService --> CacheService
+    DishWriteService --> DishSourceRegistryService
+    DishWriteService --> DishCacheService
+
+    DishSourceRegistryService --> DishProviders
 
     UserService --> UserRepository
     UserService --> JwtManagerService

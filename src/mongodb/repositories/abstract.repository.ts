@@ -1,5 +1,15 @@
-import { Document, FilterQuery, Model, PipelineStage, UpdateQuery, UpdateWithAggregationPipeline } from 'mongoose';
+import {
+    Document,
+    FilterQuery,
+    isValidObjectId,
+    Model,
+    PipelineStage,
+    UpdateQuery,
+    UpdateWithAggregationPipeline
+} from 'mongoose';
 import { DeleteResult } from 'mongodb';
+import { InvalidMongooseIdError } from '../../errors/invalid-mongoose-id.error';
+import { NotFoundError } from '../../errors/not-found.error';
 
 export abstract class AbstractRepository<T extends Document, CreateDataType> {
 
@@ -10,7 +20,17 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
     }
 
     async findById(id: string): Promise<T | null> {
-        return this.model.findById(id);
+        if (!isValidObjectId(id)) {
+            throw new InvalidMongooseIdError(`Provided "${id}" is not a correct MongoDB id.`);
+        }
+
+        const document = await this.model.findById(id) as T | null;
+
+        if (document === null) {
+            throw new NotFoundError(`Cannot find a dish with "${id}" id.`);
+        }
+
+        return document;
     }
 
     async findAll(filterQuery: FilterQuery<T>, limit?: number): Promise<T[] | null> {

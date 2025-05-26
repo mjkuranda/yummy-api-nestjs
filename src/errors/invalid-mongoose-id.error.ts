@@ -1,6 +1,9 @@
-export class InvalidMongooseIdError extends Error {
+import { AbstractError } from './abstract.error';
+import { ContextString } from '../common/types';
 
-    constructor(message: string) {
-        super(message);
+export class InvalidMongooseIdError extends AbstractError {
+
+    constructor(context: ContextString, message: string) {
+        super(context, message);
     }
 }

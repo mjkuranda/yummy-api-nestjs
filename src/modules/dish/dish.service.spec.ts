@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { LoggerService } from '../logger/logger.service';
-import { DishService } from './dish.service';
+import { DishOrchestrator } from './dish.orchestrator';
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { RedisService } from '../redis/redis.service';
@@ -23,7 +23,7 @@ import { AxiosService } from '../../services/axios.service';
 import { ExternalApiService } from '../api/external-api.service';
 
 describe('DishService', () => {
-    let dishService: DishService;
+    let dishService: DishOrchestrator;
     let dishRepository: DishRepository;
     let dishCommentRepository: DishCommentRepository;
     let dishRatingRepository: DishRatingRepository;
@@ -103,7 +103,7 @@ describe('DishService', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                DishService,
+                DishOrchestrator,
                 IngredientService,
                 { provide: DishRepository, useValue: mockDishRepository },
                 { provide: DishCommentRepository, useValue: mockDishCommentRepository },
@@ -118,7 +118,7 @@ describe('DishService', () => {
             ],
         }).compile();
 
-        dishService = module.get(DishService);
+        dishService = module.get(DishOrchestrator);
         dishRepository = module.get(DishRepository);
         dishCommentRepository = module.get(DishCommentRepository);
         dishRatingRepository = module.get(DishRatingRepository);

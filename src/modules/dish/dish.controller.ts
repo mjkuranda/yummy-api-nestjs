@@ -13,7 +13,7 @@ import {
     Request,
     UsePipes
 } from '@nestjs/common';
-import { DishService } from './dish.service';
+import { DishOrchestrator } from './dish.orchestrator';
 import {
     CreateDishCommentBody,
     CreateDishDto,
@@ -35,7 +35,7 @@ import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
 
 @Controller('dishes')
 export class DishController {
-    constructor(private readonly dishService: DishService,
+    constructor(private readonly dishService: DishOrchestrator,
                 private readonly translationService: TranslationService,
                 private readonly ingredientService: IngredientService) {}
 

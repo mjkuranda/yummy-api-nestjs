@@ -111,7 +111,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `ExternalApiModule` to manage different external APIs.
 
 ### Changed
-- [Marek Kurańda](https://github.com/mjkuranda): Simplified external API services management and added `getDatasets` method to `DishService`.
+- [Marek Kurańda](https://github.com/mjkuranda): Simplified external API services management and added `getDatasets` method to `DishOrchestrator`.
 
 ### Fixed
 - [Marek Kurańda](https://github.com/mjkuranda): Avoided `402 Payment Required` HTTP status code from external APIs, replacing `Promise.all` with `Promise.allSettled`.
@@ -514,7 +514,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.22.0] - 2024-02-12
 ### Added
-- [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `DishService/getMeals`.
+- [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `DishOrchestrator/getMeals`.
 - [Marek Kurańda](https://github.com/mjkuranda): E2E tests for `GET /meals`.
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `AbstractApiService/getMeals`.
 - [Marek Kurańda](https://github.com/mjkuranda): `AxiosService` for wrapping axios instance to inject to API integration services.
@@ -626,7 +626,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.12.0] - 2023-09-05
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `UserService`.
-- [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `DishService`.
+- [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `DishOrchestrator`.
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `IngredientService`.
 - [Marek Kurańda](https://github.com/mjkuranda): Unit tests for `AuthService`.
 

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { DishService } from './dish.service';
+import { DishOrchestrator } from './dish.orchestrator';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DishController } from './dish.controller';
 import { dishCommentModel, dishModel, dishRatingModel, userSearchQueryModel } from '../../common/definitions/mongoose-model.definitions';
@@ -23,7 +23,7 @@ import { DishWriteModule } from './write/dish-write.module';
     ],
     controllers: [DishController],
     providers: [
-        DishService,
+        DishOrchestrator,
         UserSearchQueryRepository
     ],
     exports: []

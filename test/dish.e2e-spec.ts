@@ -4,7 +4,7 @@ import { AppModule } from '../src/app.module';
 import { LoggerService } from '../src/modules/logger/logger.service';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
-import { DishService } from '../src/modules/dish/dish.service';
+import { DishOrchestrator } from '../src/modules/dish/dish.orchestrator';
 import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
 import { RedisService } from '../src/modules/redis/redis.service';
 import { DishRepository } from '../src/mongodb/repositories/dish.repository';
@@ -18,7 +18,7 @@ import { ExternalApiService } from '../src/modules/api/external-api.service';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
-    let dishService: DishService;
+    let dishService: DishOrchestrator;
     let dishRepository: DishRepository;
     let dishCommentRepository: DishCommentRepository;
     let dishRatingRepository: DishRatingRepository;
@@ -107,7 +107,7 @@ describe('UserController (e2e)', () => {
         app.use(cookieParser());
         await app.init();
 
-        dishService = moduleRef.get(DishService);
+        dishService = moduleRef.get(DishOrchestrator);
         dishRepository = moduleRef.get(DishRepository);
         dishCommentRepository = moduleRef.get(DishCommentRepository);
         dishRatingRepository = moduleRef.get(DishRatingRepository);

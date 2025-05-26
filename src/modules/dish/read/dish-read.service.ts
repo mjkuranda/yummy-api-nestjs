@@ -102,7 +102,7 @@ export class DishReadService {
         const dishes = await this.dishAggregatorService.aggregateRatedDishes(ingredients);
         const proposedDishes: ProposedDish[] = proceedRatedDishesToProposedDishes(dishes, mergedSearchQueries);
 
-        this.loggerService.info('DishService/getDishProposal', `Generated ${proposedDishes.length} dish proposal${proposedDishes.length > 1 ? 's' : ''}.`);
+        this.loggerService.info('DishOrchestrator/getDishProposal', `Generated ${proposedDishes.length} dish proposal${proposedDishes.length > 1 ? 's' : ''}.`);
 
         return proposedDishes
             .filter((dish, idx) => idx < 10);
