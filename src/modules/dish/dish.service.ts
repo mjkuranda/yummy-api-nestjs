@@ -68,6 +68,11 @@ export class DishService {
         return createdDish;
     }
 
+    /**
+     * @description Confirms creating a new dish
+     * @param encodedDishId encoded dish ID and its provider name
+     * @param user user DTO data // TODO: Shoulb be simplified to have less information
+     */
     async confirmCreating(encodedDishId: EncodedDishId, user: UserDto): Promise<void> {
         await this.dishWriteService.confirmCreating(encodedDishId, user);
     }

@@ -4,37 +4,28 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DishController } from './dish.controller';
 import { dishCommentModel, dishModel, dishRatingModel, userSearchQueryModel } from '../../common/definitions/mongoose-model.definitions';
 import { RedisModule } from '../redis/redis.module';
-import { DishRepository } from '../../mongodb/repositories/dish.repository';
 import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
-import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
 import { IngredientModule } from '../ingredient/ingredient.module';
 import { UserSearchQueryRepository } from '../../mongodb/repositories/user-search-query.repository';
 import { TranslationModule } from '../translation/translation.module';
-import { DishCommentRepository } from '../../mongodb/repositories/dish-comment.repository';
-import { DishRatingRepository } from '../../mongodb/repositories/dish-rating.repository';
-import { ExternalApiModule } from '../api/external-api.module';
-import { DishCommonService } from './dish-common.service';
-import { DishSourceRegistryService } from './source/dish-source-registry.service';
+import { DishReadModule } from './read/dish-read.module';
+import { DishWriteModule } from './write/dish-write.module';
 
 @Module({
     imports: [
         MongooseModule.forFeature([dishModel, dishCommentModel, dishRatingModel, userSearchQueryModel]),
-        RedisModule,
-        JwtManagerModule,
+        DishReadModule,
+        DishWriteModule,
+        RedisModule, // FIXME: Discard?
+        JwtManagerModule, // FIXME: Discard
         IngredientModule,
-        ExternalApiModule,
-        TranslationModule
+        TranslationModule // FIXME: Discard?
     ],
     controllers: [DishController],
     providers: [
-        DishCommonService,
         DishService,
-        DishRepository,
-        DishCommentRepository,
-        DishRatingRepository,
-        UserSearchQueryRepository,
-        JwtManagerService
+        UserSearchQueryRepository
     ],
-    exports: [DishSourceRegistryService]
+    exports: []
 })
 export class DishModule {}
