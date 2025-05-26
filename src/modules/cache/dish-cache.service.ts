@@ -1,0 +1,119 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { REDIS_CLIENT } from '../redis/redis.constants';
+import { Redis } from 'ioredis';
+import { DetailedDish, RatedDish } from '../dish/dish.types';
+import { DishProvidable } from '../../common/interfaces';
+import { CacheKeyFactory } from './cache-key.factory';
+import { DAY, HOUR } from '../../constants/times.constant';
+import { EncodedDishId } from '../../common/types';
+
+@Injectable()
+export class DishCacheService {
+
+    constructor(
+        @Inject(REDIS_CLIENT) private readonly redisClient: Redis
+    ) {}
+
+    /**
+     * @description Returns all cached dishes per search query
+     * @param providedIngredients list of provided ingredients by user
+     */
+    async getDishes(providedIngredients: string[]): Promise<RatedDish[]> {
+        const key = CacheKeyFactory.createDishSearchResultKey(providedIngredients);
+        const val = await this.redisClient.get(key);
+
+        return val ? <RatedDish[]>JSON.parse(val) : [];
+    }
+
+    /**
+     * @description Saves all dishes found by query, where provided ingredients were included in
+     * @param providedIngredients
+     * @param ratedDishes
+     */
+    async setDishes(providedIngredients: string[], ratedDishes: RatedDish[]): Promise<void> {
+        const key = CacheKeyFactory.createDishSearchResultKey(providedIngredients);
+        const val = JSON.stringify(ratedDishes);
+
+        await this.redisClient.set(key, val);
+        await this.redisClient.expire(key, 12 * HOUR);
+    }
+
+    /**
+     * @description Returns all accumulated dishes from every listed ingredient and a particular provider
+     * @param provider defined provider of the dishes
+     * @param ingredients list of ingredients to merge results
+     */
+    async getDishesPerIngredient(provider: DishProvidable, ingredients: string[]): Promise<RatedDish[]> {
+        if (ingredients.length === 0) {
+            return [];
+        }
+
+        const key = CacheKeyFactory.createDishSearchResultPerProviderKey(provider);
+        const pipeline = this.redisClient.pipeline();
+        ingredients.forEach(ingredient => pipeline.hget(key, ingredient));
+        const results = await pipeline.exec();
+
+        return results.flatMap(([err, val]) => {
+            if (err || !val) {
+                return [];
+            }
+
+            if (typeof val !== 'string') {
+                return [];
+            }
+
+            try {
+                return JSON.parse(val) as RatedDish[];
+            } catch {
+                return [];
+            }
+        });
+    }
+
+    /**
+     * @description Saves dishes to cache, defined for a particular provider and ingredient
+     * @param provider
+     * @param ingredient
+     * @param dishes
+     */
+    async setDishesPerIngredient(provider: DishProvidable, ingredient: string, dishes: RatedDish[]): Promise<void> {
+        const key = CacheKeyFactory.createDishSearchResultPerProviderKey(provider);
+
+        await this.redisClient.hset(key, ingredient, JSON.stringify(dishes));
+        await this.redisClient.expire(key, 365 * DAY);
+    }
+
+    /**
+     * @description Gets detailed dish from cache
+     * @param encodedDishId dish ID
+     */
+    async getDishDetails(encodedDishId: EncodedDishId): Promise<DetailedDish | null> {
+        const key = CacheKeyFactory.createDishDetailedResultKey(encodedDishId);
+        const val = await this.redisClient.get(key);
+
+        return val ? <DetailedDish>JSON.parse(val) : null;
+    }
+
+    /**
+     * @description Saves detailed dish to the cache
+     * @param encodedDishId encoded dish ID and its cache
+     * @param detailedDish dish to cache
+     */
+    async setDishDetails(encodedDishId: EncodedDishId, detailedDish: DetailedDish): Promise<void> {
+        const key = CacheKeyFactory.createDishDetailedResultKey(encodedDishId);
+
+        await this.redisClient.set(key, JSON.stringify(detailedDish));
+        await this.redisClient.expire(key, DAY);
+    }
+
+    /**
+     * @description Returns true if dish with a particular encoded ID is cached
+     * @param encodedDishId
+     */
+    async hasDish(encodedDishId: EncodedDishId): Promise<boolean> {
+        const key = CacheKeyFactory.createDishDetailedResultKey(encodedDishId);
+        const val = await this.redisClient.get(key);
+
+        return val !== null && val.length > 0;
+    }
+}

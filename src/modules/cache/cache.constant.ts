@@ -1,0 +1,1 @@
+export const CACHE_PROVIDER = 'CACHE_PROVIDER';

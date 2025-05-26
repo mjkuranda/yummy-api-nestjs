@@ -1,0 +1,24 @@
+import * as crypto from 'crypto';
+import { DishDetailedKey, DishSearchResultKey, DishSearchResultPerProviderKey } from './dish-cache.types';
+import { DishProvidable } from '../../common/interfaces';
+import { EncodedDishId } from '../../common/types';
+
+export class CacheKeyFactory {
+
+    static createDishSearchResultKey(ingredients: string[]): DishSearchResultKey {
+        const sorted = ingredients.map(i => i.toLowerCase().trim()).sort();
+        const hash = crypto.createHash('sha256').update(sorted.join(',')).digest('hex').slice(0, 16);
+
+        return `dish:results:ingredients:${hash}`;
+    }
+
+    static createDishSearchResultPerProviderKey(provider: DishProvidable): DishSearchResultPerProviderKey {
+        const providerName = provider.getProvider();
+
+        return `dish:results:provider:${providerName}`;
+    }
+
+    static createDishDetailedResultKey(encodedDishId: EncodedDishId): DishDetailedKey {
+        return `dish:detailed:${encodedDishId}`;
+    }
+}
