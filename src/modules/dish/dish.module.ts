@@ -13,6 +13,8 @@ import { TranslationModule } from '../translation/translation.module';
 import { DishCommentRepository } from '../../mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../../mongodb/repositories/dish-rating.repository';
 import { ExternalApiModule } from '../api/external-api.module';
+import { DishCommonService } from './dish-common.service';
+import { DishSourceRegistryService } from './source/dish-source-registry.service';
 
 @Module({
     imports: [
@@ -24,6 +26,15 @@ import { ExternalApiModule } from '../api/external-api.module';
         TranslationModule
     ],
     controllers: [DishController],
-    providers: [DishService, DishRepository, DishCommentRepository, DishRatingRepository, UserSearchQueryRepository, JwtManagerService],
+    providers: [
+        DishCommonService,
+        DishService,
+        DishRepository,
+        DishCommentRepository,
+        DishRatingRepository,
+        UserSearchQueryRepository,
+        JwtManagerService
+    ],
+    exports: [DishSourceRegistryService]
 })
 export class DishModule {}

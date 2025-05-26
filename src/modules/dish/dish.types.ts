@@ -1,20 +1,21 @@
 import { IngredientType, DishIngredient } from '../ingredient/ingredient.types';
 import { TranslatedIngredient } from '../translation/translation.types';
-import { Language } from '../../common/types';
-import { MealType, DishType } from '../../common/enums';
+import { EncodedDishId, Language } from '../../common/types';
+import { MealType, DishType, DishProvider } from '../../common/enums';
+import { CreateDishWithAuthorDto } from './dish.dto';
 
-export type RatedDish = {
-    id: string,
-    imgUrl?: string,
-    ingredients: IngredientType[],
-    missingCount: number,
-    language: Language,
-    provider: DishProvider,
-    title: string,
-    relevance: number,
-    type: DishType
-    mealType: MealType,
-};
+export interface RatedDish {
+    encodedDishId: EncodedDishId;
+    imgUrl?: string;
+    ingredients: IngredientType[];
+    missingCount: number;
+    language: Language;
+    provider: DishProvider;
+    title: string;
+    relevance: number;
+    type: DishType;
+    mealType: MealType;
+}
 
 export type DishRecipeSection = {
     name?: string,
@@ -23,26 +24,25 @@ export type DishRecipeSection = {
 
 export type DishRecipeSections = DishRecipeSection[];
 
-export type DetailedDish = {
-    id: string,
-    imgUrl?: string,
-    ingredients: DishIngredient[],
-    language: Language,
-    title: string,
-    description: string,
-    readyInMinutes: number,
-    sourceOrAuthor: string,
+export interface DetailedDish {
+    imgUrl?: string;
+    ingredients: DishIngredient[];
+    language: Language;
+    title: string;
+    description: string;
+    readyInMinutes: number;
+    sourceOrAuthor: string;
     properties?: {
-        vegetarian?: boolean,
-        vegan?: boolean,
-        glutenFree?: boolean,
-        dairyFree?: boolean,
-        veryHealthy?: boolean
-    },
-    provider: DishProvider,
-    type: DishType,
-    mealType: MealType
-};
+        vegetarian?: boolean;
+        vegan?: boolean;
+        glutenFree?: boolean;
+        dairyFree?: boolean;
+        veryHealthy?: boolean;
+    };
+    provider: DishProvider;
+    type: DishType;
+    mealType: MealType;
+}
 
 export type DetailedDishWithTranslations = Omit<DetailedDish, 'ingredients' | 'language'> & {
     ingredients: {
@@ -55,18 +55,18 @@ export type DetailedDishWithTranslations = Omit<DetailedDish, 'ingredients' | 'l
     };
 };
 
-export type ProposedDish = {
-    id: string,
-    imgUrl?: string,
-    ingredients: IngredientType[],
-    recommendationPoints: number,
-    title: string,
-    provider: DishProvider,
-    type: DishType,
-    mealType: MealType
-};
+export interface ProposedDish {
+    encodedDishId: string;
+    imgUrl?: string;
+    ingredients: IngredientType[];
+    recommendationPoints: number;
+    title: string;
+    provider: DishProvider;
+    type: DishType;
+    mealType: MealType;
+}
 
-export type DishProvider = 'yummy' | 'spoonacular';
+export type CreateDishDataType = CreateDishWithAuthorDto<DishIngredient> | { softAdded: boolean };
 
 export type GetDishesQueryType = Record<GetDishesQueryKeyTypes, string>;
 

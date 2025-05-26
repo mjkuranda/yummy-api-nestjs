@@ -2,16 +2,50 @@ import { AbstractRepository } from './abstract.repository';
 import { DishDocument } from '../documents/dish.document';
 import { InjectModel } from '@nestjs/mongoose';
 import { dishModel } from '../../common/definitions/mongoose-model.definitions';
-import { Model } from 'mongoose';
-import { CreateDishWithAuthorDto, DishEditDto } from '../../modules/dish/dish.dto';
+import { isValidObjectId, Model } from 'mongoose';
+import { DishEditDto } from '../../modules/dish/dish.dto';
 import { DishIngredient } from '../../modules/ingredient/ingredient.types';
-import { RatedDish } from '../../modules/dish/dish.types';
+import { CreateDishDataType, DetailedDish, RatedDish } from '../../modules/dish/dish.types';
 import { calculateMissing, calculateRelevance } from '../../common/helpers';
+import { DishProvidable } from '../../common/interfaces';
+import { DishProvider, MealType } from '../../common/enums';
+import { ForbiddenException } from '../../exceptions/forbidden-exception';
+import { proceedDishDocumentToDishDetails } from '../../modules/dish/dish.utils';
+import { ContextString, EncodedDishId } from '../../common/types';
+import { NotFoundException } from '../../exceptions/not-found.exception';
+import { DishIdObfuscator } from '../../common/helpers/dish-id-obfuscator.helper';
 
-export class DishRepository extends AbstractRepository<DishDocument, CreateDishWithAuthorDto<DishIngredient> | { softAdded: boolean }> {
+export class DishRepository extends AbstractRepository<DishDocument, CreateDishDataType> implements DishProvidable {
 
     constructor(@InjectModel(dishModel.name) model: Model<DishDocument>) {
         super(model);
+    }
+
+    async getDishDetails(encodedDishId: EncodedDishId): Promise<DetailedDish | null> {
+        const context: ContextString = 'DishRepository/findById';
+        const { dishId: id } = DishIdObfuscator.decode(encodedDishId);
+
+        if (!isValidObjectId(id)) {
+            throw new NotFoundException(context, 'Dish not found, because ID is not valid ObjectId.');
+        }
+
+        const dishDocument: DishDocument = await this.model.findById(id);
+
+        if (!dishDocument) {
+            return null;
+        }
+
+        if (dishDocument.softAdded) {
+            throw new ForbiddenException(context, `Dish with "${id}" id was not confirmed by admin. Therefore, it is impossible to see its content.`);
+        }
+
+        if (dishDocument.softDeleted) {
+            throw new ForbiddenException(context, `Dish with "${id}" id is labeled to be deleted. Therefore, it is impossible to see its content.`);
+        }
+
+        const dishDetails: DetailedDish = proceedDishDocumentToDishDetails(dishDocument);
+
+        return dishDetails;
     }
 
     async getDishesWithSoftAdded(): Promise<DishDocument[]> {
@@ -69,9 +103,13 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishW
         await this.model.deleteOne({ _id: id });
     }
 
-    async getDishes(providedIngredients: string[]): Promise<RatedDish[]> {
+    getProvider(): DishProvider {
+        return DishProvider.INT_DMT_USER;
+    }
+
+    async getDishes(ingredients: string[], mealType?: MealType): Promise<RatedDish[]> {
         const dishes = await this.findAll({
-            'ingredients.name': { $in: providedIngredients },
+            'ingredients.name': { $in: ingredients },
             $or: [
                 { softAdded: { $exists: false }},
                 { softAdded: false }
@@ -79,12 +117,20 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishW
         });
 
         return dishes.map(dish => {
-            const { id, title, imageUrl, type, mealType, ingredients, language } = dish;
-            const mealIngredients = ingredients.map(ingredient => ingredient.name);
-            const relevance = calculateRelevance(providedIngredients, mealIngredients);
-            const missingCount = calculateMissing(providedIngredients, mealIngredients);
+            const { id, title, imageUrl, type, mealType, ingredients: dishIngredients, language } = dish;
+            const encodedDishId = DishIdObfuscator.encode(DishProvider.INT_DMT_USER, id);
+            const finalDishIngredients = dishIngredients.map(ingredient => ingredient.name);
+            const relevance = calculateRelevance(ingredients, finalDishIngredients);
+            const missingCount = calculateMissing(ingredients, finalDishIngredients);
 
-            return { id, title, imgUrl: imageUrl, type, mealType, ingredients: mealIngredients, language, provider: 'yummy', relevance, missingCount };
+            return {
+                encodedDishId,
+                title,
+                imgUrl: imageUrl,
+                type,
+                mealType,
+                ingredients: finalDishIngredients,
+                language, provider: DishProvider.INT_DMT_USER, relevance, missingCount };
         });
     }
 }

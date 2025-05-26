@@ -28,7 +28,7 @@ import { DetailedDishWithTranslations, GetDishesQueryType, RatedDish } from './d
 import { IngredientName, MealType } from '../../common/enums';
 import { DishQueryValidationPipe } from '../../pipes/dish-query-validation.pipe';
 import { TranslationService } from '../translation/translation.service';
-import { Language } from '../../common/types';
+import { EncodedDishId, Language } from '../../common/types';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { TransformedBody } from '../../common/interfaces';
 import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
@@ -49,16 +49,17 @@ export class DishController {
         return await this.dishService.getDishes(<IngredientName[]>ingredients, <MealType>type);
     }
 
+    // FIXME: Deprecated
     @Get('/:id')
     @HttpCode(200)
     public async getDish(@Param('id') id: string) {
         return await this.dishService.find(id);
     }
 
-    @Get('/:id/details')
+    @Get('/:encoded-id/details')
     @HttpCode(200)
-    public async getDishDetails(@Param('id') id: string, @Headers('accept-language') lang: Language = 'pl'): Promise<DetailedDishWithTranslations> {
-        const dish = await this.dishService.getDishDetails(id);
+    public async getDishDetails(@Param('encoded-id') encodedDishId: EncodedDishId, @Headers('accept-language') lang: Language = 'pl'): Promise<DetailedDishWithTranslations> {
+        const dish = await this.dishService.getDishDetails(encodedDishId);
         const translatedDetailedDish = await this.translationService.translateDish(dish, lang);
 
         return {
@@ -128,10 +129,10 @@ export class DishController {
         return await this.dishService.confirmDeleting(id, authenticatedUser);
     }
 
-    @Get('/:id/comments')
+    @Get('/:encoded-id/comments')
     @HttpCode(200)
-    public async getComments(@Param('id') id: string) {
-        return await this.dishService.getComments(id);
+    public async getComments(@Param('encoded-id') encodedDishId: EncodedDishId) {
+        return await this.dishService.getComments(encodedDishId);
     }
 
     @Post('/:id/comment')
@@ -143,10 +144,10 @@ export class DishController {
         return await this.dishService.addComment(data, authenticatedUser.login);
     }
 
-    @Get('/:id/rating')
+    @Get('/:encoded-id/rating')
     @HttpCode(200)
-    public async getRating(@Param('id') id: string) {
-        return await this.dishService.calculateRating(id);
+    public async getRating(@Param('encoded-id') encodedDishId: EncodedDishId) {
+        return await this.dishService.calculateRating(encodedDishId);
     }
 
     @Post('/:id/rating')

@@ -7,63 +7,59 @@ import { NotFoundException } from '../../exceptions/not-found.exception';
 import { LoggerService } from '../logger/logger.service';
 import { RedisService } from '../redis/redis.service';
 import { UserDto } from '../user/user.dto';
-import { DishRepository } from '../../mongodb/repositories/dish.repository';
-import { MealType } from '../../common/enums';
+import { DishProvider, MealType } from '../../common/enums';
 import { DetailedDish, DishRating, MergedSearchQueries, ProposedDish, RatedDish } from './dish.types';
-import {
-    getQueryWithIngredientsAndDishType,
-    mergeSearchQueries,
-    proceedDishDocumentToDishDetails,
-    proceedRatedDishesToProposedDishes
-} from './dish.utils';
-import { HOUR } from '../../constants/times.constant';
 import { IngredientService } from '../ingredient/ingredient.service';
-import { IngredientType, DishIngredient, DishIngredientWithoutImage } from '../ingredient/ingredient.types';
+import { DishIngredient, DishIngredientWithoutImage, IngredientType } from '../ingredient/ingredient.types';
 import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
 import { UserSearchQueryRepository } from '../../mongodb/repositories/user-search-query.repository';
-import { UserSearchQueryDocument } from '../../mongodb/documents/user-search-query.document';
-import { ContextString } from '../../common/types';
+import { ContextString, EncodedDishId } from '../../common/types';
 import { DishCommentRepository } from '../../mongodb/repositories/dish-comment.repository';
 import { DishCommentDocument } from '../../mongodb/documents/dish-comment.document';
 import { DishRatingRepository } from '../../mongodb/repositories/dish-rating.repository';
 import { DishRatingDocument } from '../../mongodb/documents/dish-rating.document';
-import { sortDescendingRelevance } from '../../common/helpers';
-import { ForbiddenException } from '../../exceptions/forbidden-exception';
-import { ExternalApiService } from '../api/external-api.service';
-import { getFulfilledPromiseResults } from '../../utils';
-import { loadDataFile } from '../../common/utils';
+import { DishRepository } from '../../mongodb/repositories/dish.repository';
+import { DishReadService } from './read/dish-read.service';
+import { DishWriteService } from './write/dish-write.service';
+import { UserSearchQueryDocument } from '../../mongodb/documents/user-search-query.document';
+import { mergeSearchQueries } from './dish.utils';
+import { DishIdObfuscator } from '../../common/helpers/dish-id-obfuscator.helper';
 
+// FIXME: Rename to DishOrchestrator
 @Injectable()
 export class DishService {
+    private dishRepository: DishRepository;
 
     constructor(
-        private dishRepository: DishRepository,
-        private dishCommentRepository: DishCommentRepository,
-        private dishRatingRepository: DishRatingRepository,
-        private userSearchQueryRepository: UserSearchQueryRepository,
-        private redisService: RedisService,
-        private loggerService: LoggerService,
-        private ingredientService: IngredientService,
-        private externalApiService: ExternalApiService
+        private readonly dishReadService: DishReadService,
+        private readonly dishWriteService: DishWriteService,
+        private readonly dishCommentRepository: DishCommentRepository,
+        private readonly dishRatingRepository: DishRatingRepository,
+        private readonly userSearchQueryRepository: UserSearchQueryRepository,
+        private readonly redisService: RedisService,
+        private readonly loggerService: LoggerService,
+        private readonly ingredientService: IngredientService
     ) {}
 
+    /**
+     * @description Creates a new dish and saves to the database
+     * @param createDishDto data to create new dish
+     * @param user data from accessToken to define user
+     */
     async create(createDishDto: CreateDishDto<DishIngredientWithoutImage>, user: UserAccessTokenPayload): Promise<DishDocument> {
-        const ingredients = await this.ingredientService.wrapIngredientsWithImages(createDishDto.ingredients);
+        const { ingredients, title, imageUrl, ingredientCount } = createDishDto;
+        const imageUrlDescription = imageUrl ? `"${imageUrl}" image url` : 'no image';
+        const ingredientList = await this.ingredientService.wrapIngredientsWithImages(ingredients);
 
-        const createdDish = await this.dishRepository.create({
+        const createdDish = await this.dishWriteService.saveNewDish({
             ...createDishDto,
-            ingredients,
+            ingredients: ingredientList,
             author: user.login,
             posted: Date.now(),
-            provider: 'yummy',
+            provider: DishProvider.INT_DMT_USER,
             softAdded: true
         });
 
-        const title = createDishDto.title;
-        const ingredientCount = createDishDto.ingredients.length;
-        const imageUrlDescription = createDishDto.imageUrl
-            ? `"${createDishDto.imageUrl}" image url`
-            : 'no image';
         const context = 'DishService/create';
         const message = `New dish "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription} has been created by ${user.login}.`;
 
@@ -213,55 +209,19 @@ export class DishService {
         return deletedDish;
     }
 
-    async getDishDetails(id: string): Promise<DetailedDish> {
-        const context = 'DishService/getDishDetails';
-
-        if (!id) {
-            throw new BadRequestException(context, 'Not provided id param.');
+    /**
+     * @description Returns detailed dish
+     * @param encodedDishId dish ID
+     */
+    async getDishDetails(encodedDishId: EncodedDishId): Promise<DetailedDish> {
+        try {
+            return await this.dishReadService.getDishDetails(encodedDishId);
+        } catch (err: unknown) {
+            throw err;
         }
-
-        const cachedDish: DetailedDish = await this.redisService.getDishDetails(id);
-
-        if (cachedDish) {
-            this.loggerService.info(context, `Found in cache a dish with id "${id}".`);
-
-            return cachedDish;
-        }
-
-        if (isValidObjectId(id)) {
-            const dishDocument: DishDocument = await this.dishRepository.findById(id);
-
-            if (dishDocument) {
-                if (dishDocument.softAdded) {
-                    throw new ForbiddenException(context, `Dish with "${id}" id was not confirmed by admin. Therefore, it is impossible to see its content.`);
-                }
-
-                if (dishDocument.softDeleted) {
-                    throw new ForbiddenException(context, `Dish with "${id}" id is labeled to be deleted. Therefore, it is impossible to see its content.`);
-                }
-
-                const dishDetails: DetailedDish = proceedDishDocumentToDishDetails(dishDocument);
-                await this.redisService.saveDishDetails(id, dishDetails);
-                this.loggerService.info(context, `Found in local database a dish with id "${id}" and cached.`);
-
-                return dishDetails;
-            }
-        }
-
-        const datasets = await this.getDatasets<DetailedDish>(...this.externalApiService.getDishDetails(id));
-
-        const filteredDish: DetailedDish = datasets.find(dish => dish !== null);
-
-        if (filteredDish) {
-            await this.redisService.saveDishDetails(id, filteredDish);
-            this.loggerService.info(context, `Found in external database a dish with id "${id}" and cached.`);
-
-            return filteredDish;
-        }
-
-        throw new NotFoundException(context, `Dish with "${id}" does not exist in any integrated API.`);
     }
 
+    // FIXME: Deprecated
     async find(id: string): Promise<DishDocument> {
         const context = 'DishService/find';
 
@@ -304,6 +264,7 @@ export class DishService {
         return dish;
     }
 
+    // FIXME: Deprecated
     async findAll(): Promise<DishDocument[]> {
         const dishes = (await this.dishRepository.findAll({ softDeleted: { $exists: false }})) as DishDocument[];
         const message = `Found ${dishes.length} dishes.`;
@@ -313,43 +274,33 @@ export class DishService {
         return dishes;
     }
 
-    async getDishes(ings: IngredientType[], type: MealType): Promise<RatedDish[]> {
-        const filteredIngredients = this.ingredientService.filterIngredients(ings);
-        const query = getQueryWithIngredientsAndDishType(filteredIngredients, type);
-        const cachedResult = await this.redisService.getDishResult('merged', query);
+    /**
+     * @description Returns dishes from all providers
+     * @param ings listed ingredients, provided by user
+     * @param mealType filter dishes by meal type, e.g. breakfast, launch, beverage, etc...
+     */
+    async getDishes(ings: IngredientType[], mealType: MealType): Promise<RatedDish[]> {
         const context = 'DishService/getDishes';
+        const filteredIngredients = this.ingredientService.filterIngredients(ings);
+        const allIngredients = [...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()];
 
-        if (cachedResult) {
-            this.loggerService.info(context, `Found cached result "${query}" containing ${cachedResult.length} dishes.`);
-
-            return cachedResult;
-        }
-
-        const ingredients = [...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()];
-
-        const datasets = await this.getDatasets(this.dishRepository.getDishes(ingredients), ...this.externalApiService.getDishes(ingredients, type));
-
-        const dishes: RatedDish[] = datasets.flat().filter(dish => dish.relevance > 0).sort(sortDescendingRelevance);
-        await this.redisService.saveDishResult('merged', query, dishes, 12 * HOUR);
-        this.loggerService.info(context, `Cached result containing ${dishes.length} dishes, defined for query "${query}".`);
+        const dishes = await this.dishReadService.getDishes(filteredIngredients, allIngredients, mealType);
+        this.loggerService.info(context, `Returned ${dishes.length} dishes, defined for ingredients: ${filteredIngredients.join(', ')}.`);
 
         return dishes;
     }
 
-    async getDishProposal(user: UserAccessTokenPayload) {
+    /**
+     * Returns proposed dishes for a particular user
+     * @param user data from user access token
+     */
+    async getDishProposal(user: UserAccessTokenPayload): Promise<ProposedDish[]> {
+        // TODO: Consider creating CRON to create recommendation for a particular user
         const userSearchQueries: UserSearchQueryDocument[] = await this.userSearchQueryRepository.findAllRecentQueries(user.login);
         const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(userSearchQueries);
-        const ingredientsList = Object.keys(mergedSearchQueries);
-        const datasets = await this.getDatasets(this.dishRepository.getDishes(ingredientsList), ...this.externalApiService.getDishes(ingredientsList));
-        const dishes: RatedDish[] = datasets.flat().sort(sortDescendingRelevance);
-        const proposedDishes: ProposedDish[] = proceedRatedDishesToProposedDishes(dishes, mergedSearchQueries);
+        const ingredients = Object.keys(mergedSearchQueries);
 
-        this.loggerService.info('DishService/getDishProposal', `Generated ${proposedDishes.length} dish proposal${proposedDishes.length > 1 ? 's' : ''}.`);
-
-        // FIXME: Could be simplified, because sorting is done earlier.
-        return proposedDishes
-            .filter(dish => dish.recommendationPoints > 0)
-            .filter((dish, idx) => idx < 10);
+        return await this.dishReadService.getDishProposals(ingredients, mergedSearchQueries);
     }
 
     async addDishProposal(user: UserAccessTokenPayload, ingredients: string[]) {
@@ -358,71 +309,58 @@ export class DishService {
         this.loggerService.info('DishService/addDishProposal', `Added search query for user ${user.login}.`);
     }
 
+    /**
+     * @description Returns all dishes, marked as softAdded
+     */
     async getDishesWithSoftAdded(): Promise<DishDocument[]> {
-        return await this.dishRepository.getDishesWithSoftAdded();
+        return await this.dishReadService.getDishesWithSoftAdded();
     }
 
+    /**
+     * @description Returns all dishes with proposed changes
+     */
     async getDishesWithSoftEdited(): Promise<DishDocument[]> {
-        return await this.dishRepository.getDishesWithSoftEdited();
+        return await this.dishReadService.getDishesWithSoftEdited();
     }
 
+    /**
+     * @description Returns all dishes, marked as softDeleted
+     */
     async getDishesWithSoftDeleted(): Promise<DishDocument[]> {
-        return await this.dishRepository.getDishesWithSoftDeleted();
+        return await this.dishReadService.getDishesWithSoftDeleted();
     }
 
-    async hasDish(dishId: string): Promise<boolean> {
-        const context: ContextString = 'DishService/hasDish';
-        const isSaved = await this.redisService.hasDish(dishId);
-
-        if (isSaved) {
-            return true;
-        }
-
-        // NOTE: When it is usual request after fetching details, it should be found within cache
-        // Checking existence of the dish
-        if (isValidObjectId(dishId)) {
-            const dish = await this.dishRepository.findById(dishId);
-
-            if (dish) {
-                return true;
-            }
-        } else {
-            const datasets = await this.getDatasets(...this.externalApiService.getDishDetails(dishId));
-
-            const filteredDish: DetailedDish = datasets.find(dish => dish !== null);
-
-            if (filteredDish) {
-                await this.redisService.saveDishDetails(dishId, filteredDish);
-                this.loggerService.info(context, `Cached a dish with id "${dishId}".`);
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    async getComments(dishId: string): Promise<DishCommentDocument[]> {
+    /**
+     * @description Returns all comments for a particular dish
+     * @param encodedDishId
+     */
+    async getComments(encodedDishId: EncodedDishId): Promise<DishCommentDocument[]> {
         const context: ContextString = 'DishService/getComments';
-        const hasDish = await this.hasDish(dishId);
+        const hasDish = await this.dishReadService.hasDish(encodedDishId);
 
         if (!hasDish) {
-            const message = 'Dish with provided ID does not exist.';
+            const message = `Dish with provided ID "${encodedDishId}" does not exist.`;
             this.loggerService.error(context, message);
 
             throw new NotFoundException(context, message);
         }
 
-        const comments = await this.dishCommentRepository.findAll({ dishId: dishId });
+        const { dishId } = DishIdObfuscator.decode(encodedDishId);
+        const comments = await this.dishCommentRepository.findAll({ dishId });
 
-        this.loggerService.info(context, `Found ${comments.length} comments for "${dishId}" dish.`);
+        this.loggerService.info(context, `Found ${comments.length} comments for "${encodedDishId}" dish.`);
 
         return comments;
     }
 
+    /**
+     * @description posts a comment
+     * @param createCommentBody comment data including content, commenter and dish
+     * @param user user login
+     */
     async addComment(createCommentBody: CreateDishCommentBody, user: string): Promise<void> {
         const context: ContextString = 'DishService/addComment';
-        const hasDish = await this.hasDish(createCommentBody.dishId);
+        const hasDish = await this.dishReadService.hasDish(createCommentBody.encodedDishId);
 
         if (!hasDish) {
             const message = 'Dish with provided ID does not exist.';
@@ -432,12 +370,16 @@ export class DishService {
         }
 
         await this.dishCommentRepository.create({ ...createCommentBody, user, posted: Date.now() });
-        this.loggerService.info(context, `Successfully added a new comment to "${createCommentBody.dishId}" dish by "${user}" user.`);
+        this.loggerService.info(context, `Successfully added a new comment to "${createCommentBody.encodedDishId}" dish by "${user}" user.`);
     }
 
-    async calculateRating(dishId: string): Promise<DishRating> {
+    /**
+     * @description calculates a rating for a particular dish
+     * @param encodedDishId encoded dish ID and its provider name
+     */
+    async calculateRating(encodedDishId: EncodedDishId): Promise<DishRating> {
         const context: ContextString = 'DishService/calculateRating';
-        const hasDish = await this.hasDish(dishId);
+        const hasDish = await this.dishReadService.hasDish(encodedDishId);
 
         if (!hasDish) {
             const message = 'Dish with provided ID does not exist.';
@@ -446,14 +388,21 @@ export class DishService {
             throw new NotFoundException(context, message);
         }
 
-        this.loggerService.info(context, `Calculated rating for dish "${dishId}".`);
+        this.loggerService.info(context, `Calculated rating for dish "${encodedDishId}".`);
+
+        const { dishId } = DishIdObfuscator.decode(encodedDishId);
 
         return await this.dishRatingRepository.getAverageRatingForDish(dishId);
     }
 
+    /**
+     * @description adds a new rating for a particular dish
+     * @param createRatingBody rating and encoded dish ID
+     * @param user user login
+     */
     async addRating(createRatingBody: CreateDishRatingBody, user: string): Promise<DishRatingDocument> {
         const context: ContextString = 'DishService/addRating';
-        const hasDish = await this.hasDish(createRatingBody.dishId);
+        const hasDish = await this.dishReadService.hasDish(createRatingBody.encodedDishId);
 
         if (!hasDish) {
             const message = 'Dish with provided ID does not exist.';
@@ -462,29 +411,20 @@ export class DishService {
             throw new NotFoundException(context, message);
         }
 
+        const { dishId } = DishIdObfuscator.decode(createRatingBody.encodedDishId);
         const rating = await this.dishRatingRepository.findOne({
-            dishId: createRatingBody.dishId,
+            dishId,
             user
         });
 
         if (rating) {
-            this.loggerService.info(context, `Successfully changed a rating for "${createRatingBody.dishId}" dish by "${user}" user.`);
+            this.loggerService.info(context, `Successfully changed a rating for "${createRatingBody.encodedDishId}" dish by "${user}" user.`);
 
             return await this.dishRatingRepository.updateAndReturn(createRatingBody, user);
         }
 
-        this.loggerService.info(context, `Successfully added a new rating for "${createRatingBody.dishId}" dish by "${user}" user.`);
+        this.loggerService.info(context, `Successfully added a new rating for "${createRatingBody.encodedDishId}" dish by "${user}" user.`);
 
         return await this.dishRatingRepository.create({ ...createRatingBody, user, posted: Date.now() });
-    }
-
-    async addInitialDishes(): Promise<void> {
-        const data = await loadDataFile<DishDocument[]>('initial-dishes');
-
-        await this.dishRepository.insertMany(data);
-    }
-
-    private getDatasets<T>(...datasets: Promise<T>[]): Promise<T[]> {
-        return getFulfilledPromiseResults<T>(datasets);
     }
 }

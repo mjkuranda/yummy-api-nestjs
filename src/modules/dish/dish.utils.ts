@@ -1,10 +1,11 @@
-import { MealType } from '../../common/enums';
+import { DishProvider, MealType } from '../../common/enums';
 import { ApiName } from '../redis/redis.types';
 import { IngredientType } from '../ingredient/ingredient.types';
 import { DishDocument } from '../../mongodb/documents/dish.document';
 import { DetailedDish, MergedSearchQueries, ProposedDish, RatedDish } from './dish.types';
 import { UserSearchQueryDocument } from '../../mongodb/documents/user-search-query.document';
 
+// FIXME: Do to deprecate
 export function getQueryWithIngredientsAndDishType(ingredients: IngredientType[], type?: MealType, apiName?: ApiName, apiKey?: string): string {
     const ingredientList = ingredients.sort().join(',');
     const mealType = type ? `type=${type}` : '';
@@ -26,12 +27,11 @@ export function getQueryWithIngredientsAndDishType(ingredients: IngredientType[]
 
 export function proceedDishDocumentToDishDetails(dish: DishDocument): DetailedDish {
     const {
-        id, imageUrl, ingredients, language, title, description,
+        imageUrl, ingredients, language, title, description,
         author, readyInMinutes, type, mealType
     } = dish;
 
     return {
-        id,
         imgUrl: imageUrl,
         ingredients: ingredients.map(ingredient => ({
             name: ingredient.name,
@@ -43,7 +43,7 @@ export function proceedDishDocumentToDishDetails(dish: DishDocument): DetailedDi
         title,
         description,
         sourceOrAuthor: author,
-        provider: 'yummy',
+        provider: DishProvider.INT_DMT_USER,
         readyInMinutes,
         type,
         mealType
@@ -70,7 +70,7 @@ export function mergeSearchQueries(searchQueries: UserSearchQueryDocument[]): Me
 
 export function proceedRatedDishesToProposedDishes(dishes: RatedDish[], mergedSearchQueries: MergedSearchQueries): ProposedDish[] {
     return dishes.map(dish => {
-        const { id, imgUrl, ingredients, title, provider, type, mealType } = dish;
+        const { encodedDishId, imgUrl, ingredients, title, provider, type, mealType } = dish;
         const recommendationPoints = dish.ingredients.reduce((points, ingredient) => {
             if (!mergedSearchQueries[ingredient]) {
                 return points;
@@ -80,7 +80,7 @@ export function proceedRatedDishesToProposedDishes(dishes: RatedDish[], mergedSe
         }, 0);
 
         return {
-            id,
+            encodedDishId,
             ...(imgUrl && { imgUrl }),
             ingredients,
             recommendationPoints,

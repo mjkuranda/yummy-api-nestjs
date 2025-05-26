@@ -10,10 +10,10 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UserDto } from '../user/user.dto';
-import { DishProvider, DishRecipeSections } from './dish.types';
-import { Language } from '../../common/types';
+import { DishRecipeSections } from './dish.types';
+import { EncodedDishId, Language } from '../../common/types';
 import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
-import { MealType, DishType } from '../../common/enums';
+import { MealType, DishType, DishProvider } from '../../common/enums';
 
 export class CreateDishDto<Ingredient> {
     @IsNotEmpty({ message: 'Dish should have a description' })
@@ -55,6 +55,10 @@ export class CreateDishDto<Ingredient> {
     @IsIn(Object.values(MealType), { message: `Meal type should be defined as a one of allowed types: ${Object.values(MealType).join(', ')}` })
     @Length(3, 16)
     readonly mealType: MealType;
+
+    get ingredientCount(): number {
+        return this.ingredients.length;
+    }
 }
 
 export class CreateDishWithAuthorDto<Ingredient> extends CreateDishDto<Ingredient> {
@@ -86,7 +90,7 @@ export class EditDishBodyDto {
 
 export class CreateDishCommentBody {
     @IsNotEmpty({ message: 'Dish comment should have a reference to dish' })
-    readonly dishId: string;
+    readonly encodedDishId: EncodedDishId;
 
     @IsNotEmpty({ message: 'Dish comment should have a posted time' })
     @Length(4, 64)
@@ -103,7 +107,7 @@ export class CreateDishCommentDto extends CreateDishCommentBody {
 
 export class CreateDishRatingBody {
     @IsNotEmpty({ message: 'Dish rating should have a reference to dish' })
-    readonly dishId: string;
+    readonly encodedDishId: EncodedDishId;
 
     @IsNotEmpty({ message: 'Dish rating should have a posted time' })
     @Min(0)
