@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TestApiService } from './test.api.service';
+import { ExampleApiService } from './example-api-service';
 import { RedisService } from '../modules/redis/redis.service';
 import { LoggerService } from '../modules/logger/logger.service';
 import { AxiosService } from './axios.service';
-import { MealType, IngredientName, DishType } from '../common/enums';
+import { DishProvider, DishType, IngredientName, MealType } from '../common/enums';
 import { RatedDish } from '../modules/dish/dish.types';
 
-describe('TestApiService', () => {
-    let testApiService: TestApiService;
+describe('ExampleApiService', () => {
+    let testApiService: ExampleApiService;
     let axiosService: AxiosService;
     let redisService: RedisService;
 
@@ -28,14 +28,14 @@ describe('TestApiService', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                TestApiService,
+                ExampleApiService,
                 { provide: AxiosService, useValue: axiosServiceProvider },
                 { provide: RedisService, useValue: redisServiceProvider },
                 { provide: LoggerService, useValue: loggerServiceProvider }
             ]
         }).compile();
 
-        testApiService = module.get<TestApiService>(TestApiService);
+        testApiService = module.get<ExampleApiService>(ExampleApiService);
         axiosService = module.get<AxiosService>(AxiosService);
         redisService = module.get<RedisService>(RedisService);
     });
@@ -50,13 +50,13 @@ describe('TestApiService', () => {
         const mealType = MealType.LAUNCH;
         const mockResult: RatedDish[] = [
             {
-                id: 'some-id',
+                encodedDishId: 'some-encoded-id',
                 ingredients: [],
                 missingCount: 1,
                 language: 'en',
                 relevance: 50,
                 title: 'some-dish',
-                provider: 'yummy',
+                provider: DishProvider.INT_DMT_USER,
                 type: DishType.ANY,
                 mealType: MealType.ANY
             }

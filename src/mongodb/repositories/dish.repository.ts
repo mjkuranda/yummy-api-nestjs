@@ -5,15 +5,15 @@ import { dishModel } from '../../common/definitions/mongoose-model.definitions';
 import { isValidObjectId, Model } from 'mongoose';
 import { DishEditDto } from '../../modules/dish/dish.dto';
 import { DishIngredient } from '../../modules/ingredient/ingredient.types';
-import { CreateDishDataType, DetailedDish, RatedDish } from '../../modules/dish/dish.types';
+import { CreateDishDataType, RatedDish } from '../../modules/dish/dish.types';
 import { calculateMissing, calculateRelevance } from '../../common/helpers';
 import { DishProvidable } from '../../common/interfaces';
 import { DishProvider, MealType } from '../../common/enums';
-import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { proceedDishDocumentToDishDetails } from '../../modules/dish/dish.utils';
-import { ContextString, EncodedDishId } from '../../common/types';
-import { NotFoundException } from '../../exceptions/not-found.exception';
+import { EncodedDishId } from '../../common/types';
 import { DishIdObfuscator } from '../../common/helpers/dish-id-obfuscator.helper';
+import { InvalidMongooseObjectIdError } from '../../errors/infrastructure/invalid-mongoose-object-id.error';
+import { DishDetailsWithMetadata } from '../../modules/dish/read/dish-read.types';
 
 export class DishRepository extends AbstractRepository<DishDocument, CreateDishDataType> implements DishProvidable {
 
@@ -21,12 +21,11 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
         super(model);
     }
 
-    async getDishDetails(encodedDishId: EncodedDishId): Promise<DetailedDish | null> {
-        const context: ContextString = 'DishRepository/findById';
+    async getDishDetails(encodedDishId: EncodedDishId): Promise<DishDetailsWithMetadata | null> {
         const { dishId: id } = DishIdObfuscator.decode(encodedDishId);
 
         if (!isValidObjectId(id)) {
-            throw new NotFoundException(context, 'Dish not found, because ID is not valid ObjectId.');
+            throw new InvalidMongooseObjectIdError('Dish not found, because ID is not valid ObjectId.');
         }
 
         const dishDocument: DishDocument = await this.model.findById(id);
@@ -35,17 +34,15 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
             return null;
         }
 
-        if (dishDocument.softAdded) {
-            throw new ForbiddenException(context, `Dish with "${id}" id was not confirmed by admin. Therefore, it is impossible to see its content.`);
-        }
+        const dishDetails = proceedDishDocumentToDishDetails(dishDocument);
 
-        if (dishDocument.softDeleted) {
-            throw new ForbiddenException(context, `Dish with "${id}" id is labeled to be deleted. Therefore, it is impossible to see its content.`);
-        }
-
-        const dishDetails: DetailedDish = proceedDishDocumentToDishDetails(dishDocument);
-
-        return dishDetails;
+        return {
+            dishDetails,
+            metadata: {
+                softAdded: dishDocument.softAdded,
+                softDeleted: dishDocument.softDeleted
+            }
+        };
     }
 
     async getDishesWithSoftAdded(): Promise<DishDocument[]> {
@@ -113,7 +110,8 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
             $or: [
                 { softAdded: { $exists: false }},
                 { softAdded: false }
-            ]
+            ],
+            ...( mealType && { mealType })
         });
 
         return dishes.map(dish => {

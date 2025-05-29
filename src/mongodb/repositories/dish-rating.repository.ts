@@ -15,7 +15,7 @@ export class DishRatingRepository extends AbstractRepository<DishRatingDocument,
     async updateAndReturn(createRatingBody: CreateDishRatingBody, userLogin: string): Promise<DishRatingDocument> {
         return await this.updateAndReturnDocument(
             {
-                dishId: createRatingBody.dishId,
+                dishId: createRatingBody.encodedDishId,
                 user: userLogin
             },
             {

@@ -5,6 +5,7 @@ import { DetailedDish, RatedDish } from '../dish/dish.types';
 import { MealType } from '../../common/enums';
 import { Language } from '../../common/types';
 import { DishRecipe } from '../recipe/recipe.types';
+import { DishDetailsWithMetadata } from '../dish/read/dish-read.types';
 
 @Injectable()
 export class ExternalApiService {
@@ -22,7 +23,7 @@ export class ExternalApiService {
         return this.getAll().map(service => service.getDishes(ingredients, mealType));
     }
 
-    getDishDetails(id: string): Promise<DetailedDish>[] {
+    getDishDetails(id: string): Promise<DishDetailsWithMetadata>[] {
         return this.getAll().map(service => service.getDishDetails(id));
     }
 

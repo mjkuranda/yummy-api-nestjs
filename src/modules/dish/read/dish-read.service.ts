@@ -1,17 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { DishSourceRegistryService } from '../source/dish-source-registry.service';
-import { DetailedDish, MergedSearchQueries, ProposedDish, RatedDish } from '../dish.types';
+import { DishRating, MergedSearchQueries, ProposedDish } from '../dish.types';
 import { DishDocument } from '../../../mongodb/documents/dish.document';
 import { DishRepository } from '../../../mongodb/repositories/dish.repository';
 import { DishCacheService } from '../../cache/dish-cache.service';
-import { ContextString, EncodedDishId } from '../../../common/types';
-import { LoggerService } from '../../logger/logger.service';
+import { EncodedDishId } from '../../../common/types';
 import { DishAggregatorService } from './dish-aggregator.service';
 import { MealType } from '../../../common/enums';
 import { DishIdObfuscator } from '../../../common/helpers/dish-id-obfuscator.helper';
-import { NotFoundException } from '../../../exceptions/not-found.exception';
-import { BadRequestException } from '../../../exceptions/bad-request.exception';
 import { proceedRatedDishesToProposedDishes } from '../dish.utils';
+import { DishNotFoundError } from '../../../errors/domain/dish-not-found.error';
+import { GetDishDetailsResult, GetDishesResult } from './dish-read.types';
+import { DishNotAcceptedError } from '../../../errors/domain/dish-not-accepted.error';
+import { DishSoftDeletedError } from '../../../errors/domain/dish-soft-deleted.error';
+import { InvalidDishIdError } from '../../../errors/domain/invalid-dish-id.error';
+import { DishCommentDocument } from '../../../mongodb/documents/dish-comment.document';
+import { DishCommentRepository } from '../../../mongodb/repositories/dish-comment.repository';
+import { DishRatingRepository } from '../../../mongodb/repositories/dish-rating.repository';
 
 @Injectable()
 export class DishReadService {
@@ -22,7 +27,8 @@ export class DishReadService {
         private readonly dishSourceRegistryService: DishSourceRegistryService,
         private readonly dishCacheService: DishCacheService,
         private readonly dishAggregatorService: DishAggregatorService,
-        private readonly loggerService: LoggerService
+        private readonly dishCommentRepository: DishCommentRepository,
+        private readonly dishRatingRepository: DishRatingRepository
     ) {
         this.dishRepository = this.dishSourceRegistryService.getDishRepositoryProvider();
     }
@@ -33,38 +39,28 @@ export class DishReadService {
      * @param mergedIngredients ingredients provided by user and from pantry
      * @param mealType filter dishes by meal type
      */
-    async getDishes(providedIngredients: string[], mergedIngredients: string[], mealType?: MealType): Promise<RatedDish[]> {
-        const context: ContextString = 'DishReadService/getDishes';
+    async getDishes(providedIngredients: string[], mergedIngredients: string[], mealType?: MealType): Promise<GetDishesResult> {
         const cachedResult = await this.dishCacheService.getDishes(providedIngredients);
 
         if (cachedResult) {
-            this.loggerService.info(context, `Found cached dishes (${providedIngredients.join(', ')}) containing ${cachedResult.length} dishes.`);
-
-            return cachedResult;
+            return { dishes: cachedResult, fromCache: true };
         }
 
         const dishes = await this.dishAggregatorService.aggregateRatedDishes(mergedIngredients, mealType);
         await this.dishCacheService.setDishes(providedIngredients, dishes);
 
-        this.loggerService.info(context, `Cached result containing ${dishes.length} dishes, defined for ingredients: ${providedIngredients.join(', ')}.`);
-
-        return dishes;
+        return { dishes, fromCache: false };
     }
 
     /**
      * @description Returns detailed dish
      * @param encodedDishId encoded dish ID and its provider name
      */
-    async getDishDetails(encodedDishId: EncodedDishId): Promise<DetailedDish> {
-        const context: ContextString = 'DishReadService/getDishDetails';
+    async getDishDetails(encodedDishId: EncodedDishId): Promise<GetDishDetailsResult> {
         const decoded = DishIdObfuscator.decode(encodedDishId);
 
         if (!decoded) {
-            const message = 'Incorrect ID';
-
-            this.loggerService.error(context, message);
-
-            throw new BadRequestException(context, message);
+            throw new InvalidDishIdError(encodedDishId);
         }
 
         const { providerName, dishId } = decoded;
@@ -72,25 +68,28 @@ export class DishReadService {
         const cachedDish = await this.dishCacheService.getDishDetails(encodedDishId);
 
         if (cachedDish) {
-            this.loggerService.info(context, `Found in cache and returned dish with "${dishId}" id.`);
-
-            return cachedDish;
+            return { dish: cachedDish, fromCache: true };
         }
 
-        try {
-            const detailedDish = await provider.getDishDetails(dishId);
+        const dishDetailsWithMetadata = await provider.getDishDetails(dishId);
 
-            if (!detailedDish) {
-                throw new NotFoundException(context, `Not found dish with "${dishId}" id.`);
-            }
-
-            await this.dishCacheService.setDishDetails(encodedDishId, detailedDish);
-            this.loggerService.info(context, `Found and cached dish with "${dishId}" id.`);
-
-            return detailedDish;
-        } catch (err: unknown) {
-            throw err;
+        if (!dishDetailsWithMetadata) {
+            throw new DishNotFoundError(dishId);
         }
+
+        const { dishDetails, metadata } = dishDetailsWithMetadata;
+
+        if (metadata.softAdded) {
+            throw new DishNotAcceptedError(encodedDishId);
+        }
+
+        if (metadata.softDeleted) {
+            throw new DishSoftDeletedError(encodedDishId);
+        }
+
+        await this.dishCacheService.setDishDetails(encodedDishId, dishDetails);
+
+        return { dish: dishDetails, fromCache: false };
     }
 
     /**
@@ -101,8 +100,6 @@ export class DishReadService {
     async getDishProposals(ingredients: string[], mergedSearchQueries: MergedSearchQueries): Promise<ProposedDish[]> {
         const dishes = await this.dishAggregatorService.aggregateRatedDishes(ingredients);
         const proposedDishes: ProposedDish[] = proceedRatedDishesToProposedDishes(dishes, mergedSearchQueries);
-
-        this.loggerService.info('DishOrchestrator/getDishProposal', `Generated ${proposedDishes.length} dish proposal${proposedDishes.length > 1 ? 's' : ''}.`);
 
         return proposedDishes
             .filter((dish, idx) => idx < 10);
@@ -130,32 +127,66 @@ export class DishReadService {
     }
 
     /**
+     * @description Returns all comments for a particular dish
+     * @param encodedDishId encoded dish ID and its provider name
+     */
+    async getDishComments(encodedDishId: EncodedDishId): Promise<DishCommentDocument[]> {
+        const decoded = DishIdObfuscator.decode(encodedDishId);
+
+        if (!decoded) {
+            throw new InvalidDishIdError(encodedDishId);
+        }
+
+        const { dishId } = decoded;
+
+        const dish = await this.dishRepository.findById(dishId);
+
+        if (!dish) {
+            throw new DishNotFoundError(encodedDishId);
+        }
+
+        return await this.dishCommentRepository.findAll({ dishId });
+    }
+
+    async getDishRating(encodedDishId: EncodedDishId): Promise<DishRating> {
+        const decoded = DishIdObfuscator.decode(encodedDishId);
+
+        if (!decoded) {
+            throw new InvalidDishIdError(encodedDishId);
+        }
+
+        const { dishId } = decoded;
+        const dish = await this.dishRepository.findById(dishId);
+
+        if (!dish) {
+            throw new DishNotFoundError(encodedDishId);
+        }
+
+        return await this.dishRatingRepository.getAverageRatingForDish(dishId);
+    }
+
+    /**
      * @description Returns true if exists a dish with a particular encoded ID
-     * @param encodedDishId
+     * @param encodedDishId encoded dish id and its provider name
+     * @deprecated
      */
     async hasDish(encodedDishId: EncodedDishId): Promise<boolean> {
-        const context: ContextString = 'DishReadService/hasDish';
         const isCached = await this.dishCacheService.hasDish(encodedDishId);
 
         if (isCached) {
-            this.loggerService.info(context, `Dish "${encodedDishId}" exists and found in cache.`);
-
             return true;
         }
 
         const { providerName, dishId } = DishIdObfuscator.decode(encodedDishId);
         const provider = this.dishSourceRegistryService.getProvider(providerName);
-        const dish = await provider.getDishDetails(dishId);
+        const dishDetailsWithMetadata = await provider.getDishDetails(dishId);
 
-        if (dish) {
-            await this.dishCacheService.setDishDetails(encodedDishId, dish);
-
-            this.loggerService.info(context, `Dish ${encodedDishId} exists and cached.`);
+        if (dishDetailsWithMetadata) {
+            const { dishDetails } = dishDetailsWithMetadata;
+            await this.dishCacheService.setDishDetails(encodedDishId, dishDetails);
 
             return true;
         }
-
-        this.loggerService.info(context, `Dish ${encodedDishId} does not exist.`);
 
         return false;
     }

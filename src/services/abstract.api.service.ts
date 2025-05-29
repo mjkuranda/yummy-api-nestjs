@@ -12,6 +12,7 @@ import { IngredientType, DishIngredient } from '../modules/ingredient/ingredient
 import { DishRecipe } from '../modules/recipe/recipe.types';
 import { DishProvidable } from '../common/interfaces';
 import { DishIdObfuscator } from '../common/helpers/dish-id-obfuscator.helper';
+import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
 
 @Injectable()
 export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStruct, GenericDishDetailsStruct, DishInstructionStruct> implements DishProvidable {
@@ -80,7 +81,7 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
         }
     }
 
-    async getDishDetails(encodedDishId: EncodedDishId): Promise<DetailedDish> {
+    async getDishDetails(encodedDishId: EncodedDishId): Promise<DishDetailsWithMetadata> {
         const { dishId: id } = DishIdObfuscator.decode(encodedDishId);
         const url: string = this.getFullApiUrl(this.getDishDetailsEndpointUrl(id));
         const context = 'AbstractApiService/getDishDetails';
@@ -97,7 +98,7 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
             const dish: DetailedDish = this.proceedDataToDishDetails(result.data);
             this.loggerService.info(context, `Received dish with details from "${this.getName()}" API.`);
 
-            return dish;
+            return { dishDetails: dish, metadata: {}};
         } catch (err: any) {
             this.loggerService.error(context, `Error occurred during fetching a dish from ${this.getName()} API: ${err.message}.`);
 

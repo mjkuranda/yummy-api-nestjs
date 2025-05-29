@@ -2,6 +2,7 @@ import { UserAccessTokenPayload } from '../modules/jwt-manager/jwt-manager.types
 import { DetailedDish, RatedDish } from '../modules/dish/dish.types';
 import { DishProvider, MealType } from './enums';
 import { EncodedDishId } from './types';
+import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
 
 /**
  * @description Transformed endpoint body
@@ -31,5 +32,16 @@ export interface DishProvidable {
      * @description Returns detailed dish
      * @param encodedDishId encoded dish ID and its provider name
      */
-    getDishDetails(encodedDishId: EncodedDishId): Promise<DetailedDish | null>;
+    getDishDetails(encodedDishId: EncodedDishId): Promise<DishDetailsWithMetadata | null>;
+}
+
+/**
+ * @description Interface for handling use case service
+ */
+export interface Executable<TParams extends unknown[], TOutput> {
+    /**
+     * @description Executes use case scenario
+     * @param params list of parameters used to execute a scenario
+     */
+    execute(...params: TParams): Promise<TOutput>;
 }

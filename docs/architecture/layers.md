@@ -17,7 +17,8 @@ graph TD
 
 %% === Application Layer ===
     subgraph Application Layer
-        DishOrchestrator
+        DishQueryFacade
+        DishCommandFacade
     end
 
 %% === Domain Layer ===
@@ -55,28 +56,30 @@ graph TD
 %% === Connections ===
 
 %% Presentation → Application / Domain
-    DishController --> DishOrchestrator
+    DishController --> DishQueryFacade
+    DishController --> DishCommandFacade
     UserController --> UserService
     RecipeController --> RecipeService
     ImageController --> ImageService
 
 %% Application → Domain
-    DishOrchestrator --> DishReadService
-    DishOrchestrator --> DishWriteService
+    DishQueryFacade --> DishReadService
+    DishCommandFacade --> DishWriteService
 
 %% Application → Infrastructure
-    DishOrchestrator --> UserSearchQueryRepository
 
 %% Domain → Infrastructure
     DishReadService --> DishCacheService
     DishReadService --> DishAggregatorService
     DishReadService --> DishSourceRegistryService
+    DishReadService --> TranslationService
     DishAggregatorService --> DishSourceRegistryService
 
     DishWriteService --> DishCommentRepository
     DishWriteService --> DishRatingRepository
     DishWriteService --> DishSourceRegistryService
     DishWriteService --> DishCacheService
+    DishWriteService --> UserSearchQueryRepository
 
     DishSourceRegistryService --> DishProviders
 
@@ -117,7 +120,8 @@ graph TD
 %% === Application Layer ===
     subgraph Application Layer
         classDef application fill:#fff3e0,stroke:#fb8c00,color:#e65100,stroke-width:2;
-        DishOrchestrator:::application
+        DishCommandFacade:::application
+        DishQueryFacade:::application
     end
 
 %% === Domain Layer ===
@@ -157,26 +161,26 @@ graph TD
 %% === Connections ===
 
 %% Presentation → Application / Domain
-    DishController --> DishOrchestrator
+    DishController --> DishQueryFacade
+    DishController --> DishCommandFacade
     UserController --> UserService
     RecipeController --> RecipeService
     ImageController --> ImageService
 %%    HealthcheckController --> LoggerService
 
 %% Application → Domain
-    DishOrchestrator --> DishReadService
-    DishOrchestrator --> DishWriteService
+    DishQueryFacade --> DishReadService
+    DishCommandFacade --> DishWriteService
 
 %% Application → Infrastructure
-%%    DishOrchestrator --> DishCommentRepository
-%%    DishOrchestrator --> DishRatingRepository
-    DishOrchestrator --> UserSearchQueryRepository
+    DishQueryFacade --> UserSearchQueryRepository
 
 %% Domain → Infrastructure
 %%    DishReadService --> DishProviders
     DishReadService --> DishCacheService
     DishReadService --> DishAggregatorService
     DishReadService --> DishSourceRegistryService
+    DishReadService --> TranslationService
     DishAggregatorService --> DishSourceRegistryService
 
     DishWriteService --> DishCommentRepository

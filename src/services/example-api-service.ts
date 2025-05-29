@@ -1,9 +1,12 @@
 import { AbstractApiService } from './abstract.api.service';
 import { ApiName } from '../modules/redis/redis.types';
 import { DetailedDish, DishRecipeSections, RatedDish } from '../modules/dish/dish.types';
-import { IngredientType, DishIngredient } from '../modules/ingredient/ingredient.types';
+import { DishIngredient, IngredientType } from '../modules/ingredient/ingredient.types';
+import { EncodedDishId } from '../common/types';
+import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
+import { DishProvider, MealType } from '../common/enums';
 
-export class TestApiService extends AbstractApiService<any, any, any, any> {
+export class ExampleApiService extends AbstractApiService<any, any, any, any> {
 
     getApiUrl(): string {
         return 'api-url';
@@ -15,6 +18,23 @@ export class TestApiService extends AbstractApiService<any, any, any, any> {
 
     getApiKey(): string {
         return 'my-key';
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async getDishDetails(encodedDishId: EncodedDishId): Promise<DishDetailsWithMetadata> {
+        return {
+            dishDetails: {} as DetailedDish,
+            metadata: {}
+        };
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async getDishes(ingredients: IngredientType[], mealType?: MealType): Promise<RatedDish[]> {
+        return [];
+    }
+
+    getProvider(): DishProvider {
+        return DishProvider.INT_DMT_USER;
     }
 
     getDishDetailsEndpointUrl(id: string): string {

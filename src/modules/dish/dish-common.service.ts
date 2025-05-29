@@ -10,6 +10,7 @@ export class DishCommonService {
 
     constructor(private readonly dishRepository: DishRepository) {}
 
+    // TODO: Change to cron or initial
     async addInitialDishes(): Promise<void> {
         const data = await loadDataFile<DishDocument[]>('initial-dishes');
 

@@ -8,8 +8,8 @@ import {
     UpdateWithAggregationPipeline
 } from 'mongoose';
 import { DeleteResult } from 'mongodb';
-import { InvalidMongooseIdError } from '../../errors/invalid-mongoose-id.error';
-import { NotFoundError } from '../../errors/not-found.error';
+import { InvalidMongooseObjectIdError } from '../../errors/infrastructure/invalid-mongoose-object-id.error';
+import { DishNotFoundError } from '../../errors/domain/dish-not-found.error';
 
 export abstract class AbstractRepository<T extends Document, CreateDataType> {
 
@@ -21,14 +21,10 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
 
     async findById(id: string): Promise<T | null> {
         if (!isValidObjectId(id)) {
-            throw new InvalidMongooseIdError(`Provided "${id}" is not a correct MongoDB id.`);
+            throw new InvalidMongooseObjectIdError(`Provided "${id}" is not a correct MongoDB id.`);
         }
 
         const document = await this.model.findById(id) as T | null;
-
-        if (document === null) {
-            throw new NotFoundError(`Cannot find a dish with "${id}" id.`);
-        }
 
         return document;
     }

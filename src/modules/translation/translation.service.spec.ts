@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TranslationService } from './translation.service';
 import translate from '@iamtraction/google-translate';
 import { DetailedDish } from '../dish/dish.types';
-import { MealType, DishType } from '../../common/enums';
+import { DishProvider, DishType, MealType } from '../../common/enums';
 import { DishRecipe } from '../recipe/recipe.types';
 
 jest.mock('@iamtraction/google-translate', () =>
@@ -37,13 +37,12 @@ describe('TranslationService', () => {
 
         it('should translate a detailed dish', async () => {
             const mockDetailedDish: DetailedDish = {
-                id: '123',
                 type: DishType.ANY,
                 mealType: MealType.ANY,
                 title: 'Untitled',
                 description: 'Lorem ipsum dolor sit amet.',
                 language: 'en',
-                provider: 'spoonacular',
+                provider: DishProvider.EXT_API_SPOONACULAR,
                 readyInMinutes: 75,
                 sourceOrAuthor: 'unknown',
                 ingredients: [

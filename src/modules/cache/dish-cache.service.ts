@@ -116,4 +116,14 @@ export class DishCacheService {
 
         return val !== null && val.length > 0;
     }
+
+    /**
+     * @description Deletes dish row from cache
+     * @param encodedDishId encoded dish ID and its provider name
+     */
+    async deleteDish(encodedDishId: EncodedDishId): Promise<void> {
+        const key = CacheKeyFactory.createDishDetailedResultKey(encodedDishId);
+
+        await this.redisClient.del(key);
+    }
 }

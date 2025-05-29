@@ -10,9 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): New four-layer architecture: presentation, application, domain and information layer.
 - [Marek Kurańda](https://github.com/mjkuranda): `DishProvidable` interface to extract get methods.
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /dishes/encoded-id/confirm` returns `204` status code.
-- [Marek Kurańda](https://github.com/mjkuranda): Errors along with third layer aka domain layer.
+- [Marek Kurańda](https://github.com/mjkuranda): Errors along with third (aka domain layer) and fourth layer (aka infrastructure layer).
 - [Marek Kurańda](https://github.com/mjkuranda): `docs/architecture` two documents: four-layer architecture and module graph.
 - [Marek Kurańda](https://github.com/mjkuranda): `NotificationModule` module.
+- [Marek Kurańda](https://github.com/mjkuranda): Dish use cases, covering with unit tests.
+- [Marek Kurańda](https://github.com/mjkuranda): `InternalServerException` exception and a few domain and infrastructure errors.
+- [Marek Kurańda](https://github.com/mjkuranda): Running `.test` files instead of `.spec` ones.
 
 ## [3.1.2] - 2025-05-02
 ### Changed
