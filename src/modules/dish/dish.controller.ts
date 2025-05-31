@@ -13,7 +13,7 @@ import {
     Request,
     UsePipes
 } from '@nestjs/common';
-import { DishOrchestrator } from './dish.orchestrator';
+import { DishCommandFacade } from './application/dish-command.facade';
 import {
     CreateDishCommentBody,
     CreateDishDto,
@@ -27,17 +27,20 @@ import { DeletionGuard } from '../../guards/deletion.guard';
 import { DetailedDishWithTranslations, GetDishesQueryType, RatedDish } from './dish.types';
 import { IngredientName, MealType } from '../../common/enums';
 import { DishQueryValidationPipe } from '../../pipes/dish-query-validation.pipe';
-import { TranslationService } from '../translation/translation.service';
 import { EncodedDishId, Language } from '../../common/types';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { TransformedBody } from '../../common/interfaces';
 import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
+import { DishQueryFacade } from './application/dish-query.facade';
 
 @Controller('dishes')
 export class DishController {
-    constructor(private readonly dishService: DishOrchestrator,
-                private readonly translationService: TranslationService,
-                private readonly ingredientService: IngredientService) {}
+
+    constructor(
+        private readonly dishQueryFacade: DishQueryFacade,
+        private readonly dishCommandFacade: DishCommandFacade,
+        private readonly ingredientService: IngredientService
+    ) {}
 
     @Get()
     @HttpCode(200)
@@ -46,34 +49,13 @@ export class DishController {
         const { ings, type } = query;
         const ingredients = ings.split(',');
 
-        return await this.dishService.getDishes(<IngredientName[]>ingredients, <MealType>type);
-    }
-
-    // FIXME: Deprecated
-    @Get('/:id')
-    @HttpCode(200)
-    public async getDish(@Param('id') id: string) {
-        return await this.dishService.find(id);
+        return await this.dishQueryFacade.getDishes(<IngredientName[]>ingredients, <MealType>type);
     }
 
     @Get('/:encoded-id/details')
     @HttpCode(200)
-    public async getDishDetails(@Param('encoded-id') encodedDishId: EncodedDishId, @Headers('accept-language') lang: Language = 'pl'): Promise<DetailedDishWithTranslations> {
-        const dish = await this.dishService.getDishDetails(encodedDishId);
-        const translatedDetailedDish = await this.translationService.translateDish(dish, lang);
-
-        return {
-            ...dish,
-            ...translatedDetailedDish,
-            language: {
-                original: dish.language,
-                translated: lang
-            },
-            ingredients: {
-                original: dish.ingredients,
-                translated: translatedDetailedDish.ingredients
-            }
-        };
+    public async getDishDetails(@Param('encoded-id') encodedDishId: EncodedDishId, @Headers('accept-language') language: Language = 'pl'): Promise<DetailedDishWithTranslations> {
+        return await this.dishQueryFacade.getDishDetails(encodedDishId, language);
     }
 
     @Post('/create')
@@ -82,24 +64,24 @@ export class DishController {
     public async createDish(@Body() body: TransformedBody<CreateDishDto<DishIngredientWithoutImage>>) {
         const { data, authenticatedUser } = body;
 
-        return await this.dishService.create(data, authenticatedUser);
+        return await this.dishCommandFacade.createDish(data, authenticatedUser);
     }
 
-    @Delete('/:id')
-    @HttpCode(204)
-    @UseGuards(AuthenticationGuard)
-    public async deleteDish(@Param('id') id: string) {
-        return await this.dishService.delete(id);
-    }
-
-    @Put('/:id')
+    @Put('/:encoded-id')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard)
-    public async updateDish(@Param('id') id: string, @Body() body: EditDishBodyDto) {
+    public async updateDish(@Param('encoded-id') encodedDishId: EncodedDishId, @Body() body: EditDishBodyDto) {
         const { data } = body;
         const dataWithImages = this.ingredientService.applyWithImages(data);
 
-        return await this.dishService.edit(id, dataWithImages);
+        return await this.dishCommandFacade.editDish(encodedDishId, dataWithImages);
+    }
+
+    @Delete('/:encoded-id')
+    @HttpCode(204)
+    @UseGuards(AuthenticationGuard)
+    public async deleteDish(@Param('encoded-id') encodedDishId: EncodedDishId) {
+        return await this.dishCommandFacade.deleteDish(encodedDishId);
     }
 
     @Post('/:encoded-id/create')
@@ -108,55 +90,55 @@ export class DishController {
     public async confirmCreatingDish(@Param('encoded-id') encodedDishId: EncodedDishId, @Body() body) {
         const { authenticatedUser } = body;
 
-        return await this.dishService.confirmCreating(encodedDishId, authenticatedUser);
+        return await this.dishCommandFacade.confirmCreating(encodedDishId, authenticatedUser);
     }
 
-    @Post('/:id/edit')
+    @Post('/:encoded-id/edit')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, EditionGuard)
-    public async confirmEditingDish(@Param('id') id: string, @Body() body) {
+    public async confirmEditingDish(@Param('encoded-id') encodedDishId: EncodedDishId, @Body() body) {
         const { authenticatedUser } = body;
 
-        return await this.dishService.confirmEditing(id, authenticatedUser);
+        return await this.dishCommandFacade.confirmEditing(encodedDishId, authenticatedUser);
     }
 
-    @Post('/:id/delete')
+    @Post('/:encoded-id/delete')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, DeletionGuard)
-    public async confirmDeletingDish(@Param('id') id: string, @Body() body) {
+    public async confirmDeletingDish(@Param('encoded-id') encodedDishId: EncodedDishId, @Body() body) {
         const { authenticatedUser } = body;
 
-        return await this.dishService.confirmDeleting(id, authenticatedUser);
+        return await this.dishCommandFacade.confirmDeleting(encodedDishId, authenticatedUser);
     }
 
     @Get('/:encoded-id/comments')
     @HttpCode(200)
     public async getComments(@Param('encoded-id') encodedDishId: EncodedDishId) {
-        return await this.dishService.getComments(encodedDishId);
+        return await this.dishQueryFacade.getDishComments(encodedDishId);
     }
 
-    @Post('/:id/comment')
+    @Post('/:encoded-id/comment')
     @HttpCode(201)
     @UseGuards(AuthenticationGuard)
     public async addDishComment(@Body() body: TransformedBody<CreateDishCommentBody>) {
         const { data, authenticatedUser } = body;
 
-        return await this.dishService.addComment(data, authenticatedUser.login);
+        return await this.dishCommandFacade.addDishComment(data, authenticatedUser.login);
     }
 
     @Get('/:encoded-id/rating')
     @HttpCode(200)
     public async getRating(@Param('encoded-id') encodedDishId: EncodedDishId) {
-        return await this.dishService.calculateRating(encodedDishId);
+        return await this.dishQueryFacade.getDishRating(encodedDishId);
     }
 
-    @Post('/:id/rating')
+    @Post('/:encoded-id/rating')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard)
     public async addRating(@Body() body: TransformedBody<CreateDishRatingBody>) {
         const { data, authenticatedUser } = body;
 
-        return await this.dishService.addRating(data, authenticatedUser.login);
+        return await this.dishCommandFacade.addDishRating(data, authenticatedUser.login);
     }
 
     @Get('/proposal/all')
@@ -165,7 +147,7 @@ export class DishController {
     public async getDishProposal(@Request() req) {
         const { authenticatedUser } = req.body;
 
-        return await this.dishService.getDishProposal(authenticatedUser);
+        return await this.dishQueryFacade.getDishProposal(authenticatedUser);
     }
 
     @Post('/proposal')
@@ -175,27 +157,27 @@ export class DishController {
         const { authenticatedUser, data } = req.body;
         const { ingredients } = data;
 
-        return await this.dishService.addDishProposal(authenticatedUser, ingredients);
+        return await this.dishCommandFacade.addDishProposal(authenticatedUser, ingredients);
     }
 
     @Get('/soft/added')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, CreationGuard)
     public async getSoftAddedDishes() {
-        return await this.dishService.getDishesWithSoftAdded();
+        return await this.dishQueryFacade.getDishesWithSoftAdded();
     }
 
     @Get('/soft/edited')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, EditionGuard)
     public async getSoftEditedDishes() {
-        return await this.dishService.getDishesWithSoftEdited();
+        return await this.dishQueryFacade.getDishesWithSoftEdited();
     }
 
     @Get('/soft/deleted')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, DeletionGuard)
     public async getSoftDeletedDishes() {
-        return await this.dishService.getDishesWithSoftDeleted();
+        return await this.dishQueryFacade.getDishesWithSoftDeleted();
     }
 }

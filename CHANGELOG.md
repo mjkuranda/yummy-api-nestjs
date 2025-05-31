@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): Dish use cases, covering with unit tests.
 - [Marek Kurańda](https://github.com/mjkuranda): `InternalServerException` exception and a few domain and infrastructure errors.
 - [Marek Kurańda](https://github.com/mjkuranda): Running `.test` files instead of `.spec` ones.
+- [Marek Kurańda](https://github.com/mjkuranda): `SchedulerModule` module and `sync-dish-cron.service`.
+
+### Removed
+- [Marek Kurańda](https://github.com/mjkuranda): `dish.service.spec.ts` and `dish.controller.spec.ts` test files.
 
 ## [3.1.2] - 2025-05-02
 ### Changed

@@ -4,7 +4,7 @@ import { AppModule } from '../src/app.module';
 import { LoggerService } from '../src/modules/logger/logger.service';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
-import { DishOrchestrator } from '../src/modules/dish/dish.orchestrator';
+import { DishOrchestrator } from '../src/modules/dish/application/dish-command.facade';
 import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
 import { RedisService } from '../src/modules/redis/redis.service';
 import { DishRepository } from '../src/mongodb/repositories/dish.repository';
