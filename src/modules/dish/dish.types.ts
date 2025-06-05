@@ -1,4 +1,4 @@
-import { IngredientType, DishIngredient } from '../ingredient/ingredient.types';
+import { IngredientType, DishIngredient, DishIngredientWithoutImage } from '../ingredient/ingredient.types';
 import { TranslatedIngredient } from '../translation/translation.types';
 import { EncodedDishId, Language } from '../../common/types';
 import { MealType, DishType, DishProvider } from '../../common/enums';
@@ -66,7 +66,7 @@ export interface ProposedDish {
     mealType: MealType;
 }
 
-export type CreateDishDataType = CreateDishWithAuthorDto<DishIngredient> | { softAdded: boolean };
+export type CreateDishDataType = Omit<CreateDishWithAuthorDto<DishIngredientWithoutImage>, 'author'>;
 
 export type GetDishesQueryType = Record<GetDishesQueryKeyTypes, string>;
 

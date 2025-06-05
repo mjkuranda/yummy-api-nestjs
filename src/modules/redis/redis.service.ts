@@ -42,6 +42,7 @@ export class RedisService {
         return Boolean(dish !== null || details !== null);
     }
 
+    // FIXME: Deprecated
     async deleteDish(dishId: string): Promise<void> {
         await this.redisClient.del(`dish:${dishId}`);
         await this.redisClient.del(`dish-details:${dishId}`);
@@ -160,6 +161,7 @@ export class RedisService {
         return JSON.parse(value);
     }
 
+    // FIXME: Deprecated
     async getDishRecipe(dishId: string, language: Language): Promise<DishRecipe> {
         const key: DishRecipeQueryKey = getDishRecipeQueryKey(dishId, language);
         const value = await this.redisClient.get(key);
@@ -171,6 +173,7 @@ export class RedisService {
         return JSON.parse(value);
     }
 
+    // FIXME: Deprecated
     async saveDishRecipe(recipe: DishRecipe): Promise<void> {
         const key: DishRecipeQueryKey = getDishRecipeQueryKey(recipe.dishId, recipe.language);
         const value = JSON.stringify(recipe);

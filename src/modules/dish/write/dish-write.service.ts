@@ -5,20 +5,16 @@ import { DishDocument } from '../../../mongodb/documents/dish.document';
 import { DishRepository } from '../../../mongodb/repositories/dish.repository';
 import { EncodedDishId } from '../../../common/types';
 import { DishIdObfuscator } from '../../../common/helpers/dish-id-obfuscator.helper';
-import { DishCacheService } from '../../cache/dish-cache.service';
+import { DishCacheService } from '../../cache/dish/dish-cache.service';
 import { proceedDishDocumentToDishDetails } from '../dish.utils';
 import { CreateDishCommentBody, CreateDishRatingBody, DishEditDto } from '../dish.dto';
 import { DishIngredient } from '../../ingredient/ingredient.types';
 import { DishCommentRepository } from '../../../mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../../../mongodb/repositories/dish-rating.repository';
-import { DishNotFoundError } from '../../../errors/domain/dish-not-found.error';
-import { DishNotAcceptedError } from '../../../errors/domain/dish-not-accepted.error';
-import { DishSoftDeletedError } from '../../../errors/domain/dish-soft-deleted.error';
+import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError, InvalidDishIdError, DishDeletionFailedError, EmptyDishIngredientListError, MissingDishAuthorError } from '../../../errors/domain';
 import { IngredientService } from '../../ingredient/ingredient.service';
 import { UserSearchQueryRepository } from '../../../mongodb/repositories/user-search-query.repository';
-import { InvalidDishIdError } from '../../../errors/domain/invalid-dish-id.error';
 import { AddDishRatingResult, ConfirmDeletingResult, DeleteDishResult, EditDishResult } from './dish-write.types';
-import { DishDeletionFailedError } from '../../../errors/domain/dish-deletion-failed.error';
 
 @Injectable()
 export class DishWriteService {
@@ -39,9 +35,19 @@ export class DishWriteService {
     /**
      * @description creates and saves a new dish to the database
      * @param createData includes data to create a new dish
+     * @param author user who creates this dish
+     * @param ingredients list of dish ingredients
      */
-    async saveNewDish(createData: CreateDishDataType): Promise<DishDocument> {
-        return await this.dishRepository.create(createData);
+    async saveNewDish(createData: CreateDishDataType, author: string, ingredients: DishIngredient[]): Promise<DishDocument> {
+        if (!author) {
+            throw new MissingDishAuthorError();
+        }
+
+        if (!ingredients || ingredients.length === 0) {
+            throw new EmptyDishIngredientListError();
+        }
+
+        return await this.dishRepository.create(createData, author, ingredients);
     }
 
     /**

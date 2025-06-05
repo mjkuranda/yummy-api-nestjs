@@ -12,13 +12,24 @@ import { DishProvider, MealType } from '../../common/enums';
 import { proceedDishDocumentToDishDetails } from '../../modules/dish/dish.utils';
 import { EncodedDishId } from '../../common/types';
 import { DishIdObfuscator } from '../../common/helpers/dish-id-obfuscator.helper';
-import { InvalidMongooseObjectIdError } from '../../errors/infrastructure/invalid-mongoose-object-id.error';
+import { InvalidMongooseObjectIdError } from '../../errors/infrastructure';
 import { DishDetailsWithMetadata } from '../../modules/dish/read/dish-read.types';
 
 export class DishRepository extends AbstractRepository<DishDocument, CreateDishDataType> implements DishProvidable {
 
     constructor(@InjectModel(dishModel.name) model: Model<DishDocument>) {
         super(model);
+    }
+
+    async create(data: CreateDishDataType, author?: string, ingredients?: DishIngredient[]) {
+        return this.model.create({
+            ...data,
+            ingredients,
+            author,
+            posted: Date.now(),
+            provider: DishProvider.INT_DMT_USER,
+            softAdded: true
+        });
     }
 
     async getDishDetails(encodedDishId: EncodedDishId): Promise<DishDetailsWithMetadata | null> {

@@ -3,9 +3,7 @@ import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../write/dish-write.service';
 import { AddDishCommentUseCase } from './add-dish-comment.use-case';
 import { CreateDishCommentBody } from '../../dish.dto';
-import { DishNotFoundError } from '../../../../errors/domain/dish-not-found.error';
-import { DishNotAcceptedError } from '../../../../errors/domain/dish-not-accepted.error';
-import { DishSoftDeletedError } from '../../../../errors/domain/dish-soft-deleted.error';
+import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../../../../errors/domain';
 import { NotFoundException } from '../../../../exceptions/not-found.exception';
 import { ForbiddenException } from '../../../../exceptions/forbidden-exception';
 
@@ -102,4 +100,4 @@ describe('AddDishCommentUseCase', () => {
                 .toThrow(`Dish "${mockCommentBody.encodedDishId}" has been deleted`);
         });
     });
-}); 
+});

@@ -4,7 +4,6 @@ import { AppModule } from '../src/app.module';
 import { LoggerService } from '../src/modules/logger/logger.service';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
-import { DishOrchestrator } from '../src/modules/dish/application/dish-command.facade';
 import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
 import { RedisService } from '../src/modules/redis/redis.service';
 import { DishRepository } from '../src/mongodb/repositories/dish.repository';
@@ -13,12 +12,15 @@ import { UserSearchQueryRepository } from '../src/mongodb/repositories/user-sear
 import { DishCommentRepository } from '../src/mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../src/mongodb/repositories/dish-rating.repository';
 import { IngredientService } from '../src/modules/ingredient/ingredient.service';
-import { MealType, DishType } from '../src/common/enums';
+import { MealType, DishType, DishProvider } from '../src/common/enums';
 import { ExternalApiService } from '../src/modules/api/external-api.service';
+import { UserAccessTokenPayload } from '../src/modules/jwt-manager/jwt-manager.types';
+import { DishIngredient } from '../src/modules/ingredient/ingredient.types';
+import { DishRatingDocument } from '../src/mongodb/documents/dish-rating.document';
 
-describe('UserController (e2e)', () => {
+describe('DishController (e2e)', () => {
     let app: INestApplication;
-    let dishService: DishOrchestrator;
+    let dishService: DishRepository;
     let dishRepository: DishRepository;
     let dishCommentRepository: DishCommentRepository;
     let dishRatingRepository: DishRatingRepository;
@@ -107,7 +109,7 @@ describe('UserController (e2e)', () => {
         app.use(cookieParser());
         await app.init();
 
-        dishService = moduleRef.get(DishOrchestrator);
+        dishService = moduleRef.get(DishRepository);
         dishRepository = moduleRef.get(DishRepository);
         dishCommentRepository = moduleRef.get(DishCommentRepository);
         dishRatingRepository = moduleRef.get(DishRatingRepository);
@@ -144,22 +146,22 @@ describe('UserController (e2e)', () => {
         });
     });
 
-    describe('/dishes/:id/details', () => {
+    describe('/dishes/details (GET)', () => {
         it('should return a dish when is cached', async () => {
             const mockCachedDish: DetailedDish = {
-                id: 'some-id',
+                imgUrl: 'http://example.com/image.jpg',
                 title: 'some title',
                 description: 'some description',
                 language: 'en-US',
                 readyInMinutes: 0,
                 sourceOrAuthor: 'unknown',
                 ingredients: [],
-                provider: 'yummy',
+                provider: DishProvider.INT_DMT_USER,
                 type: DishType.ANY,
                 mealType: MealType.ANY
             };
             const expectedResponseBody: DetailedDishWithTranslations = {
-                id: 'some-id',
+                imgUrl: 'http://example.com/image.jpg',
                 title: 'some title',
                 description: 'some description',
                 language: {
@@ -172,7 +174,7 @@ describe('UserController (e2e)', () => {
                     original: [],
                     translated: []
                 },
-                provider: 'yummy',
+                provider: DishProvider.INT_DMT_USER,
                 type: DishType.ANY,
                 mealType: MealType.ANY
             };
@@ -184,7 +186,7 @@ describe('UserController (e2e)', () => {
                 .set('Accept-Language', 'en')
                 .expect(200)
                 .expect(expectedResponseBody);
-        }, 10000);
+        });
 
         it('should throw an error when dish hasn\'t found', async () => {
             jest.spyOn(redisService, 'getDishDetails').mockResolvedValueOnce(null);
@@ -273,393 +275,273 @@ describe('UserController (e2e)', () => {
         });
     });
 
-    describe('/dishes/:id/comment (POST)', () => {
-        it('should post a new comment for a particular dish', () => {
-            const mockDishId = 'mock dish id';
-            const mockRequestBody = {
-                dishId: mockDishId,
-                user: 'mock user name',
-                text: 'That\'s an awesome dish ever!'
-            } as any;
-            const mockDishComment = {
-                ...mockRequestBody,
-                posted: Date.now()
-            } as any;
-            const mockUser = {
-                _id: '635981f6e40f61599e839ddb',
-                login: 'user',
-                password: 'hashed'
-            } as any;
+    describe('/dishes (POST)', () => {
+        const mockCreateDishDto = {
+            title: 'Test Dish',
+            description: 'Test Description',
+            ingredients: [{
+                name: 'ingredient1' as const,
+                amount: 1,
+                unit: 'piece',
+                imageUrl: 'http://example.com/ingredient1.jpg'
+            } as DishIngredient],
+            language: 'en',
+            type: DishType.MAIN_COURSE,
+            mealType: MealType.DINNER,
+            readyInMinutes: 30,
+            imageUrl: 'http://example.com/image.jpg',
+            provider: DishProvider.INT_DMT_USER
+        };
 
+        const mockAccessToken = 'mock-access-token';
+        const mockUser: UserAccessTokenPayload = {
+            login: 'testUser',
+            expirationTimestamp: Date.now() + 900000, // 15 minutes
+            capabilities: { canAdd: true, canEdit: true }
+        };
+
+        beforeEach(() => {
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-            jest.spyOn(redisService, 'hasDish').mockResolvedValueOnce(true);
-            jest.spyOn(dishCommentRepository, 'create').mockResolvedValueOnce(mockDishComment);
+            jest.spyOn(ingredientService, 'wrapIngredientsWithImages').mockResolvedValue([
+                {
+                    name: 'ingredient1',
+                    amount: 1,
+                    unit: 'piece',
+                    imageUrl: 'http://example.com/ingredient1.jpg'
+                } as DishIngredient
+            ]);
+        });
+
+        it('should create a new dish successfully', () => {
+            const mockCreatedDish = {
+                ...mockCreateDishDto,
+                id: 'new-dish-id',
+                author: mockUser.login
+            };
+
+            jest.spyOn(dishRepository, 'create').mockResolvedValue(mockCreatedDish as any);
 
             return request(app.getHttpServer())
-                .post(`/dishes/${mockDishId}/comment`)
-                .set('Cookie', ['accessToken=token'])
-                .set('Accept', 'application/json')
-                .set('Authorization', 'Bearer token')
-                .send(mockRequestBody)
-                .expect(201);
+                .post('/dishes')
+                .set('Authorization', `Bearer ${mockAccessToken}`)
+                .send(mockCreateDishDto)
+                .expect(201)
+                .expect(res => {
+                    expect(res.body).toMatchObject(mockCreatedDish);
+                });
+        });
+
+        it('should return 400 when creating dish with invalid data', () => {
+            const invalidDishDto = {
+                ...mockCreateDishDto,
+                ingredients: [] // Empty ingredients list should fail validation
+            };
+
+            return request(app.getHttpServer())
+                .post('/dishes')
+                .set('Authorization', `Bearer ${mockAccessToken}`)
+                .send(invalidDishDto)
+                .expect(400);
+        });
+
+        it('should return 401 when creating dish without authentication', () => {
+            return request(app.getHttpServer())
+                .post('/dishes')
+                .send(mockCreateDishDto)
+                .expect(401);
+        });
+    });
+
+    describe('/dishes/:id/comments (POST)', () => {
+        const mockDishId = 'test-dish-id';
+        const mockAccessToken = 'mock-access-token';
+        const mockUser: UserAccessTokenPayload = {
+            login: 'testUser',
+            expirationTimestamp: Date.now() + 900000,
+            capabilities: { canAdd: true }
+        };
+        const mockComment = {
+            text: 'This is a test comment'
+        };
+
+        beforeEach(() => {
+            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
+            jest.spyOn(redisService, 'hasDish').mockResolvedValue(true);
+        });
+
+        it('should add a comment to a dish successfully', () => {
+            const mockCreatedComment = {
+                ...mockComment,
+                id: 'new-comment-id',
+                dishId: mockDishId,
+                user: mockUser.login,
+                posted: expect.any(Number)
+            };
+
+            jest.spyOn(dishCommentRepository, 'create').mockResolvedValue(mockCreatedComment as any);
+
+            return request(app.getHttpServer())
+                .post(`/dishes/${mockDishId}/comments`)
+                .set('Authorization', `Bearer ${mockAccessToken}`)
+                .send(mockComment)
+                .expect(201)
+                .expect(res => {
+                    expect(res.body).toMatchObject(mockCreatedComment);
+                });
+        });
+
+        it('should return 404 when commenting on non-existent dish', () => {
+            jest.spyOn(redisService, 'hasDish').mockResolvedValue(false);
+
+            return request(app.getHttpServer())
+                .post(`/dishes/${mockDishId}/comments`)
+                .set('Authorization', `Bearer ${mockAccessToken}`)
+                .send(mockComment)
+                .expect(404);
         });
     });
 
     describe('/dishes/:id/rating (POST)', () => {
-        it('should post a new rating for a specific dish', () => {
-            const mockDishId = 'mock dish id';
-            const mockRequestBody = {
-                dishId: mockDishId,
-                user: 'mock user name',
-                rating: 10
-            } as any;
-            const mockDishRating = {
-                ...mockRequestBody,
-                posted: Date.now()
-            } as any;
-            const mockUser = {
-                _id: '635981f6e40f61599e839ddb',
-                login: 'user',
-                password: 'hashed'
-            } as any;
+        const mockDishId = 'test-dish-id';
+        const mockAccessToken = 'mock-access-token';
+        const mockUser: UserAccessTokenPayload = {
+            login: 'testUser',
+            expirationTimestamp: Date.now() + 900000,
+            capabilities: { canAdd: true }
+        };
 
+        beforeEach(() => {
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-            jest.spyOn(redisService, 'hasDish').mockResolvedValueOnce(true);
-            jest.spyOn(dishRatingRepository, 'create').mockResolvedValueOnce(mockDishRating);
+            jest.spyOn(redisService, 'hasDish').mockResolvedValue(true);
+        });
+
+        it('should add a rating to a dish successfully', () => {
+            const mockRatingDoc: DishRatingDocument = {
+                dishId: mockDishId,
+                user: mockUser.login,
+                rating: 4,
+                posted: Date.now()
+            } as DishRatingDocument;
+
+            jest.spyOn(dishRatingRepository, 'create').mockResolvedValue(mockRatingDoc);
+            jest.spyOn(dishRatingRepository, 'getAverageRatingForDish').mockResolvedValue({
+                dishId: mockDishId,
+                rating: 4,
+                count: 1
+            });
 
             return request(app.getHttpServer())
                 .post(`/dishes/${mockDishId}/rating`)
-                .set('Cookie', ['accessToken=token'])
-                .set('Accept', 'application/json')
-                .set('Authorization', 'Bearer token')
-                .send(mockRequestBody)
-                .expect(200);
-        });
-    });
-
-    describe('/dishes/create (POST)', () => {
-        it('should add a new dish when user is logged-in', () => {
-            const mockRequestBody = {
-                title: 'Title',
-                description: 'Lorem ipsum',
-                ingredients: ['123', '456'],
-                type: 'some type',
-                imageUrl: '2e99e91d-7bd0-4ec8-89a6-ea9a6604a4f7.jpg'
-            } as any;
-            const mockUser = {
-                _id: '635981f6e40f61599e839ddb',
-                login: 'user',
-                password: 'hashed'
-            } as any;
-            const mockIngredients = ['123', '456'] as any;
-            const accessToken = 'token';
-
-            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue(accessToken);
-            jest.spyOn(ingredientService, 'wrapIngredientsWithImages').mockResolvedValueOnce(mockIngredients);
-
-            return request(app.getHttpServer())
-                .post('/dishes/create')
-                .set('Cookie', ['accessToken=token'])
-                .set('Accept', 'application/json')
-                .set('Authorization', 'Bearer token')
-                .send(mockRequestBody)
-                .expect(201);
+                .set('Authorization', `Bearer ${mockAccessToken}`)
+                .send({ rating: 4 })
+                .expect(201)
+                .expect(res => {
+                    expect(res.body).toMatchObject({
+                        rating: 4,
+                        averageRating: 4
+                    });
+                });
         });
 
-        it('should throw an error, when user is not logged-in', () => {
-            const mockRequestBody = {
-                title: 'Title',
-                description: 'Lorem ipsum',
-                ingredients: ['123', '456'],
-                type: 'some type'
-            } as any;
-
+        it('should return 400 when rating value is invalid', () => {
             return request(app.getHttpServer())
-                .post('/dishes/create')
-                .set('Cookie', [])
-                .set('Accept', 'application/json')
-                .send(mockRequestBody)
-                .expect(401);
+                .post(`/dishes/${mockDishId}/rating`)
+                .set('Authorization', `Bearer ${mockAccessToken}`)
+                .send({ rating: 6 }) // Invalid rating value
+                .expect(400);
         });
     });
 
     describe('/dishes/:id (PUT)', () => {
-        it('should introduce edition when user is logged-in', () => {
-            const mockRequestBody = {
-                description: 'New lorem ipsum'
-            } as any;
-            const mockEditedDish = {
-                description: mockRequestBody.description,
-                title: 'Abc',
-                ingredients: ['xxx'],
-                type: 'Some type'
-            } as any;
-            const mockUser = {
-                _id: '635981f6e40f61599e839aaa',
-                login: 'user',
-                password: 'hashed'
-            } as any;
-            const accessToken = 'token';
+        const mockDishId = 'test-dish-id';
+        const mockAccessToken = 'mock-access-token';
+        const mockUser: UserAccessTokenPayload = {
+            login: 'testUser',
+            expirationTimestamp: Date.now() + 900000,
+            capabilities: { canEdit: true }
+        };
+        const mockUpdateDishDto = {
+            title: 'Updated Dish Title',
+            description: 'Updated description',
+            ingredients: [{
+                name: 'updated-ingredient' as const,
+                amount: 2,
+                unit: 'pieces',
+                imageUrl: 'http://example.com/updated-ingredient.jpg'
+            } as DishIngredient]
+        };
 
+        beforeEach(() => {
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue(accessToken);
-            jest.spyOn(dishService, 'edit').mockReturnValueOnce(mockEditedDish);
-
-            return request(app.getHttpServer())
-                .put('/dishes/635981f6e40f61599e839ddf')
-                .set('Cookie', ['accessToken=token'])
-                .set('Accept', 'application/json')
-                .set('Authorization', 'Bearer token')
-                .send(mockRequestBody)
-                .expect(200)
-                .expect(mockEditedDish);
+            jest.spyOn(redisService, 'hasDish').mockResolvedValue(true);
+            jest.spyOn(ingredientService, 'wrapIngredientsWithImages').mockResolvedValue(mockUpdateDishDto.ingredients);
         });
 
-        it('should throw an error, when user is not logged-in', () => {
-            const mockRequestBody = {
-                description: 'New lorem ipsum',
-            } as any;
+        it('should update a dish successfully', () => {
+            const mockUpdatedDish = {
+                id: mockDishId,
+                ...mockUpdateDishDto,
+                author: mockUser.login
+            };
+
+            jest.spyOn(dishRepository, 'updateOne').mockResolvedValue(mockUpdatedDish as any);
 
             return request(app.getHttpServer())
-                .put('/dishes/635981f6e40f61599e839ddf')
-                .set('Cookie', [])
-                .set('Accept', 'application/json')
-                .send(mockRequestBody)
-                .expect(401)
+                .put(`/dishes/${mockDishId}`)
+                .set('Authorization', `Bearer ${mockAccessToken}`)
+                .send(mockUpdateDishDto)
+                .expect(200)
                 .expect(res => {
-                    expect(res.body.message).toBe('Not provided accessToken.');
+                    expect(res.body).toMatchObject(mockUpdatedDish);
                 });
+        });
+
+        it('should return 404 when updating non-existent dish', () => {
+            jest.spyOn(redisService, 'hasDish').mockResolvedValue(false);
+
+            return request(app.getHttpServer())
+                .put(`/dishes/${mockDishId}`)
+                .set('Authorization', `Bearer ${mockAccessToken}`)
+                .send(mockUpdateDishDto)
+                .expect(404);
         });
     });
 
     describe('/dishes/:id (DELETE)', () => {
-        it('should mark as soft-deleted when user is logged-in', () => {
-            const mockUser = {
-                _id: '635981f6e40f61599e839aaa',
-                login: 'user',
-                password: 'hashed'
-            } as any;
-            const mockDeletedDish = {} as any;
+        const mockDishId = 'test-dish-id';
+        const mockAccessToken = 'mock-access-token';
+        const mockUser: UserAccessTokenPayload = {
+            login: 'testUser',
+            expirationTimestamp: Date.now() + 900000,
+            capabilities: { canEdit: true }
+        };
 
+        beforeEach(() => {
             jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-            jest.spyOn(dishService, 'delete').mockReturnValueOnce(mockDeletedDish);
-
-            return request(app.getHttpServer())
-                .delete('/dishes/635981f6e40f61599e839ddf')
-                .set('Cookie', ['accessToken=token'])
-                .set('Authorization', 'Bearer token')
-                .expect(204);
+            jest.spyOn(redisService, 'hasDish').mockResolvedValue(true);
         });
 
-        it('should throw an error, when user is not logged-in', () => {
-            return request(app.getHttpServer())
-                .delete('/dishes/635981f6e40f61599e839ddf')
-                .set('Cookie', [])
-                .expect(401)
-                .expect(res => {
-                    expect(res.body.message).toBe('Not provided accessToken.');
-                });
-        });
-    });
-
-    describe('/dishes/:id/create (POST)', () => {
-        it('should confirm adding a new dish when user is an admin', () => {
-            const mockUser = {
-                _id: '635981f6e40f61599e839aaa',
-                login: 'user',
-                password: 'hashed',
-                isAdmin: true
-            } as any;
-
-            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-            jest.spyOn(dishService, 'confirmCreating').mockReturnValueOnce({} as any);
+        it('should delete a dish successfully', () => {
+            jest.spyOn(dishRepository, 'updateOne').mockResolvedValue({ acknowledged: true } as any);
 
             return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/create')
-                .set('Cookie', ['accessToken=token'])
-                .set('Authorization', 'Bearer token')
+                .delete(`/dishes/${mockDishId}`)
+                .set('Authorization', `Bearer ${mockAccessToken}`)
                 .expect(200);
         });
 
-        it('should confirm adding a new dish when user has canAdd capability', () => {
-            const mockUser = {
-                _id: '635981f6e40f61599e839aaa',
-                login: 'user',
-                password: 'hashed',
-                capabilities: {
-                    canAdd: true
-                }
-            } as any;
-
-            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-            jest.spyOn(dishService, 'confirmCreating').mockReturnValueOnce({} as any);
+        it('should return 404 when deleting non-existent dish', () => {
+            jest.spyOn(redisService, 'hasDish').mockResolvedValue(false);
 
             return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/create')
-                .set('Cookie', ['accessToken=token'])
-                .set('Authorization', 'Bearer token')
-                .expect(200);
+                .delete(`/dishes/${mockDishId}`)
+                .set('Authorization', `Bearer ${mockAccessToken}`)
+                .expect(404);
         });
 
-        it('should fail when user has not sufficient capabilities', () => {
-            const mockUser = {
-                _id: '635981f6e40f61599e839aaa',
-                login: 'user',
-                password: 'hashed'
-            } as any;
-
-            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-
+        it('should return 401 when deleting without authentication', () => {
             return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/create')
-                .set('Cookie', ['accessToken=token'])
-                .set('Authorization', 'Bearer token')
-                .expect(403);
-        });
-
-        it('should fail when you are not logged-in', () => {
-            return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/create')
-                .set('Cookie', [])
-                .expect(401);
-        });
-    });
-
-    describe('/dishes/:id/edit (POST)', () => {
-        it('should confirm editing a dish when user is an admin', () => {
-            const mockUser = {
-                _id: '635981f6e40f61599e839aaa',
-                login: 'user',
-                password: 'hashed',
-                isAdmin: true
-            } as any;
-
-            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-            jest.spyOn(dishService, 'confirmEditing').mockReturnValueOnce({} as any);
-
-            return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/edit')
-                .set('Cookie', ['accessToken=token'])
-                .set('Authorization', 'Bearer token')
-                .expect(200);
-        });
-
-        it('should confirm editing a dish when user has canEdit capability', () => {
-            const mockUser = {
-                _id: '635981f6e40f61599e839aaa',
-                login: 'user',
-                password: 'hashed',
-                capabilities: {
-                    canEdit: true
-                }
-            } as any;
-
-            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-            jest.spyOn(dishService, 'confirmEditing').mockReturnValueOnce({} as any);
-
-            return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/edit')
-                .set('Cookie', ['accessToken=token'])
-                .set('Authorization', 'Bearer token')
-                .expect(200);
-        });
-
-        it('should fail when user has not sufficient capabilities', () => {
-            const mockUser = {
-                _id: '635981f6e40f61599e839aaa',
-                login: 'user',
-                password: 'hashed'
-            } as any;
-
-            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-
-            return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/edit')
-                .set('Cookie', ['accessToken=token'])
-                .set('Authorization', 'Bearer token')
-                .expect(403);
-        });
-
-        it('should fail when you are not logged-in', () => {
-            return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/edit')
-                .set('Cookie', [])
-                .expect(401);
-        });
-    });
-
-    describe('/dishes/:id/delete (POST)', () => {
-        it('should confirm deleting a dish when user is an admin', () => {
-            const mockUser = {
-                _id: '635981f6e40f61599e839aaa',
-                login: 'user',
-                password: 'hashed',
-                isAdmin: true
-            } as any;
-
-            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-            jest.spyOn(dishService, 'confirmDeleting').mockReturnValueOnce({} as any);
-
-            return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/delete')
-                .set('Cookie', ['accessToken=token'])
-                .set('Authorization', 'Bearer token')
-                .expect(200);
-        });
-
-        it('should confirm deleting a dish when user has canDelete capability', () => {
-            const mockUser = {
-                _id: '635981f6e40f61599e839aaa',
-                login: 'user',
-                password: 'hashed',
-                capabilities: {
-                    canDelete: true
-                }
-            } as any;
-
-            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-            jest.spyOn(dishService, 'confirmDeleting').mockReturnValueOnce({} as any);
-
-            return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/delete')
-                .set('Cookie', ['accessToken=token'])
-                .set('Authorization', 'Bearer token')
-                .expect(200);
-        });
-
-        it('should fail when user has not sufficient capabilities', () => {
-            const mockUser = {
-                _id: '635981f6e40f61599e839aaa',
-                login: 'user',
-                password: 'hashed'
-            } as any;
-
-            jest.spyOn(jwtManagerService, 'verifyAccessToken').mockResolvedValue(mockUser);
-            jest.spyOn(redisService, 'getAccessToken').mockResolvedValue('token');
-
-            return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/delete')
-                .set('Cookie', ['accessToken=token'])
-                .set('Authorization', 'Bearer token')
-                .expect(403);
-        });
-
-        it('should fail when you are not logged-in', () => {
-            return request(app.getHttpServer())
-                .post('/dishes/635981f6e40f61599e839aaa/delete')
-                .set('Cookie', [])
+                .delete(`/dishes/${mockDishId}`)
                 .expect(401);
         });
     });
@@ -710,5 +592,9 @@ describe('UserController (e2e)', () => {
                 .send({ ingredients })
                 .expect(204);
         });
+    });
+
+    afterAll(async () => {
+        await app.close();
     });
 });

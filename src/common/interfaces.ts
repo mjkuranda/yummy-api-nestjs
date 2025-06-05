@@ -1,8 +1,9 @@
 import { UserAccessTokenPayload } from '../modules/jwt-manager/jwt-manager.types';
-import { DetailedDish, RatedDish } from '../modules/dish/dish.types';
+import { RatedDish } from '../modules/dish/dish.types';
 import { DishProvider, MealType } from './enums';
-import { EncodedDishId } from './types';
+import { EncodedDishId, Language } from './types';
 import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
+import { DishRecipe } from '../modules/recipe/recipe.types';
 
 /**
  * @description Transformed endpoint body
@@ -33,6 +34,24 @@ export interface DishProvidable {
      * @param encodedDishId encoded dish ID and its provider name
      */
     getDishDetails(encodedDishId: EncodedDishId): Promise<DishDetailsWithMetadata | null>;
+}
+
+/**
+ *  @description Interface for providing dish recipes
+ */
+export interface RecipeProvidable {
+    /**
+     * @description returns dish recipe
+     * @param encodedDishId encoded dish ID and its provider name
+     * @param language recipe language
+     */
+    getDishRecipe(encodedDishId: EncodedDishId, language?: Language): Promise<DishRecipe | null>;
+
+    /**
+     * @description returns list of language-prepared recipes
+     * @param encodedDishId encoded dish ID and its provider name
+     */
+    getLanguageVersions(encodedDishId: string): Language[];
 }
 
 /**

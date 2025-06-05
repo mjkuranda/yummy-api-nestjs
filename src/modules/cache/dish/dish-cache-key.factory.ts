@@ -1,9 +1,9 @@
 import * as crypto from 'crypto';
 import { DishDetailedKey, DishSearchResultKey, DishSearchResultPerProviderKey } from './dish-cache.types';
-import { DishProvidable } from '../../common/interfaces';
-import { EncodedDishId } from '../../common/types';
+import { DishProvidable } from '../../../common/interfaces';
+import { EncodedDishId } from '../../../common/types';
 
-export class CacheKeyFactory {
+export class DishCacheKeyFactory {
 
     static createDishSearchResultKey(ingredients: string[]): DishSearchResultKey {
         const sorted = ingredients.map(i => i.toLowerCase().trim()).sort();

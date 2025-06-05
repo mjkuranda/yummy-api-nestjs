@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { REDIS_CLIENT } from '../redis/redis.constants';
+import { REDIS_CLIENT } from '../../redis/redis.constants';
 import { Redis } from 'ioredis';
-import { DetailedDish, RatedDish } from '../dish/dish.types';
-import { DishProvidable } from '../../common/interfaces';
-import { CacheKeyFactory } from './cache-key.factory';
-import { DAY, HOUR } from '../../constants/times.constant';
-import { EncodedDishId } from '../../common/types';
+import { DetailedDish, RatedDish } from '../../dish/dish.types';
+import { DishProvidable } from '../../../common/interfaces';
+import { DishCacheKeyFactory } from './dish-cache-key.factory';
+import { DAY, HOUR } from '../../../constants/times.constant';
+import { EncodedDishId } from '../../../common/types';
 
 @Injectable()
 export class DishCacheService {
@@ -19,7 +19,7 @@ export class DishCacheService {
      * @param providedIngredients list of provided ingredients by user
      */
     async getDishes(providedIngredients: string[]): Promise<RatedDish[]> {
-        const key = CacheKeyFactory.createDishSearchResultKey(providedIngredients);
+        const key = DishCacheKeyFactory.createDishSearchResultKey(providedIngredients);
         const val = await this.redisClient.get(key);
 
         return val ? <RatedDish[]>JSON.parse(val) : [];
@@ -31,7 +31,7 @@ export class DishCacheService {
      * @param ratedDishes
      */
     async setDishes(providedIngredients: string[], ratedDishes: RatedDish[]): Promise<void> {
-        const key = CacheKeyFactory.createDishSearchResultKey(providedIngredients);
+        const key = DishCacheKeyFactory.createDishSearchResultKey(providedIngredients);
         const val = JSON.stringify(ratedDishes);
 
         await this.redisClient.set(key, val);
@@ -48,7 +48,7 @@ export class DishCacheService {
             return [];
         }
 
-        const key = CacheKeyFactory.createDishSearchResultPerProviderKey(provider);
+        const key = DishCacheKeyFactory.createDishSearchResultPerProviderKey(provider);
         const pipeline = this.redisClient.pipeline();
         ingredients.forEach(ingredient => pipeline.hget(key, ingredient));
         const results = await pipeline.exec();
@@ -77,7 +77,7 @@ export class DishCacheService {
      * @param dishes
      */
     async setDishesPerIngredient(provider: DishProvidable, ingredient: string, dishes: RatedDish[]): Promise<void> {
-        const key = CacheKeyFactory.createDishSearchResultPerProviderKey(provider);
+        const key = DishCacheKeyFactory.createDishSearchResultPerProviderKey(provider);
 
         await this.redisClient.hset(key, ingredient, JSON.stringify(dishes));
         await this.redisClient.expire(key, 365 * DAY);
@@ -88,7 +88,7 @@ export class DishCacheService {
      * @param encodedDishId dish ID
      */
     async getDishDetails(encodedDishId: EncodedDishId): Promise<DetailedDish | null> {
-        const key = CacheKeyFactory.createDishDetailedResultKey(encodedDishId);
+        const key = DishCacheKeyFactory.createDishDetailedResultKey(encodedDishId);
         const val = await this.redisClient.get(key);
 
         return val ? <DetailedDish>JSON.parse(val) : null;
@@ -100,7 +100,7 @@ export class DishCacheService {
      * @param detailedDish dish to cache
      */
     async setDishDetails(encodedDishId: EncodedDishId, detailedDish: DetailedDish): Promise<void> {
-        const key = CacheKeyFactory.createDishDetailedResultKey(encodedDishId);
+        const key = DishCacheKeyFactory.createDishDetailedResultKey(encodedDishId);
 
         await this.redisClient.set(key, JSON.stringify(detailedDish));
         await this.redisClient.expire(key, DAY);
@@ -111,7 +111,7 @@ export class DishCacheService {
      * @param encodedDishId
      */
     async hasDish(encodedDishId: EncodedDishId): Promise<boolean> {
-        const key = CacheKeyFactory.createDishDetailedResultKey(encodedDishId);
+        const key = DishCacheKeyFactory.createDishDetailedResultKey(encodedDishId);
         const val = await this.redisClient.get(key);
 
         return val !== null && val.length > 0;
@@ -122,7 +122,7 @@ export class DishCacheService {
      * @param encodedDishId encoded dish ID and its provider name
      */
     async deleteDish(encodedDishId: EncodedDishId): Promise<void> {
-        const key = CacheKeyFactory.createDishDetailedResultKey(encodedDishId);
+        const key = DishCacheKeyFactory.createDishDetailedResultKey(encodedDishId);
 
         await this.redisClient.del(key);
     }
