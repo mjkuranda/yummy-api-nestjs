@@ -21,35 +21,41 @@ export class GetDishDetailsUseCase extends AbstractUseCase<[EncodedDishId, Langu
         super();
     }
 
-    async execute(encodedDishId: EncodedDishId, language: Language): Promise<DetailedDishWithTranslations> {
-        const context: ContextString = 'GetDishDetailsUseCase/execute';
+    protected async run(encodedDishId: EncodedDishId, language: Language): Promise<DetailedDishWithTranslations> {
+        const { dish, fromCache } = await this.dishReadService.getDishDetails(encodedDishId);
+        // TODO: Translation should be done within the service
+        const translated = await this.translationService.translateDish(dish, language);
 
-        try {
-            const { dish, fromCache } = await this.dishReadService.getDishDetails(encodedDishId);
-            const translated = await this.translationService.translateDish(dish, language);
+        this.loggerService.info(this.context, `Dish with "${encodedDishId}" ID loaded from ${fromCache ? 'cache' : 'provider and cached'}.`);
 
-            this.loggerService.info(context, `Dish with "${encodedDishId}" ID loaded from ${fromCache ? 'cache' : 'provider and cached'}.`);
-
-            return {
-                ...dish,
-                ...translated,
-                language: {
-                    original: dish.language,
-                    translated: language
-                },
-                ingredients: {
-                    original: dish.ingredients,
-                    translated: translated.ingredients
-                }
-            };
-        } catch (error) {
-            if (error instanceof DishNotFoundError) {
-                throw new NotFoundException(context, `Dish "${encodedDishId}" not found`);
+        // TODO: Consider entities
+        return {
+            ...dish,
+            ...translated,
+            language: {
+                original: dish.language,
+                translated: language
+            },
+            ingredients: {
+                original: dish.ingredients,
+                translated: translated.ingredients
             }
+        };
+    }
 
-            if (error instanceof InvalidDishIdError) {
-                throw new BadRequestException(context, `Invalid dish ID "${encodedDishId}"`);
-            }
+    protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof DishNotFoundError) {
+            throw new NotFoundException(context, error.message);
         }
+
+        if (error instanceof InvalidDishIdError) {
+            throw new BadRequestException(context, error.message);
+        }
+
+        throw new BadRequestException(context, 'Unknown error occurred');
+    }
+
+    protected get context(): ContextString {
+        return 'GetDishDetailsUseCase/run';
     }
 }

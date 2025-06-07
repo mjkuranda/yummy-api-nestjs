@@ -19,22 +19,26 @@ export class GetDishCommentsUseCase extends AbstractUseCase<[EncodedDishId], Dis
         super();
     }
 
-    async execute(encodedDishId: EncodedDishId): Promise<DishCommentDocument[]> {
-        const context: ContextString = 'GetDishCommentsUseCase/execute';
+    protected async run(encodedDishId: EncodedDishId): Promise<DishCommentDocument[]> {
+        const comments = await this.dishReadService.getDishComments(encodedDishId);
+        this.loggerService.info(this.context, `Successfully retrieved ${comments.length} comments for dish "${encodedDishId}".`);
 
-        try {
-            const comments = await this.dishReadService.getDishComments(encodedDishId);
-            this.loggerService.info(context, `Successfully retrieved ${comments.length} comments for dish "${encodedDishId}".`);
+        return comments;
+    }
 
-            return comments;
-        } catch (error) {
-            if (error instanceof DishNotFoundError) {
-                throw new NotFoundException(context, `Dish "${encodedDishId}" not found`);
-            }
-
-            if (error instanceof InvalidDishIdError) {
-                throw new BadRequestException(context, `Invalid dish ID "${encodedDishId}"`);
-            }
+    protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof DishNotFoundError) {
+            throw new NotFoundException(context, error.message);
         }
+
+        if (error instanceof InvalidDishIdError) {
+            throw new BadRequestException(context, error.message);
+        }
+
+        throw new BadRequestException(context, 'Unknown error occurred');
+    }
+
+    protected get context(): ContextString {
+        return 'GetDishCommentsUseCase/run';
     }
 }

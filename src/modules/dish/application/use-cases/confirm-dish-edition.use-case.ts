@@ -8,6 +8,7 @@ import { NotFoundException } from '../../../../exceptions/not-found.exception';
 import { BadRequestException } from '../../../../exceptions/bad-request.exception';
 import { Injectable } from '@nestjs/common';
 import { EncodedDishId } from '../../encoded-dish-id.value-object';
+import { ContextString } from '../../../../common/types';
 
 @Injectable()
 export class ConfirmDishEditionUseCase extends AbstractUseCase<[EncodedDishId, UserDto], DishDocument> {
@@ -19,22 +20,26 @@ export class ConfirmDishEditionUseCase extends AbstractUseCase<[EncodedDishId, U
         super();
     }
 
-    async execute(encodedDishId: EncodedDishId, userDto: UserDto): Promise<DishDocument> {
-        const context = 'ConfirmDishEditionUseCase/execute';
+    protected async run(encodedDishId: EncodedDishId, userDto: UserDto): Promise<DishDocument> {
+        const result = await this.dishWrite.confirmEditing(encodedDishId);
+        this.loggerService.info(this.context, `Dish edition for "${encodedDishId}" (titled: "${result.title}") has been confirmed by "${userDto.login}" user.`);
 
-        try {
-            const result = await this.dishWrite.confirmEditing(encodedDishId);
-            this.loggerService.info(context, `Dish edition for "${encodedDishId}" (titled: "${result.title}") has been confirmed by "${userDto.login}" user.`);
+        return result;
+    }
 
-            return result;
-        } catch (error) {
-            if (error instanceof DishNotFoundError) {
-                throw new NotFoundException(context, `Dish "${encodedDishId}" not found`);
-            }
-
-            if (error instanceof InvalidDishIdError) {
-                throw new BadRequestException(context, `Invalid dish ID "${encodedDishId}"`);
-            }
+    protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof DishNotFoundError) {
+            throw new NotFoundException(context, error.message);
         }
+
+        if (error instanceof InvalidDishIdError) {
+            throw new BadRequestException(context, error.message);
+        }
+
+        throw new BadRequestException(context, 'Unknown error occurred');
+    }
+
+    protected get context(): ContextString {
+        return 'ConfirmDishEditionUseCase/run';
     }
 }

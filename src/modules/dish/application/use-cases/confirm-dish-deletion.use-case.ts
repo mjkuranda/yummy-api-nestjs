@@ -7,6 +7,7 @@ import { BadRequestException } from '../../../../exceptions/bad-request.exceptio
 import { InvalidDishIdError, DishNotFoundError } from '../../../../errors/domain';
 import { NotFoundException } from '../../../../exceptions/not-found.exception';
 import { EncodedDishId } from '../../encoded-dish-id.value-object';
+import { ContextString } from '../../../../common/types';
 
 @Injectable()
 export class ConfirmDishDeletionUseCase extends AbstractUseCase<[EncodedDishId, UserDto], boolean> {
@@ -18,24 +19,26 @@ export class ConfirmDishDeletionUseCase extends AbstractUseCase<[EncodedDishId, 
         super();
     }
 
+    protected async run(encodedDishId: EncodedDishId, user: UserDto): Promise<boolean> {
+        const { wasDeleted, dishTitle } = await this.dishWriteService.confirmDeleting(encodedDishId);
+        this.loggerService.info(this.context, `Confirmed dish deletion with id "${encodedDishId}" (titled: "${dishTitle}") by "${user.login}" user.`);
 
-    async execute(encodedDishId: EncodedDishId, user: UserDto): Promise<boolean> {
-        const context = 'ConfirmDishDeletionUseCase/execute';
+        return wasDeleted;
+    }
 
-        try {
-            const { wasDeleted, dishTitle } = await this.dishWriteService.confirmDeleting(encodedDishId);
-
-            this.loggerService.info(context, `Confirmed dish deletion with id "${encodedDishId}" (titled: "${dishTitle}") by "${user.login}" user.`);
-
-            return wasDeleted;
-        } catch (error) {
-            if (error instanceof InvalidDishIdError) {
-                throw new BadRequestException(context, error.message);
-            }
-
-            if (error instanceof DishNotFoundError) {
-                throw new NotFoundException(context, error.message);
-            }
+    protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof InvalidDishIdError) {
+            throw new BadRequestException(context, error.message);
         }
+
+        if (error instanceof DishNotFoundError) {
+            throw new NotFoundException(context, error.message);
+        }
+
+        throw new BadRequestException(context, 'Unknown error occurred');
+    }
+
+    protected get context(): ContextString {
+        return 'ConfirmDishDeletionUseCase/run';
     }
 }

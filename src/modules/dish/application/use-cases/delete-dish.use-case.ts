@@ -7,6 +7,7 @@ import { BadRequestException } from '../../../../exceptions/bad-request.exceptio
 import { Injectable } from '@nestjs/common';
 import { InternalServerException } from '../../../../exceptions/internal-server.exception';
 import { EncodedDishId } from '../../encoded-dish-id.value-object';
+import { ContextString } from '../../../../common/types';
 
 @Injectable()
 export class DeleteDishUseCase extends AbstractUseCase<[EncodedDishId], boolean> {
@@ -18,31 +19,35 @@ export class DeleteDishUseCase extends AbstractUseCase<[EncodedDishId], boolean>
         super();
     }
 
-    async execute(encodedDishId: EncodedDishId): Promise<boolean> {
-        const context = 'DeleteDishUseCase/execute';
+    protected async run(encodedDishId: EncodedDishId): Promise<boolean> {
+        const result = await this.dishWriteService.deleteDish(encodedDishId);
 
-        try {
-            const result = await this.dishWriteService.deleteDish(encodedDishId);
-
-            if (result.isSoftDeleted) {
-                this.loggerService.info(context, `Dish with id "${encodedDishId}" (titled: "${result.dishTitle}") has been marked as soft-deleted.`);
-            } else {
-                this.loggerService.error(context, `Dish with id "${encodedDishId}" (titled: "${result.dishTitle}") has not been marked as soft-deleted.`);
-            }
-
-            return result.isSoftDeleted;
-        } catch (error) {
-            if (error instanceof DishNotFoundError) {
-                throw new NotFoundException(context, `Dish "${encodedDishId}" not found`);
-            }
-
-            if (error instanceof InvalidDishIdError) {
-                throw new BadRequestException(context, `Invalid dish ID "${encodedDishId}"`);
-            }
-
-            if (error instanceof DishDeletionFailedError) {
-                throw new InternalServerException(context, `Failed to delete dish "${encodedDishId}"`);
-            }
+        if (result.isSoftDeleted) {
+            this.loggerService.info(this.context, `Dish with id "${encodedDishId}" (titled: "${result.dishTitle}") has been marked as soft-deleted.`);
+        } else {
+            this.loggerService.error(this.context, `Dish with id "${encodedDishId}" (titled: "${result.dishTitle}") has not been marked as soft-deleted.`);
         }
+
+        return result.isSoftDeleted;
+    }
+
+    protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof DishNotFoundError) {
+            throw new NotFoundException(context, error.message);
+        }
+
+        if (error instanceof InvalidDishIdError) {
+            throw new BadRequestException(context, error.message);
+        }
+
+        if (error instanceof DishDeletionFailedError) {
+            throw new InternalServerException(context, error.message);
+        }
+
+        throw new BadRequestException(context, 'Unknown error occurred');
+    }
+
+    protected get context(): ContextString {
+        return 'DeleteDishUseCase/run';
     }
 }

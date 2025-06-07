@@ -2,6 +2,7 @@ import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { DishDocument } from '../../../../mongodb/documents/dish.document';
 import { DishReadService } from '../../read/dish-read.service';
 import { Injectable } from '@nestjs/common';
+import { ContextString } from '../../../../common/types';
 
 @Injectable()
 export class GetDishesWithSoftEditedUseCase extends AbstractUseCase<undefined, DishDocument[]> {
@@ -10,7 +11,16 @@ export class GetDishesWithSoftEditedUseCase extends AbstractUseCase<undefined, D
         super();
     }
 
-    async execute(): Promise<DishDocument[]> {
+    protected async run(): Promise<DishDocument[]> {
         return await this.dishReadService.getDishesWithSoftEdited();
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    protected handleError(error: unknown, context: ContextString): never {
+        throw error;
+    }
+
+    protected get context(): ContextString {
+        return 'GetDishesWithSoftEditedUseCase/run';
     }
 }

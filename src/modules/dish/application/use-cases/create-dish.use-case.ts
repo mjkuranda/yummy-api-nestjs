@@ -9,6 +9,7 @@ import { LoggerService } from '../../../logger/logger.service';
 import { BadRequestException } from '../../../../exceptions/bad-request.exception';
 import { Injectable } from '@nestjs/common';
 import { EmptyDishIngredientListError, MissingDishAuthorError } from '../../../../errors/domain';
+import { ContextString } from '../../../../common/types';
 
 @Injectable()
 export class CreateDishUseCase extends AbstractUseCase<[CreateDishDto<DishIngredientWithoutImage>, UserAccessTokenPayload], DishDocument> {
@@ -21,27 +22,32 @@ export class CreateDishUseCase extends AbstractUseCase<[CreateDishDto<DishIngred
         super();
     }
 
-    async execute(createDishDto: CreateDishDto<DishIngredientWithoutImage>, user: UserAccessTokenPayload): Promise<DishDocument> {
-        const context = 'CreateDishUseCase/execute';
+    protected async run(createDishDto: CreateDishDto<DishIngredientWithoutImage>, user: UserAccessTokenPayload): Promise<DishDocument> {
         const { ingredients, title, imageUrl, ingredientCount } = createDishDto;
         const imageUrlDescription = imageUrl ? `"${imageUrl}" image url` : 'no image';
 
-        try {
-            const ingredientList = await this.ingredientService.wrapIngredientsWithImages(ingredients);
-            const createdDish = await this.dishWriteService.saveNewDish(createDishDto, user.login, ingredientList);
-            const message = `New dish "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription} has been created by ${user.login}.`;
+        const ingredientList = await this.ingredientService.wrapIngredientsWithImages(ingredients);
+        const createdDish = await this.dishWriteService.saveNewDish(createDishDto, user.login, ingredientList);
+        const message = `New dish "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription} has been created by ${user.login}.`;
 
-            this.loggerService.info(context, message);
+        this.loggerService.info(this.context, message);
 
-            return createdDish;
-        } catch (error: unknown) {
-            if (error instanceof MissingDishAuthorError) {
-                throw new BadRequestException(context, error.message);
-            }
+        return createdDish;
+    }
 
-            if (error instanceof EmptyDishIngredientListError) {
-                throw new BadRequestException(context, error.message);
-            }
+    protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof MissingDishAuthorError) {
+            throw new BadRequestException(context, error.message);
         }
+
+        if (error instanceof EmptyDishIngredientListError) {
+            throw new BadRequestException(context, error.message);
+        }
+
+        throw new BadRequestException(context, 'Unknown error occurred');
+    }
+
+    protected get context(): ContextString {
+        return 'CreateDishUseCase/run';
     }
 }

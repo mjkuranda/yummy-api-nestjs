@@ -18,25 +18,28 @@ export class AddDishCommentUseCase extends AbstractUseCase<[CreateDishCommentBod
         super();
     }
 
-    async execute(createCommentBody: CreateDishCommentBody, user: string): Promise<void> {
-        const context: ContextString = 'AddDishCommentUseCase/execute';
+    protected async run(createCommentBody: CreateDishCommentBody, user: string): Promise<void> {
+        await this.dishWriteService.addDishComment(createCommentBody, user);
+        this.loggerService.info(this.context, `Successfully added a new comment to dish "${createCommentBody.encodedDishId}" by "${user}" user.`);
+    }
 
-        try {
-            await this.dishWriteService.addDishComment(createCommentBody, user);
-
-            this.loggerService.info(context, `Successfully added a new comment to dish "${createCommentBody.encodedDishId}" by "${user}" user.`);
-        } catch (error) {
-            if (error instanceof DishNotFoundError) {
-                throw new NotFoundException(context, `Dish "${createCommentBody.encodedDishId}" not found`);
-            }
-
-            if (error instanceof DishNotAcceptedError) {
-                throw new ForbiddenException(context, `Dish "${createCommentBody.encodedDishId}" has not been accepted`);
-            }
-
-            if (error instanceof DishSoftDeletedError) {
-                throw new ForbiddenException(context, `Dish "${createCommentBody.encodedDishId}" has been deleted`);
-            }
+    protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof DishNotFoundError) {
+            throw new NotFoundException(context, error.message);
         }
+
+        if (error instanceof DishNotAcceptedError) {
+            throw new ForbiddenException(context, error.message);
+        }
+
+        if (error instanceof DishSoftDeletedError) {
+            throw new ForbiddenException(context, error.message);
+        }
+
+        throw error;
+    }
+
+    protected get context(): ContextString {
+        return 'AddDishCommentUseCase/run';
     }
 }

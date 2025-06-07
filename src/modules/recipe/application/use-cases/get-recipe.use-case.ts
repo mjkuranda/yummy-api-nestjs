@@ -18,29 +18,32 @@ export class GetRecipeUseCase extends AbstractUseCase<[EncodedDishId, Language],
         super();
     }
 
-    async execute(encodedDishId: EncodedDishId, language: Language): Promise<Recipe> {
-        const context: ContextString = 'GetRecipeUseCase/execute';
+    protected async run(encodedDishId: EncodedDishId, language: Language): Promise<Recipe> {
+        const { recipe, fromCache } = await this.recipeService.getTranslatedRecipe(encodedDishId, language);
+        const languageName = LanguageName[language];
 
-        try {
-            const { recipe, fromCache } = await this.recipeService.getTranslatedRecipe(encodedDishId, language);
-            const languageName = LanguageName[language];
+        this.loggerService.info(this.context, `Retrieved dish recipe "${encodedDishId}" in ${languageName} language ${fromCache ? 'from cache' : 'and cached'}.`);
 
-            this.loggerService.info(context, `Retrieved dish recipe "${encodedDishId}" in ${languageName} language ${fromCache ? 'from cache' : 'and cached'}.`);
-
-            return recipe;
-        } catch (err: unknown) {
-            if (err instanceof InvalidDishIdError) {
-                throw new BadRequestException(context, err.message);
-            }
-
-            if (err instanceof DishNotFoundError) {
-                throw new NotFoundException(context, err.message);
-            }
-
-            if (err instanceof DishRecipeNotFoundError) {
-                throw new NotFoundException(context, err.message);
-            }
-        }
+        return recipe;
     }
 
+    protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof InvalidDishIdError) {
+            throw new BadRequestException(context, error.message);
+        }
+
+        if (error instanceof DishNotFoundError) {
+            throw new NotFoundException(context, error.message);
+        }
+
+        if (error instanceof DishRecipeNotFoundError) {
+            throw new NotFoundException(context, error.message);
+        }
+
+        throw error;
+    }
+
+    protected get context(): ContextString {
+        return 'GetRecipeUseCase/run';
+    }
 }

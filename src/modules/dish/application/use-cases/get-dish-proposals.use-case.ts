@@ -7,6 +7,8 @@ import { UserSearchQueryRepository } from '../../../../mongodb/repositories/user
 import { DishReadService } from '../../read/dish-read.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
+import { ContextString } from '../../../../common/types';
+import { BadRequestException } from '../../../../exceptions/bad-request.exception';
 
 @Injectable()
 export class GetDishProposalsUseCase extends AbstractUseCase<[UserAccessTokenPayload], ProposedDish[]> {
@@ -19,7 +21,7 @@ export class GetDishProposalsUseCase extends AbstractUseCase<[UserAccessTokenPay
         super();
     }
 
-    async execute(user: UserAccessTokenPayload): Promise<any> {
+    protected async run(user: UserAccessTokenPayload): Promise<ProposedDish[]> {
         // TODO: Consider creating CRON to create recommendation for a particular user
         const userSearchQueries: UserSearchQueryDocument[] = await this.userSearchQueryRepository.findAllRecentQueries(user.login);
         const mergedSearchQueries: MergedSearchQueries = mergeSearchQueries(userSearchQueries);
@@ -27,9 +29,16 @@ export class GetDishProposalsUseCase extends AbstractUseCase<[UserAccessTokenPay
 
         const dishProposal = await this.dishReadService.getDishProposals(ingredients, mergedSearchQueries);
 
-        this.loggerService.info('GetDishProposalsUseCase/execute', `Generated ${dishProposal.length} dish proposal${dishProposal.length > 1 || dishProposal.length === 0 ? 's' : ''}.`);
+        this.loggerService.info(this.context, `Generated ${dishProposal.length} dish proposal${dishProposal.length > 1 || dishProposal.length === 0 ? 's' : ''}.`);
 
         return dishProposal;
     }
 
+    protected handleError(error: unknown, context: ContextString): never {
+        throw new BadRequestException(context, 'Unknown error occurred');
+    }
+
+    protected get context(): ContextString {
+        return 'GetDishProposalsUseCase/run';
+    }
 }

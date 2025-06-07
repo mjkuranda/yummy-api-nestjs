@@ -19,21 +19,24 @@ export class ConfirmDishCreationUseCase extends AbstractUseCase<[EncodedDishId, 
         super();
     }
 
-    async execute(encodedDishId: EncodedDishId, user: UserDto): Promise<void> {
-        const context: ContextString = 'ConfirmDishCreationUseCase/execute';
+    protected async run(encodedDishId: EncodedDishId, user: UserDto): Promise<void> {
+        const dishDetails = await this.dishWriteService.confirmCreating(encodedDishId);
+        this.loggerService.info(this.context, `Dish with id "${encodedDishId}" (titled: "${dishDetails.title}") has been confirmed by "${user.login}" user and cached.`);
+    }
 
-        try {
-            const dishDetails = await this.dishWriteService.confirmCreating(encodedDishId);
-
-            this.loggerService.info(context, `Dish with id "${encodedDishId}" (titled: "${dishDetails.title}") has been confirmed by "${user.login}" user and cached.`);
-        } catch (error) {
-            if (error instanceof DishNotFoundError) {
-                throw new NotFoundException(context, error.message);
-            }
-
-            if (error instanceof InvalidDishIdError) {
-                throw new BadRequestException(context, error.message);
-            }
+    protected handleError(err: unknown, context: ContextString): never {
+        if (err instanceof DishNotFoundError) {
+            throw new NotFoundException(context, err.message);
         }
+
+        if (err instanceof InvalidDishIdError) {
+            throw new BadRequestException(context, err.message);
+        }
+
+        throw err;
+    }
+
+    protected get context(): ContextString {
+        return 'ConfirmDishCreationUseCase/run';
     }
 }

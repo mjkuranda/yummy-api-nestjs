@@ -13,7 +13,14 @@ export abstract class AbstractUseCase<TParams extends unknown[], TOutput> implem
 
     protected abstract run(...params: TParams): Promise<TOutput>;
 
-    protected abstract handleError(err: unknown, context: ContextString): never;
+    protected handleError(err: unknown, context: ContextString): never {
+        if (err instanceof Error) {
+            throw new Error(`[${context}] ${err.message}`);
+        }
+        throw new Error(`[${context}] An unexpected error occurred`);
+    }
 
-    protected abstract get context(): ContextString;
+    protected get context(): ContextString {
+        return `UseCase/${this.constructor.name}` as ContextString;
+    }
 }

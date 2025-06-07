@@ -19,22 +19,26 @@ export class GetDishRatingUseCase extends AbstractUseCase<[EncodedDishId], DishR
         super();
     }
 
-    async execute(encodedDishId: EncodedDishId): Promise<DishRating> {
-        const context: ContextString = 'GetDishRatingUseCase/execute';
+    protected async run(encodedDishId: EncodedDishId): Promise<DishRating> {
+        const rating = await this.dishReadService.getDishRating(encodedDishId);
+        this.loggerService.info(this.context, `Calculated rating for dish "${encodedDishId}" on ${rating.rating}.`);
 
-        try {
-            const rating = await this.dishReadService.getDishRating(encodedDishId);
-            this.loggerService.info(context, `Calculated rating for dish "${encodedDishId}" on ${rating.rating}.`);
+        return rating;
+    }
 
-            return rating;
-        } catch (error) {
-            if (error instanceof DishNotFoundError) {
-                throw new NotFoundException(context, `Dish "${encodedDishId}" not found`);
-            }
-
-            if (error instanceof InvalidDishIdError) {
-                throw new BadRequestException(context, `Invalid dish ID "${encodedDishId}"`);
-            }
+    protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof DishNotFoundError) {
+            throw new NotFoundException(context, error.message);
         }
+
+        if (error instanceof InvalidDishIdError) {
+            throw new BadRequestException(context, error.message);
+        }
+
+        throw new BadRequestException(context, 'Unknown error occurred');
+    }
+
+    protected get context(): ContextString {
+        return 'GetDishRatingUseCase/run';
     }
 }

@@ -6,6 +6,8 @@ import { IngredientService } from '../../../ingredient/ingredient.service';
 import { DishReadService } from '../../read/dish-read.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
+import { ContextString } from '../../../../common/types';
+import { BadRequestException } from '../../../../exceptions/bad-request.exception';
 
 @Injectable()
 export class GetDishesUseCase extends AbstractUseCase<[IngredientType[], MealType], RatedDish[]> {
@@ -18,14 +20,21 @@ export class GetDishesUseCase extends AbstractUseCase<[IngredientType[], MealTyp
         super();
     }
 
-    async execute(ings: IngredientType[], mealType: MealType): Promise<RatedDish[]> {
-        const context = 'GetDishesUseCase/execute';
+    protected async run(ings: IngredientType[], mealType: MealType): Promise<RatedDish[]> {
         const filteredIngredients = this.ingredientService.filterIngredients(ings);
         const allIngredients = [...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()];
 
         const { dishes, fromCache } = await this.dishReadService.getDishes(filteredIngredients, allIngredients, mealType);
-        this.loggerService.info(context, `Returned ${dishes.length} dishes from ${fromCache ? 'cache' : 'provider and cached'}, defined for ingredients: ${filteredIngredients.join(', ')}.`);
+        this.loggerService.info(this.context, `Returned ${dishes.length} dishes from ${fromCache ? 'cache' : 'provider and cached'}, defined for ingredients: ${filteredIngredients.join(', ')}.`);
 
         return dishes;
+    }
+
+    protected handleError(error: unknown, context: ContextString): never {
+        throw new BadRequestException(context, 'Unknown error occurred');
+    }
+
+    protected get context(): ContextString {
+        return 'GetDishesUseCase/run';
     }
 }

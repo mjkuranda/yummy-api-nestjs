@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `InternalServerException` exception and a few domain and infrastructure errors.
 - [Marek Kurańda](https://github.com/mjkuranda): Running `.test` files instead of `.spec` ones.
 - [Marek Kurańda](https://github.com/mjkuranda): `SchedulerModule` module and `sync-dish-cron.service`.
+- [Marek Kurańda](https://github.com/mjkuranda): Template method pattern for `AbstractUseCase` class.
 
 ### Removed
 - [Marek Kurańda](https://github.com/mjkuranda): `dish.service.spec.ts` and `dish.controller.spec.ts` test files.
