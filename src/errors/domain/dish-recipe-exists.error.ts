@@ -1,6 +1,8 @@
+import { EncodedDishId } from '../../modules/dish/encoded-dish-id.value-object';
+
 export class DishRecipeExistsError extends Error {
 
-    constructor(dishId: string, recipeId: string) {
-        super(`Recipe "${recipeId}" already exists for this specific dish "${dishId}"`);
+    constructor(encodedDishId: EncodedDishId) {
+        super(`Recipe already exists for this specific dish "${encodedDishId.getValue()}"`);
     }
 }

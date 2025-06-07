@@ -6,7 +6,7 @@ import { compoundTextToTranslate, convertAmountToText, normalizeName, normalizeU
 import translate from '@iamtraction/google-translate';
 import { proceedTagsSpaces } from '../api/spoonacular/spoonacular.api.utils';
 import { DishIngredient } from '../ingredient/ingredient.types';
-import { DishRecipe } from '../recipe/application/recipe-application.types';
+import { Recipe } from '../recipe/domain/entities';
 
 @Injectable()
 export class TranslationService {
@@ -86,7 +86,7 @@ export class TranslationService {
         }));
     }
 
-    async translateRecipe(recipe: DishRecipe, targetLanguage: Language): Promise<TranslatedRecipe> {
+    async translateRecipe(recipe: Recipe, targetLanguage: Language): Promise<TranslatedRecipe> {
         if (recipe.language === targetLanguage) {
             return {
                 original: recipe,
@@ -115,11 +115,11 @@ export class TranslationService {
 
         return {
             original: recipe,
-            translated: {
-                language: targetLanguage,
-                dishId: recipe.dishId,
-                sections: translatedRecipe
-            }
+            translated: new Recipe(
+                targetLanguage,
+                recipe.dishId,
+                translatedRecipe
+            )
         };
     }
 

@@ -80,7 +80,7 @@ export function proceedRatedDishesToProposedDishes(dishes: RatedDish[], mergedSe
         }, 0);
 
         return {
-            encodedDishId,
+            encodedDishId: encodedDishId.getValue(),
             ...(imgUrl && { imgUrl }),
             ingredients,
             recommendationPoints,

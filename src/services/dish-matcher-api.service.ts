@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { Providable } from '../common/interfaces';
 import { DishRepository } from '../mongodb/repositories/dish.repository';
 import { DishRecipeRepository } from '../mongodb/repositories/dish-recipe.repository';
-import { EncodedDishId, Language } from '../common/types';
+import { Language } from '../common/types';
 import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
-import { DishRecipe } from '../modules/recipe/application/recipe-application.types';
 import { MealType, Provider } from '../common/enums';
 import { RatedDish } from '../modules/dish/dish.types';
-import { DishIdObfuscator } from '../common/helpers/dish-id-obfuscator.helper';
 import { proceedDishDocumentToDishDetails } from '../modules/dish/dish.utils';
+import { EncodedDishId } from '../modules/dish/encoded-dish-id.value-object';
+import { Recipe } from '../modules/recipe/domain/entities';
 
 @Injectable()
 export class DishMatcherApiService implements Providable {
@@ -19,8 +19,7 @@ export class DishMatcherApiService implements Providable {
     ) {}
 
     async getDishDetails(encodedDishId: EncodedDishId): Promise<DishDetailsWithMetadata | null> {
-        const { dishId } = DishIdObfuscator.decode(encodedDishId);
-
+        const dishId = encodedDishId.getDishId();
         const dishDocument = await this.dishRepository.findById(dishId);
 
         if (!dishDocument) {
@@ -38,8 +37,8 @@ export class DishMatcherApiService implements Providable {
         };
     }
 
-    async getDishRecipe(encodedDishId: EncodedDishId, language?: Language): Promise<DishRecipe | null> {
-        const { dishId } = DishIdObfuscator.decode(encodedDishId);
+    async getDishRecipe(encodedDishId: EncodedDishId, language?: Language): Promise<Recipe | null> {
+        const dishId = encodedDishId.getDishId();
 
         return await this.dishRecipeRepository.findByDishId(dishId, language);
     }

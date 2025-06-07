@@ -1,3 +1,3 @@
-import { EncodedDishId, Language } from '../../../common/types';
+import { Language } from '../../../common/types';
 
-export type DishRecipeKey = `recipe:dish:${EncodedDishId}:${Language}`;
+export type DishRecipeKey = `recipe:dish:${string}:${Language}`;

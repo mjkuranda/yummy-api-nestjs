@@ -1,11 +1,14 @@
 import { IngredientType, DishIngredient, DishIngredientWithoutImage } from '../ingredient/ingredient.types';
 import { TranslatedIngredient } from '../translation/translation.types';
-import { EncodedDishId, Language } from '../../common/types';
+import { Language } from '../../common/types';
 import { MealType, DishType, Provider } from '../../common/enums';
 import { CreateDishWithAuthorDto } from './dish.dto';
+import { EncodedDishId } from './encoded-dish-id.value-object';
+
+export type DishId = string | number;
 
 export interface RatedDish {
-    encodedDishId: EncodedDishId;
+    encodedDishId: EncodedDishId; // TODO: fix this
     imgUrl?: string;
     ingredients: IngredientType[];
     missingCount: number;

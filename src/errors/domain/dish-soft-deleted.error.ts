@@ -1,6 +1,8 @@
+import { EncodedDishId } from '../../modules/dish/encoded-dish-id.value-object';
+
 export class DishSoftDeletedError extends Error {
 
-    constructor(id: string) {
-        super(`Dish with "${id}" id is labeled to be deleted. Therefore, it is impossible to see its content.`);
+    constructor(encodedDishId: EncodedDishId) {
+        super(`Dish with id "${encodedDishId}" id is labeled to be deleted. Therefore, it is impossible to see its content.`);
     }
 }

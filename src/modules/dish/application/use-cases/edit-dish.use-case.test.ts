@@ -11,7 +11,6 @@ import { DishDocument } from '../../../../mongodb/documents/dish.document';
 import { Document } from 'mongoose';
 import { DishType, MealType, Provider } from '../../../../common/enums';
 import { UserDto } from '../../../user/user.dto';
-import { EncodedDishId } from '../../../../common/types';
 
 describe('EditDishUseCase', () => {
     let useCase: EditDishUseCase;
@@ -63,7 +62,7 @@ describe('EditDishUseCase', () => {
                 canDelete: true
             }
         };
-        const mockEncodedDishId: EncodedDishId = 'encoded-dish-123';
+        const mockEncodedDishId: EncodedComplexDishId = 'encoded-dish-123';
         const mockEditDishDto: DishEditDto<DishIngredient> = {
             title: 'Updated Test Dish',
             description: 'Updated test description',

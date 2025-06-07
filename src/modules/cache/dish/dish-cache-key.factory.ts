@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 import { DishDetailedKey, DishSearchResultKey, DishSearchResultPerProviderKey } from './dish-cache.types';
 import { Providable } from '../../../common/interfaces';
-import { EncodedDishId } from '../../../common/types';
+import { EncodedDishId } from '../../dish/encoded-dish-id.value-object';
 
 export class DishCacheKeyFactory {
 

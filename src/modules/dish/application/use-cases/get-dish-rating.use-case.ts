@@ -1,13 +1,13 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { DishRating } from '../../dish.types';
-import { ContextString, EncodedDishId } from '../../../../common/types';
+import { ContextString } from '../../../../common/types';
 import { DishReadService } from '../../read/dish-read.service';
 import { LoggerService } from '../../../logger/logger.service';
-import { DishNotFoundError } from '../../../../errors/domain/dish-not-found.error';
-import { InvalidDishIdError } from '../../../../errors/domain/invalid-dish-id.error';
+import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
 import { NotFoundException } from '../../../../exceptions/not-found.exception';
 import { BadRequestException } from '../../../../exceptions/bad-request.exception';
 import { Injectable } from '@nestjs/common';
+import { EncodedDishId } from '../../encoded-dish-id.value-object';
 
 @Injectable()
 export class GetDishRatingUseCase extends AbstractUseCase<[EncodedDishId], DishRating> {

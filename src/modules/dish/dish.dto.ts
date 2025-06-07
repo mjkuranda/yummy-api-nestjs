@@ -11,9 +11,10 @@ import {
 import { Type } from 'class-transformer';
 import { UserDto } from '../user/user.dto';
 import { DishRecipeSections } from './dish.types';
-import { EncodedDishId, Language } from '../../common/types';
+import { Language } from '../../common/types';
 import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
 import { MealType, DishType, Provider } from '../../common/enums';
+import { EncodedDishId } from './encoded-dish-id.value-object';
 
 export class CreateDishDto<Ingredient> {
     @IsNotEmpty({ message: 'Dish should have a description' })

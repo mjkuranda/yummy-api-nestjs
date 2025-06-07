@@ -1,8 +1,9 @@
 import { Language } from '../../../common/types';
 import { DishRecipeSections } from '../../dish/dish.types';
+import { Recipe } from '../domain/entities';
 
 export interface GetRecipeResult {
-    recipe: DishRecipe;
+    recipe: Recipe;
     fromCache?: boolean;
 }
 

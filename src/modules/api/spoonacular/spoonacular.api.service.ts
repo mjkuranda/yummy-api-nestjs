@@ -12,15 +12,15 @@ import { DishIngredient, IngredientType } from '../../ingredient/ingredient.type
 import { calculateCheckingAgain, inferDishType, inferMealType } from '../../../common/helpers';
 import { proceedIngredientUnit } from './spoonacular.api.utils';
 import { Provider } from '../../../common/enums';
-import { DishIdObfuscator } from '../../../common/helpers/dish-id-obfuscator.helper';
 import { Language } from '../../../common/types';
+import { EncodedDishId } from '../../dish/encoded-dish-id.value-object';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularRecipeSections> {
 
     // TODO: Getting dish and returning its language
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getLanguage(encodedDishId: string): Language {
+    getLanguage(encodedDishId: EncodedDishId): Language {
         return 'en';
     }
 
@@ -83,7 +83,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
     proceedDataToDishes(data: SpoonacularRecipe[], providedIngredients?: IngredientType[]): RatedDish[] {
         return data.map(recipe => {
             const { relevance, missingCount } = calculateCheckingAgain(providedIngredients, recipe.usedIngredients, recipe.missedIngredients);
-            const encodedDishId = DishIdObfuscator.encode(Provider.EXT_API_SPOONACULAR, recipe.id.toString());
+            const encodedDishId = EncodedDishId.fromParts(Provider.EXT_API_SPOONACULAR, recipe.id.toString());
             const type = inferDishType(recipe.title);
             const mealType = inferMealType(type);
 

@@ -3,17 +3,16 @@ import { DishRating, MergedSearchQueries, ProposedDish } from '../dish.types';
 import { DishDocument } from '../../../mongodb/documents/dish.document';
 import { DishRepository } from '../../../mongodb/repositories/dish.repository';
 import { DishCacheService } from '../../cache/dish/dish-cache.service';
-import { EncodedDishId } from '../../../common/types';
 import { DishAggregatorService } from './dish-aggregator.service';
 import { MealType } from '../../../common/enums';
-import { DishIdObfuscator } from '../../../common/helpers/dish-id-obfuscator.helper';
 import { proceedRatedDishesToProposedDishes } from '../dish.utils';
-import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError, InvalidDishIdError } from '../../../errors/domain';
+import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../../../errors/domain';
 import { GetDishDetailsResult, GetDishesResult } from './dish-read.types';
 import { DishCommentDocument } from '../../../mongodb/documents/dish-comment.document';
 import { DishCommentRepository } from '../../../mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../../../mongodb/repositories/dish-rating.repository';
 import { ProviderRegistryService } from '../../provider/provider-registry.service';
+import { EncodedDishId } from '../encoded-dish-id.value-object';
 
 @Injectable()
 export class DishReadService {
@@ -54,24 +53,19 @@ export class DishReadService {
      * @param encodedDishId encoded dish ID and its provider name
      */
     async getDishDetails(encodedDishId: EncodedDishId): Promise<GetDishDetailsResult> {
-        const decoded = DishIdObfuscator.decode(encodedDishId);
+        const provider = encodedDishId.getProvider();
 
-        if (!decoded) {
-            throw new InvalidDishIdError(encodedDishId);
-        }
-
-        const { providerName, dishId } = decoded;
-        const provider = this.providerRegistryService.getProvider(providerName);
+        const providable = this.providerRegistryService.getProvider(provider);
         const cachedDish = await this.dishCacheService.getDishDetails(encodedDishId);
 
         if (cachedDish) {
             return { dish: cachedDish, fromCache: true };
         }
 
-        const dishDetailsWithMetadata = await provider.getDishDetails(dishId);
+        const dishDetailsWithMetadata = await providable.getDishDetails(encodedDishId);
 
         if (!dishDetailsWithMetadata) {
-            throw new DishNotFoundError(dishId);
+            throw new DishNotFoundError(encodedDishId);
         }
 
         const { dishDetails, metadata } = dishDetailsWithMetadata;
@@ -128,13 +122,7 @@ export class DishReadService {
      * @param encodedDishId encoded dish ID and its provider name
      */
     async getDishComments(encodedDishId: EncodedDishId): Promise<DishCommentDocument[]> {
-        const decoded = DishIdObfuscator.decode(encodedDishId);
-
-        if (!decoded) {
-            throw new InvalidDishIdError(encodedDishId);
-        }
-
-        const { dishId } = decoded;
+        const dishId = encodedDishId.getDishId();
 
         const dish = await this.dishRepository.findById(dishId);
 
@@ -146,20 +134,14 @@ export class DishReadService {
     }
 
     async getDishRating(encodedDishId: EncodedDishId): Promise<DishRating> {
-        const decoded = DishIdObfuscator.decode(encodedDishId);
-
-        if (!decoded) {
-            throw new InvalidDishIdError(encodedDishId);
-        }
-
-        const { dishId } = decoded;
+        const dishId = encodedDishId.getDishId();
         const dish = await this.dishRepository.findById(dishId);
 
         if (!dish) {
             throw new DishNotFoundError(encodedDishId);
         }
 
-        return await this.dishRatingRepository.getAverageRatingForDish(dishId);
+        return await this.dishRatingRepository.getAverageRatingForDish(<string>dishId);
     }
 
     /**
@@ -174,9 +156,10 @@ export class DishReadService {
             return true;
         }
 
-        const { providerName, dishId } = DishIdObfuscator.decode(encodedDishId);
-        const provider = this.providerRegistryService.getProvider(providerName);
-        const dishDetailsWithMetadata = await provider.getDishDetails(dishId);
+        const provider = encodedDishId.getProvider();
+
+        const providable = this.providerRegistryService.getProvider(provider);
+        const dishDetailsWithMetadata = await providable.getDishDetails(encodedDishId);
 
         if (dishDetailsWithMetadata) {
             const { dishDetails } = dishDetailsWithMetadata;

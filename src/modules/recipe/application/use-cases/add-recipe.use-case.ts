@@ -1,6 +1,3 @@
-import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
-import { DishRecipeDocument } from '../../../../mongodb/documents/dish-recipe-document';
-import { ContextString, EncodedDishId } from '../../../../common/types';
 import { CreateRecipeDto } from '../../recipe.dto';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { RecipeService } from '../../domain/services/recipe.service';
@@ -8,32 +5,33 @@ import { DishNotFoundError, DishRecipeExistsError, NotDishAuthorError } from '..
 import { NotFoundException } from '../../../../exceptions/not-found.exception';
 import { ForbiddenException } from '../../../../exceptions/forbidden-exception';
 import { LoggerService } from '../../../logger/logger.service';
-import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
-import { BadRequestException } from '../../../../exceptions/bad-request.exception';
+import { Recipe } from '../../domain/entities';
+import { DishRecipeCacheService } from '../../../cache/dish-recipe/dish-recipe-cache.service';
+import { EncodedDishId } from '../../../dish/encoded-dish-id.value-object';
+import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 
-export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishId, CreateRecipeDto, UserAccessTokenPayload], DishRecipeDocument> {
+export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishId, CreateRecipeDto, UserAccessTokenPayload], Recipe> {
 
     constructor(
         private readonly recipeService: RecipeService,
-        private readonly loggerService: LoggerService
+        private readonly loggerService: LoggerService,
+        private readonly dishRecipeCacheService: DishRecipeCacheService
     ) {
         super();
     }
 
-    async execute(encodedDishId: EncodedDishId, createRecipeDto: CreateRecipeDto, userDto: UserAccessTokenPayload): Promise<DishRecipeDocument> {
-        const context: ContextString = 'AddRecipeUseCase/execute';
+    async execute(encodedDishId: EncodedDishId, createRecipeDto: CreateRecipeDto, userDto: UserAccessTokenPayload): Promise<Recipe> {
+        const context = 'AddRecipeUseCase/execute';
 
         try {
-            const newRecipe = await this.recipeService.create(encodedDishId, createRecipeDto, userDto);
+            const recipe = await this.recipeService.create(encodedDishId, createRecipeDto, userDto);
 
-            this.loggerService.info(context, `New recipe "${newRecipe._id}" created for dish "${newRecipe.dishId}"`);
+            await this.dishRecipeCacheService.setDishRecipe(encodedDishId, recipe);
 
-            return newRecipe;
+            this.loggerService.info(context, `New recipe has been created for dish "${recipe.dishId}"`);
+
+            return recipe;
         } catch (err: unknown) {
-            if (err instanceof InvalidMongooseObjectIdError) {
-                throw new BadRequestException(context, err.message);
-            }
-
             if (err instanceof DishNotFoundError) {
                 throw new NotFoundException(context, err.message);
             }
@@ -47,5 +45,4 @@ export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishId, CreateReci
             }
         }
     }
-
 }

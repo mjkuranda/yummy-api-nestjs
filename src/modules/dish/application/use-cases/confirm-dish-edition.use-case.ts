@@ -3,12 +3,11 @@ import { UserDto } from '../../../user/user.dto';
 import { DishDocument } from '../../../../mongodb/documents/dish.document';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../write/dish-write.service';
-import { EncodedDishId } from '../../../../common/types';
-import { DishNotFoundError } from '../../../../errors/domain/dish-not-found.error';
-import { InvalidDishIdError } from '../../../../errors/domain/invalid-dish-id.error';
+import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
 import { NotFoundException } from '../../../../exceptions/not-found.exception';
 import { BadRequestException } from '../../../../exceptions/bad-request.exception';
 import { Injectable } from '@nestjs/common';
+import { EncodedDishId } from '../../encoded-dish-id.value-object';
 
 @Injectable()
 export class ConfirmDishEditionUseCase extends AbstractUseCase<[EncodedDishId, UserDto], DishDocument> {

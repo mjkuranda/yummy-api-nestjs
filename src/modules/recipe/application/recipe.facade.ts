@@ -1,9 +1,9 @@
 import { AddRecipeUseCase, GetRecipeUseCase } from './use-cases';
-import { DishRecipe } from './recipe-application.types';
-import { EncodedDishId, Language } from '../../../common/types';
+import { Recipe } from '../domain/entities';
+import { Language } from '../../../common/types';
 import { CreateRecipeDto } from '../recipe.dto';
 import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
-import { DishRecipeDocument } from '../../../mongodb/documents/dish-recipe-document';
+import { EncodedDishId } from '../../dish/encoded-dish-id.value-object';
 
 export class RecipeFacade {
 
@@ -18,7 +18,7 @@ export class RecipeFacade {
      * @param data recipe DTO
      * @param authenticatedUser user DTO
      */
-    async addRecipe(encodedDishId: EncodedDishId, data: CreateRecipeDto, authenticatedUser: UserAccessTokenPayload): Promise<DishRecipeDocument> {
+    async addRecipe(encodedDishId: EncodedDishId, data: CreateRecipeDto, authenticatedUser: UserAccessTokenPayload): Promise<Recipe> {
         return await this.addRecipeUseCase.execute(encodedDishId, data, authenticatedUser);
     }
 
@@ -27,7 +27,7 @@ export class RecipeFacade {
      * @param encodedDishId encoded dish ID and its provider name
      * @param language recipe language
      */
-    async getRecipe(encodedDishId: EncodedDishId, language: Language): Promise<DishRecipe> {
+    async getRecipe(encodedDishId: EncodedDishId, language: Language): Promise<Recipe> {
         return await this.getRecipeUseCase.execute(encodedDishId, language);
     }
 

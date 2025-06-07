@@ -3,11 +3,11 @@ import { RatedDish } from '../../dish/dish.types';
 import { IngredientType } from '../../ingredient/ingredient.types';
 import { discardDecimalPoint, inferDishType, inferMealType, toFixNumber } from '../../../common/helpers';
 import { Provider, IngredientUnitConverters } from '../../../common/enums';
-import { DishIdObfuscator } from '../../../common/helpers/dish-id-obfuscator.helper';
+import { EncodedDishId } from '../../dish/encoded-dish-id.value-object';
 
 export function proceedRecipesToDishes(recipes: SpoonacularRecipe[]): RatedDish[] {
     return recipes.map(recipe => {
-        const encodedDishId = DishIdObfuscator.encode(Provider.EXT_API_SPOONACULAR, recipe.id.toString());
+        const encodedDishId = EncodedDishId.fromParts(Provider.EXT_API_SPOONACULAR, recipe.id.toString());
         const type = inferDishType(recipe.title);
         const mealType = inferMealType(type);
 

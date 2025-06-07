@@ -1,4 +1,4 @@
-import { EncodedDishId } from '../../common/types';
+import { EncodedDishId } from '../../modules/dish/encoded-dish-id.value-object';
 
 export class DishDeletionFailedError extends Error {
 

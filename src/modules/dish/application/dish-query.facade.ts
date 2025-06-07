@@ -1,19 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { EncodedDishId, Language } from '../../../common/types';
+import { Language } from '../../../common/types';
 import { DetailedDishWithTranslations, DishRating, ProposedDish, RatedDish } from '../dish.types';
 import { DishDocument } from '../../../mongodb/documents/dish.document';
 import { IngredientType } from '../../ingredient/ingredient.types';
 import { MealType } from '../../../common/enums';
 import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
 import { DishCommentDocument } from '../../../mongodb/documents/dish-comment.document';
-import { GetDishDetailsUseCase } from './use-cases/get-dish-details.use-case';
-import { GetDishesUseCase } from './use-cases/get-dishes.use-case';
-import { GetDishProposalsUseCase } from './use-cases/get-dish-proposals.use-case';
-import { GetDishesWithSoftAddedUseCase } from './use-cases/get-dishes-with-soft-added.use-case';
-import { GetDishesWithSoftEditedUseCase } from './use-cases/get-dishes-with-soft-edited.use-case';
-import { GetDishesWithSoftDeletedUseCase } from './use-cases/get-dishes-with-soft-deleted.use-case';
-import { GetDishCommentsUseCase } from './use-cases/get-dish-comments.use-case';
-import { GetDishRatingUseCase } from './use-cases/get-dish-rating.use-case';
+import { GetDishDetailsUseCase, GetDishesUseCase, GetDishProposalsUseCase, GetDishesWithSoftAddedUseCase, GetDishesWithSoftEditedUseCase, GetDishesWithSoftDeletedUseCase, GetDishCommentsUseCase, GetDishRatingUseCase } from './use-cases';
+import { EncodedDishId } from '../encoded-dish-id.value-object';
 
 @Injectable()
 export class DishQueryFacade {

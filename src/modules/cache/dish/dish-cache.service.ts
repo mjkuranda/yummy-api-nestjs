@@ -5,7 +5,7 @@ import { DetailedDish, RatedDish } from '../../dish/dish.types';
 import { Providable } from '../../../common/interfaces';
 import { DishCacheKeyFactory } from './dish-cache-key.factory';
 import { DAY, HOUR } from '../../../constants/times.constant';
-import { EncodedDishId } from '../../../common/types';
+import { EncodedDishId } from '../../dish/encoded-dish-id.value-object';
 
 @Injectable()
 export class DishCacheService {

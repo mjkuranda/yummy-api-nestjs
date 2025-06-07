@@ -27,11 +27,12 @@ import { DeletionGuard } from '../../guards/deletion.guard';
 import { DetailedDishWithTranslations, GetDishesQueryType, RatedDish } from './dish.types';
 import { IngredientName, MealType } from '../../common/enums';
 import { DishQueryValidationPipe } from '../../pipes/dish-query-validation.pipe';
-import { EncodedDishId, Language } from '../../common/types';
+import { Language } from '../../common/types';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { TransformedBody } from '../../common/interfaces';
 import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
 import { DishQueryFacade } from './application/dish-query.facade';
+import { EncodedDishId } from './encoded-dish-id.value-object';
 
 @Controller('dishes')
 export class DishController {

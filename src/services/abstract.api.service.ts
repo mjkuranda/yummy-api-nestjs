@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { RedisService } from '../modules/redis/redis.service';
 import { Provider, MealType } from '../common/enums';
-import { DetailedDish, DishRecipeSections, RatedDish } from '../modules/dish/dish.types';
+import { DetailedDish, DishId, DishRecipeSections, RatedDish } from '../modules/dish/dish.types';
 import { getQueryWithIngredientsAndDishType } from '../modules/dish/dish.utils';
 import { AxiosResponse } from 'axios';
 import { ApiName } from '../modules/redis/redis.types';
-import { ContextString, EncodedDishId, Language } from '../common/types';
+import { ContextString, Language } from '../common/types';
 import { LoggerService } from '../modules/logger/logger.service';
 import { AxiosService } from './axios.service';
 import { IngredientType, DishIngredient } from '../modules/ingredient/ingredient.types';
 import { Providable } from '../common/interfaces';
-import { DishIdObfuscator } from '../common/helpers/dish-id-obfuscator.helper';
 import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
-import { DishRecipe } from '../modules/recipe/application/recipe-application.types';
+import { EncodedDishId } from '../modules/dish/encoded-dish-id.value-object';
+import { Recipe } from '../modules/recipe/domain/entities';
 
 @Injectable()
 export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStruct, GenericDishDetailsStruct, DishInstructionStruct> implements Providable {
@@ -29,7 +29,7 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
 
     abstract getDishesEndpointUrl(): string;
 
-    abstract getDishDetailsEndpointUrl(id: string): string;
+    abstract getDishDetailsEndpointUrl(dishId: DishId): string;
 
     abstract getDishInstructionEndpointUrl(id: string): string;
 
@@ -82,8 +82,9 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
     }
 
     async getDishDetails(encodedDishId: EncodedDishId): Promise<DishDetailsWithMetadata> {
-        const { dishId: id } = DishIdObfuscator.decode(encodedDishId);
-        const url: string = this.getFullApiUrl(this.getDishDetailsEndpointUrl(id));
+        const dishId = encodedDishId.getDishId();
+        const endpointUrl = this.getDishDetailsEndpointUrl(dishId);
+        const url: string = this.getFullApiUrl(endpointUrl);
         const context = 'AbstractApiService/getDishDetails';
 
         try {
@@ -106,8 +107,9 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
         }
     }
 
-    async getDishRecipe(dishId: string, language: Language): Promise<DishRecipe | null> {
-        const instructionUrl: string = this.getFullApiUrl(this.getDishInstructionEndpointUrl(dishId));
+    async getDishRecipe(encodedDishId: EncodedDishId, language: Language): Promise<Recipe | null> {
+        const dishId = encodedDishId.getDishId();
+        const instructionUrl: string = this.getFullApiUrl(this.getDishInstructionEndpointUrl(<string>dishId));
         const context = 'AbstractApiService/getDishRecipe';
 
         try {
@@ -122,7 +124,7 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
             const sections: DishRecipeSections = this.proceedDataToDishRecipeSections(result.data);
             this.loggerService.info(context, `Received recipe for "${dishId}" dish with details from "${this.getName()}" API.`);
 
-            return { dishId, language, sections };
+            return new Recipe(language, dishId, sections);
         } catch (err: any) {
             this.loggerService.error(context, `Error occurred during fetching a dish from ${this.getName()} API: ${err.message}.`);
 
@@ -130,7 +132,7 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
         }
     }
 
-    abstract getLanguage(encodedDishId: string): Language;
+    abstract getLanguage(encodedDishId: EncodedDishId): Language;
 
     private getFullApiUrl(endpointUrl: string, query?: string) {
         if (!query) {

@@ -8,7 +8,8 @@ import {
     UpdateWithAggregationPipeline
 } from 'mongoose';
 import { DeleteResult } from 'mongodb';
-import { InvalidMongooseObjectIdError } from '../../errors/infrastructure';
+import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../errors/infrastructure';
+import { DishId } from '../../modules/dish/dish.types';
 
 export abstract class AbstractRepository<T extends Document, CreateDataType> {
 
@@ -18,7 +19,11 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
         return this.model.findOne(filterQuery);
     }
 
-    async findById(id: string): Promise<T | null> {
+    async findById(id: DishId): Promise<T | null> {
+        if (typeof id !== 'string') {
+            throw new InvalidMongooseIdTypeError(id);
+        }
+
         if (!isValidObjectId(id)) {
             throw new InvalidMongooseObjectIdError(id);
         }

@@ -60,8 +60,3 @@ export type RepositoryMap = {
     [Repository.DISH_REPOSITORY]: DishRepository,
     [Repository.RECIPE_REPOSITORY]: DishRecipeRepository
 };
-
-/**
- * @description obfuscated dish ID and provider name
- */
-export type EncodedDishId = string;

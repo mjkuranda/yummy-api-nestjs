@@ -3,8 +3,6 @@ import { ProviderRegistryService } from '../../provider/provider-registry.servic
 import { CreateDishDataType, DetailedDish } from '../dish.types';
 import { DishDocument } from '../../../mongodb/documents/dish.document';
 import { DishRepository } from '../../../mongodb/repositories/dish.repository';
-import { EncodedDishId } from '../../../common/types';
-import { DishIdObfuscator } from '../../../common/helpers/dish-id-obfuscator.helper';
 import { DishCacheService } from '../../cache/dish/dish-cache.service';
 import { proceedDishDocumentToDishDetails } from '../dish.utils';
 import { CreateDishCommentBody, CreateDishRatingBody, DishEditDto } from '../dish.dto';
@@ -17,13 +15,13 @@ import {
     DishNotFoundError,
     DishSoftDeletedError,
     EmptyDishIngredientListError,
-    InvalidDishIdError,
     MissingDishAuthorError
 } from '../../../errors/domain';
 import { IngredientService } from '../../ingredient/ingredient.service';
 import { UserSearchQueryRepository } from '../../../mongodb/repositories/user-search-query.repository';
 import { AddDishRatingResult, ConfirmDeletingResult, DeleteDishResult, EditDishResult } from './dish-write.types';
 import { Provider } from '../../../common/enums';
+import { EncodedDishId } from '../encoded-dish-id.value-object';
 
 @Injectable()
 export class DishWriteService {
@@ -65,13 +63,7 @@ export class DishWriteService {
      * @param dishEditDto dish edit data
      */
     async editDish(encodedDishId: EncodedDishId, dishEditDto: DishEditDto<DishIngredient>): Promise<EditDishResult> {
-        const decodedId = DishIdObfuscator.decode(encodedDishId);
-
-        if (!decodedId) {
-            throw new InvalidDishIdError(encodedDishId);
-        }
-
-        const { dishId } = decodedId;
+        const dishId = encodedDishId.getDishId();
 
         const dish = await this.dishRepository.findById(dishId) as DishDocument;
 
@@ -87,13 +79,7 @@ export class DishWriteService {
      * @param encodedDishId encoded dish ID and its provider name
      */
     async deleteDish(encodedDishId: EncodedDishId): Promise<DeleteDishResult> {
-        const decoded = DishIdObfuscator.decode(encodedDishId);
-
-        if (!decoded) {
-            throw new InvalidDishIdError(encodedDishId);
-        }
-
-        const { dishId } = decoded;
+        const dishId = encodedDishId.getDishId();
         const dish = await this.dishRepository.findById(dishId) as DishDocument;
 
         if (!dish) {
@@ -120,8 +106,7 @@ export class DishWriteService {
      * @param encodedDishId encoded dish id with its provider name
      */
     async confirmCreating(encodedDishId: EncodedDishId): Promise<DetailedDish> {
-        const { dishId: id } = DishIdObfuscator.decode(encodedDishId);
-
+        const id = encodedDishId.getDishId();
         const dish = await this.dishRepository.findById(id) as DishDocument;
 
         await this.dishRepository.unsetSoftAdded(dish._id);
@@ -138,21 +123,15 @@ export class DishWriteService {
      * @description Confirms new dish version
      * @param encodedDishId encoded dish ID and its provider name
      */
-    async confirmEditing(encodedDishId: string): Promise<DishDocument> {
-        const decoded = DishIdObfuscator.decode(encodedDishId);
-
-        if (!decoded) {
-            throw new InvalidDishIdError(encodedDishId);
-        }
-
-        const { dishId } = decoded;
+    async confirmEditing(encodedDishId: EncodedDishId): Promise<DishDocument> {
+        const dishId = encodedDishId.getDishId();
         const dish = await this.dishRepository.findById(dishId) as DishDocument;
 
         if (!dish) {
             throw new DishNotFoundError(encodedDishId);
         }
 
-        await this.dishRepository.confirmEdition(encodedDishId, dish.softEdited);
+        await this.dishRepository.confirmEdition(dishId, dish.softEdited);
         const updatedDish = await this.dishRepository.findById(dishId) as DishDocument;
         const detailedDish = proceedDishDocumentToDishDetails(updatedDish);
         await this.dishCacheService.setDishDetails(encodedDishId, detailedDish);
@@ -165,18 +144,11 @@ export class DishWriteService {
      * @param encodedDishId encoded dish ID and its provider name
      */
     async confirmDeleting(encodedDishId: EncodedDishId): Promise<ConfirmDeletingResult> {
-        const decodedId = DishIdObfuscator.decode(encodedDishId);
-
-        if (!decodedId) {
-            throw new InvalidDishIdError(encodedDishId);
-        }
-
-        const { dishId } = decodedId;
-
+        const dishId = encodedDishId.getDishId();
         const dish = await this.dishRepository.findById(dishId) as DishDocument;
 
         if (!dish) {
-            throw new DishNotFoundError(dishId);
+            throw new DishNotFoundError(encodedDishId);
         }
 
         await this.dishCacheService.deleteDish(dish._id);
@@ -243,13 +215,9 @@ export class DishWriteService {
             throw new DishNotFoundError(createDishRatingBody.encodedDishId);
         }
 
-        const decodedId = DishIdObfuscator.decode(createDishRatingBody.encodedDishId);
+        const encodedDishId = EncodedDishId.fromEncodedString(createDishRatingBody.encodedDishId.getValue());
+        const dishId = encodedDishId.getDishId();
 
-        if (!decodedId) {
-            throw new InvalidDishIdError(createDishRatingBody.encodedDishId);
-        }
-
-        const { dishId } = decodedId;
         const rating = await this.dishRatingRepository.findOne({
             dishId,
             user: userLogin

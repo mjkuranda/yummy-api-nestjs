@@ -1,13 +1,12 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
-import { EncodedDishId } from '../../../../common/types';
 import { UserDto } from '../../../user/user.dto';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../write/dish-write.service';
 import { Injectable } from '@nestjs/common';
 import { BadRequestException } from '../../../../exceptions/bad-request.exception';
-import { InvalidDishIdError } from '../../../../errors/domain/invalid-dish-id.error';
-import { DishNotFoundError } from '../../../../errors/domain/dish-not-found.error';
+import { InvalidDishIdError, DishNotFoundError } from '../../../../errors/domain';
 import { NotFoundException } from '../../../../exceptions/not-found.exception';
+import { EncodedDishId } from '../../encoded-dish-id.value-object';
 
 @Injectable()
 export class ConfirmDishDeletionUseCase extends AbstractUseCase<[EncodedDishId, UserDto], boolean> {

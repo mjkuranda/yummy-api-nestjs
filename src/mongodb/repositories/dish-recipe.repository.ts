@@ -5,7 +5,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { dishRecipeModel } from '../../common/definitions/mongoose-model.definitions';
 import { isValidObjectId, Model } from 'mongoose';
 import { Language } from '../../common/types';
-import { InvalidMongooseObjectIdError } from '../../errors/infrastructure';
+import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../errors/infrastructure';
+import { Recipe } from '../../modules/recipe/domain/entities';
+import { DishId } from '../../modules/dish/dish.types';
 
 export class DishRecipeRepository extends AbstractRepository<DishRecipeDocument, CreateRecipeDto> {
 
@@ -13,11 +15,21 @@ export class DishRecipeRepository extends AbstractRepository<DishRecipeDocument,
         super(model);
     }
 
-    async findByDishId(dishId: string, language: Language = 'pl'): Promise<DishRecipeDocument | null> {
+    async findByDishId(dishId: DishId, language: Language = 'pl'): Promise<Recipe | never> {
+        if (typeof dishId !== 'string') {
+            throw new InvalidMongooseIdTypeError(dishId);
+        }
+
         if (!isValidObjectId(dishId)) {
             throw new InvalidMongooseObjectIdError(dishId);
         }
 
-        return this.model.findOne({ dishId, language });
+        const document = await this.model.findOne({ dishId, language });
+
+        return new Recipe(
+            document.language,
+            document.dishId,
+            document.sections
+        );
     }
 }

@@ -5,10 +5,10 @@ import { dishModel } from '../../common/definitions/mongoose-model.definitions';
 import { Model } from 'mongoose';
 import { DishEditDto } from '../../modules/dish/dish.dto';
 import { DishIngredient } from '../../modules/ingredient/ingredient.types';
-import { CreateDishDataType, RatedDish } from '../../modules/dish/dish.types';
+import { CreateDishDataType, DishId, RatedDish } from '../../modules/dish/dish.types';
 import { calculateMissing, calculateRelevance } from '../../common/helpers';
 import { Provider, MealType } from '../../common/enums';
-import { DishIdObfuscator } from '../../common/helpers/dish-id-obfuscator.helper';
+import { EncodedDishId } from '../../modules/dish/encoded-dish-id.value-object';
 
 export class DishRepository extends AbstractRepository<DishDocument, CreateDishDataType> {
 
@@ -39,7 +39,7 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
         return await this.findAll({ softDeleted: { $eq: true }});
     }
 
-    async findOneAvailable(id: string): Promise<DishDocument | null> {
+    async findOneAvailable(id: DishId): Promise<DishDocument | null> {
         return this.model.findOne({
             _id: id,
             softAdded: { $exists: false },
@@ -47,7 +47,7 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
         });
     }
 
-    async unsetSoftAdded(id: string): Promise<void> {
+    async unsetSoftAdded(id: DishId): Promise<void> {
         await this.model.updateOne({ _id: id }, {
             $unset: {
                 softAdded: true
@@ -55,7 +55,7 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
         });
     }
 
-    async insertEdition(id: string, dishEditDto: DishEditDto<DishIngredient>): Promise<void> {
+    async insertEdition(id: DishId, dishEditDto: DishEditDto<DishIngredient>): Promise<void> {
         await this.model.updateOne({ _id: id }, {
             $set: {
                 softEdited: dishEditDto
@@ -63,7 +63,7 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
         });
     }
 
-    async confirmEdition(id: string, dishSoftEdited?: DishDocument): Promise<void> {
+    async confirmEdition(id: DishId, dishSoftEdited?: DishDocument): Promise<void> {
         await this.model.updateOne({ _id: id }, {
             $unset: { softEdited: {}},
             $set: { ...dishSoftEdited }
@@ -98,7 +98,7 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
 
         return dishes.map(dish => {
             const { id, title, imageUrl, type, mealType, ingredients: dishIngredients, language } = dish;
-            const encodedDishId = DishIdObfuscator.encode(Provider.INT_DMT_USER, id);
+            const encodedDishId = EncodedDishId.fromParts(Provider.INT_DMT_USER, id);
             const finalDishIngredients = dishIngredients.map(ingredient => ingredient.name);
             const relevance = calculateRelevance(ingredients, finalDishIngredients);
             const missingCount = calculateMissing(ingredients, finalDishIngredients);

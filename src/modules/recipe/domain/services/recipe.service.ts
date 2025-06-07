@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { DishRecipeRepository } from '../../../../mongodb/repositories/dish-recipe.repository';
 import { CreateRecipeDto } from '../../recipe.dto';
-import { DishRecipeDocument } from '../../../../mongodb/documents/dish-recipe-document';
-import { EncodedDishId, Language } from '../../../../common/types';
+import { Language } from '../../../../common/types';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
-import { DetailedDish } from '../../../dish/dish.types';
 import { ProviderRegistryService } from '../../../provider/provider-registry.service';
 import { DishRepository } from '../../../../mongodb/repositories/dish.repository';
-import { DishCacheService } from '../../../cache/dish/dish-cache.service';
 import { DishRecipeCacheService } from '../../../cache/dish-recipe/dish-recipe-cache.service';
 import { DishNotFoundError, NotDishAuthorError, DishRecipeExistsError, DishRecipeNotFoundError } from '../../../../errors/domain';
 import { GetRecipeResult } from '../../application/recipe-application.types';
-import { DishIdObfuscator } from '../../../../common/helpers/dish-id-obfuscator.helper';
+import { EncodedDishId } from '../../../dish/encoded-dish-id.value-object';
+import { Recipe } from '../entities';
 
 @Injectable()
 export class RecipeService {
@@ -21,7 +19,6 @@ export class RecipeService {
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService,
-        private readonly dishCacheService: DishCacheService,
         private readonly dishRecipeCacheService: DishRecipeCacheService
     ) {
         this.dishRepository = this.providerRegistryService.getDishRepository();
@@ -34,8 +31,8 @@ export class RecipeService {
      * @param createRecipeDto data containing recipe information
      * @param user user data extracted from access token
      */
-    async create(encodedDishId: EncodedDishId, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<DishRecipeDocument> {
-        const { dishId } = DishIdObfuscator.decode(encodedDishId);
+    async create(encodedDishId: EncodedDishId, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<Recipe> {
+        const dishId = encodedDishId.getDishId();
 
         // NOTE: This dish can be unconfirmed because you add dish and recipe at once.
         const dish = await this.dishRepository.findById(dishId);
@@ -48,15 +45,19 @@ export class RecipeService {
             throw new NotDishAuthorError();
         }
 
-        const recipe = await this.recipeRepository.findByDishId(encodedDishId);
+        const recipe = await this.recipeRepository.findByDishId(dishId);
 
         if (recipe) {
-            throw new DishRecipeExistsError(encodedDishId, recipe._id);
+            throw new DishRecipeExistsError(encodedDishId);
         }
 
         const createdRecipe = await this.recipeRepository.create(createRecipeDto);
 
-        return createdRecipe;
+        return new Recipe(
+            createdRecipe.language,
+            createdRecipe.dishId,
+            createdRecipe.sections
+        );
     }
 
     /**
@@ -65,8 +66,8 @@ export class RecipeService {
      * @param language dish recipe language
      */
     async get(encodedDishId: EncodedDishId, language?: Language): Promise<GetRecipeResult> {
-        const { providerName } = DishIdObfuscator.decode(encodedDishId);
-        const providable = this.providerRegistryService.getProvider(providerName);
+        const provider = encodedDishId.getProvider();
+        const providable = this.providerRegistryService.getProvider(provider);
 
         const recipeLanguage = language ?? providable.getLanguage(encodedDishId);
         const cachedRecipe = await this.dishRecipeCacheService.getDishRecipe(encodedDishId, recipeLanguage);
@@ -78,21 +79,13 @@ export class RecipeService {
             };
         }
 
-        const cachedDish = await this.dishCacheService.getDishDetails(encodedDishId);
-        const dish = cachedDish ?? await providable.getDishDetails(encodedDishId);
+        const dishRecipe = await providable.getDishRecipe(encodedDishId, language);
 
-        if (!dish) {
-            throw new DishNotFoundError(encodedDishId);
-        }
-
-        // NOTE: To avoid leaking of daily points from external API, I cache dish result
-        await this.dishCacheService.setDishDetails(encodedDishId, dish as DetailedDish);
-
-        const recipe = await providable.getDishRecipe(encodedDishId, language);
-
-        if (!recipe) {
+        if (!dishRecipe) {
             throw new DishRecipeNotFoundError(encodedDishId);
         }
+
+        const recipe = new Recipe(dishRecipe.language, dishRecipe.dishId, dishRecipe.sections);
 
         return { recipe };
     }
