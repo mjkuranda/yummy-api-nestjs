@@ -3,7 +3,7 @@ import { DishRecipeDocument } from '../../../../mongodb/documents/dish-recipe-do
 import { ContextString, EncodedDishId } from '../../../../common/types';
 import { CreateRecipeDto } from '../../recipe.dto';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
-import { RecipeService } from '../recipe.service';
+import { RecipeService } from '../../domain/services/recipe.service';
 import { DishNotFoundError, DishRecipeExistsError, NotDishAuthorError } from '../../../../errors/domain';
 import { NotFoundException } from '../../../../exceptions/not-found.exception';
 import { ForbiddenException } from '../../../../exceptions/forbidden-exception';

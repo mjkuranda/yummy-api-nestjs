@@ -2,7 +2,7 @@ import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString, EncodedDishId, Language } from '../../../../common/types';
 import { DishRecipe } from '../recipe-application.types';
 import { LoggerService } from '../../../logger/logger.service';
-import { RecipeService } from '../recipe.service';
+import { RecipeService } from '../../domain/services/recipe.service';
 import { TranslationService } from '../../../translation/translation.service';
 import { DishNotFoundError, DishRecipeNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
 import { BadRequestException } from '../../../../exceptions/bad-request.exception';

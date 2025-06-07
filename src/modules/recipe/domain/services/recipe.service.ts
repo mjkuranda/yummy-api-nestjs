@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { DishRecipeRepository } from '../../../mongodb/repositories/dish-recipe.repository';
-import { CreateRecipeDto } from '../recipe.dto';
-import { DishRecipeDocument } from '../../../mongodb/documents/dish-recipe-document';
-import { EncodedDishId, Language } from '../../../common/types';
-import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
-import { DetailedDish } from '../../dish/dish.types';
-import { ProviderRegistryService } from '../../provider/provider-registry.service';
-import { DishRepository } from '../../../mongodb/repositories/dish.repository';
-import { DishCacheService } from '../../cache/dish/dish-cache.service';
-import { DishRecipeCacheService } from '../../cache/dish-recipe/dish-recipe-cache.service';
-import { DishNotFoundError, NotDishAuthorError, DishRecipeExistsError, DishRecipeNotFoundError } from '../../../errors/domain';
-import { GetRecipeResult } from './recipe-application.types';
-import { DishIdObfuscator } from '../../../common/helpers/dish-id-obfuscator.helper';
+import { DishRecipeRepository } from '../../../../mongodb/repositories/dish-recipe.repository';
+import { CreateRecipeDto } from '../../recipe.dto';
+import { DishRecipeDocument } from '../../../../mongodb/documents/dish-recipe-document';
+import { EncodedDishId, Language } from '../../../../common/types';
+import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
+import { DetailedDish } from '../../../dish/dish.types';
+import { ProviderRegistryService } from '../../../provider/provider-registry.service';
+import { DishRepository } from '../../../../mongodb/repositories/dish.repository';
+import { DishCacheService } from '../../../cache/dish/dish-cache.service';
+import { DishRecipeCacheService } from '../../../cache/dish-recipe/dish-recipe-cache.service';
+import { DishNotFoundError, NotDishAuthorError, DishRecipeExistsError, DishRecipeNotFoundError } from '../../../../errors/domain';
+import { GetRecipeResult } from '../../application/recipe-application.types';
+import { DishIdObfuscator } from '../../../../common/helpers/dish-id-obfuscator.helper';
 
 @Injectable()
 export class RecipeService {
