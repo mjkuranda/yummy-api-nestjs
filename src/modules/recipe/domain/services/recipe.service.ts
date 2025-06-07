@@ -10,6 +10,7 @@ import { DishNotFoundError, NotDishAuthorError, DishRecipeExistsError, DishRecip
 import { GetRecipeResult } from '../../application/recipe-application.types';
 import { EncodedDishId } from '../../../dish/encoded-dish-id.value-object';
 import { Recipe } from '../entities';
+import { TranslationService } from '../../../translation/translation.service';
 
 @Injectable()
 export class RecipeService {
@@ -19,7 +20,8 @@ export class RecipeService {
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService,
-        private readonly dishRecipeCacheService: DishRecipeCacheService
+        private readonly dishRecipeCacheService: DishRecipeCacheService,
+        private readonly translationService: TranslationService
     ) {
         this.dishRepository = this.providerRegistryService.getDishRepository();
         this.recipeRepository = this.providerRegistryService.getRecipeRepository();
@@ -53,11 +55,15 @@ export class RecipeService {
 
         const createdRecipe = await this.recipeRepository.create(createRecipeDto);
 
-        return new Recipe(
+        const newRecipe = new Recipe(
             createdRecipe.language,
             createdRecipe.dishId,
             createdRecipe.sections
         );
+
+        await this.dishRecipeCacheService.setDishRecipe(encodedDishId, recipe);
+
+        return newRecipe;
     }
 
     /**
@@ -65,7 +71,7 @@ export class RecipeService {
      * @param encodedDishId encoded dish ID and its provider name
      * @param language dish recipe language
      */
-    async get(encodedDishId: EncodedDishId, language?: Language): Promise<GetRecipeResult> {
+    async getTranslatedRecipe(encodedDishId: EncodedDishId, language?: Language): Promise<GetRecipeResult> {
         const provider = encodedDishId.getProvider();
         const providable = this.providerRegistryService.getProvider(provider);
 
@@ -87,6 +93,12 @@ export class RecipeService {
 
         const recipe = new Recipe(dishRecipe.language, dishRecipe.dishId, dishRecipe.sections);
 
-        return { recipe };
+        const { translated: translatedRecipe } = await this.translationService.translateRecipe(recipe, language);
+
+        await this.dishRecipeCacheService.setDishRecipe(encodedDishId, recipe);
+        await this.dishRecipeCacheService.setDishRecipe(encodedDishId, translatedRecipe);
+
+        return { recipe: translatedRecipe };
     }
+
 }

@@ -6,7 +6,6 @@ import { NotFoundException } from '../../../../exceptions/not-found.exception';
 import { ForbiddenException } from '../../../../exceptions/forbidden-exception';
 import { LoggerService } from '../../../logger/logger.service';
 import { Recipe } from '../../domain/entities';
-import { DishRecipeCacheService } from '../../../cache/dish-recipe/dish-recipe-cache.service';
 import { EncodedDishId } from '../../../dish/encoded-dish-id.value-object';
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 
@@ -14,8 +13,7 @@ export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishId, CreateReci
 
     constructor(
         private readonly recipeService: RecipeService,
-        private readonly loggerService: LoggerService,
-        private readonly dishRecipeCacheService: DishRecipeCacheService
+        private readonly loggerService: LoggerService
     ) {
         super();
     }
@@ -25,8 +23,6 @@ export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishId, CreateReci
 
         try {
             const recipe = await this.recipeService.create(encodedDishId, createRecipeDto, userDto);
-
-            await this.dishRecipeCacheService.setDishRecipe(encodedDishId, recipe);
 
             this.loggerService.info(context, `New recipe has been created for dish "${recipe.dishId}"`);
 
