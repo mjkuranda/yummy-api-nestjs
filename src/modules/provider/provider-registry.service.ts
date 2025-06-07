@@ -5,6 +5,7 @@ import { Providable } from '../../common/interfaces';
 import { ProviderMap, RepositoryMap } from '../../common/types';
 import { PROVIDERS, REPOSITORIES } from '../../constants/nestjs.contant';
 import { DishRecipeRepository } from '../../mongodb/repositories/dish-recipe.repository';
+import { ProviderNotRegisteredError } from '../../errors/domain';
 
 @Injectable()
 export class ProviderRegistryService {
@@ -27,7 +28,7 @@ export class ProviderRegistryService {
         const providable = this.providersMap[provider];
 
         if (!providable) {
-            throw new Error(`Dish provider "${provider}" is not registered`);
+            throw new ProviderNotRegisteredError(provider);
         }
 
         return providable;

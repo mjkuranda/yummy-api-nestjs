@@ -8,3 +8,4 @@ export * from './empty-dish-ingredient-list.error';
 export * from './invalid-dish-id.error';
 export * from './missing-dish-author.error';
 export * from './not-dish-author.error';
+export * from './provider-not-registered.error';
