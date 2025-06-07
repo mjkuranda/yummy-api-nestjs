@@ -12,7 +12,7 @@ import { UserSearchQueryRepository } from '../src/mongodb/repositories/user-sear
 import { DishCommentRepository } from '../src/mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../src/mongodb/repositories/dish-rating.repository';
 import { IngredientService } from '../src/modules/ingredient/ingredient.service';
-import { MealType, DishType, DishProvider } from '../src/common/enums';
+import { MealType, DishType, Provider } from '../src/common/enums';
 import { ExternalApiService } from '../src/modules/api/external-api.service';
 import { UserAccessTokenPayload } from '../src/modules/jwt-manager/jwt-manager.types';
 import { DishIngredient } from '../src/modules/ingredient/ingredient.types';
@@ -156,7 +156,7 @@ describe('DishController (e2e)', () => {
                 readyInMinutes: 0,
                 sourceOrAuthor: 'unknown',
                 ingredients: [],
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 type: DishType.ANY,
                 mealType: MealType.ANY
             };
@@ -174,7 +174,7 @@ describe('DishController (e2e)', () => {
                     original: [],
                     translated: []
                 },
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 type: DishType.ANY,
                 mealType: MealType.ANY
             };
@@ -290,7 +290,7 @@ describe('DishController (e2e)', () => {
             mealType: MealType.DINNER,
             readyInMinutes: 30,
             imageUrl: 'http://example.com/image.jpg',
-            provider: DishProvider.INT_DMT_USER
+            provider: Provider.INT_DMT_USER
         };
 
         const mockAccessToken = 'mock-access-token';

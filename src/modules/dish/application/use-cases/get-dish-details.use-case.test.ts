@@ -3,11 +3,10 @@ import { LoggerService } from '../../../logger/logger.service';
 import { DishReadService } from '../../read/dish-read.service';
 import { TranslationService } from '../../../translation/translation.service';
 import { GetDishDetailsUseCase } from './get-dish-details.use-case';
-import { DishNotFoundError } from '../../../../errors/domain/dish-not-found.error';
-import { InvalidDishIdError } from '../../../../errors/domain/invalid-dish-id.error';
+import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
 import { NotFoundException } from '../../../../exceptions/not-found.exception';
 import { BadRequestException } from '../../../../exceptions/bad-request.exception';
-import { DishType, MealType, DishProvider } from '../../../../common/enums';
+import { DishType, MealType, Provider } from '../../../../common/enums';
 import { DetailedDish } from '../../dish.types';
 import { DishIngredient } from '../../../ingredient/ingredient.types';
 
@@ -75,7 +74,7 @@ describe('GetDishDetailsUseCase', () => {
             readyInMinutes: 45,
             imgUrl: 'http://example.com/dish.jpg',
             sourceOrAuthor: 'testUser',
-            provider: DishProvider.INT_DMT_USER,
+            provider: Provider.INT_DMT_USER,
             properties: {
                 vegetarian: true,
                 vegan: false,

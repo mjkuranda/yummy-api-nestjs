@@ -7,7 +7,7 @@ import { CreateDishDto } from '../../dish.dto';
 import { DishIngredientWithoutImage } from '../../../ingredient/ingredient.types';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { DishDocument } from '../../../../mongodb/documents/dish.document';
-import { DishProvider, DishType, MealType } from '../../../../common/enums';
+import { Provider, DishType, MealType } from '../../../../common/enums';
 import { BadRequestException } from '../../../../exceptions/bad-request.exception';
 import { Document } from 'mongoose';
 
@@ -76,7 +76,7 @@ describe('CreateDishUseCase', () => {
             mealType: MealType.DINNER,
             readyInMinutes: 30,
             imageUrl: 'http://example.com/image.jpg',
-            provider: DishProvider.INT_DMT_USER,
+            provider: Provider.INT_DMT_USER,
             posted: Date.now(),
             get ingredientCount() {
                 return this.ingredients.length;
@@ -109,7 +109,7 @@ describe('CreateDishUseCase', () => {
                 ingredients: mockWrappedIngredients,
                 author: mockUser.login,
                 posted: expect.any(Number),
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 softAdded: true,
             }));
             expect(loggerService.info).toHaveBeenCalledWith(

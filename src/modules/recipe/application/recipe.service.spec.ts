@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggerService } from '../logger/logger.service';
+import { LoggerService } from '../../logger/logger.service';
 import { RecipeService } from './recipe.service';
-import { DishRepository } from '../../mongodb/repositories/dish.repository';
-import { CreateRecipeDto } from './recipe.dto';
-import { NotFoundException } from '../../exceptions/not-found.exception';
-import { ForbiddenException } from '../../exceptions/forbidden-exception';
-import { BadRequestException } from '../../exceptions/bad-request.exception';
-import { DishRecipeRepository } from '../../mongodb/repositories/dish-recipe.repository';
+import { DishRepository } from '../../../mongodb/repositories/dish.repository';
+import { CreateRecipeDto } from '../recipe.dto';
+import { NotFoundException } from '../../../exceptions/not-found.exception';
+import { ForbiddenException } from '../../../exceptions/forbidden-exception';
+import { BadRequestException } from '../../../exceptions/bad-request.exception';
+import { DishRecipeRepository } from '../../../mongodb/repositories/dish-recipe.repository';
 import mongoose from 'mongoose';
-import { ExternalApiService } from '../api/external-api.service';
-import { RedisService } from '../redis/redis.service';
+import { ExternalApiService } from '../../api/external-api.service';
+import { RedisService } from '../../redis/redis.service';
 
 describe('RecipeService', () => {
     let externalApiService: ExternalApiService;
@@ -207,7 +207,7 @@ describe('RecipeService', () => {
             jest.spyOn(dishRepository, 'findById').mockResolvedValueOnce(mockDish);
             jest.spyOn(recipeRepository, 'findByDishId').mockResolvedValueOnce(mockRecipe);
 
-            const recipe = await recipeService.get(mockDishId);
+            const { recipe } = await recipeService.get(mockDishId);
 
             expect(recipe).toBeDefined();
             expect(recipe.sections).toBeDefined();

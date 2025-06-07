@@ -19,6 +19,7 @@ graph TD
     subgraph Application Layer
         DishQueryFacade
         DishCommandFacade
+        RecipeFacade
     end
 
 %% === Domain Layer ===
@@ -41,8 +42,8 @@ graph TD
         ImageRepository
         CacheService
         DishCacheService
-        DishProviders
-        DishSourceRegistryService
+        Providers
+        ProviderRegistryService
         JwtManagerService
         RedisService
         ExternalApiService
@@ -59,29 +60,32 @@ graph TD
     DishController --> DishQueryFacade
     DishController --> DishCommandFacade
     UserController --> UserService
-    RecipeController --> RecipeService
+    RecipeController --> RecipeFacade
     ImageController --> ImageService
 
 %% Application → Domain
     DishQueryFacade --> DishReadService
     DishCommandFacade --> DishWriteService
+    RecipeFacade --> RecipeService
+    RecipeFacade --> TranslationService
 
 %% Application → Infrastructure
 
 %% Domain → Infrastructure
     DishReadService --> DishCacheService
     DishReadService --> DishAggregatorService
-    DishReadService --> DishSourceRegistryService
+    DishReadService --> ProviderRegistryService
     DishReadService --> TranslationService
-    DishAggregatorService --> DishSourceRegistryService
+    DishAggregatorService --> ProviderRegistryService
+    RecipeService --> ProviderRegistryService
 
     DishWriteService --> DishCommentRepository
     DishWriteService --> DishRatingRepository
-    DishWriteService --> DishSourceRegistryService
+    DishWriteService --> ProviderRegistryService
     DishWriteService --> DishCacheService
     DishWriteService --> UserSearchQueryRepository
 
-    DishSourceRegistryService --> DishProviders
+    ProviderRegistryService --> Providers
 
     UserService --> UserRepository
     UserService --> JwtManagerService
@@ -91,9 +95,7 @@ graph TD
 
     RecipeService --> RecipeRepository
     RecipeService --> JwtManagerService
-    RecipeService --> RedisService
-    RecipeService --> ExternalApiService
-    RecipeService --> TranslationService
+    RecipeService --> DishCacheService
 
     ImageService --> ImageRepository
     ImageService --> JwtManagerService
@@ -122,6 +124,7 @@ graph TD
         classDef application fill:#fff3e0,stroke:#fb8c00,color:#e65100,stroke-width:2;
         DishCommandFacade:::application
         DishQueryFacade:::application
+        RecipeFacade:::application
     end
 
 %% === Domain Layer ===
@@ -146,8 +149,8 @@ graph TD
         ImageRepository:::infra
         CacheService:::infra
         DishCacheService:::infra
-        DishProviders:::infra
-        DishSourceRegistryService:::infra
+        Providers:::infra
+        ProviderRegistryService:::infra
         JwtManagerService:::infra
         RedisService:::infra
         ExternalApiService:::infra
@@ -164,28 +167,28 @@ graph TD
     DishController --> DishQueryFacade
     DishController --> DishCommandFacade
     UserController --> UserService
-    RecipeController --> RecipeService
+    RecipeController --> RecipeFacade
     ImageController --> ImageService
-%%    HealthcheckController --> LoggerService
 
 %% Application → Domain
     DishQueryFacade --> DishReadService
     DishCommandFacade --> DishWriteService
+    RecipeFacade --> RecipeService
 
 %% Application → Infrastructure
     DishQueryFacade --> UserSearchQueryRepository
 
 %% Domain → Infrastructure
-%%    DishReadService --> DishProviders
+%%    DishReadService --> Providers
     DishReadService --> DishCacheService
     DishReadService --> DishAggregatorService
-    DishReadService --> DishSourceRegistryService
+    DishReadService --> ProviderRegistryService
     DishReadService --> TranslationService
-    DishAggregatorService --> DishSourceRegistryService
+    DishAggregatorService --> ProviderRegistryService
 
     DishWriteService --> DishCommentRepository
     DishWriteService --> DishRatingRepository
-    DishWriteService --> DishSourceRegistryService
+    DishWriteService --> ProviderRegistryService
     DishWriteService --> DishCacheService
 %%    DishWriteService --> LoggerService
 
@@ -198,9 +201,9 @@ graph TD
 
     RecipeService --> RecipeRepository
     RecipeService --> JwtManagerService
-    RecipeService --> RedisService
-    RecipeService --> ExternalApiService
+    RecipeService --> DishCacheService
     RecipeService --> TranslationService
+    RecipeService --> ProviderRegistryService
 %%    RecipeService --> LoggerService
 
     ImageService --> ImageRepository

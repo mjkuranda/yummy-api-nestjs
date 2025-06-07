@@ -1,6 +1,6 @@
 export class InvalidMongooseObjectIdError extends Error {
 
-    constructor(message: string) {
-        super(message);
+    constructor(id: string) {
+        super(`Provided "${id}" is not a correct MongoDB id.`);
     }
 }

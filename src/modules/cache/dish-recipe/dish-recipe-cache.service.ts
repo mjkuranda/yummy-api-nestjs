@@ -2,10 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REDIS_CLIENT } from '../../redis/redis.constants';
 import { Redis } from 'ioredis';
 import { EncodedDishId, Language } from '../../../common/types';
-import { DishRecipe } from '../../recipe/recipe.types';
 import { HOUR } from '../../../constants/times.constant';
 import { DishRecipeKey } from './dish-recipe-cache.types';
 import { DishRecipeCacheKeyFactory } from './dish-recipe-cache-key.factory';
+import { DishRecipe } from '../../recipe/application/recipe-application.types';
 
 @Injectable()
 export class DishRecipeCacheService {

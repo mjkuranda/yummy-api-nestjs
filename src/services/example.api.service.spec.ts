@@ -3,7 +3,7 @@ import { ExampleApiService } from './example-api-service';
 import { RedisService } from '../modules/redis/redis.service';
 import { LoggerService } from '../modules/logger/logger.service';
 import { AxiosService } from './axios.service';
-import { DishProvider, DishType, IngredientName, MealType } from '../common/enums';
+import { Provider, DishType, IngredientName, MealType } from '../common/enums';
 import { RatedDish } from '../modules/dish/dish.types';
 
 describe('ExampleApiService', () => {
@@ -56,7 +56,7 @@ describe('ExampleApiService', () => {
                 language: 'en',
                 relevance: 50,
                 title: 'some-dish',
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 type: DishType.ANY,
                 mealType: MealType.ANY
             }

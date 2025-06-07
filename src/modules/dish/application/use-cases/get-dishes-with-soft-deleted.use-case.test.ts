@@ -3,7 +3,7 @@ import { DishReadService } from '../../read/dish-read.service';
 import { GetDishesWithSoftDeletedUseCase } from './get-dishes-with-soft-deleted.use-case';
 import { DishDocument } from '../../../../mongodb/documents/dish.document';
 import { Document } from 'mongoose';
-import { DishType, MealType, DishProvider } from '../../../../common/enums';
+import { DishType, MealType, Provider } from '../../../../common/enums';
 
 describe('GetDishesWithSoftDeletedUseCase', () => {
     let useCase: GetDishesWithSoftDeletedUseCase;
@@ -47,7 +47,7 @@ describe('GetDishesWithSoftDeletedUseCase', () => {
                 readyInMinutes: 30,
                 imageUrl: 'http://example.com/dish1.jpg',
                 author: 'testUser',
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 posted: Date.now(),
                 softDeleted: true,
             },
@@ -62,7 +62,7 @@ describe('GetDishesWithSoftDeletedUseCase', () => {
                 readyInMinutes: 45,
                 imageUrl: 'http://example.com/dish2.jpg',
                 author: 'testUser',
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 posted: Date.now(),
                 softDeleted: true,
             }
@@ -94,4 +94,4 @@ describe('GetDishesWithSoftDeletedUseCase', () => {
             expect(dishReadService.getDishesWithSoftDeleted).toHaveBeenCalled();
         });
     });
-}); 
+});

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DishSourceRegistryService } from '../source/dish-source-registry.service';
+import { ProviderRegistryService } from '../../provider/provider-registry.service';
 import { RatedDish } from '../dish.types';
 import { getFulfilledPromiseResults } from '../../../utils';
 import { MealType } from '../../../common/enums';
@@ -8,7 +8,7 @@ import { filterByMealType, filterGreaterThanZeroRelevance, sortDescendingRelevan
 @Injectable()
 export class DishAggregatorService {
 
-    constructor(private readonly dishSourceRegistryService: DishSourceRegistryService) {}
+    constructor(private readonly providerRegistryService: ProviderRegistryService) {}
 
     /**
      * @description Returns aggregated dishes by ingredients and meal type optionally
@@ -16,7 +16,7 @@ export class DishAggregatorService {
      * @param mealType filter dishes by meal type
      */
     async aggregateRatedDishes(ingredients: string[], mealType?: MealType): Promise<RatedDish[]> {
-        const providers = this.dishSourceRegistryService.getAllProviders();
+        const providers = this.providerRegistryService.getAllProviders();
         const promises = providers.map(provider => provider.getDishes(ingredients));
         const datasets = await this.getDatasets(...promises);
 

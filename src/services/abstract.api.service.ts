@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RedisService } from '../modules/redis/redis.service';
-import { DishProvider, MealType } from '../common/enums';
+import { Provider, MealType } from '../common/enums';
 import { DetailedDish, DishRecipeSections, RatedDish } from '../modules/dish/dish.types';
 import { getQueryWithIngredientsAndDishType } from '../modules/dish/dish.utils';
 import { AxiosResponse } from 'axios';
@@ -9,13 +9,13 @@ import { ContextString, EncodedDishId, Language } from '../common/types';
 import { LoggerService } from '../modules/logger/logger.service';
 import { AxiosService } from './axios.service';
 import { IngredientType, DishIngredient } from '../modules/ingredient/ingredient.types';
-import { DishRecipe } from '../modules/recipe/recipe.types';
-import { DishProvidable } from '../common/interfaces';
+import { Providable } from '../common/interfaces';
 import { DishIdObfuscator } from '../common/helpers/dish-id-obfuscator.helper';
 import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
+import { DishRecipe } from '../modules/recipe/application/recipe-application.types';
 
 @Injectable()
-export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStruct, GenericDishDetailsStruct, DishInstructionStruct> implements DishProvidable {
+export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStruct, GenericDishDetailsStruct, DishInstructionStruct> implements Providable {
 
     constructor(
         protected readonly axiosService: AxiosService,
@@ -45,7 +45,7 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
 
     abstract proceedDataToIngredientList(ingredients: GenericIngredientStruct[]): IngredientType[];
 
-    abstract getProvider(): DishProvider;
+    abstract getProvider(): Provider;
 
     async getDishes(ingredients: IngredientType[], mealType?: MealType): Promise<RatedDish[]> {
         const query = getQueryWithIngredientsAndDishType(ingredients, mealType, this.getName(), this.getApiKey());
@@ -129,6 +129,8 @@ export abstract class AbstractApiService<GenericDishStruct, GenericIngredientStr
             return null;
         }
     }
+
+    abstract getLanguage(encodedDishId: string): Language;
 
     private getFullApiUrl(endpointUrl: string, query?: string) {
         if (!query) {

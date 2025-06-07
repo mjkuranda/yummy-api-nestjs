@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { SpoonacularApiService } from './spoonacular/spoonacular.api.service';
 import { AbstractApiService } from '../../services/abstract.api.service';
-import { DetailedDish, RatedDish } from '../dish/dish.types';
+import { RatedDish } from '../dish/dish.types';
 import { MealType } from '../../common/enums';
 import { Language } from '../../common/types';
-import { DishRecipe } from '../recipe/recipe.types';
 import { DishDetailsWithMetadata } from '../dish/read/dish-read.types';
+import { DishRecipe } from '../recipe/application/recipe-application.types';
 
 @Injectable()
 export class ExternalApiService {

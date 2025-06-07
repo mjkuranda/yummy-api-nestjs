@@ -3,12 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { DishCacheService } from '../cache/dish/dish-cache.service';
 import { LoggerService } from '../logger/logger.service';
 import { ContextString } from '../../common/types';
-import { DishSourceRegistryService } from '../dish/source/dish-source-registry.service';
+import { ProviderRegistryService } from '../provider/provider-registry.service';
 
 @Injectable()
 export class SyncDishCronService {
     constructor(
-        private readonly dishSourceRegistry: DishSourceRegistryService,
+        private readonly providerRegistryService: ProviderRegistryService,
         private readonly dishCacheService: DishCacheService,
         private readonly loggerService: LoggerService
     ) {}
@@ -21,7 +21,7 @@ export class SyncDishCronService {
 
         this.loggerService.info(context, 'Starting refreshing dish cache...');
 
-        for (const provider of this.dishSourceRegistry.getAllProviders()) {
+        for (const provider of this.providerRegistryService.getAllProviders()) {
             this.loggerService.info(context, `Fetching dishes for provider: ${provider.getProvider()}`);
 
             for (const ingredient of ingredients) {

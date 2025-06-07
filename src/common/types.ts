@@ -1,12 +1,15 @@
-import { DishProvider, IngredientName } from './enums';
+import { Provider, IngredientName, Repository } from './enums';
 import { supportedLanguages } from '../constants/language.constant';
-import { DishProvidable } from './interfaces';
+import { Providable } from './interfaces';
+import { DishRepository } from '../mongodb/repositories/dish.repository';
+import { DishRecipeRepository } from '../mongodb/repositories/dish-recipe.repository';
 
 /**
  * @description Equals to {}
  */
-export type EmptyDocument = Record<string, never>;
+export type EmptyDocument = Record<string, unknown>;
 
+// FIXME: Deprecated. Use HttpStatus or HttpCode
 /**
  * @description HTTP status codes.
  */
@@ -46,9 +49,17 @@ export interface IngredientUnitConverter {
 }
 
 /**
- * @description All dish providers map type
+ * @description All providers map type
  */
-export type DishProviderMap = Record<DishProvider, DishProvidable>;
+export type ProviderMap = Record<Provider, Providable>;
+
+/**
+ * @description Dish and recipe repositories
+ */
+export type RepositoryMap = {
+    [Repository.DISH_REPOSITORY]: DishRepository,
+    [Repository.RECIPE_REPOSITORY]: DishRecipeRepository
+};
 
 /**
  * @description obfuscated dish ID and provider name

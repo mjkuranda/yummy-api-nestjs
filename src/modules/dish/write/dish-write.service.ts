@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DishSourceRegistryService } from '../source/dish-source-registry.service';
+import { ProviderRegistryService } from '../../provider/provider-registry.service';
 import { CreateDishDataType, DetailedDish } from '../dish.types';
 import { DishDocument } from '../../../mongodb/documents/dish.document';
 import { DishRepository } from '../../../mongodb/repositories/dish.repository';
@@ -11,10 +11,19 @@ import { CreateDishCommentBody, CreateDishRatingBody, DishEditDto } from '../dis
 import { DishIngredient } from '../../ingredient/ingredient.types';
 import { DishCommentRepository } from '../../../mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../../../mongodb/repositories/dish-rating.repository';
-import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError, InvalidDishIdError, DishDeletionFailedError, EmptyDishIngredientListError, MissingDishAuthorError } from '../../../errors/domain';
+import {
+    DishDeletionFailedError,
+    DishNotAcceptedError,
+    DishNotFoundError,
+    DishSoftDeletedError,
+    EmptyDishIngredientListError,
+    InvalidDishIdError,
+    MissingDishAuthorError
+} from '../../../errors/domain';
 import { IngredientService } from '../../ingredient/ingredient.service';
 import { UserSearchQueryRepository } from '../../../mongodb/repositories/user-search-query.repository';
 import { AddDishRatingResult, ConfirmDeletingResult, DeleteDishResult, EditDishResult } from './dish-write.types';
+import { Provider } from '../../../common/enums';
 
 @Injectable()
 export class DishWriteService {
@@ -22,14 +31,14 @@ export class DishWriteService {
     private readonly dishRepository: DishRepository;
 
     constructor(
-        private readonly dishSourceRegistryService: DishSourceRegistryService,
+        private readonly providerRegistryService: ProviderRegistryService,
         private readonly dishCacheService: DishCacheService,
         private readonly dishCommentRepository: DishCommentRepository,
         private readonly dishRatingRepository: DishRatingRepository,
         private readonly userSearchQueryRepository: UserSearchQueryRepository,
         private readonly ingredientService: IngredientService
     ) {
-        this.dishRepository = this.dishSourceRegistryService.getDishRepositoryProvider();
+        this.dishRepository = this.providerRegistryService.getDishRepository();
     }
 
     /**
@@ -200,7 +209,8 @@ export class DishWriteService {
      * @param userLogin user login
      */
     async addDishComment(createDishCommentBody: CreateDishCommentBody, userLogin: string): Promise<void> {
-        const dishDetailsWithMetadata = await this.dishRepository.getDishDetails(createDishCommentBody.encodedDishId);
+        const providable = this.providerRegistryService.getProvider(Provider.INT_DMT_USER);
+        const dishDetailsWithMetadata = await providable.getDishDetails(createDishCommentBody.encodedDishId);
 
         if (!dishDetailsWithMetadata) {
             throw new DishNotFoundError(createDishCommentBody.encodedDishId);
@@ -226,7 +236,8 @@ export class DishWriteService {
      * @param userLogin user login
      */
     async addDishRating(createDishRatingBody: CreateDishRatingBody, userLogin: string): Promise<AddDishRatingResult> {
-        const dishDetailsWithMetadata = await this.dishRepository.getDishDetails(createDishRatingBody.encodedDishId);
+        const providable = this.providerRegistryService.getProvider(Provider.INT_DMT_USER);
+        const dishDetailsWithMetadata = await providable.getDishDetails(createDishRatingBody.encodedDishId);
 
         if (!dishDetailsWithMetadata) {
             throw new DishNotFoundError(createDishRatingBody.encodedDishId);

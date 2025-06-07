@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 import { DishDetailedKey, DishSearchResultKey, DishSearchResultPerProviderKey } from './dish-cache.types';
-import { DishProvidable } from '../../../common/interfaces';
+import { Providable } from '../../../common/interfaces';
 import { EncodedDishId } from '../../../common/types';
 
 export class DishCacheKeyFactory {
@@ -12,7 +12,7 @@ export class DishCacheKeyFactory {
         return `dish:results:ingredients:${hash}`;
     }
 
-    static createDishSearchResultPerProviderKey(provider: DishProvidable): DishSearchResultPerProviderKey {
+    static createDishSearchResultPerProviderKey(provider: Providable): DishSearchResultPerProviderKey {
         const providerName = provider.getProvider();
 
         return `dish:results:provider:${providerName}`;

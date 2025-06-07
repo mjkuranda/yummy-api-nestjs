@@ -4,7 +4,7 @@ import { DishReadService } from '../../read/dish-read.service';
 import { IngredientService } from '../../../ingredient/ingredient.service';
 import { GetDishesUseCase } from './get-dishes.use-case';
 import { IngredientType } from '../../../ingredient/ingredient.types';
-import { MealType, DishType, DishProvider } from '../../../../common/enums';
+import { MealType, DishType, Provider } from '../../../../common/enums';
 import { RatedDish } from '../../dish.types';
 
 describe('GetDishesUseCase', () => {
@@ -79,7 +79,7 @@ describe('GetDishesUseCase', () => {
                 ingredients: ['tomato', 'onion', 'garlic'],
                 missingCount: 1,
                 language: 'en',
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 relevance: 0.8,
                 type: DishType.MAIN_COURSE,
                 mealType: MealType.DINNER,
@@ -90,7 +90,7 @@ describe('GetDishesUseCase', () => {
                 ingredients: ['tomato', 'garlic', 'basil'],
                 missingCount: 2,
                 language: 'en',
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 relevance: 0.6,
                 type: DishType.MAIN_COURSE,
                 mealType: MealType.DINNER,

@@ -4,13 +4,12 @@ import { DishWriteService } from '../../write/dish-write.service';
 import { EditDishUseCase } from './edit-dish.use-case';
 import { DishEditDto } from '../../dish.dto';
 import { DishIngredient } from '../../../ingredient/ingredient.types';
-import { DishNotFoundError } from '../../../../errors/domain/dish-not-found.error';
-import { InvalidDishIdError } from '../../../../errors/domain/invalid-dish-id.error';
+import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
 import { NotFoundException } from '../../../../exceptions/not-found.exception';
 import { BadRequestException } from '../../../../exceptions/bad-request.exception';
 import { DishDocument } from '../../../../mongodb/documents/dish.document';
 import { Document } from 'mongoose';
-import { DishType, MealType, DishProvider } from '../../../../common/enums';
+import { DishType, MealType, Provider } from '../../../../common/enums';
 import { UserDto } from '../../../user/user.dto';
 import { EncodedDishId } from '../../../../common/types';
 
@@ -85,7 +84,7 @@ describe('EditDishUseCase', () => {
             readyInMinutes: 45,
             imageUrl: 'http://example.com/updated-dish.jpg',
             author: mockUser.login,
-            provider: DishProvider.INT_DMT_USER,
+            provider: Provider.INT_DMT_USER,
             posted: Date.now(),
             softEdited: true,
         } as unknown as (DishDocument & Document);

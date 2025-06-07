@@ -1,7 +1,7 @@
 import { IngredientType, DishIngredient, DishIngredientWithoutImage } from '../ingredient/ingredient.types';
 import { TranslatedIngredient } from '../translation/translation.types';
 import { EncodedDishId, Language } from '../../common/types';
-import { MealType, DishType, DishProvider } from '../../common/enums';
+import { MealType, DishType, Provider } from '../../common/enums';
 import { CreateDishWithAuthorDto } from './dish.dto';
 
 export interface RatedDish {
@@ -10,7 +10,7 @@ export interface RatedDish {
     ingredients: IngredientType[];
     missingCount: number;
     language: Language;
-    provider: DishProvider;
+    provider: Provider;
     title: string;
     relevance: number;
     type: DishType;
@@ -39,7 +39,7 @@ export interface DetailedDish {
         dairyFree?: boolean;
         veryHealthy?: boolean;
     };
-    provider: DishProvider;
+    provider: Provider;
     type: DishType;
     mealType: MealType;
 }
@@ -61,7 +61,7 @@ export interface ProposedDish {
     ingredients: IngredientType[];
     recommendationPoints: number;
     title: string;
-    provider: DishProvider;
+    provider: Provider;
     type: DishType;
     mealType: MealType;
 }

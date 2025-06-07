@@ -3,7 +3,7 @@ import { DishReadService } from '../../read/dish-read.service';
 import { GetDishesWithSoftAddedUseCase } from './get-dishes-with-soft-added.use-case';
 import { DishDocument } from '../../../../mongodb/documents/dish.document';
 import { Document } from 'mongoose';
-import { DishType, MealType, DishProvider } from '../../../../common/enums';
+import { DishType, MealType, Provider } from '../../../../common/enums';
 
 describe('GetDishesWithSoftAddedUseCase', () => {
     let useCase: GetDishesWithSoftAddedUseCase;
@@ -47,7 +47,7 @@ describe('GetDishesWithSoftAddedUseCase', () => {
                 readyInMinutes: 30,
                 imageUrl: 'http://example.com/dish1.jpg',
                 author: 'testUser',
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 posted: Date.now(),
                 softAdded: true,
             },
@@ -62,7 +62,7 @@ describe('GetDishesWithSoftAddedUseCase', () => {
                 readyInMinutes: 45,
                 imageUrl: 'http://example.com/dish2.jpg',
                 author: 'testUser',
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 posted: Date.now(),
                 softAdded: true,
             }
@@ -94,4 +94,4 @@ describe('GetDishesWithSoftAddedUseCase', () => {
             expect(dishReadService.getDishesWithSoftAdded).toHaveBeenCalled();
         });
     });
-}); 
+});

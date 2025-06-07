@@ -6,9 +6,14 @@ export const LanguageName: Record<Language, string> = {
     pl: 'Polish'
 };
 
-export enum DishProvider {
+export enum Provider {
     INT_DMT_USER = 'int_dmt_user',                  // NOTE: DishMatcher user
-    EXT_API_SPOONACULAR = 'ext_api_spoonacular',    // NOTE: External API - Spoonacular
+    EXT_API_SPOONACULAR = 'ext_api_spoonacular'     // NOTE: External API - Spoonacular
+}
+
+export enum Repository {
+    DISH_REPOSITORY = 'dish_repository',
+    RECIPE_REPOSITORY = 'recipe_repository'
 }
 
 export enum MealType {

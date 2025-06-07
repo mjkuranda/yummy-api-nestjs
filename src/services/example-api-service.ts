@@ -2,9 +2,9 @@ import { AbstractApiService } from './abstract.api.service';
 import { ApiName } from '../modules/redis/redis.types';
 import { DetailedDish, DishRecipeSections, RatedDish } from '../modules/dish/dish.types';
 import { DishIngredient, IngredientType } from '../modules/ingredient/ingredient.types';
-import { EncodedDishId } from '../common/types';
+import { EncodedDishId, Language } from '../common/types';
 import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
-import { DishProvider, MealType } from '../common/enums';
+import { Provider, MealType } from '../common/enums';
 
 export class ExampleApiService extends AbstractApiService<any, any, any, any> {
 
@@ -33,8 +33,8 @@ export class ExampleApiService extends AbstractApiService<any, any, any, any> {
         return [];
     }
 
-    getProvider(): DishProvider {
-        return DishProvider.INT_DMT_USER;
+    getProvider(): Provider {
+        return Provider.INT_DMT_USER;
     }
 
     getDishDetailsEndpointUrl(id: string): string {
@@ -67,6 +67,11 @@ export class ExampleApiService extends AbstractApiService<any, any, any, any> {
 
     proceedDataToDishRecipeSections(instructionData: any): DishRecipeSections {
         return { ...instructionData };
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getLanguage(encodedDishId: string): Language {
+        return undefined;
     }
 
 }

@@ -2,12 +2,12 @@ import { SpoonacularIngredient, SpoonacularRecipe } from './spoonacular.api.type
 import { RatedDish } from '../../dish/dish.types';
 import { IngredientType } from '../../ingredient/ingredient.types';
 import { discardDecimalPoint, inferDishType, inferMealType, toFixNumber } from '../../../common/helpers';
-import { DishProvider, IngredientUnitConverters } from '../../../common/enums';
+import { Provider, IngredientUnitConverters } from '../../../common/enums';
 import { DishIdObfuscator } from '../../../common/helpers/dish-id-obfuscator.helper';
 
 export function proceedRecipesToDishes(recipes: SpoonacularRecipe[]): RatedDish[] {
     return recipes.map(recipe => {
-        const encodedDishId = DishIdObfuscator.encode(DishProvider.EXT_API_SPOONACULAR, recipe.id.toString());
+        const encodedDishId = DishIdObfuscator.encode(Provider.EXT_API_SPOONACULAR, recipe.id.toString());
         const type = inferDishType(recipe.title);
         const mealType = inferMealType(type);
 
@@ -19,7 +19,7 @@ export function proceedRecipesToDishes(recipes: SpoonacularRecipe[]): RatedDish[
             missingCount: recipe.missedIngredients.length,
             relevance: recipe.usedIngredients.length / (recipe.usedIngredients.length + recipe.missedIngredients.length),
             title: recipe.title,
-            provider: DishProvider.EXT_API_SPOONACULAR,
+            provider: Provider.EXT_API_SPOONACULAR,
             type,
             mealType
         };

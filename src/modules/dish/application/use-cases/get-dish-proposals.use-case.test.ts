@@ -6,7 +6,7 @@ import { GetDishProposalsUseCase } from './get-dish-proposals.use-case';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { UserSearchQueryDocument } from '../../../../mongodb/documents/user-search-query.document';
 import { ProposedDish } from '../../dish.types';
-import { DishType, DishProvider, MealType } from '../../../../common/enums';
+import { DishType, Provider, MealType } from '../../../../common/enums';
 import { Document } from 'mongoose';
 
 describe('GetDishProposalsUseCase', () => {
@@ -85,7 +85,7 @@ describe('GetDishProposalsUseCase', () => {
                 title: 'Test Dish 1',
                 ingredients: ['tomato', 'onion', 'garlic'],
                 recommendationPoints: 2,
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 type: DishType.MAIN_COURSE,
                 mealType: MealType.DINNER,
             },
@@ -94,7 +94,7 @@ describe('GetDishProposalsUseCase', () => {
                 title: 'Test Dish 2',
                 ingredients: ['tomato', 'garlic', 'basil'],
                 recommendationPoints: 1,
-                provider: DishProvider.INT_DMT_USER,
+                provider: Provider.INT_DMT_USER,
                 type: DishType.MAIN_COURSE,
                 mealType: MealType.DINNER,
             },

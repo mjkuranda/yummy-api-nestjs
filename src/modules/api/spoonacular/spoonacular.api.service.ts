@@ -11,14 +11,21 @@ import {
 import { DishIngredient, IngredientType } from '../../ingredient/ingredient.types';
 import { calculateCheckingAgain, inferDishType, inferMealType } from '../../../common/helpers';
 import { proceedIngredientUnit } from './spoonacular.api.utils';
-import { DishProvider } from '../../../common/enums';
+import { Provider } from '../../../common/enums';
 import { DishIdObfuscator } from '../../../common/helpers/dish-id-obfuscator.helper';
+import { Language } from '../../../common/types';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularRecipeSections> {
 
-    getProvider(): DishProvider {
-        return DishProvider.EXT_API_SPOONACULAR;
+    // TODO: Getting dish and returning its language
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getLanguage(encodedDishId: string): Language {
+        return 'en';
+    }
+
+    getProvider(): Provider {
+        return Provider.EXT_API_SPOONACULAR;
     }
 
     getApiUrl(): string {
@@ -76,7 +83,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
     proceedDataToDishes(data: SpoonacularRecipe[], providedIngredients?: IngredientType[]): RatedDish[] {
         return data.map(recipe => {
             const { relevance, missingCount } = calculateCheckingAgain(providedIngredients, recipe.usedIngredients, recipe.missedIngredients);
-            const encodedDishId = DishIdObfuscator.encode(DishProvider.EXT_API_SPOONACULAR, recipe.id.toString());
+            const encodedDishId = DishIdObfuscator.encode(Provider.EXT_API_SPOONACULAR, recipe.id.toString());
             const type = inferDishType(recipe.title);
             const mealType = inferMealType(type);
 
@@ -88,7 +95,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 missingCount,
                 relevance,
                 title: recipe.title,
-                provider: DishProvider.EXT_API_SPOONACULAR,
+                provider: Provider.EXT_API_SPOONACULAR,
                 type,
                 mealType
             };
@@ -119,7 +126,7 @@ export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe,
                 dairyFree,
                 veryHealthy
             },
-            provider: DishProvider.EXT_API_SPOONACULAR,
+            provider: Provider.EXT_API_SPOONACULAR,
             type,
             mealType
         };

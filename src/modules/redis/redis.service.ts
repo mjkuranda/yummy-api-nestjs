@@ -13,8 +13,8 @@ import { HOUR } from '../../constants/times.constant';
 import { NotFoundException } from '../../exceptions/not-found.exception';
 import { DetailedDish, RatedDish } from '../dish/dish.types';
 import { ACCESS_TOKEN_DURATION, REFRESH_TOKEN_DURATION } from '../../constants/tokens.constant';
-import { DishRecipe } from '../recipe/recipe.types';
 import { Language } from '../../common/types';
+import { DishRecipe } from '../recipe/application/recipe-application.types';
 
 type RedisKeyType = string | `${string}:${string}`;
 

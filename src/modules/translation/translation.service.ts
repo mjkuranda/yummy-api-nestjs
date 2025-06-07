@@ -6,7 +6,7 @@ import { compoundTextToTranslate, convertAmountToText, normalizeName, normalizeU
 import translate from '@iamtraction/google-translate';
 import { proceedTagsSpaces } from '../api/spoonacular/spoonacular.api.utils';
 import { DishIngredient } from '../ingredient/ingredient.types';
-import { DishRecipe } from '../recipe/recipe.types';
+import { DishRecipe } from '../recipe/application/recipe-application.types';
 
 @Injectable()
 export class TranslationService {

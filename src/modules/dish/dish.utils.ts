@@ -1,4 +1,4 @@
-import { DishProvider, MealType } from '../../common/enums';
+import { Provider, MealType } from '../../common/enums';
 import { ApiName } from '../redis/redis.types';
 import { IngredientType } from '../ingredient/ingredient.types';
 import { DishDocument } from '../../mongodb/documents/dish.document';
@@ -43,7 +43,7 @@ export function proceedDishDocumentToDishDetails(dish: DishDocument): DetailedDi
         title,
         description,
         sourceOrAuthor: author,
-        provider: DishProvider.INT_DMT_USER,
+        provider: Provider.INT_DMT_USER,
         readyInMinutes,
         type,
         mealType

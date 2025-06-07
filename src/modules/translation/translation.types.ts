@@ -1,4 +1,4 @@
-import { DishRecipe } from '../recipe/recipe.types';
+import { DishRecipe } from '../recipe/application/recipe-application.types';
 
 export interface TranslatedIngredient {
     text: string;

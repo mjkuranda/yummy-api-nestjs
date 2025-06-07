@@ -13,7 +13,7 @@ import { UserDto } from '../user/user.dto';
 import { DishRecipeSections } from './dish.types';
 import { EncodedDishId, Language } from '../../common/types';
 import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
-import { MealType, DishType, DishProvider } from '../../common/enums';
+import { MealType, DishType, Provider } from '../../common/enums';
 
 export class CreateDishDto<Ingredient> {
     @IsNotEmpty({ message: 'Dish should have a description' })
@@ -36,7 +36,7 @@ export class CreateDishDto<Ingredient> {
     readonly posted: number;
 
     @IsNotEmpty({ message: 'Dish should have a provider name' })
-    readonly provider: DishProvider;
+    readonly provider: Provider;
 
     @IsNotEmpty({ message: 'Dish should have a time preparation defined' })
     @Min(1, { message: 'Preparation time must last at least 1 minute' })

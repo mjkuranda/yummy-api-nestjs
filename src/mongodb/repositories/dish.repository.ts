@@ -2,20 +2,15 @@ import { AbstractRepository } from './abstract.repository';
 import { DishDocument } from '../documents/dish.document';
 import { InjectModel } from '@nestjs/mongoose';
 import { dishModel } from '../../common/definitions/mongoose-model.definitions';
-import { isValidObjectId, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { DishEditDto } from '../../modules/dish/dish.dto';
 import { DishIngredient } from '../../modules/ingredient/ingredient.types';
 import { CreateDishDataType, RatedDish } from '../../modules/dish/dish.types';
 import { calculateMissing, calculateRelevance } from '../../common/helpers';
-import { DishProvidable } from '../../common/interfaces';
-import { DishProvider, MealType } from '../../common/enums';
-import { proceedDishDocumentToDishDetails } from '../../modules/dish/dish.utils';
-import { EncodedDishId } from '../../common/types';
+import { Provider, MealType } from '../../common/enums';
 import { DishIdObfuscator } from '../../common/helpers/dish-id-obfuscator.helper';
-import { InvalidMongooseObjectIdError } from '../../errors/infrastructure';
-import { DishDetailsWithMetadata } from '../../modules/dish/read/dish-read.types';
 
-export class DishRepository extends AbstractRepository<DishDocument, CreateDishDataType> implements DishProvidable {
+export class DishRepository extends AbstractRepository<DishDocument, CreateDishDataType> {
 
     constructor(@InjectModel(dishModel.name) model: Model<DishDocument>) {
         super(model);
@@ -27,33 +22,9 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
             ingredients,
             author,
             posted: Date.now(),
-            provider: DishProvider.INT_DMT_USER,
+            provider: Provider.INT_DMT_USER,
             softAdded: true
         });
-    }
-
-    async getDishDetails(encodedDishId: EncodedDishId): Promise<DishDetailsWithMetadata | null> {
-        const { dishId: id } = DishIdObfuscator.decode(encodedDishId);
-
-        if (!isValidObjectId(id)) {
-            throw new InvalidMongooseObjectIdError('Dish not found, because ID is not valid ObjectId.');
-        }
-
-        const dishDocument: DishDocument = await this.model.findById(id);
-
-        if (!dishDocument) {
-            return null;
-        }
-
-        const dishDetails = proceedDishDocumentToDishDetails(dishDocument);
-
-        return {
-            dishDetails,
-            metadata: {
-                softAdded: dishDocument.softAdded,
-                softDeleted: dishDocument.softDeleted
-            }
-        };
     }
 
     async getDishesWithSoftAdded(): Promise<DishDocument[]> {
@@ -111,8 +82,8 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
         await this.model.deleteOne({ _id: id });
     }
 
-    getProvider(): DishProvider {
-        return DishProvider.INT_DMT_USER;
+    getProvider(): Provider {
+        return Provider.INT_DMT_USER;
     }
 
     async getDishes(ingredients: string[], mealType?: MealType): Promise<RatedDish[]> {
@@ -127,7 +98,7 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
 
         return dishes.map(dish => {
             const { id, title, imageUrl, type, mealType, ingredients: dishIngredients, language } = dish;
-            const encodedDishId = DishIdObfuscator.encode(DishProvider.INT_DMT_USER, id);
+            const encodedDishId = DishIdObfuscator.encode(Provider.INT_DMT_USER, id);
             const finalDishIngredients = dishIngredients.map(ingredient => ingredient.name);
             const relevance = calculateRelevance(ingredients, finalDishIngredients);
             const missingCount = calculateMissing(ingredients, finalDishIngredients);
@@ -139,7 +110,7 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
                 type,
                 mealType,
                 ingredients: finalDishIngredients,
-                language, provider: DishProvider.INT_DMT_USER, relevance, missingCount };
+                language, provider: Provider.INT_DMT_USER, relevance, missingCount };
         });
     }
 }

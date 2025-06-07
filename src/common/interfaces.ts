@@ -1,9 +1,9 @@
 import { UserAccessTokenPayload } from '../modules/jwt-manager/jwt-manager.types';
 import { RatedDish } from '../modules/dish/dish.types';
-import { DishProvider, MealType } from './enums';
+import { MealType, Provider } from './enums';
 import { EncodedDishId, Language } from './types';
 import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
-import { DishRecipe } from '../modules/recipe/recipe.types';
+import { DishRecipe } from '../modules/recipe/application/recipe-application.types';
 
 /**
  * @description Transformed endpoint body
@@ -13,15 +13,17 @@ export interface TransformedBody<TData> {
     authenticatedUser: UserAccessTokenPayload;
 }
 
+export interface Providable extends DishProvidable, RecipeProvidable {
+    /**
+     * @description Returns provider name
+     */
+    getProvider(): Provider;
+}
+
 /**
  * @description Interface for providing dishes
  */
 export interface DishProvidable {
-    /**
-     * @description Returns provider name
-     */
-    getProvider(): DishProvider;
-
     /**
      * @description Returns dish collection on the basis of provided ingredients and meal type
      * @param providedIngredients list of ingredients
@@ -51,7 +53,7 @@ export interface RecipeProvidable {
      * @description returns list of language-prepared recipes
      * @param encodedDishId encoded dish ID and its provider name
      */
-    getLanguageVersions(encodedDishId: string): Language[];
+    getLanguage(encodedDishId: EncodedDishId): Language;
 }
 
 /**

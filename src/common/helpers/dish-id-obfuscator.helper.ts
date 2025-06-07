@@ -1,5 +1,5 @@
 import Hashids from 'hashids';
-import { DishProvider } from '../enums';
+import { Provider } from '../enums';
 import { EncodedDishId } from '../types';
 
 const hashids = new Hashids('your-secret-salt', 8);
@@ -11,7 +11,7 @@ export class DishIdObfuscator {
      * @param providerName dish source name
      * @param dishId dish identification number
      */
-    static encode(providerName: DishProvider, dishId: string | number): EncodedDishId {
+    static encode(providerName: Provider, dishId: string | number): EncodedDishId {
         const input = `${providerName}:${dishId}`;
         const charCodes = Array.from(input).map(char => char.charCodeAt(0));
 
@@ -22,7 +22,7 @@ export class DishIdObfuscator {
      * @description Returns a decoded pair: provider name and dish ID
      * @param encodedDishId encoded dish ID and its provider name
      */
-    static decode(encodedDishId: EncodedDishId): { providerName: DishProvider, dishId: string } | null {
+    static decode(encodedDishId: EncodedDishId): { providerName: Provider, dishId: string } | null {
         const charCodes = hashids.decode(encodedDishId) as number[];
 
         if (!charCodes?.length) {
@@ -38,12 +38,12 @@ export class DishIdObfuscator {
         // Could be potentially more than 2 elements, but we check only the first two
         const [providerName, dishId] = output.split(':');
 
-        if (!Object.values(DishProvider).includes(providerName as DishProvider)) {
+        if (!Object.values(Provider).includes(providerName as Provider)) {
             return null;
         }
 
         return {
-            providerName: providerName as DishProvider,
+            providerName: providerName as Provider,
             dishId
         };
     }

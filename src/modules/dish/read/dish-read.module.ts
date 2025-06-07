@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { DishSourceModule } from '../source/dish-source.module';
+import { ProviderModule } from '../../provider/provider.module';
 import { DishReadService } from './dish-read.service';
 import { CacheModule } from '../../cache/cache.module';
 import { LoggerModule } from '../../logger/logger.module';
 import { DishAggregatorService } from './dish-aggregator.service';
 
 @Module({
-    imports: [DishSourceModule, CacheModule, LoggerModule],
+    imports: [ProviderModule, CacheModule, LoggerModule],
     providers: [DishReadService, DishAggregatorService],
     exports: [DishReadService]
 })

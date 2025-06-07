@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REDIS_CLIENT } from '../../redis/redis.constants';
 import { Redis } from 'ioredis';
 import { DetailedDish, RatedDish } from '../../dish/dish.types';
-import { DishProvidable } from '../../../common/interfaces';
+import { Providable } from '../../../common/interfaces';
 import { DishCacheKeyFactory } from './dish-cache-key.factory';
 import { DAY, HOUR } from '../../../constants/times.constant';
 import { EncodedDishId } from '../../../common/types';
@@ -43,7 +43,7 @@ export class DishCacheService {
      * @param provider defined provider of the dishes
      * @param ingredients list of ingredients to merge results
      */
-    async getDishesPerIngredient(provider: DishProvidable, ingredients: string[]): Promise<RatedDish[]> {
+    async getDishesPerIngredient(provider: Providable, ingredients: string[]): Promise<RatedDish[]> {
         if (ingredients.length === 0) {
             return [];
         }
@@ -76,7 +76,7 @@ export class DishCacheService {
      * @param ingredient
      * @param dishes
      */
-    async setDishesPerIngredient(provider: DishProvidable, ingredient: string, dishes: RatedDish[]): Promise<void> {
+    async setDishesPerIngredient(provider: Providable, ingredient: string, dishes: RatedDish[]): Promise<void> {
         const key = DishCacheKeyFactory.createDishSearchResultPerProviderKey(provider);
 
         await this.redisClient.hset(key, ingredient, JSON.stringify(dishes));

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { DishSourceRegistryService } from '../source/dish-source-registry.service';
 import { DishRating, MergedSearchQueries, ProposedDish } from '../dish.types';
 import { DishDocument } from '../../../mongodb/documents/dish.document';
 import { DishRepository } from '../../../mongodb/repositories/dish.repository';
@@ -14,6 +13,7 @@ import { GetDishDetailsResult, GetDishesResult } from './dish-read.types';
 import { DishCommentDocument } from '../../../mongodb/documents/dish-comment.document';
 import { DishCommentRepository } from '../../../mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../../../mongodb/repositories/dish-rating.repository';
+import { ProviderRegistryService } from '../../provider/provider-registry.service';
 
 @Injectable()
 export class DishReadService {
@@ -21,13 +21,13 @@ export class DishReadService {
     private dishRepository: DishRepository;
 
     constructor(
-        private readonly dishSourceRegistryService: DishSourceRegistryService,
+        private readonly providerRegistryService: ProviderRegistryService,
         private readonly dishCacheService: DishCacheService,
         private readonly dishAggregatorService: DishAggregatorService,
         private readonly dishCommentRepository: DishCommentRepository,
         private readonly dishRatingRepository: DishRatingRepository
     ) {
-        this.dishRepository = this.dishSourceRegistryService.getDishRepositoryProvider();
+        this.dishRepository = this.providerRegistryService.getDishRepository();
     }
 
     /**
@@ -61,7 +61,7 @@ export class DishReadService {
         }
 
         const { providerName, dishId } = decoded;
-        const provider = this.dishSourceRegistryService.getProvider(providerName);
+        const provider = this.providerRegistryService.getProvider(providerName);
         const cachedDish = await this.dishCacheService.getDishDetails(encodedDishId);
 
         if (cachedDish) {
@@ -175,7 +175,7 @@ export class DishReadService {
         }
 
         const { providerName, dishId } = DishIdObfuscator.decode(encodedDishId);
-        const provider = this.dishSourceRegistryService.getProvider(providerName);
+        const provider = this.providerRegistryService.getProvider(providerName);
         const dishDetailsWithMetadata = await provider.getDishDetails(dishId);
 
         if (dishDetailsWithMetadata) {
