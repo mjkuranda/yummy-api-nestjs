@@ -1,5 +1,6 @@
 import Hashids from 'hashids';
 import { Provider } from '../../common/enums';
+import { DishId } from './dish.types';
 
 // TODO: Secret salt!!!!
 const hashids = new Hashids('your-secret-salt', 8);
@@ -9,7 +10,7 @@ export class EncodedDishId {
     private constructor(
         private readonly _value: string,
         private readonly _provider: Provider,
-        private readonly _dishId: string | number
+        private readonly _dishId: DishId
     ) {}
 
     static fromParts(provider: Provider, dishId: string | number): EncodedDishId {
@@ -58,7 +59,7 @@ export class EncodedDishId {
         return this._provider;
     }
 
-    getDishId(): string | number {
+    getDishId(): DishId {
         return this._dishId;
     }
 
