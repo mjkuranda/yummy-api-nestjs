@@ -4,8 +4,7 @@ import { DishWriteService } from '../../write/dish-write.service';
 import { AddDishCommentUseCase } from './add-dish-comment.use-case';
 import { CreateDishCommentBody } from '../../dish.dto';
 import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../../../../errors/domain';
-import { NotFoundException } from '../../../../exceptions/not-found.exception';
-import { ForbiddenException } from '../../../../exceptions/forbidden-exception';
+import { NotFoundException, ForbiddenException } from '../../../../exceptions';
 
 describe('AddDishCommentUseCase', () => {
     let useCase: AddDishCommentUseCase;

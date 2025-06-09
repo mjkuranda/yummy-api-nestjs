@@ -10,7 +10,7 @@ import {
     getRefreshTokenKey
 } from './redis.utils';
 import { HOUR } from '../../constants/times.constant';
-import { NotFoundException } from '../../exceptions/not-found.exception';
+import { NotFoundException } from '../../exceptions';
 import { DetailedDish, RatedDish } from '../dish/dish.types';
 import { ACCESS_TOKEN_DURATION, REFRESH_TOKEN_DURATION } from '../../constants/tokens.constant';
 import { Language } from '../../common/types';

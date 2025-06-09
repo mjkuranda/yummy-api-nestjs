@@ -3,9 +3,8 @@ import { UserDto } from '../../../user/user.dto';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../write/dish-write.service';
 import { Injectable } from '@nestjs/common';
-import { BadRequestException } from '../../../../exceptions/bad-request.exception';
+import { BadRequestException, NotFoundException } from '../../../../exceptions';
 import { InvalidDishIdError, DishNotFoundError } from '../../../../errors/domain';
-import { NotFoundException } from '../../../../exceptions/not-found.exception';
 import { EncodedDishId } from '../../encoded-dish-id.value-object';
 import { ContextString } from '../../../../common/types';
 

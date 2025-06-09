@@ -6,7 +6,7 @@ import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { DishWriteService } from '../../write/dish-write.service';
 import { IngredientService } from '../../../ingredient/ingredient.service';
 import { LoggerService } from '../../../logger/logger.service';
-import { BadRequestException } from '../../../../exceptions/bad-request.exception';
+import { BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { EmptyDishIngredientListError, MissingDishAuthorError } from '../../../../errors/domain';
 import { ContextString } from '../../../../common/types';

@@ -1,7 +1,7 @@
 import { PipeTransform, Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { LoggerService } from '../modules/logger/logger.service';
-import { BadRequestException } from '../exceptions/bad-request.exception';
+import { BadRequestException } from '../exceptions';
 import { ContextString } from '../common/types';
 
 @Injectable()

@@ -5,8 +5,7 @@ import { ContextString } from '../../../../common/types';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../write/dish-write.service';
 import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
-import { NotFoundException } from '../../../../exceptions/not-found.exception';
-import { BadRequestException } from '../../../../exceptions/bad-request.exception';
+import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

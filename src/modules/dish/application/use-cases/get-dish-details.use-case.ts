@@ -5,8 +5,7 @@ import { DishReadService } from '../../read/dish-read.service';
 import { TranslationService } from '../../../translation/translation.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
-import { NotFoundException } from '../../../../exceptions/not-found.exception';
-import { BadRequestException } from '../../../../exceptions/bad-request.exception';
+import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { EncodedDishId } from '../../encoded-dish-id.value-object';
 

@@ -7,7 +7,7 @@ import { DishReadService } from '../../read/dish-read.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';
-import { BadRequestException } from '../../../../exceptions/bad-request.exception';
+import { BadRequestException } from '../../../../exceptions';
 
 @Injectable()
 export class GetDishesUseCase extends AbstractUseCase<[IngredientType[], MealType], RatedDish[]> {

@@ -3,10 +3,8 @@ import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../write/dish-write.service';
 import { ConfirmDishDeletionUseCase } from './confirm-dish-deletion.use-case';
 import { UserDto } from '../../../user/user.dto';
-import { DishNotFoundError } from '../../../../errors/domain/dish-not-found.error';
-import { InvalidDishIdError } from '../../../../errors/domain/invalid-dish-id.error';
-import { NotFoundException } from '../../../../exceptions/not-found.exception';
-import { BadRequestException } from '../../../../exceptions/bad-request.exception';
+import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
+import { NotFoundException, BadRequestException } from '../../../../exceptions';
 
 describe('ConfirmDishDeletionUseCase', () => {
     let useCase: ConfirmDishDeletionUseCase;

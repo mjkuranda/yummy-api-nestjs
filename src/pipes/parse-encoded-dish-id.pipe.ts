@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { EncodedDishId } from '../modules/dish/encoded-dish-id.value-object';
-import { BadRequestException } from '../exceptions/bad-request.exception';
+import { BadRequestException } from '../exceptions';
 
 @Injectable()
 export class ParseEncodedDishIdPipe implements PipeTransform {

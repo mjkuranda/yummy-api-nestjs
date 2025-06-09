@@ -2,10 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishReadService } from '../../read/dish-read.service';
 import { GetDishRatingUseCase } from './get-dish-rating.use-case';
-import { DishNotFoundError } from '../../../../errors/domain/dish-not-found.error';
-import { InvalidDishIdError } from '../../../../errors/domain/invalid-dish-id.error';
-import { NotFoundException } from '../../../../exceptions/not-found.exception';
-import { BadRequestException } from '../../../../exceptions/bad-request.exception';
+import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
+import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { DishRating } from '../../dish.types';
 
 describe('GetDishRatingUseCase', () => {

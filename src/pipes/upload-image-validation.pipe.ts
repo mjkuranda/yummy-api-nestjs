@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { BadRequestException } from '../exceptions/bad-request.exception';
+import { BadRequestException } from '../exceptions';
 import { ContextString } from '../common/types';
 import { LoggerService } from '../modules/logger/logger.service';
 import { MEGABYTE } from '../constants/sizes.constant';

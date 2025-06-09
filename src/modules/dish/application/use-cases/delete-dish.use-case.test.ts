@@ -2,12 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../write/dish-write.service';
 import { DeleteDishUseCase } from './delete-dish.use-case';
-import { DishNotFoundError } from '../../../../errors/domain/dish-not-found.error';
-import { InvalidDishIdError } from '../../../../errors/domain/invalid-dish-id.error';
-import { DishDeletionFailedError } from '../../../../errors/domain/dish-deletion-failed.error';
-import { NotFoundException } from '../../../../exceptions/not-found.exception';
-import { BadRequestException } from '../../../../exceptions/bad-request.exception';
-import { InternalServerException } from '../../../../exceptions/internal-server.exception';
+import { DishNotFoundError, InvalidDishIdError, DishDeletionFailedError } from '../../../../errors/domain';
+import { NotFoundException, BadRequestException, InternalServerException } from '../../../../exceptions';
 
 describe('DeleteDishUseCase', () => {
     let useCase: DeleteDishUseCase;

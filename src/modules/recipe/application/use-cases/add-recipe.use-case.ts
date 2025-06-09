@@ -6,8 +6,7 @@ import {
     DishRecipeExistsError,
     NotDishAuthorError
 } from '../../../../errors/domain';
-import { NotFoundException } from '../../../../exceptions/not-found.exception';
-import { ForbiddenException } from '../../../../exceptions/forbidden-exception';
+import { NotFoundException, ForbiddenException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
 import { Recipe } from '../../domain/entities';
 import { EncodedDishId } from '../../../dish/encoded-dish-id.value-object';

@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { UnauthorizedException } from '../exceptions/unauthorized-exception';
+import { UnauthorizedException } from '../exceptions';
 import { JwtManagerService } from '../modules/jwt-manager/jwt-manager.service';
 import { RedisService } from '../modules/redis/redis.service';
 import { TransformedBody } from '../common/interfaces';

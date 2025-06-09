@@ -8,7 +8,7 @@ import { DishIngredientWithoutImage } from '../../../ingredient/ingredient.types
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { DishDocument } from '../../../../mongodb/documents/dish.document';
 import { Provider, DishType, MealType } from '../../../../common/enums';
-import { BadRequestException } from '../../../../exceptions/bad-request.exception';
+import { BadRequestException } from '../../../../exceptions';
 import { Document } from 'mongoose';
 
 describe('CreateDishUseCase', () => {
