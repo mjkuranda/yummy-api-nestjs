@@ -1,4 +1,4 @@
-import { DishRatingDocument } from '../../../mongodb/documents/dish-rating.document';
+import { DishRatingDocument } from '../../../../mongodb/documents/dish-rating.document';
 
 export interface AddDishRatingResult {
     dishRating: DishRatingDocument;

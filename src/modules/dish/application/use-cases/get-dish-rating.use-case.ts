@@ -1,7 +1,7 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { DishRating } from '../../dish.types';
 import { ContextString } from '../../../../common/types';
-import { DishReadService } from '../../read/dish-read.service';
+import { DishReadService } from '../../domain/read/dish-read.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';

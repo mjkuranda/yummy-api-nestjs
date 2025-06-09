@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '../../../logger/logger.service';
-import { DishReadService } from '../../read/dish-read.service';
+import { DishReadService } from '../../domain/read/dish-read.service';
 import { IngredientService } from '../../../ingredient/ingredient.service';
 import { GetDishesUseCase } from './get-dishes.use-case';
 import { IngredientType } from '../../../ingredient/ingredient.types';

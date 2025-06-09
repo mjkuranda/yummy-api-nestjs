@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { ProviderRegistryService } from '../../provider/provider-registry.service';
-import { CreateDishDataType, DetailedDish } from '../dish.types';
-import { DishDocument } from '../../../mongodb/documents/dish.document';
-import { DishRepository } from '../../../mongodb/repositories/dish.repository';
-import { DishCacheService } from '../../cache/dish/dish-cache.service';
-import { proceedDishDocumentToDishDetails } from '../dish.utils';
-import { CreateDishCommentBody, CreateDishRatingBody, DishEditDto } from '../dish.dto';
-import { DishIngredient } from '../../ingredient/ingredient.types';
-import { DishCommentRepository } from '../../../mongodb/repositories/dish-comment.repository';
-import { DishRatingRepository } from '../../../mongodb/repositories/dish-rating.repository';
+import { ProviderRegistryService } from '../../../provider/provider-registry.service';
+import { CreateDishDataType, DetailedDish } from '../../dish.types';
+import { DishDocument } from '../../../../mongodb/documents/dish.document';
+import { DishRepository } from '../../../../mongodb/repositories/dish.repository';
+import { DishCacheService } from '../../../cache/dish/dish-cache.service';
+import { proceedDishDocumentToDishDetails } from '../../dish.utils';
+import { CreateDishCommentBody, CreateDishRatingBody, DishEditDto } from '../../dish.dto';
+import { DishIngredient } from '../../../ingredient/ingredient.types';
+import { DishCommentRepository } from '../../../../mongodb/repositories/dish-comment.repository';
+import { DishRatingRepository } from '../../../../mongodb/repositories/dish-rating.repository';
 import {
     DishDeletionFailedError,
     DishNotAcceptedError,
@@ -16,12 +16,12 @@ import {
     DishSoftDeletedError,
     EmptyDishIngredientListError,
     MissingDishAuthorError
-} from '../../../errors/domain';
-import { IngredientService } from '../../ingredient/ingredient.service';
-import { UserSearchQueryRepository } from '../../../mongodb/repositories/user-search-query.repository';
+} from '../../../../errors/domain';
+import { IngredientService } from '../../../ingredient/ingredient.service';
+import { UserSearchQueryRepository } from '../../../../mongodb/repositories/user-search-query.repository';
 import { AddDishRatingResult, ConfirmDeletingResult, DeleteDishResult, EditDishResult } from './dish-write.types';
-import { Provider } from '../../../common/enums';
-import { EncodedDishId } from '../encoded-dish-id.value-object';
+import { Provider } from '../../../../common/enums';
+import { EncodedDishId } from '../../encoded-dish-id.value-object';
 
 @Injectable()
 export class DishWriteService {

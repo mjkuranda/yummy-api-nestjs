@@ -2,7 +2,7 @@ import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { DishEditDto } from '../../dish.dto';
 import { DishIngredient } from '../../../ingredient/ingredient.types';
-import { DishWriteService } from '../../write/dish-write.service';
+import { DishWriteService } from '../../domain/write/dish-write.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';

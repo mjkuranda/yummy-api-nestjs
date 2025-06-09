@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '../../../logger/logger.service';
-import { DishReadService } from '../../read/dish-read.service';
+import { DishReadService } from '../../domain/read/dish-read.service';
 import { UserSearchQueryRepository } from '../../../../mongodb/repositories/user-search-query.repository';
 import { GetDishProposalsUseCase } from './get-dish-proposals.use-case';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';

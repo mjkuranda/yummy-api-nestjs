@@ -3,7 +3,7 @@ import { CreateDishRatingBody } from '../../dish.dto';
 import { DishRatingDocument } from '../../../../mongodb/documents/dish-rating.document';
 import { ContextString } from '../../../../common/types';
 import { LoggerService } from '../../../logger/logger.service';
-import { DishWriteService } from '../../write/dish-write.service';
+import { DishWriteService } from '../../domain/write/dish-write.service';
 import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';

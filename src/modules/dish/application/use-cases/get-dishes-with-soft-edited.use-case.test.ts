@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DishReadService } from '../../read/dish-read.service';
+import { DishReadService } from '../../domain/read/dish-read.service';
 import { GetDishesWithSoftEditedUseCase } from './get-dishes-with-soft-edited.use-case';
 import { DishDocument } from '../../../../mongodb/documents/dish.document';
 import { Document } from 'mongoose';

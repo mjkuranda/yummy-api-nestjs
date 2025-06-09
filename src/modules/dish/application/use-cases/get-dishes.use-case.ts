@@ -3,7 +3,7 @@ import { IngredientType } from '../../../ingredient/ingredient.types';
 import { MealType } from '../../../../common/enums';
 import { RatedDish } from '../../dish.types';
 import { IngredientService } from '../../../ingredient/ingredient.service';
-import { DishReadService } from '../../read/dish-read.service';
+import { DishReadService } from '../../domain/read/dish-read.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';

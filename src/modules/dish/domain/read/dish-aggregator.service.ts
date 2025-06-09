@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ProviderRegistryService } from '../../provider/provider-registry.service';
-import { RatedDish } from '../dish.types';
-import { getFulfilledPromiseResults } from '../../../utils';
-import { MealType } from '../../../common/enums';
-import { filterByMealType, filterGreaterThanZeroRelevance, sortDescendingRelevance } from '../rated-dish.helpers';
+import { ProviderRegistryService } from '../../../provider/provider-registry.service';
+import { RatedDish } from '../../dish.types';
+import { getFulfilledPromiseResults } from '../../../../utils';
+import { MealType } from '../../../../common/enums';
+import { filterByMealType, filterGreaterThanZeroRelevance, sortDescendingRelevance } from '../../rated-dish.helpers';
 
 @Injectable()
 export class DishAggregatorService {

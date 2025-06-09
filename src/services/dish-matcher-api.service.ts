@@ -3,7 +3,7 @@ import { Providable } from '../common/interfaces';
 import { DishRepository } from '../mongodb/repositories/dish.repository';
 import { DishRecipeRepository } from '../mongodb/repositories/dish-recipe.repository';
 import { Language } from '../common/types';
-import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
+import { DishDetailsWithMetadata } from '../modules/dish/domain/read/dish-read.types';
 import { MealType, Provider } from '../common/enums';
 import { RatedDish } from '../modules/dish/dish.types';
 import { proceedDishDocumentToDishDetails } from '../modules/dish/dish.utils';

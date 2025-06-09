@@ -3,7 +3,7 @@ import { ApiName } from '../modules/redis/redis.types';
 import { DetailedDish, DishRecipeSections, RatedDish } from '../modules/dish/dish.types';
 import { DishIngredient, IngredientType } from '../modules/ingredient/ingredient.types';
 import { Language } from '../common/types';
-import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
+import { DishDetailsWithMetadata } from '../modules/dish/domain/read/dish-read.types';
 import { Provider, MealType } from '../common/enums';
 import { EncodedDishId } from '../modules/dish/encoded-dish-id.value-object';
 

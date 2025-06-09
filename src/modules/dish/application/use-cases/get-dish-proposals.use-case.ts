@@ -4,7 +4,7 @@ import { MergedSearchQueries, ProposedDish } from '../../dish.types';
 import { UserSearchQueryDocument } from '../../../../mongodb/documents/user-search-query.document';
 import { mergeSearchQueries } from '../../dish.utils';
 import { UserSearchQueryRepository } from '../../../../mongodb/repositories/user-search-query.repository';
-import { DishReadService } from '../../read/dish-read.service';
+import { DishReadService } from '../../domain/read/dish-read.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';

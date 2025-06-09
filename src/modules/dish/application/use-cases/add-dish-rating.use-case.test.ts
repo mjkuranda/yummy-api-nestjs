@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '../../../logger/logger.service';
-import { DishWriteService } from '../../write/dish-write.service';
+import { DishWriteService } from '../../domain/write/dish-write.service';
 import { AddDishRatingUseCase } from './add-dish-rating.use-case';
 import { CreateDishRatingBody } from '../../dish.dto';
 import { DishNotFoundError, InvalidDishIdError,  } from '../../../../errors/domain';

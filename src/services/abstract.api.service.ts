@@ -10,7 +10,7 @@ import { LoggerService } from '../modules/logger/logger.service';
 import { AxiosService } from './axios.service';
 import { IngredientType, DishIngredient } from '../modules/ingredient/ingredient.types';
 import { Providable } from '../common/interfaces';
-import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
+import { DishDetailsWithMetadata } from '../modules/dish/domain/read/dish-read.types';
 import { EncodedDishId } from '../modules/dish/encoded-dish-id.value-object';
 import { Recipe } from '../modules/recipe/domain/entities';
 

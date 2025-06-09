@@ -1,6 +1,6 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { DishDocument } from '../../../../mongodb/documents/dish.document';
-import { DishReadService } from '../../read/dish-read.service';
+import { DishReadService } from '../../domain/read/dish-read.service';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';
 

@@ -4,7 +4,7 @@ import { AbstractApiService } from '../../services/abstract.api.service';
 import { DishId, RatedDish } from '../dish/dish.types';
 import { MealType } from '../../common/enums';
 import { Language } from '../../common/types';
-import { DishDetailsWithMetadata } from '../dish/read/dish-read.types';
+import { DishDetailsWithMetadata } from '../dish/domain/read/dish-read.types';
 import { DishRecipe } from '../recipe/application/recipe-application.types';
 import { EncodedDishId } from '../dish/encoded-dish-id.value-object';
 import { Recipe } from '../recipe/domain/entities';

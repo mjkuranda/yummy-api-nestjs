@@ -1,4 +1,4 @@
-import { DetailedDish, RatedDish } from '../dish.types';
+import { DetailedDish, RatedDish } from '../../dish.types';
 
 export interface GetDishDetailsResult {
     dish: DetailedDish;

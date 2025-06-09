@@ -1,7 +1,7 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { UserDto } from '../../../user/user.dto';
 import { LoggerService } from '../../../logger/logger.service';
-import { DishWriteService } from '../../write/dish-write.service';
+import { DishWriteService } from '../../domain/write/dish-write.service';
 import { Injectable } from '@nestjs/common';
 import { BadRequestException, NotFoundException } from '../../../../exceptions';
 import { InvalidDishIdError, DishNotFoundError } from '../../../../errors/domain';

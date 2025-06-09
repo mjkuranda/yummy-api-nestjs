@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '../../../logger/logger.service';
-import { DishWriteService } from '../../write/dish-write.service';
+import { DishWriteService } from '../../domain/write/dish-write.service';
 import { ConfirmDishDeletionUseCase } from './confirm-dish-deletion.use-case';
 import { UserDto } from '../../../user/user.dto';
 import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';

@@ -2,7 +2,7 @@ import { UserAccessTokenPayload } from '../modules/jwt-manager/jwt-manager.types
 import { RatedDish } from '../modules/dish/dish.types';
 import { MealType, Provider } from './enums';
 import { Language } from './types';
-import { DishDetailsWithMetadata } from '../modules/dish/read/dish-read.types';
+import { DishDetailsWithMetadata } from '../modules/dish/domain/read/dish-read.types';
 import { Recipe } from '../modules/recipe/domain/entities';
 import { EncodedDishId } from '../modules/dish/encoded-dish-id.value-object';
 

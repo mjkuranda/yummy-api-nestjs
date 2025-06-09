@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { DishRating, MergedSearchQueries, ProposedDish } from '../dish.types';
-import { DishDocument } from '../../../mongodb/documents/dish.document';
-import { DishRepository } from '../../../mongodb/repositories/dish.repository';
-import { DishCacheService } from '../../cache/dish/dish-cache.service';
+import { DishRating, MergedSearchQueries, ProposedDish } from '../../dish.types';
+import { DishDocument } from '../../../../mongodb/documents/dish.document';
+import { DishRepository } from '../../../../mongodb/repositories/dish.repository';
+import { DishCacheService } from '../../../cache/dish/dish-cache.service';
 import { DishAggregatorService } from './dish-aggregator.service';
-import { MealType } from '../../../common/enums';
-import { proceedRatedDishesToProposedDishes } from '../dish.utils';
-import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../../../errors/domain';
+import { MealType } from '../../../../common/enums';
+import { proceedRatedDishesToProposedDishes } from '../../dish.utils';
+import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../../../../errors/domain';
 import { GetDishDetailsResult, GetDishesResult } from './dish-read.types';
-import { DishCommentDocument } from '../../../mongodb/documents/dish-comment.document';
-import { DishCommentRepository } from '../../../mongodb/repositories/dish-comment.repository';
-import { DishRatingRepository } from '../../../mongodb/repositories/dish-rating.repository';
-import { ProviderRegistryService } from '../../provider/provider-registry.service';
-import { EncodedDishId } from '../encoded-dish-id.value-object';
+import { DishCommentDocument } from '../../../../mongodb/documents/dish-comment.document';
+import { DishCommentRepository } from '../../../../mongodb/repositories/dish-comment.repository';
+import { DishRatingRepository } from '../../../../mongodb/repositories/dish-rating.repository';
+import { ProviderRegistryService } from '../../../provider/provider-registry.service';
+import { EncodedDishId } from '../../encoded-dish-id.value-object';
 
 @Injectable()
 export class DishReadService {

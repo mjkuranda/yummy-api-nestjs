@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '../../../logger/logger.service';
-import { DishWriteService } from '../../write/dish-write.service';
+import { DishWriteService } from '../../domain/write/dish-write.service';
 import { CreateDishUseCase } from './create-dish.use-case';
 import { IngredientService } from '../../../ingredient/ingredient.service';
 import { CreateDishDto } from '../../dish.dto';

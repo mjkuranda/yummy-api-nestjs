@@ -3,7 +3,7 @@ import { DishDocument } from '../../../../mongodb/documents/dish.document';
 import { CreateDishDto } from '../../dish.dto';
 import { DishIngredientWithoutImage } from '../../../ingredient/ingredient.types';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
-import { DishWriteService } from '../../write/dish-write.service';
+import { DishWriteService } from '../../domain/write/dish-write.service';
 import { IngredientService } from '../../../ingredient/ingredient.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { BadRequestException } from '../../../../exceptions';
