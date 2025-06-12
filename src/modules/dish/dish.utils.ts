@@ -25,6 +25,7 @@ export function getQueryWithIngredientsAndDishType(ingredients: IngredientType[]
     }
 }
 
+// FIXME: Deprecated
 export function proceedDishDocumentToDishDetails(dish: DishDocument): DetailedDish {
     const {
         imageUrl, ingredients, language, title, description,

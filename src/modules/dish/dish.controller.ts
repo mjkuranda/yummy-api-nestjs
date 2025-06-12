@@ -32,7 +32,7 @@ import { IngredientService } from '../ingredient/ingredient.service';
 import { TransformedBody } from '../../common/interfaces';
 import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
 import { DishQueryFacade } from './application/dish-query.facade';
-import { EncodedDishId } from './encoded-dish-id.value-object';
+import { EncodedDishId } from './domain/common/encoded-dish-id.value-object';
 
 @Controller('dishes')
 export class DishController {

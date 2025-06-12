@@ -7,7 +7,7 @@ import { DishDetailsWithMetadata } from '../modules/dish/domain/read/dish-read.t
 import { MealType, Provider } from '../common/enums';
 import { RatedDish } from '../modules/dish/dish.types';
 import { proceedDishDocumentToDishDetails } from '../modules/dish/dish.utils';
-import { EncodedDishId } from '../modules/dish/encoded-dish-id.value-object';
+import { EncodedDishId } from '../modules/dish/domain/common/encoded-dish-id.value-object';
 import { Recipe } from '../modules/recipe/domain/entities';
 
 @Injectable()

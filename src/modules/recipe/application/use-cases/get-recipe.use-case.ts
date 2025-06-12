@@ -5,10 +5,10 @@ import { RecipeService } from '../../domain/services/recipe.service';
 import { DishNotFoundError, DishRecipeNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
 import { BadRequestException, NotFoundException } from '../../../../exceptions';
 import { Recipe } from '../../domain/entities';
-import { EncodedDishId } from '../../../dish/encoded-dish-id.value-object';
 import { LanguageName } from '../../../../common/enums';
+import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
 
-export class GetRecipeUseCase extends AbstractUseCase<[EncodedDishId, Language], Recipe> {
+export class GetRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject, Language], Recipe> {
 
     constructor(
         private readonly loggerService: LoggerService,
@@ -17,7 +17,7 @@ export class GetRecipeUseCase extends AbstractUseCase<[EncodedDishId, Language],
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishId, language: Language): Promise<Recipe> {
+    protected async run(encodedDishId: EncodedDishIdValueObject, language: Language): Promise<Recipe> {
         const { recipe, fromCache } = await this.recipeService.getTranslatedRecipe(encodedDishId, language);
         const languageName = LanguageName[language];
 

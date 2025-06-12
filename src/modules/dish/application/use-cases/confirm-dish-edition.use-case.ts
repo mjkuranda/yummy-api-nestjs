@@ -6,7 +6,7 @@ import { DishWriteService } from '../../domain/write/dish-write.service';
 import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
-import { EncodedDishId } from '../../encoded-dish-id.value-object';
+import { EncodedDishId } from '../../domain/common/encoded-dish-id.value-object';
 import { ContextString } from '../../../../common/types';
 
 @Injectable()

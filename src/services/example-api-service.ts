@@ -5,7 +5,7 @@ import { DishIngredient, IngredientType } from '../modules/ingredient/ingredient
 import { Language } from '../common/types';
 import { DishDetailsWithMetadata } from '../modules/dish/domain/read/dish-read.types';
 import { Provider, MealType } from '../common/enums';
-import { EncodedDishId } from '../modules/dish/encoded-dish-id.value-object';
+import { EncodedDishId } from '../modules/dish/domain/common/encoded-dish-id.value-object';
 
 export class ExampleApiService extends AbstractApiService<any, any, any, any> {
 

@@ -3,12 +3,12 @@ import { TranslatedIngredient } from '../translation/translation.types';
 import { Language } from '../../common/types';
 import { MealType, DishType, Provider } from '../../common/enums';
 import { CreateDishWithAuthorDto } from './dish.dto';
-import { EncodedDishId } from './encoded-dish-id.value-object';
+import { EncodedDishIdValueObject } from './domain/common/value-objects';
 
 export type DishId = string | number;
 
 export interface RatedDish {
-    encodedDishId: EncodedDishId; // TODO: fix this
+    encodedDishId: EncodedDishIdValueObject; // TODO: fix this
     imgUrl?: string;
     ingredients: IngredientType[];
     missingCount: number;

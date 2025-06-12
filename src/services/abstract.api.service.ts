@@ -11,7 +11,7 @@ import { AxiosService } from './axios.service';
 import { IngredientType, DishIngredient } from '../modules/ingredient/ingredient.types';
 import { Providable } from '../common/interfaces';
 import { DishDetailsWithMetadata } from '../modules/dish/domain/read/dish-read.types';
-import { EncodedDishId } from '../modules/dish/encoded-dish-id.value-object';
+import { EncodedDishId } from '../modules/dish/domain/common/encoded-dish-id.value-object';
 import { Recipe } from '../modules/recipe/domain/entities';
 
 @Injectable()

@@ -4,7 +4,8 @@ import { dishRatingModel } from '../../common/definitions/mongoose-model.definit
 import { Model, PipelineStage } from 'mongoose';
 import { DishRatingDocument } from '../documents/dish-rating.document';
 import { CreateDishRatingBody, CreateDishRatingDto } from '../../modules/dish/dish.dto';
-import { DishRating } from '../../modules/dish/dish.types';
+import { DishId, DishRating } from '../../modules/dish/dish.types';
+import { DishRatingEntity } from '../../modules/dish/domain/common/entities';
 
 export class DishRatingRepository extends AbstractRepository<DishRatingDocument, CreateDishRatingDto> {
 
@@ -29,7 +30,7 @@ export class DishRatingRepository extends AbstractRepository<DishRatingDocument,
         await this.model.deleteMany({ dishId });
     }
 
-    async getAverageRatingForDish(dishId: string): Promise<DishRating> {
+    async getAverageRatingForDish(dishId: DishId): Promise<DishRatingEntity> {
         const pipeline: PipelineStage[] = [
             { $match: { dishId }},
             {
@@ -44,17 +45,17 @@ export class DishRatingRepository extends AbstractRepository<DishRatingDocument,
         const result = await this.calculateAverage(pipeline);
 
         if (result.length > 0) {
-            return {
+            return new DishRatingEntity(
                 dishId,
-                rating: result[0].rating,
-                count: result[0].count,
-            };
+                result[0].rating,
+                result[0].count
+            );
         }
 
-        return {
+        return new DishRatingEntity(
             dishId,
-            rating: 0,
-            count: 0
-        };
+            0,
+            0
+        );
     }
 }

@@ -6,7 +6,7 @@ import { DishIngredient, DishIngredientWithoutImage } from '../../ingredient/ing
 import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
 import { DishRatingDocument } from '../../../mongodb/documents/dish-rating.document';
 import { CreateDishUseCase, EditDishUseCase, DeleteDishUseCase, ConfirmDishCreationUseCase, ConfirmDishEditionUseCase, ConfirmDishDeletionUseCase, AddDishProposalsUseCase, AddDishCommentUseCase, AddDishRatingUseCase } from './use-cases';
-import { EncodedDishId } from '../encoded-dish-id.value-object';
+import { EncodedDishId } from '../domain/common/encoded-dish-id.value-object';
 
 @Injectable()
 export class DishCommandFacade {

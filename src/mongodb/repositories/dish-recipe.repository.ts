@@ -1,6 +1,6 @@
 import { AbstractRepository } from './abstract.repository';
 import { DishRecipeDocument } from '../documents/dish-recipe-document';
-import { CreateRecipeDto } from '../../modules/recipe/recipe.dto';
+import { CreateRecipeDto } from '../../modules/recipe/application/dtos/recipe.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { dishRecipeModel } from '../../common/definitions/mongoose-model.definitions';
 import { isValidObjectId, Model } from 'mongoose';

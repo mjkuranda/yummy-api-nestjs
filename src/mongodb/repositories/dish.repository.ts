@@ -8,12 +8,20 @@ import { DishIngredient } from '../../modules/ingredient/ingredient.types';
 import { CreateDishDataType, DishId, RatedDish } from '../../modules/dish/dish.types';
 import { calculateMissing, calculateRelevance } from '../../common/helpers';
 import { Provider, MealType } from '../../common/enums';
-import { EncodedDishId } from '../../modules/dish/encoded-dish-id.value-object';
+import { EncodedDishId } from '../../modules/dish/domain/common/encoded-dish-id.value-object';
+import { DishFactory } from '../../modules/dish/domain/common/factories';
+import { DishEntity } from '../../modules/dish/domain/common/entities';
 
 export class DishRepository extends AbstractRepository<DishDocument, CreateDishDataType> {
 
     constructor(@InjectModel(dishModel.name) model: Model<DishDocument>) {
         super(model);
+    }
+
+    async findById(id: DishId): Promise<DishEntity | null> {
+        const dish = super.findById(id);
+
+        return DishFactory.fromDocument(dish);
     }
 
     async create(data: CreateDishDataType, author?: string, ingredients?: DishIngredient[]) {
@@ -27,16 +35,22 @@ export class DishRepository extends AbstractRepository<DishDocument, CreateDishD
         });
     }
 
-    async getDishesWithSoftAdded(): Promise<DishDocument[]> {
-        return await this.findAll({ softAdded: { $eq: true }});
+    async getDishesWithSoftAdded(): Promise<DishEntity[]> {
+        const docs = await this.findAll({ softAdded: { $eq: true }});
+
+        return DishFactory.fromDocuments(docs);
     }
 
-    async getDishesWithSoftEdited(): Promise<DishDocument[]> {
-        return await this.findAll({ softEdited: { $exists: true }});
+    async getDishesWithSoftEdited(): Promise<DishEntity[]> {
+        const docs = await this.findAll({ softEdited: { $exists: true }});
+
+        return DishFactory.fromDocuments(docs);
     }
 
-    async getDishesWithSoftDeleted(): Promise<DishDocument[]> {
-        return await this.findAll({ softDeleted: { $eq: true }});
+    async getDishesWithSoftDeleted(): Promise<DishEntity[]> {
+        const docs = await this.findAll({ softDeleted: { $eq: true }});
+
+        return DishFactory.fromDocuments(docs);
     }
 
     async findOneAvailable(id: DishId): Promise<DishDocument | null> {

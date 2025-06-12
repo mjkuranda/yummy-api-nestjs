@@ -13,7 +13,7 @@ import { calculateCheckingAgain, inferDishType, inferMealType } from '../../../c
 import { proceedIngredientUnit } from './spoonacular.api.utils';
 import { Provider } from '../../../common/enums';
 import { Language } from '../../../common/types';
-import { EncodedDishId } from '../../dish/encoded-dish-id.value-object';
+import { EncodedDishId } from '../../dish/domain/common/encoded-dish-id.value-object';
 
 @Injectable()
 export class SpoonacularApiService extends AbstractApiService<SpoonacularRecipe, SpoonacularIngredient, SpoonacularRecipeDetails, SpoonacularRecipeSections> {

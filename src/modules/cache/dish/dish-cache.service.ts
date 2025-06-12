@@ -5,7 +5,8 @@ import { DetailedDish, RatedDish } from '../../dish/dish.types';
 import { Providable } from '../../../common/interfaces';
 import { DishCacheKeyFactory } from './dish-cache-key.factory';
 import { DAY, HOUR } from '../../../constants/times.constant';
-import { EncodedDishId } from '../../dish/encoded-dish-id.value-object';
+import { EncodedDishId } from '../../dish/domain/common/encoded-dish-id.value-object';
+import { DishEntity } from '../../dish/domain/write/entities';
 
 @Injectable()
 export class DishCacheService {
@@ -97,12 +98,13 @@ export class DishCacheService {
     /**
      * @description Saves detailed dish to the cache
      * @param encodedDishId encoded dish ID and its cache
-     * @param detailedDish dish to cache
+     * @param dishEntity dish to cache
+     * @returns void
      */
-    async setDishDetails(encodedDishId: EncodedDishId, detailedDish: DetailedDish): Promise<void> {
+    async setDishDetails(encodedDishId: EncodedDishId, dishEntity: DishEntity): Promise<void> {
         const key = DishCacheKeyFactory.createDishDetailedResultKey(encodedDishId);
 
-        await this.redisClient.set(key, JSON.stringify(detailedDish));
+        await this.redisClient.set(key, JSON.stringify(dishEntity));
         await this.redisClient.expire(key, DAY);
     }
 

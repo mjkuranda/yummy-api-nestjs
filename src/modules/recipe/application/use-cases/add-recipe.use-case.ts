@@ -1,4 +1,4 @@
-import { CreateRecipeDto } from '../../recipe.dto';
+import { CreateRecipeDto } from '../dtos/recipe.dto';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { RecipeService } from '../../domain/services/recipe.service';
 import {
@@ -9,11 +9,11 @@ import {
 import { NotFoundException, ForbiddenException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
 import { Recipe } from '../../domain/entities';
-import { EncodedDishId } from '../../../dish/encoded-dish-id.value-object';
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
+import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
 
-export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishId, CreateRecipeDto, UserAccessTokenPayload], Recipe> {
+export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject, CreateRecipeDto, UserAccessTokenPayload], Recipe> {
 
     constructor(
         private readonly recipeService: RecipeService,
@@ -22,7 +22,7 @@ export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishId, CreateReci
         super();
     }
 
-    async run(encodedDishId: EncodedDishId, createRecipeDto: CreateRecipeDto, userDto: UserAccessTokenPayload): Promise<Recipe> {
+    async run(encodedDishId: EncodedDishIdValueObject, createRecipeDto: CreateRecipeDto, userDto: UserAccessTokenPayload): Promise<Recipe> {
         const recipe = await this.recipeService.create(encodedDishId, createRecipeDto, userDto);
 
         this.loggerService.info(this.context, `New recipe has been created for dish "${recipe.dishId}"`);

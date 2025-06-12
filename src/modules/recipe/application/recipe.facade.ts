@@ -1,9 +1,9 @@
 import { AddRecipeUseCase, GetRecipeUseCase } from './use-cases';
 import { Recipe } from '../domain/entities';
 import { Language } from '../../../common/types';
-import { CreateRecipeDto } from '../recipe.dto';
+import { CreateRecipeDto } from './dtos/recipe.dto';
 import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
-import { EncodedDishId } from '../../dish/encoded-dish-id.value-object';
+import { EncodedDishId } from '../../dish/domain/common/encoded-dish-id.value-object';
 
 export class RecipeFacade {
 

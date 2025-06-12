@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DishRating, MergedSearchQueries, ProposedDish } from '../../dish.types';
-import { DishDocument } from '../../../../mongodb/documents/dish.document';
+import { MergedSearchQueries, ProposedDish } from '../../dish.types';
 import { DishRepository } from '../../../../mongodb/repositories/dish.repository';
 import { DishCacheService } from '../../../cache/dish/dish-cache.service';
 import { DishAggregatorService } from './dish-aggregator.service';
@@ -8,11 +7,12 @@ import { MealType } from '../../../../common/enums';
 import { proceedRatedDishesToProposedDishes } from '../../dish.utils';
 import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../../../../errors/domain';
 import { GetDishDetailsResult, GetDishesResult } from './dish-read.types';
-import { DishCommentDocument } from '../../../../mongodb/documents/dish-comment.document';
 import { DishCommentRepository } from '../../../../mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../../../../mongodb/repositories/dish-rating.repository';
 import { ProviderRegistryService } from '../../../provider/provider-registry.service';
-import { EncodedDishId } from '../../encoded-dish-id.value-object';
+import { EncodedDishId } from '../common/encoded-dish-id.value-object';
+import { DishRatingsValueObject, DishCommentsValueObject } from './value-objects';
+import { DishEntity } from '../common/entities';
 
 @Injectable()
 export class DishReadService {
@@ -98,30 +98,34 @@ export class DishReadService {
 
     /**
      * @description Returns all dishes with softAdded property set to true
+     * @returns dish entities which are soft-added
      */
-    async getDishesWithSoftAdded(): Promise<DishDocument[]> {
+    async getDishesWithSoftAdded(): Promise<DishEntity[]> {
         return await this.dishRepository.getDishesWithSoftAdded();
     }
 
     /**
      * @description Returns all dishes with softEdited property
+     * @returns dish entities which are edited
      */
-    async getDishesWithSoftEdited(): Promise<DishDocument[]> {
+    async getDishesWithSoftEdited(): Promise<DishEntity[]> {
         return await this.dishRepository.getDishesWithSoftEdited();
     }
 
     /**
      * @description Returns all dishes with softDeleted property set to true
+     * @returns dish entities which are soft-deleted
      */
-    async getDishesWithSoftDeleted(): Promise<DishDocument[]> {
+    async getDishesWithSoftDeleted(): Promise<DishEntity[]> {
         return await this.dishRepository.getDishesWithSoftDeleted();
     }
 
     /**
      * @description Returns all comments for a particular dish
      * @param encodedDishId encoded dish ID and its provider name
+     * @returns dish entity and list of all comments
      */
-    async getDishComments(encodedDishId: EncodedDishId): Promise<DishCommentDocument[]> {
+    async getDishComments(encodedDishId: EncodedDishId): Promise<DishCommentsValueObject> {
         const dishId = encodedDishId.getDishId();
 
         const dish = await this.dishRepository.findById(dishId);
@@ -130,10 +134,17 @@ export class DishReadService {
             throw new DishNotFoundError(encodedDishId);
         }
 
-        return await this.dishCommentRepository.findAll({ dishId });
+        const comments = await this.dishCommentRepository.getAll(dishId);
+
+        return new DishCommentsValueObject(dish, comments);
     }
 
-    async getDishRating(encodedDishId: EncodedDishId): Promise<DishRating> {
+    /**
+     * @description Returns dish rating
+     * @param encodedDishId encoded dish ID and its provider name
+     * @returns dish entity and information about rating and how many user rated
+     */
+    async getDishRating(encodedDishId: EncodedDishId): Promise<DishRatingsValueObject> {
         const dishId = encodedDishId.getDishId();
         const dish = await this.dishRepository.findById(dishId);
 
@@ -141,7 +152,13 @@ export class DishReadService {
             throw new DishNotFoundError(encodedDishId);
         }
 
-        return await this.dishRatingRepository.getAverageRatingForDish(<string>dishId);
+        const dishRating = await this.dishRatingRepository.getAverageRatingForDish(dishId);
+
+        return new DishRatingsValueObject(
+            dish,
+            dishRating.getAverageRating(),
+            dishRating.getRatingCount()
+        );
     }
 
     /**

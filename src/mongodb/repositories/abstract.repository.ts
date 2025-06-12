@@ -11,15 +11,15 @@ import { DeleteResult } from 'mongodb';
 import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../errors/infrastructure';
 import { DishId } from '../../modules/dish/dish.types';
 
-export abstract class AbstractRepository<T extends Document, CreateDataType> {
+export abstract class AbstractRepository<DocumentType extends Document, CreateDataType> {
 
-    protected constructor(protected readonly model: Model<T>) {}
+    protected constructor(protected readonly model: Model<DocumentType>) {}
 
-    async findOne(filterQuery: FilterQuery<T>): Promise<T | null> {
+    async findOne(filterQuery: FilterQuery<DocumentType>): Promise<DocumentType | null> {
         return this.model.findOne(filterQuery);
     }
 
-    async findById(id: DishId): Promise<T | null> {
+    async findById(id: DishId): Promise<DocumentType | null> {
         if (typeof id !== 'string') {
             throw new InvalidMongooseIdTypeError(id);
         }
@@ -28,12 +28,12 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
             throw new InvalidMongooseObjectIdError(id);
         }
 
-        const document = await this.model.findById(id) as T | null;
+        const document = await this.model.findById(id) as DocumentType | null;
 
         return document;
     }
 
-    async findAll(filterQuery: FilterQuery<T>, limit?: number): Promise<T[] | null> {
+    async findAll(filterQuery: FilterQuery<DocumentType>, limit?: number): Promise<DocumentType[] | null> {
         if (limit) {
             return this.model.find(filterQuery).limit(limit);
         }
@@ -41,31 +41,31 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
         return this.model.find(filterQuery);
     }
 
-    async create(createData: CreateDataType): Promise<T> {
+    async create(createData: CreateDataType): Promise<DocumentType> {
         return this.model.create(createData);
     }
 
-    async insertMany(data: T[]) {
+    async insertMany(data: DocumentType[]) {
         return this.model.insertMany(data);
     }
 
-    async updateOne(filterQuery: FilterQuery<T>, updateQuery: UpdateQuery<T> | UpdateWithAggregationPipeline) {
+    async updateOne(filterQuery: FilterQuery<DocumentType>, updateQuery: UpdateQuery<DocumentType> | UpdateWithAggregationPipeline) {
         return this.model.updateOne(filterQuery, updateQuery);
     }
 
-    async updateMany(filterQuery: FilterQuery<T>, updateQuery: UpdateQuery<T> | UpdateWithAggregationPipeline) {
+    async updateMany(filterQuery: FilterQuery<DocumentType>, updateQuery: UpdateQuery<DocumentType> | UpdateWithAggregationPipeline) {
         return this.model.updateMany(filterQuery, updateQuery);
     }
 
-    async updateAndReturnDocument(filterQuery: FilterQuery<T>, updateQuery: UpdateQuery<T>) {
+    async updateAndReturnDocument(filterQuery: FilterQuery<DocumentType>, updateQuery: UpdateQuery<DocumentType>) {
         return this.model.findOneAndUpdate(filterQuery, updateQuery, { new: true });
     }
 
-    async deleteOne(filterQuery: FilterQuery<T>): Promise<DeleteResult> {
+    async deleteOne(filterQuery: FilterQuery<DocumentType>): Promise<DeleteResult> {
         return this.model.deleteOne(filterQuery);
     }
 
-    async deleteMany(filterQuery: FilterQuery<T>): Promise<DeleteResult> {
+    async deleteMany(filterQuery: FilterQuery<DocumentType>): Promise<DeleteResult> {
         return this.model.deleteMany(filterQuery);
     }
 

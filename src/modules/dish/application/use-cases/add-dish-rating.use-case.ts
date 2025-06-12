@@ -19,14 +19,15 @@ export class AddDishRatingUseCase extends AbstractUseCase<[CreateDishRatingBody,
     }
 
     protected async run(createRatingBody: CreateDishRatingBody, user: string): Promise<DishRatingDocument> {
-        const { dishRating, isNew } = await this.dishWriteService.addDishRating(createRatingBody, user);
+        const addDishRatingStatusValueObject = await this.dishWriteService.addDishRating(createRatingBody, user);
 
-        if (!isNew) {
+        if (!addDishRatingStatusValueObject.isNewRating()) {
             this.loggerService.info(this.context, `Successfully changed a rating for dish "${createRatingBody.encodedDishId}" by "${user}" user.`);
         } else {
             this.loggerService.info(this.context, `Successfully added a new rating for dish "${createRatingBody.encodedDishId}" by "${user}" user.`);
         }
 
+        // TODO: DTO
         return dishRating;
     }
 

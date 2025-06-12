@@ -1,7 +1,7 @@
 import { IsIn, IsNotEmpty } from 'class-validator';
-import { DishRecipeSections } from '../dish/dish.types';
-import { Language } from '../../common/types';
-import { supportedLanguages } from '../../constants/language.constant';
+import { DishRecipeSections } from '../../../dish/dish.types';
+import { Language } from '../../../../common/types';
+import { supportedLanguages } from '../../../../constants/language.constant';
 
 export class CreateRecipeDto {
     @IsNotEmpty({ message: 'Recipe should have a specific language' })

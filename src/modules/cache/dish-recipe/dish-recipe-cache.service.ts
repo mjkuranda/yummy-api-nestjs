@@ -7,7 +7,7 @@ import { DishRecipeKey } from './dish-recipe-cache.types';
 import { DishRecipeCacheKeyFactory } from './dish-recipe-cache-key.factory';
 import { DishRecipe } from '../../recipe/application/recipe-application.types';
 import { Recipe } from '../../recipe/domain/entities';
-import { EncodedDishId } from '../../dish/encoded-dish-id.value-object';
+import { EncodedDishId } from '../../dish/domain/common/encoded-dish-id.value-object';
 
 @Injectable()
 export class DishRecipeCacheService {

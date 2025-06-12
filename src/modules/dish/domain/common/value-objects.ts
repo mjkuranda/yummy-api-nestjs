@@ -1,11 +1,11 @@
 import Hashids from 'hashids';
-import { Provider } from '../../common/enums';
-import { DishId } from './dish.types';
+import { Provider } from '../../../../common/enums';
+import { DishId } from '../../dish.types';
 
 // TODO: Secret salt!!!!
 const hashids = new Hashids('your-secret-salt', 8);
 
-export class EncodedDishId {
+export class EncodedDishIdValueObject {
 
     private constructor(
         private readonly _value: string,
@@ -13,15 +13,15 @@ export class EncodedDishId {
         private readonly _dishId: DishId
     ) {}
 
-    static fromParts(provider: Provider, dishId: string | number): EncodedDishId {
+    static fromParts(provider: Provider, dishId: string | number): EncodedDishIdValueObject {
         const input = `${provider}:${dishId}`;
         const charCodes = Array.from(input).map(char => char.charCodeAt(0));
         const encoded = hashids.encode(charCodes);
 
-        return new EncodedDishId(encoded, provider, dishId);
+        return new EncodedDishIdValueObject(encoded, provider, dishId);
     }
 
-    static fromEncodedString(encoded: string): EncodedDishId | null {
+    static fromEncodedString(encoded: string): EncodedDishIdValueObject | null {
         const charCodes = hashids.decode(encoded) as number[];
 
         if (!charCodes?.length) {
@@ -40,14 +40,14 @@ export class EncodedDishId {
             return null;
         }
 
-        return new EncodedDishId(encoded, provider, dishId);
+        return new EncodedDishIdValueObject(encoded, provider, dishId);
     }
 
     toString(): string {
         return this._value;
     }
 
-    equals(other: EncodedDishId): boolean {
+    equals(other: EncodedDishIdValueObject): boolean {
         return this._value === other._value;
     }
 

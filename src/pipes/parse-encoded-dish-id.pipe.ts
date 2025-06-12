@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { EncodedDishId } from '../modules/dish/encoded-dish-id.value-object';
+import { EncodedDishId } from '../modules/dish/domain/common/encoded-dish-id.value-object';
 import { BadRequestException } from '../exceptions';
 
 @Injectable()

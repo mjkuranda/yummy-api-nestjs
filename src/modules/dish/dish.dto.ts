@@ -14,7 +14,7 @@ import { DishRecipeSections } from './dish.types';
 import { Language } from '../../common/types';
 import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
 import { MealType, DishType, Provider } from '../../common/enums';
-import { EncodedDishId } from './encoded-dish-id.value-object';
+import { EncodedDishId } from './domain/common/encoded-dish-id.value-object';
 
 export class CreateDishDto<Ingredient> {
     @IsNotEmpty({ message: 'Dish should have a description' })

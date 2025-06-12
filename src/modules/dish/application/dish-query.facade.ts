@@ -7,7 +7,7 @@ import { MealType } from '../../../common/enums';
 import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
 import { DishCommentDocument } from '../../../mongodb/documents/dish-comment.document';
 import { GetDishDetailsUseCase, GetDishesUseCase, GetDishProposalsUseCase, GetDishesWithSoftAddedUseCase, GetDishesWithSoftEditedUseCase, GetDishesWithSoftDeletedUseCase, GetDishCommentsUseCase, GetDishRatingUseCase } from './use-cases';
-import { EncodedDishId } from '../encoded-dish-id.value-object';
+import { EncodedDishId } from '../domain/common/encoded-dish-id.value-object';
 
 @Injectable()
 export class DishQueryFacade {

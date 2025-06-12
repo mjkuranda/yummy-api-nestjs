@@ -3,7 +3,7 @@ import { RatedDish } from '../../dish/dish.types';
 import { IngredientType } from '../../ingredient/ingredient.types';
 import { discardDecimalPoint, inferDishType, inferMealType, toFixNumber } from '../../../common/helpers';
 import { Provider, IngredientUnitConverters } from '../../../common/enums';
-import { EncodedDishId } from '../../dish/encoded-dish-id.value-object';
+import { EncodedDishId } from '../../dish/domain/common/encoded-dish-id.value-object';
 
 export function proceedRecipesToDishes(recipes: SpoonacularRecipe[]): RatedDish[] {
     return recipes.map(recipe => {

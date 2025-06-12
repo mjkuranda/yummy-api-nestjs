@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DishRecipeRepository } from '../../../../mongodb/repositories/dish-recipe.repository';
-import { CreateRecipeDto } from '../../recipe.dto';
+import { CreateRecipeDto } from '../../application/dtos/recipe.dto';
 import { Language } from '../../../../common/types';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { ProviderRegistryService } from '../../../provider/provider-registry.service';
@@ -8,7 +8,7 @@ import { DishRepository } from '../../../../mongodb/repositories/dish.repository
 import { DishRecipeCacheService } from '../../../cache/dish-recipe/dish-recipe-cache.service';
 import { DishNotFoundError, NotDishAuthorError, DishRecipeExistsError, DishRecipeNotFoundError } from '../../../../errors/domain';
 import { GetRecipeResult } from '../../application/recipe-application.types';
-import { EncodedDishId } from '../../../dish/encoded-dish-id.value-object';
+import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
 import { Recipe } from '../entities';
 import { TranslationService } from '../../../translation/translation.service';
 
@@ -33,7 +33,7 @@ export class RecipeService {
      * @param createRecipeDto data containing recipe information
      * @param user user data extracted from access token
      */
-    async create(encodedDishId: EncodedDishId, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<Recipe> {
+    async create(encodedDishId: EncodedDishIdValueObject, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<Recipe> {
         const dishId = encodedDishId.getDishId();
 
         // NOTE: This dish can be unconfirmed because you add dish and recipe at once.
@@ -43,7 +43,7 @@ export class RecipeService {
             throw new DishNotFoundError(encodedDishId);
         }
 
-        if (!user.isAdmin && dish.author !== user.login) {
+        if (!user.isAdmin && dish.getAuthor() !== user.login) {
             throw new NotDishAuthorError();
         }
 
@@ -71,7 +71,7 @@ export class RecipeService {
      * @param encodedDishId encoded dish ID and its provider name
      * @param language dish recipe language
      */
-    async getTranslatedRecipe(encodedDishId: EncodedDishId, language?: Language): Promise<GetRecipeResult> {
+    async getTranslatedRecipe(encodedDishId: EncodedDishIdValueObject, language?: Language): Promise<GetRecipeResult> {
         const provider = encodedDishId.getProvider();
         const providable = this.providerRegistryService.getProvider(provider);
 

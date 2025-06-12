@@ -9,7 +9,7 @@ export class Recipe {
     constructor(
         language: Language,
         dishId: DishId,
-        sections: DishRecipeSections,
+        sections: DishRecipeSections
     ) {
         this.validateLanguage(language);
         this.validateDishId(dishId);

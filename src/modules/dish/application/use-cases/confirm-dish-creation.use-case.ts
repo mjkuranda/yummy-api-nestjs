@@ -6,7 +6,7 @@ import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { DishNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
-import { EncodedDishId } from '../../encoded-dish-id.value-object';
+import { EncodedDishId } from '../../domain/common/encoded-dish-id.value-object';
 
 @Injectable()
 export class ConfirmDishCreationUseCase extends AbstractUseCase<[EncodedDishId, UserDto], void> {

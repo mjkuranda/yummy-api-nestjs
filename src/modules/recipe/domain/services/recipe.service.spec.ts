@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '../../../logger/logger.service';
 import { RecipeService } from './recipe.service';
 import { DishRepository } from '../../../../mongodb/repositories/dish.repository';
-import { CreateRecipeDto } from '../../recipe.dto';
+import { CreateRecipeDto } from '../../application/dtos/recipe.dto';
 import { NotFoundException, ForbiddenException, BadRequestException } from '../../../../exceptions';
 import { DishRecipeRepository } from '../../../../mongodb/repositories/dish-recipe.repository';
 import mongoose from 'mongoose';
