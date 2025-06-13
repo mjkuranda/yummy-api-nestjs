@@ -13,7 +13,7 @@ async function bootstrap() {
     app.setGlobalPrefix('api');
     app.enableVersioning({
         type: VersioningType.URI,
-        defaultVersion: '3'
+        defaultVersion: '4'
     });
 
     app.enableCors({

@@ -4,11 +4,12 @@ import { LoggerService } from '../../../logger/logger.service';
 import { RecipeService } from '../../domain/services/recipe.service';
 import { DishNotFoundError, DishRecipeNotFoundError, InvalidDishIdError } from '../../../../errors/domain';
 import { BadRequestException, NotFoundException } from '../../../../exceptions';
-import { RecipeEntity } from '../../domain/entities';
 import { LanguageName } from '../../../../common/enums';
 import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
+import { GetRecipeDto } from '../dtos';
+import { RecipeDtoMapper } from '../recipe-dto.mapper';
 
-export class GetRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject, Language], RecipeEntity> {
+export class GetRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject, Language], GetRecipeDto> {
 
     constructor(
         private readonly loggerService: LoggerService,
@@ -17,13 +18,13 @@ export class GetRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject,
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject, language: Language): Promise<RecipeEntity> {
+    protected async run(encodedDishId: EncodedDishIdValueObject, language: Language): Promise<GetRecipeDto> {
         const { recipe, fromCache } = await this.recipeService.getTranslatedRecipe(encodedDishId, language);
         const languageName = LanguageName[language];
 
-        this.loggerService.info(this.context, `Retrieved dish recipe "${encodedDishId}" in ${languageName} language ${fromCache ? 'from cache' : 'and cached'}.`);
+        this.loggerService.info(this.context, `Retrieved dish recipe "${encodedDishId.getValue()}" in ${languageName} language ${fromCache ? 'from cache' : 'and cached'}.`);
 
-        return recipe;
+        return RecipeDtoMapper.toGetRecipeDto(encodedDishId, recipe);
     }
 
     protected handleError(error: unknown, context: ContextString): never {

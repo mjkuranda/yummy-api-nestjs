@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Headers, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
-import { CreatedRecipeDto, CreateRecipeDto, GetRecipeDto } from './application/dtos/recipe.dto';
+import { CreateRecipeDto, GetRecipeDto } from './application/dtos';
 import { TransformedBody } from '../../common/interfaces';
 import { Language } from '../../common/types';
 import { RecipeFacade } from './application/recipe.facade';
@@ -20,7 +20,7 @@ export class RecipeController {
     public async createRecipe(
         @Param('encoded-id', ParseEncodedDishIdPipe) encodedDishId: EncodedDishIdValueObject,
         @Body() createRecipeDto: TransformedBody<CreateRecipeDto>
-    ): Promise<CreatedRecipeDto> {
+    ): Promise<void> {
         const { data, authenticatedUser } = createRecipeDto;
 
         return await this.recipeFacade.addRecipe(encodedDishId, data, authenticatedUser);

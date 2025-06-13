@@ -2,7 +2,6 @@ import { IsIn, IsNotEmpty } from 'class-validator';
 import { DishRecipeSections } from '../../../dish/dish.types';
 import { Language } from '../../../../common/types';
 import { supportedLanguages } from '../../../../constants/language.constant';
-import { RecipeEntity } from '../../domain/entities';
 
 export class CreateRecipeDto {
     @IsNotEmpty({ message: 'Recipe should have a specific language' })
@@ -15,7 +14,3 @@ export class CreateRecipeDto {
     @IsNotEmpty({ message: 'Recipe should have at least one section' })
     readonly sections: DishRecipeSections;
 }
-
-export type CreatedRecipeDto = RecipeEntity;
-
-export type GetRecipeDto = RecipeEntity;

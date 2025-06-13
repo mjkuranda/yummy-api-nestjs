@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.2.0] - 2025-05-26
+## [4.0.0] - 2025-05-26
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `CacheModule` and `DishCacheService` to dish cache management.
 - [Marek Kurańda](https://github.com/mjkuranda): `DishIdObfuscator` helper and `hashids` library to encode and decode dish IDs.

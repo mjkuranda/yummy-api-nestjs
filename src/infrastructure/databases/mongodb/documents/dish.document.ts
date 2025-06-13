@@ -1,7 +1,7 @@
 import { Document } from 'mongoose';
-import { DishIngredient } from '../../modules/ingredient/ingredient.types';
-import { Language } from '../../common/types';
-import { MealType, DishType } from '../../common/enums';
+import { DishIngredient } from '../../../../server/modules/ingredient/ingredient.types';
+import { Language } from '../../../../server/common/types';
+import { DishType, MealType } from '../../../../server/common/enums';
 
 export interface DishDocument extends Document {
   readonly author: string;

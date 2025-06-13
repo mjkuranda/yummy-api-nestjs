@@ -1,4 +1,3 @@
-import { CreateRecipeDto } from '../dtos/recipe.dto';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { RecipeService } from '../../domain/services/recipe.service';
 import {
@@ -8,12 +7,12 @@ import {
 } from '../../../../errors/domain';
 import { NotFoundException, ForbiddenException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
-import { RecipeEntity } from '../../domain/entities';
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
+import { CreateRecipeDto } from '../dtos';
 
-export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject, CreateRecipeDto, UserAccessTokenPayload], RecipeEntity> {
+export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject, CreateRecipeDto, UserAccessTokenPayload], void> {
 
     constructor(
         private readonly recipeService: RecipeService,
@@ -22,12 +21,10 @@ export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject,
         super();
     }
 
-    async run(encodedDishId: EncodedDishIdValueObject, createRecipeDto: CreateRecipeDto, userDto: UserAccessTokenPayload): Promise<RecipeEntity> {
-        const recipe = await this.recipeService.create(encodedDishId, createRecipeDto, userDto);
+    async run(encodedDishId: EncodedDishIdValueObject, createRecipeDto: CreateRecipeDto, userDto: UserAccessTokenPayload): Promise<void> {
+        await this.recipeService.create(encodedDishId, createRecipeDto, userDto);
 
-        this.loggerService.info(this.context, `New recipe has been created for dish "${recipe.dishId}"`);
-
-        return recipe;
+        this.loggerService.info(this.context, `New recipe has been created for dish "${encodedDishId.getValue()}"`);
     }
 
     protected handleError(error: unknown, context: ContextString): never {
