@@ -20,6 +20,7 @@ graph TD
         DishQueryFacade
         DishCommandFacade
         RecipeFacade
+        UserFacade
     end
 
 %% === Domain Layer ===
@@ -59,7 +60,7 @@ graph TD
 %% Presentation → Application / Domain
     DishController --> DishQueryFacade
     DishController --> DishCommandFacade
-    UserController --> UserService
+    UserController --> UserFacade
     RecipeController --> RecipeFacade
     ImageController --> ImageService
 

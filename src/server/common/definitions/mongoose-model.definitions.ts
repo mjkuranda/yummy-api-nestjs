@@ -1,11 +1,10 @@
 import { MongooseModelFactory } from '../factories/mongoose-model.factory';
-import { DishSchema } from '../../mongodb/schemas/dish.schema';
-import { DishCommentSchema } from '../../mongodb/schemas/dish-comment.schema';
-import { DishRatingSchema } from '../../mongodb/schemas/dish-rating.schema';
-import { DishRecipeSchema } from '../../mongodb/schemas/dish-recipe.schema';
-import { UserSchema } from '../../mongodb/schemas/user.schema';
-import { UserActionSchema } from '../../mongodb/schemas/user-action.schema';
-import { UserSearchQuerySchema } from '../../mongodb/schemas/user-search-query.schema';
+import {
+    DishCommentSchema,
+    DishRatingSchema,
+    DishRecipeSchema,
+    DishSchema, UserActionSchema, UserSchema, UserSearchQuerySchema
+} from '../../../infrastructure/databases/mongodb/schemas';
 
 export const dishModel = MongooseModelFactory.create('dishes', DishSchema);
 export const dishCommentModel = MongooseModelFactory.create('dish_comments', DishCommentSchema);

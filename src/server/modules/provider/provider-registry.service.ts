@@ -11,6 +11,7 @@ import {
     DishRatingRepository,
     UserSearchQueryRepository
 } from '../dish/domain/common/repositories';
+import { UserActionRepository } from '../user/domain/repositories';
 
 @Injectable()
 export class ProviderRegistryService {
@@ -35,6 +36,10 @@ export class ProviderRegistryService {
 
     getRecipeRepository(): RecipeRepository | null {
         return this.repositoryMap.recipe_repository;
+    }
+
+    getUserActionRepository(): UserActionRepository | null {
+        return this.repositoryMap.user_action_repository;
     }
 
     getUserSearchQueryRepository(): UserSearchQueryRepository | null {

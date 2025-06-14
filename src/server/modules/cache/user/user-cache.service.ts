@@ -1,0 +1,60 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { REDIS_CLIENT } from '../../redis/redis.constants';
+import { Redis } from 'ioredis';
+import { MINUTE } from '../../../constants/times.constant';
+import { UserCacheKeyFactory } from './user-cache-key.factory';
+import { TokenType, UserTokenKey } from './user-cache.types';
+
+@Injectable()
+export class UserCacheService {
+
+    constructor(
+        @Inject(REDIS_CLIENT) private readonly redisClient: Redis
+    ) {}
+
+    /**
+     * @description Returns cached user token
+     * @param userLogin user login
+     * @param tokenType token type (access or refresh)
+     */
+    async getUserToken(userLogin: string, tokenType: TokenType): Promise<string | null> {
+        const key: UserTokenKey = UserCacheKeyFactory.createUserTokenKey(userLogin, tokenType);
+        const value = await this.redisClient.get(key);
+
+        if (!value) {
+            return null;
+        }
+
+        return value;
+    }
+
+    /**
+     * @description Caches user token
+     * @param userLogin user login
+     * @param tokenType token type (access or refresh)
+     * @param token token value
+     */
+    async setUserToken(userLogin: string, tokenType: TokenType, token: string): Promise<void> {
+        const key: UserTokenKey = UserCacheKeyFactory.createUserTokenKey(userLogin, tokenType);
+        const value = JSON.stringify(token);
+
+        const ttl = tokenType === 'access'
+            ? 15 * MINUTE
+            : 60 * MINUTE;
+
+        await this.redisClient.set(key, value);
+        await this.redisClient.expire(key, ttl);
+    }
+
+    /**
+     * @description Delete from cache the both user tokens
+     * @param userLogin user login
+     */
+    async unsetUserTokens(userLogin: string): Promise<void> {
+        const key0: UserTokenKey = UserCacheKeyFactory.createUserTokenKey(userLogin, 'access');
+        const key1: UserTokenKey = UserCacheKeyFactory.createUserTokenKey(userLogin, 'access');
+
+        await this.redisClient.del(key0, key1);
+    }
+
+}

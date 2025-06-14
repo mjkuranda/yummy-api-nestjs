@@ -4,7 +4,7 @@ import { CreateDishDataType, DishId } from '../dish.types';
 import { DishIngredient } from '../../ingredient/ingredient.types';
 import { DishEditDto } from '../dish.dto';
 import { MealType } from '../../../common/enums';
-import { DishResultValueObject } from './read/value-objects';
+import { DishOverviewValueObject, DishResultValueObject } from './read/value-objects';
 
 @Injectable()
 export class DishRepository {
@@ -20,4 +20,5 @@ export class DishRepository {
     setSoftDeleted: (id: DishId) => Promise<void>;
     delete: (id: DishId) => Promise<void>;
     findByIngredientsAndType: (ingredients: string[], mealType?: MealType) => Promise<DishResultValueObject[]>;
+    findByAuthor: (userLogin: string) => Promise<DishOverviewValueObject[]>;
 }
