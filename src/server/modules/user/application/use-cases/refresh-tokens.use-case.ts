@@ -1,9 +1,11 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { Response } from 'express';
+import { BadRequestException, ForbiddenException } from '../../../../exceptions';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { LoggerService } from '../../../logger/logger.service';
 import { AuthenticationService } from '../../domain/services/authentication.service';
+import { MismatchedUserTokensError, UserWithLoginNotFoundError } from '../../../../errors/domain';
 
 export class RefreshTokensUseCase extends AbstractUseCase<[UserAccessTokenPayload, string, Response], void> {
 
@@ -25,6 +27,14 @@ export class RefreshTokensUseCase extends AbstractUseCase<[UserAccessTokenPayloa
     }
 
     protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof MismatchedUserTokensError) {
+            throw new BadRequestException(context, error.message);
+        }
+
+        if (error instanceof UserWithLoginNotFoundError) {
+            throw new BadRequestException(context, error.message);
+        }
+
         throw error;
     }
 

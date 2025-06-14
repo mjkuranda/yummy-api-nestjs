@@ -1,8 +1,10 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
-import { NotFoundException } from '../../../../exceptions';
+import { BadRequestException, NotFoundException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
 import { UserActivationService } from '../../domain/services/user-activation.service';
+import { AlreadyActivatedUserError, InactiveUserNotFoundError, UserActionNotFoundError } from '../../../../errors/domain';
+import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
 
 export class ActivateUserUseCase extends AbstractUseCase<[string], void> {
 
@@ -20,8 +22,20 @@ export class ActivateUserUseCase extends AbstractUseCase<[string], void> {
     }
 
     protected handleError(error: unknown, context: ContextString): never {
-        if (error instanceof Error && error.message.includes('not found')) {
+        if (error instanceof InvalidMongooseObjectIdError) {
+            throw new BadRequestException(context, error.message);
+        }
+
+        if (error instanceof UserActionNotFoundError) {
             throw new NotFoundException(context, error.message);
+        }
+
+        if (error instanceof InactiveUserNotFoundError) {
+            throw new NotFoundException(context, error.message);
+        }
+
+        if (error instanceof AlreadyActivatedUserError) {
+            throw new BadRequestException(context, error.message);
         }
 
         throw error;

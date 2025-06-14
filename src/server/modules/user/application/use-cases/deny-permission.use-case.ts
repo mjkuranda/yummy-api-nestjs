@@ -1,9 +1,11 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { ForbiddenException, NotFoundException } from '../../../../exceptions';
-import { CapabilityType } from '../../user.types';
 import { LoggerService } from '../../../logger/logger.service';
 import { PermissionManagementService } from '../../domain/services/permission-management.service';
+import { NoSuchCapabilityError, UserWithLoginNotFoundError } from '../../../../errors/domain';
+import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { CapabilityType } from '../../user.types';
 
 export class DenyPermissionUseCase extends AbstractUseCase<[string, string, CapabilityType], void> {
 
@@ -22,14 +24,18 @@ export class DenyPermissionUseCase extends AbstractUseCase<[string, string, Capa
     }
 
     protected handleError(error: unknown, context: ContextString): never {
-        if (error instanceof Error) {
-            if (error.message === 'User not found') {
-                throw new NotFoundException(context, error.message);
-            }
-            if (error.message.includes('Not authorized') || error.message.includes('Invalid capability')) {
-                throw new ForbiddenException(context, error.message);
-            }
+        if (error instanceof InvalidMongooseObjectIdError) {
+            throw new NotFoundException(context, error.message);
         }
+
+        if (error instanceof UserWithLoginNotFoundError) {
+            throw new NotFoundException(context, error.message);
+        }
+
+        if (error instanceof NoSuchCapabilityError) {
+            throw new ForbiddenException(context, error.message);
+        }
+
         throw error;
     }
 

@@ -5,6 +5,8 @@ import { LoggerService } from '../../../logger/logger.service';
 import { ProfileManagementService } from '../../domain/services/profile-management.service';
 import { GetUserProfileDto } from '../dtos';
 import { UserDtoMapper } from '../mappers';
+import { UserWithLoginNotFoundError } from '../../../../errors/domain';
+import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
 
 export class GetUserProfileUseCase extends AbstractUseCase<[string], GetUserProfileDto> {
 
@@ -24,9 +26,14 @@ export class GetUserProfileUseCase extends AbstractUseCase<[string], GetUserProf
     }
 
     protected handleError(error: unknown, context: ContextString): never {
-        if (error instanceof Error && error.message.includes('not found')) {
+        if (error instanceof InvalidMongooseObjectIdError) {
             throw new NotFoundException(context, error.message);
         }
+
+        if (error instanceof UserWithLoginNotFoundError) {
+            throw new NotFoundException(context, error.message);
+        }
+
         throw error;
     }
 

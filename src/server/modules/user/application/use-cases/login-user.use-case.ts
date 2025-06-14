@@ -6,6 +6,7 @@ import { LoggerService } from '../../../logger/logger.service';
 import { AuthenticationService } from '../../domain/services/authentication.service';
 import { UserLoginDto, UserTokensDto } from '../dtos';
 import { UserDtoMapper } from '../mappers';
+import { InactiveUserError, IncorrectUserCredentialsError, UserWithLoginNotFoundError } from '../../../../errors/domain';
 
 export class LoginUserUseCase extends AbstractUseCase<[UserLoginDto, Response], UserTokensDto> {
 
@@ -24,29 +25,28 @@ export class LoginUserUseCase extends AbstractUseCase<[UserLoginDto, Response], 
         res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'none', secure: true });
         res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
 
-        const message = `User "${login}" has been successfully logged in.`;
-
-        this.loggerService.info(this.context, message);
+        this.loggerService.info(this.context, `User "${login}" has been successfully logged in`);
 
         return UserDtoMapper.toUserTokensDto(userTokensVo);
     }
 
     protected handleError(error: unknown, context: ContextString): never {
-        if (error instanceof Error) {
-            if (error.message.includes('does not exist')) {
-                throw new NotFoundException(context, error.message);
-            }
-            if (error.message.includes('not a valid account')) {
-                throw new ForbiddenException(context, error.message);
-            }
-            if (error.message.includes('Incorrect credentials')) {
-                throw new BadRequestException(context, error.message);
-            }
+        if (error instanceof UserWithLoginNotFoundError) {
+            throw new NotFoundException(context, error.message);
         }
+
+        if (error instanceof InactiveUserError) {
+            throw new ForbiddenException(context, error.message);
+        }
+
+        if (error instanceof IncorrectUserCredentialsError) {
+            throw new BadRequestException(context, error.message);
+        }
+
         throw error;
     }
 
     protected get context(): ContextString {
-        return 'AuthenticateUserUseCase/run';
+        return 'LoginUserUseCase/run';
     }
 }

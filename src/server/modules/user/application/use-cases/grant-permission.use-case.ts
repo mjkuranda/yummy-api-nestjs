@@ -1,9 +1,11 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
-import { ForbiddenException, NotFoundException } from '../../../../exceptions';
+import { BadRequestException, ForbiddenException, NotFoundException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
 import { CapabilityType } from '../../user.types';
 import { PermissionManagementService } from '../../domain/services/permission-management.service';
+import { NoSuchCapabilityError, SuchCapabilityGrantedError, UserWithLoginNotFoundError } from '../../../../errors/domain';
+import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
 
 export class GrantPermissionUseCase extends AbstractUseCase<[string, string, CapabilityType], void> {
     constructor(
@@ -21,14 +23,22 @@ export class GrantPermissionUseCase extends AbstractUseCase<[string, string, Cap
     }
 
     protected handleError(error: unknown, context: ContextString): never {
-        if (error instanceof Error) {
-            if (error.message === 'User not found') {
-                throw new NotFoundException(context, error.message);
-            }
-            if (error.message.includes('Not authorized') || error.message.includes('Invalid capability')) {
-                throw new ForbiddenException(context, error.message);
-            }
+        if (error instanceof InvalidMongooseObjectIdError) {
+            throw new NotFoundException(context, error.message);
         }
+
+        if (error instanceof UserWithLoginNotFoundError) {
+            throw new NotFoundException(context, error.message);
+        }
+
+        if (error instanceof SuchCapabilityGrantedError) {
+            throw new BadRequestException(context, error.message);
+        }
+
+        if (error instanceof NoSuchCapabilityError) {
+            throw new ForbiddenException(context, error.message);
+        }
+
         throw error;
     }
 

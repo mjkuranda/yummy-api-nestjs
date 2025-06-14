@@ -6,6 +6,7 @@ import { UserEntity } from '../../domain/entities';
 import { UserManagementService } from '../../domain/services/user-management.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { UserDtoMapper } from '../mappers';
+import { UserAlreadyExistsError } from '../../../../errors/domain';
 
 export class CreateUserUseCase extends AbstractUseCase<[CreateUserDto], CreatedUserDto> {
     constructor(
@@ -26,9 +27,10 @@ export class CreateUserUseCase extends AbstractUseCase<[CreateUserDto], CreatedU
     }
 
     protected handleError(error: unknown, context: ContextString): never {
-        if (error instanceof Error && error.message.includes('has already exists')) {
+        if (error instanceof UserAlreadyExistsError) {
             throw new BadRequestException(context, error.message);
         }
+
         throw error;
     }
 

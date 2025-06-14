@@ -1,28 +1,35 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
-import { NotFoundException } from '../../../../exceptions';
+import { BadRequestException, NotFoundException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
-import { UserManagementService } from '../../domain/services/user-management.service';
+import { UserPasswordService } from '../../domain/services/user-password.service';
+import { UserWithLoginNotFoundError } from '../../../../errors/domain';
+import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
 
 export class ChangePasswordUseCase extends AbstractUseCase<[string, string], void> {
 
     constructor(
         private readonly loggerService: LoggerService,
-        private readonly userManagementService: UserManagementService
+        private readonly userPasswordService: UserPasswordService
     ) {
         super();
     }
 
-    protected async run(userLogin: string, newPassword: string): Promise<void> {
-        await this.userManagementService.changePassword(userLogin, newPassword);
+    protected async run(userId: string, newPassword: string): Promise<void> {
+        await this.userPasswordService.changePassword(userId, newPassword);
 
-        this.loggerService.info(this.context, `Password changed successfully for user with login "${userLogin}"`);
+        this.loggerService.info(this.context, `Password changed successfully for user with ID "${userId}"`);
     }
 
     protected handleError(error: unknown, context: ContextString): never {
-        if (error instanceof Error && error.message.includes('not found')) {
+        if (error instanceof InvalidMongooseObjectIdError) {
             throw new NotFoundException(context, error.message);
         }
+
+        if (error instanceof UserWithLoginNotFoundError) {
+            throw new NotFoundException(context, error.message);
+        }
+
         throw error;
     }
 

@@ -1,5 +1,6 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
+import { ForbiddenException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
 import { UserManagementService } from '../../domain/services/user-management.service';
 import { GetUsersDto } from '../dtos';
@@ -22,6 +23,11 @@ export class GetAllUsersUseCase extends AbstractUseCase<[], GetUsersDto> {
     }
 
     protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof Error) {
+            if (error.message.includes('Not authorized') || error.message.includes('Invalid capability')) {
+                throw new ForbiddenException(context, error.message);
+            }
+        }
         throw error;
     }
 
