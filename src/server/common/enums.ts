@@ -16,6 +16,7 @@ export enum Repository {
     DISH_COMMENT_REPOSITORY = 'dish_comment_repository',
     DISH_RATING_REPOSITORY = 'dish_rating_repository',
     RECIPE_REPOSITORY = 'recipe_repository',
+    USER_REPOSITORY = 'user_repository',
     USER_ACTION_REPOSITORY = 'user_action_repository',
     USER_SEARCH_QUERY_REPOSITORY = 'user_search_query_repository'
 }

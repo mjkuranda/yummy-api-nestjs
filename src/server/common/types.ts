@@ -8,7 +8,7 @@ import {
     DishRatingRepository,
     UserSearchQueryRepository
 } from '../modules/dish/domain/common/repositories';
-import { UserActionRepository } from '../modules/user/domain/repositories';
+import { UserActionRepository, UserRepository } from '../modules/user/domain/repositories';
 
 /**
  * @description Equals to {}
@@ -67,6 +67,7 @@ export type RepositoryMap = {
     [Repository.DISH_COMMENT_REPOSITORY]: DishCommentRepository,
     [Repository.DISH_RATING_REPOSITORY]: DishRatingRepository,
     [Repository.RECIPE_REPOSITORY]: RecipeRepository,
+    [Repository.USER_REPOSITORY]: UserRepository,
     [Repository.USER_ACTION_REPOSITORY]: UserActionRepository,
     [Repository.USER_SEARCH_QUERY_REPOSITORY]: UserSearchQueryRepository
 };

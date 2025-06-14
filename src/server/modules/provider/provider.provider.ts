@@ -13,6 +13,7 @@ import {
     MongodbDishRepository, MongodbUserSearchQueryRepository
 } from '../dish/infrastructure/repositories';
 import { MongodbUserActionRepository } from '../user/infrastructure/repositories/mongodb.user-action.repository';
+import { MongodbUserRepository } from '../user/infrastructure/repositories/mongodb.user.repository';
 
 export const providerServices: Provider[] = [
     DishMatcherApiService,
@@ -38,6 +39,7 @@ export const providerRepositories: Provider[] = [
     MongodbDishCommentRepository,
     MongodbDishRatingRepository,
     MongodbRecipeRepository,
+    MongodbUserRepository,
     MongodbUserActionRepository,
     MongodbUserSearchQueryRepository,
     {
@@ -47,6 +49,7 @@ export const providerRepositories: Provider[] = [
             dishCommentRepository: MongodbDishCommentRepository,
             dishRatingRepository: MongodbDishRatingRepository,
             recipeRepository: MongodbRecipeRepository,
+            userRepository: MongodbUserRepository,
             userActionRepository: MongodbUserActionRepository,
             userSearchQueryRepository: MongodbUserSearchQueryRepository
         ): RepositoryMap => ({
@@ -54,6 +57,7 @@ export const providerRepositories: Provider[] = [
             [Repository.DISH_COMMENT_REPOSITORY]: dishCommentRepository,
             [Repository.DISH_RATING_REPOSITORY]: dishRatingRepository,
             [Repository.RECIPE_REPOSITORY]: recipeRepository,
+            [Repository.USER_REPOSITORY]: userRepository,
             [Repository.USER_ACTION_REPOSITORY]: userActionRepository,
             [Repository.USER_SEARCH_QUERY_REPOSITORY]: userSearchQueryRepository
         }),
@@ -62,6 +66,7 @@ export const providerRepositories: Provider[] = [
             MongodbDishCommentRepository,
             MongodbDishRatingRepository,
             MongodbRecipeRepository,
+            MongodbUserRepository,
             MongodbUserActionRepository,
             MongodbUserSearchQueryRepository
         ]

@@ -13,6 +13,7 @@ import { DishEditDto } from '../../dish.dto';
 import { calculateMissing, calculateRelevance } from '../../../../common/helpers';
 import { DishResultValueObject } from '../../domain/read/value-objects';
 import { Injectable } from '@nestjs/common';
+import { DishOverviewValueObject } from 'src/server/modules/user/domain/value-objects';
 
 @Injectable()
 export class MongodbDishRepository implements DishRepository {
@@ -142,6 +143,12 @@ export class MongodbDishRepository implements DishRepository {
 
             return DishResultValueObject.fromDishEntity(dishEntity, relevance, missingCount);
         });
+    }
+
+    async findByAuthor(userLogin: string): Promise<DishOverviewValueObject[]> {
+        const dishes = await this.model.find({ author: userLogin });
+
+        return DishOverviewValueObject.fromDocuments(dishes);
     }
 
     private async findAll(filterQuery: FilterQuery<DishDocument>, limit?: number): Promise<DishDocument[] | null> {
