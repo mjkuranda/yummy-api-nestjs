@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRecipeDto } from '../../application/dtos/recipe.dto';
 import { Language } from '../../../../common/types';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { ProviderRegistryService } from '../../../provider/provider-registry.service';
@@ -11,6 +10,7 @@ import { RecipeEntity } from '../entities';
 import { TranslationService } from '../../../translation/translation.service';
 import { DishRepository } from '../../../dish/domain/dish.repository';
 import { RecipeRepository } from '../recipe.repository';
+import { CreateRecipeDto } from '../../application/dtos';
 
 @Injectable()
 export class RecipeService {

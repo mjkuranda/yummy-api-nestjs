@@ -5,6 +5,7 @@ import { BadRequestException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
 import { AuthenticationService } from '../../domain/services/authentication.service';
 import { MismatchedUserTokensError, UserWithLoginNotFoundError } from '../../../../errors/domain';
+import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
 
 export class LogoutUserUseCase extends AbstractUseCase<[Response, string, string, string], void> {
 
@@ -30,6 +31,10 @@ export class LogoutUserUseCase extends AbstractUseCase<[Response, string, string
         }
 
         if (error instanceof UserWithLoginNotFoundError) {
+            throw new BadRequestException(context, error.message);
+        }
+
+        if (error instanceof InvalidMongooseObjectIdError) {
             throw new BadRequestException(context, error.message);
         }
 

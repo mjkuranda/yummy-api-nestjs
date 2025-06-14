@@ -2,11 +2,11 @@ import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { BadRequestException } from '../../../../exceptions';
 import { CreatedUserDto, CreateUserDto } from '../dtos';
-import { UserEntity } from '../../domain/entities';
 import { UserManagementService } from '../../domain/services/user-management.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { UserDtoMapper } from '../mappers';
 import { UserAlreadyExistsError } from '../../../../errors/domain';
+import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
 
 export class CreateUserUseCase extends AbstractUseCase<[CreateUserDto], CreatedUserDto> {
     constructor(
@@ -27,6 +27,10 @@ export class CreateUserUseCase extends AbstractUseCase<[CreateUserDto], CreatedU
     }
 
     protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof InvalidMongooseObjectIdError) {
+            throw new BadRequestException(context, error.message);
+        }
+
         if (error instanceof UserAlreadyExistsError) {
             throw new BadRequestException(context, error.message);
         }

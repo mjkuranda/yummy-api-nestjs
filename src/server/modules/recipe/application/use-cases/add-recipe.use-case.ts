@@ -3,14 +3,16 @@ import { RecipeService } from '../../domain/services/recipe.service';
 import {
     DishNotFoundError,
     DishRecipeExistsError,
-    NotDishAuthorError
+    NotDishAuthorError,
+    DishRecipeNotFoundError
 } from '../../../../errors/domain';
-import { NotFoundException, ForbiddenException } from '../../../../exceptions';
+import { NotFoundException, ForbiddenException, BadRequestException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
 import { CreateRecipeDto } from '../dtos';
+import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
 
 export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject, CreateRecipeDto, UserAccessTokenPayload], void> {
 
@@ -28,6 +30,10 @@ export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject,
     }
 
     protected handleError(error: unknown, context: ContextString): never {
+        if (error instanceof InvalidMongooseObjectIdError) {
+            throw new NotFoundException(context, error.message);
+        }
+
         if (error instanceof DishNotFoundError) {
             throw new NotFoundException(context, error.message);
         }
@@ -38,6 +44,10 @@ export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject,
 
         if (error instanceof DishRecipeExistsError) {
             throw new ForbiddenException(context, error.message);
+        }
+
+        if (error instanceof DishRecipeNotFoundError) {
+            throw new BadRequestException(context, error.message);
         }
 
         throw error;

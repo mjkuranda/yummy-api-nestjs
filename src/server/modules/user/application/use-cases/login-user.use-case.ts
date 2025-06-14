@@ -1,12 +1,13 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { Response } from 'express';
-import { BadRequestException, NotFoundException, ForbiddenException } from '../../../../exceptions';
+import { BadRequestException, NotFoundException, UnauthorizedException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
 import { AuthenticationService } from '../../domain/services/authentication.service';
 import { UserLoginDto, UserTokensDto } from '../dtos';
 import { UserDtoMapper } from '../mappers';
 import { InactiveUserError, IncorrectUserCredentialsError, UserWithLoginNotFoundError } from '../../../../errors/domain';
+import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
 
 export class LoginUserUseCase extends AbstractUseCase<[UserLoginDto, Response], UserTokensDto> {
 
@@ -31,16 +32,20 @@ export class LoginUserUseCase extends AbstractUseCase<[UserLoginDto, Response], 
     }
 
     protected handleError(error: unknown, context: ContextString): never {
-        if (error instanceof UserWithLoginNotFoundError) {
-            throw new NotFoundException(context, error.message);
-        }
-
-        if (error instanceof InactiveUserError) {
-            throw new ForbiddenException(context, error.message);
+        if (error instanceof InvalidMongooseObjectIdError) {
+            throw new UnauthorizedException(context, error.message);
         }
 
         if (error instanceof IncorrectUserCredentialsError) {
+            throw new UnauthorizedException(context, error.message);
+        }
+
+        if (error instanceof InactiveUserError) {
             throw new BadRequestException(context, error.message);
+        }
+
+        if (error instanceof UserWithLoginNotFoundError) {
+            throw new NotFoundException(context, error.message);
         }
 
         throw error;
