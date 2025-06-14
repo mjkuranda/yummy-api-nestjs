@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { supportedLanguages } from '../../constants/language.constant';
+import { supportedLanguages } from '../../../../server/constants/language.constant';
 
 const DishRecipeSectionSchema = new mongoose.Schema({
     name: String,

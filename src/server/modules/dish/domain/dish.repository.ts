@@ -4,7 +4,8 @@ import { CreateDishDataType, DishId } from '../dish.types';
 import { DishIngredient } from '../../ingredient/ingredient.types';
 import { DishEditDto } from '../dish.dto';
 import { MealType } from '../../../common/enums';
-import { DishOverviewValueObject, DishResultValueObject } from './read/value-objects';
+import { DishResultValueObject } from './read/value-objects';
+import { DishOverviewValueObject } from '../../user/domain/value-objects';
 
 @Injectable()
 export class DishRepository {
