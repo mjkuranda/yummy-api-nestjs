@@ -136,7 +136,7 @@ export class UserFacade {
      * @param accessToken user access token
      * @param res response object to set new tokens
      */
-    async refreshTokens(authenticatedUser: UserAccessTokenPayload, accessToken: string, res: Response): Promise<void> {
+    async refreshTokens(authenticatedUser: UserAccessTokenPayload, accessToken: string, res: Response): Promise<UserTokensDto> {
         return await this.refreshTokensUseCase.execute(authenticatedUser, accessToken, res);
     }
 }

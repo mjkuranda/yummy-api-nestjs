@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, Post, Response, Param, UseGuards, Request, Get } from '@nestjs/common';
-import { CreateUserDto, UserDto, UserLoginDto, UserNewPasswordDto } from './user.dto';
+import { CreateUserDto, UserLoginDto, UserNewPasswordDto } from './user.dto';
 import { CapabilityType } from './user.types';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CapabilityGuard } from '../../guards/capability.guard';
@@ -50,7 +50,7 @@ export class UserController {
     public async refreshTokens(
         @Request() req,
         @Response({ passthrough: true }) res
-    ): Promise<void> {
+    ): Promise<UserTokensDto> {
         const { accessToken } = req.cookies;
         const { authenticatedUser } = req.body;
 
