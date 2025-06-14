@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
-import { supportedLanguages } from '../../constants/language.constant';
-import { DishType, MealType } from '../../common/enums';
+import { supportedLanguages } from '../../../../server/constants/language.constant';
+import { DishType, MealType } from '../../../../server/common/enums';
 
 const IngredientDataSchema = new mongoose.Schema({
     name: {
