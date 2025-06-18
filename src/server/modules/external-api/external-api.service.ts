@@ -8,7 +8,7 @@ import { DishDetailsValueObject, DishResultValueObject } from '../dish/domain/re
 import { ContextString, Language } from '../../common/types';
 import { RecipeEntity } from '../recipe/domain/entities';
 import { DishType, MealType, Provider } from '../../common/enums';
-import { ExternalApiDataAdaptable, EXTERNAL_API_DATA_ADAPTABLE_TOKEN } from '../../../integrations/interfaces/external-api-data.adaptable';
+import { ExternalApiDataAdaptable, EXTERNAL_API_DATA_ADAPTABLE_TOKEN } from '../../../integrations/interfaces';
 import { AxiosResponse } from 'axios';
 import { ExternalApiConstantProvidable } from './external-api.interface';
 import { DishId } from '../dish/dish.types';

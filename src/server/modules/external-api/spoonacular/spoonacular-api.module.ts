@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { SpoonacularApiService } from '../../../../integrations/spoonacular-api/spoonacular-api.service';
 import { SpoonacularApiAdapter } from '../../../../integrations/spoonacular-api/spoonacular-api.adapter';
 import { HttpModule } from '@nestjs/axios';
-import { EXTERNAL_API_DATA_ADAPTABLE_TOKEN } from '../../../../integrations/interfaces/external-api-data.adaptable';
+import { EXTERNAL_API_DATA_ADAPTABLE_TOKEN } from '../../../../integrations/interfaces';
 
 @Module({
     imports: [

@@ -14,7 +14,7 @@ import {
 import { HttpService } from '@nestjs/axios';
 import { DishCacheService } from '../../server/modules/cache/dish/dish-cache.service';
 import { LoggerService } from '../../server/modules/logger/logger.service';
-import { EXTERNAL_API_DATA_ADAPTABLE_TOKEN } from '../interfaces/external-api-data.adaptable';
+import { EXTERNAL_API_DATA_ADAPTABLE_TOKEN } from '../interfaces';
 import { SpoonacularApiAdapter } from './spoonacular-api.adapter';
 
 @Injectable()

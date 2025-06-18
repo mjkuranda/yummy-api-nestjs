@@ -14,7 +14,7 @@ import {
 import { MongodbUserActionRepository } from '../user/infrastructure/repositories/mongodb.user-action.repository';
 import { MongodbUserRepository } from '../user/infrastructure/repositories/mongodb.user.repository';
 import { SpoonacularApiService } from '../../../integrations/spoonacular-api/spoonacular-api.service';
-import { EXTERNAL_API_DATA_ADAPTABLE_TOKEN } from '../../../integrations/interfaces/external-api-data.adaptable';
+import { EXTERNAL_API_DATA_ADAPTABLE_TOKEN } from '../../../integrations/interfaces';
 import { SpoonacularApiAdapter } from '../../../integrations/spoonacular-api/spoonacular-api.adapter';
 import { DishRepository } from '../dish/domain/dish.repository';
 import {
