@@ -1,50 +1,12 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { DishModule } from './modules/dish/dish.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
-import { getMongooseUri } from './utils';
-import { IngredientModule } from './modules/ingredient/ingredient.module';
-import { UserModule } from './modules/user/user.module';
-import { ImageModule } from './modules/image/image.module';
-import { HealthcheckModule } from './modules/healthcheck/healthcheck.module';
-import { RecipeModule } from './modules/recipe/recipe.module';
-import { NotificationModule } from './modules/notification/notification.module';
+import { Module } from '@nestjs/common';
+import { configModules, domainModules, globalModules, systemModules } from './app.imports';
 
 @Module({
     imports: [
-        ConfigModule.forRoot({
-            envFilePath: ['.env'],
-        }),
-        MongooseModule.forRootAsync({
-            imports: [ConfigModule],
-            useFactory: async () => ({
-                uri: getMongooseUri()
-            }),
-            inject: [ConfigService],
-        }),
-        ServeStaticModule.forRoot(
-            {
-                rootPath: join(__dirname, '..', 'data/images/dishes'),
-                serveRoot: '/images/dishes',
-            },
-            {
-                rootPath: join(__dirname, '..', 'data/ingredients'),
-                serveRoot: '/ingredients'
-            }
-        ),
-        HealthcheckModule,
-        IngredientModule,
-        RecipeModule,
-        DishModule,
-        UserModule,
-        ImageModule,
-        NotificationModule
+        ...configModules,
+        ...systemModules,
+        ...globalModules,
+        ...domainModules
     ]
 })
-export class AppModule implements NestModule {
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    configure(consumer: MiddlewareConsumer) {}
-}
+export class AppModule {}

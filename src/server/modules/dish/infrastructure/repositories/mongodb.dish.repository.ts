@@ -1,6 +1,6 @@
 import { DishRepository } from '../../domain/dish.repository';
 import { FilterQuery, isValidObjectId, Model } from 'mongoose';
-import { DishDocument } from '../../../../../infrastructure/databases/mongodb/documents/dish.document';
+import { DishDocument } from '../../../../../infrastructure/databases/mongodb/documents';
 import { dishModel } from '../../../../common/definitions/mongoose-model.definitions';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateDishDataType, DishId } from '../../dish.types';

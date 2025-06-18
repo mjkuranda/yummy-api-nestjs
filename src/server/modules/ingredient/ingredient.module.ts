@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { IngredientService } from './ingredient.service';
-import { LoggerModule } from '../logger/logger.module';
-import { AxiosService } from '../../services/axios.service';
 
 @Module({
-    imports: [LoggerModule],
-    providers: [IngredientService, AxiosService],
-    exports: [IngredientService, AxiosService]
+    imports: [HttpModule],
+    providers: [IngredientService],
+    exports: [IngredientService]
 })
 export class IngredientModule {}

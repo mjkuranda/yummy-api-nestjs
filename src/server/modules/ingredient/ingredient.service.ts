@@ -6,12 +6,12 @@ import {
     IngredientType, DishIngredient,
     DishIngredientWithoutImage, IngredientCategory
 } from './ingredient.types';
+import { HttpService } from '@nestjs/axios';
 import { ContextString } from '../../common/types';
-import { AxiosService } from '../../services/axios.service';
-import { SpoonacularIngredient } from '../api/spoonacular/spoonacular.api.types';
 import { AxiosResponse } from 'axios';
 import { DishEditDto } from '../dish/dish.dto';
 import { loadDataFile, saveDataFile } from '../../common/utils';
+import { SpoonacularIngredient } from '../../../integrations/spoonacular-api/spoonacular-api.types';
 
 @Injectable()
 export class IngredientService {
@@ -22,7 +22,7 @@ export class IngredientService {
 
     constructor(
         private readonly loggerService: LoggerService,
-        private readonly axiosService: AxiosService
+        private readonly httpService: HttpService
     ) {
         this.ingredients = new Map();
         this.pantryIngredients = [];
@@ -89,7 +89,7 @@ export class IngredientService {
         // FIXME: Change to Promise.allSettled - Due to 402 Payment Required Error.
         const ingredientsWithImagesResponse: Awaited<AxiosResponse<SpoonacularIngredient>>[] = await Promise.all(
             ingredientWithoutImages.map(ingredient =>
-                this.axiosService.get<SpoonacularIngredient>(`https://api.spoonacular.com/food/ingredients/${ingredient.id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`)
+                this.httpService.axiosRef.get<SpoonacularIngredient>(`https://api.spoonacular.com/food/ingredients/${ingredient.id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`)
             )
         );
         const ingredientsWithImages: SpoonacularIngredient[] = ingredientsWithImagesResponse.map(ingredientWithImageResponse => ingredientWithImageResponse.data);
@@ -154,7 +154,7 @@ export class IngredientService {
 
                 if (!json[key].imageUrl) {
                     try {
-                        const { data } = await this.axiosService.get<SpoonacularIngredient>(`https://api.spoonacular.com/food/ingredients/${json[key].id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`);
+                        const { data } = await this.httpService.axiosRef.get<SpoonacularIngredient>(`https://api.spoonacular.com/food/ingredients/${json[key].id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`);
                         json[key].imageUrl = data.image;
                     } catch (err) {
                         // FIXME: Logger error

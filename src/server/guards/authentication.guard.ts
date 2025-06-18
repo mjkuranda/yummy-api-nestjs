@@ -1,14 +1,16 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { UnauthorizedException } from '../exceptions';
 import { JwtManagerService } from '../modules/jwt-manager/jwt-manager.service';
-import { RedisService } from '../modules/redis/redis.service';
 import { TransformedBody } from '../common/interfaces';
+import { UserCacheService } from '../modules/cache/user/user-cache.service';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
 
-    constructor(private readonly jwtManagerService: JwtManagerService,
-                private readonly redisService: RedisService) {}
+    constructor(
+        private readonly jwtManagerService: JwtManagerService,
+        private readonly userCacheService: UserCacheService
+    ) {}
 
     async canActivate(executionContext: ExecutionContext): Promise<boolean> {
         const req = executionContext.switchToHttp().getRequest();
@@ -20,7 +22,7 @@ export class AuthenticationGuard implements CanActivate {
         }
 
         const user = await this.jwtManagerService.verifyAccessToken(token);
-        const cachedToken = await this.redisService.getAccessToken(user.login);
+        const cachedToken = await this.userCacheService.getUserToken(user.login, 'access');
 
         if (!cachedToken) {
             throw new UnauthorizedException(context, 'User accessToken expired.');

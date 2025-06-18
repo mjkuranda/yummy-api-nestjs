@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ProviderModule } from '../../../provider/provider.module';
 import { DishWriteService } from './dish-write.service';
-import { CacheModule } from '../../../cache/cache.module';
-import { LoggerModule } from '../../../logger/logger.module';
+import { IngredientModule } from '../../../ingredient/ingredient.module';
 
 @Module({
-    imports: [ProviderModule, CacheModule, LoggerModule],
+    imports: [ProviderModule, IngredientModule],
     providers: [DishWriteService],
     exports: [DishWriteService]
 })

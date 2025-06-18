@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailManagerService } from './mail-manager.service';
 import { MailerAsyncOptions } from '@nestjs-modules/mailer/dist/interfaces/mailer-async-options.interface';
-import { LoggerModule } from '../logger/logger.module';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 
@@ -26,8 +25,7 @@ import { join } from 'path';
                     },
                 }
             })
-        } as MailerAsyncOptions),
-        LoggerModule
+        } as MailerAsyncOptions)
     ],
     providers: [
         MailManagerService

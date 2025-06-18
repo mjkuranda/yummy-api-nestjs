@@ -1,9 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { DishId } from '../../dish/dish.types';
 import { Language } from '../../../common/types';
 import { RecipeEntity } from './entities';
 import { CreateRecipeDto } from '../application/dtos';
 
-export interface RecipeRepository {
+@Injectable()
+export class RecipeRepository {
     create: (createRecipeDto: CreateRecipeDto) => Promise<RecipeEntity>;
     findByDishId: (dishId: DishId, language?: Language) => Promise<RecipeEntity | never>;
 }

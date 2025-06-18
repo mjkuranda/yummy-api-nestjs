@@ -5,7 +5,7 @@ import { DishEntity } from '../../common/entities';
 
 export class DishResultValueObject {
 
-    private constructor(
+    constructor(
         public readonly encodedDishId: EncodedDishIdValueObject,
         public readonly title: string,
         public readonly ingredients: string[],

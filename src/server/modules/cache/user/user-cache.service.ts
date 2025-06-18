@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { REDIS_CLIENT } from '../../redis/redis.constants';
+import { CACHE_PROVIDER } from '../cache.constant';
 import { Redis } from 'ioredis';
 import { MINUTE } from '../../../constants/times.constant';
 import { UserCacheKeyFactory } from './user-cache-key.factory';
@@ -9,7 +9,7 @@ import { TokenType, UserTokenKey } from './user-cache.types';
 export class UserCacheService {
 
     constructor(
-        @Inject(REDIS_CLIENT) private readonly redisClient: Redis
+        @Inject(CACHE_PROVIDER) private readonly redisClient: Redis
     ) {}
 
     /**

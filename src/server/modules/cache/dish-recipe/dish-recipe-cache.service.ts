@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { REDIS_CLIENT } from '../../redis/redis.constants';
+import { CACHE_PROVIDER } from '../cache.constant';
 import { Redis } from 'ioredis';
 import { Language } from '../../../common/types';
 import { HOUR } from '../../../constants/times.constant';
@@ -13,7 +13,7 @@ import { EncodedDishIdValueObject } from '../../dish/domain/common/value-objects
 export class DishRecipeCacheService {
 
     constructor(
-        @Inject(REDIS_CLIENT) private readonly redisClient: Redis
+        @Inject(CACHE_PROVIDER) private readonly redisClient: Redis
     ) {}
 
     /**

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
-import { REDIS_CLIENT, REDIS_TTL } from './redis.constants';
+import { REDIS_TTL } from './redis.constants';
 import { ApiName, DishDetailsQueryKey, DishRecipeQueryKey, DishResultQueryKey, TokenKey } from './redis.types';
 import {
     getAccessTokenKey,
@@ -20,11 +20,12 @@ type RedisKeyType = string | `${string}:${string}`;
 
 type DocumentType = 'ingredient' | 'ingredients' | 'dish' | 'dishes' | 'dish-details' | 'user' | 'users';
 
+// Deprecated
 @Injectable()
 export class RedisService {
 
     constructor(
-        @Inject(REDIS_CLIENT) private readonly redisClient: Redis
+        @Inject('XXX') private readonly redisClient: Redis
     ) {}
 
     encodeKey(documentData, documentType: DocumentType): RedisKeyType {

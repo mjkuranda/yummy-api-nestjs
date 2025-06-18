@@ -1,13 +1,9 @@
 import { Module } from '@nestjs/common';
-import { RecipeController } from './recipe.controller';
-import { JwtManagerModule } from '../jwt-manager/jwt-manager.module';
 import { RecipeApplicationModule } from './application/recipe-application.module';
+import { RecipeController } from './recipe.controller';
 
 @Module({
-    imports: [
-        RecipeApplicationModule,
-        JwtManagerModule
-    ],
+    imports: [RecipeApplicationModule],
     controllers: [RecipeController]
 })
 export class RecipeModule {}

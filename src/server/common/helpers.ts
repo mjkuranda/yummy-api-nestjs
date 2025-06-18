@@ -1,4 +1,4 @@
-import { SpoonacularIngredient } from '../modules/api/spoonacular/spoonacular.api.types';
+import { SpoonacularIngredient } from '../../integrations/spoonacular-api/spoonacular-api.types';
 import { BeverageTypes, DessertTypes, DishType, MainCourseTypes, MealType, SaladTypes, SoupTypes } from './enums';
 
 export function toFixNumber(number: number, fractionDigits: number = 2): number {

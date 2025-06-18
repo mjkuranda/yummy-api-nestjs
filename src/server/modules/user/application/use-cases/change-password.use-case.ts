@@ -1,22 +1,22 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
-import { BadRequestException, NotFoundException } from '../../../../exceptions';
+import { NotFoundException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
-import { UserPasswordService } from '../../domain/services/user-password.service';
 import { UserWithLoginNotFoundError } from '../../../../errors/domain';
 import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { UserManagementService } from '../../domain/services/user-management.service';
 
 export class ChangePasswordUseCase extends AbstractUseCase<[string, string], void> {
 
     constructor(
         private readonly loggerService: LoggerService,
-        private readonly userPasswordService: UserPasswordService
+        private readonly userManagementService: UserManagementService
     ) {
         super();
     }
 
     protected async run(userId: string, newPassword: string): Promise<void> {
-        await this.userPasswordService.changePassword(userId, newPassword);
+        await this.userManagementService.changePassword(userId, newPassword);
 
         this.loggerService.info(this.context, `Password changed successfully for user with ID "${userId}"`);
     }

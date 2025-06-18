@@ -1,8 +1,8 @@
-import { EncodedDishId } from '../../modules/dish/domain/common/encoded-dish-id.value-object';
+import { EncodedDishIdValueObject } from '../../modules/dish/domain/common/value-objects';
 
 export class DishRecipeNotFoundError extends Error {
 
-    constructor(encodedDishId: EncodedDishId) {
+    constructor(encodedDishId: EncodedDishIdValueObject) {
         super(`Recipe for "${encodedDishId}" dish has not been found`);
     }
 }

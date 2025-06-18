@@ -3,7 +3,6 @@ import { Language } from '../../common/types';
 import { TranslatedIngredient, TranslatedRecipe } from './translation.types';
 import { compoundTextToTranslate, convertAmountToText, normalizeName, normalizeUnit } from '../../common/helpers';
 import translate from '@iamtraction/google-translate';
-import { proceedTagsSpaces } from '../api/spoonacular/spoonacular.api.utils';
 import { DishIngredient } from '../ingredient/ingredient.types';
 import { RecipeEntity } from '../recipe/domain/entities';
 import { DishDetailsValueObject, TranslatedDishValueObject } from '../dish/domain/read/value-objects';
@@ -45,7 +44,7 @@ export class TranslationService {
         const ingredientList: TranslatedIngredient[] = translatedIngredients.map((ingredient, idx) => ({ text: ingredient, imageUrl: ingredientImages[idx] }));
 
         return new TranslatedDishValueObject(
-            proceedTagsSpaces(translatedDescription),
+            this._proceedTagsSpaces(translatedDescription),
             ingredientList
         );
     }
@@ -143,5 +142,9 @@ export class TranslationService {
         }
 
         return targetLanguage;
+    }
+
+    private _proceedTagsSpaces(dishDescription: string): string {
+        return dishDescription.replaceAll(/<\s*\/\s*([abi])\s*>/g, '</$1>');
     }
 }

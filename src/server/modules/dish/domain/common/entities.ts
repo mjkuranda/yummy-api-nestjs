@@ -6,7 +6,7 @@ import { DishType, MealType, Provider } from '../../../../common/enums';
 import { EncodedDishIdValueObject } from './value-objects';
 import {
     UserSearchQueryDocument
-} from '../../../../../infrastructure/databases/mongodb/documents/user-search-query.document';
+} from '../../../../../infrastructure/databases/mongodb/documents';
 
 export class DishEntity {
 

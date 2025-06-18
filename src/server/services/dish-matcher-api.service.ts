@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Providable } from '../common/interfaces';
 import { Language } from '../common/types';
-import { MealType, Provider } from '../common/enums';
+import { MealType, Provider, Repository } from '../common/enums';
 import { RecipeEntity } from '../modules/recipe/domain/entities';
 import { DishRepository } from '../modules/dish/domain/dish.repository';
 import { RecipeRepository } from '../modules/recipe/domain/recipe.repository';
@@ -12,7 +12,9 @@ import { DishDetailsValueObject, DishResultValueObject } from '../modules/dish/d
 export class DishMatcherApiService implements Providable {
 
     constructor(
+        @Inject(Repository.DISH_REPOSITORY)
         private readonly dishRepository: DishRepository,
+        @Inject(Repository.RECIPE_REPOSITORY)
         private readonly recipeRepository: RecipeRepository
     ) {}
 

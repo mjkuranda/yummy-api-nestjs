@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { REDIS_CLIENT } from '../../redis/redis.constants';
+import { CACHE_PROVIDER } from '../cache.constant';
 import { Redis } from 'ioredis';
 import { Providable } from '../../../common/interfaces';
 import { DishCacheKeyFactory } from './dish-cache-key.factory';
@@ -11,7 +11,7 @@ import { DishDetailsValueObject, DishResultValueObject } from '../../dish/domain
 export class DishCacheService {
 
     constructor(
-        @Inject(REDIS_CLIENT) private readonly redisClient: Redis
+        @Inject(CACHE_PROVIDER) private readonly redisClient: Redis
     ) {}
 
     /**
