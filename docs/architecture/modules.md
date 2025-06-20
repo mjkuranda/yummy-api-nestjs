@@ -1,58 +1,59 @@
-Hitherto, the graph is quite complex:
+The below graph presents current modular hierarchy:
 ```mermaid
 graph TD
 
 %% AppModule
-    AppModule --> HealthcheckModule
     AppModule --> DishModule
     AppModule --> UserModule
     AppModule --> RecipeModule
-    AppModule --> ImageModule
+    AppModule --> HealthcheckModule
     AppModule --> NotificationModule
-
-%% NotificationModule
-    NotificationModule --> LoggerModule
-
-%% ImageModule
-    ImageModule --> JwtManagerModule
-    ImageModule --> RedisModule
-
-%% RecipeModule
-    RecipeModule --> MongooseModule
-    RecipeModule --> JwtManagerModule
-    RecipeModule --> RedisModule
-    RecipeModule --> ExternalApiModule
-    RecipeModule --> TranslationModule
-
-%% UserModule
-    UserModule --> MongooseModule
-    UserModule --> JwtManagerModule
-    UserModule --> RedisModule
-    UserModule --> MailManagerModule
-    UserModule --> PasswordManagerModule
+    AppModule --> ImageModule
 
 %% DishModule
-    DishModule --> DishReadModule
-    DishModule --> DishWriteModule
-    DishModule --> IngredientModule
+    DishModule --> DishApplicationModule
 
-%% DishReadModule
-    DishReadModule --> DishSourceModule
-    DishReadModule --> CacheModule
-    DishReadModule --> LoggerModule
+%% DishApplicationModule
+    DishApplicationModule --> TranslationModule
+    DishApplicationModule --> DishWriteModule
+    DishApplicationModule --> DishReadModule
 
 %% DishWriteModule
-    DishWriteModule --> DishSourceModule
-    DishWriteModule --> CacheModule
-    DishWriteModule --> LoggerModule
-    
+    DishWriteModule --> ProviderRegistryModule
+
+%% DishReadModule
+    DishReadModule --> ProviderRegistryModule
+
+%% ProviderRegistryModule
+    ProviderRegistryModule --> HttpModule
+
 %% IngredientModule
-    IngredientModule --> LoggerModule
+
+%% NotificationModule
+
+%% ImageModule
+
+%% RecipeModule
+    RecipeModule --> RecipeApplicationModule
+
+%% RecipeApplicationModule
+    RecipeApplicationModule --> RecipeDomainModule
+
+%% RecipeDomainModule
+    RecipeDomainModule --> ProviderRegistryModule
+    RecipeDomainModule --> TranslationModule
+
+%% UserModule
+    UserModule --> UserApplicationModule
     
+%% UserApplicationModule
+    UserApplicationModule --> UserDomainModule
+
 %% MailManagerModule
-    MailManagerModule --> LoggerModule
 ```
 
-It is caused by two modules: `LoggerModule` and `JwtManagerModule`. Some references of `LoggerModule` are unnecessary. This module should be included in the last but one layer only.
-
-When it comes to `JwtManagerModule` could be simplified. The use of guards and providing some user information could be enough.
+The following modules are global and are not presented in the above graph:
+- `LoggerModule`
+- `JwtManagerModule`
+- `CacheModule`
+- `IngredientModule`

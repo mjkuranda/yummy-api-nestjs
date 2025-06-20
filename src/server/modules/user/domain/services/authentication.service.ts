@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories';
-import { ProviderRegistryService } from '../../../provider/provider-registry.service';
+import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { JwtManagerService } from '../../../jwt-manager/jwt-manager.service';
-import { PasswordManagerService } from '../../../password-manager/password-manager.service';
+import { PasswordManagerService } from './password-manager.service';
 import { InactiveUserError, IncorrectUserCredentialsError, MismatchedUserTokensError, UserWithLoginNotFoundError } from '../../../../errors/domain';
 import { UserTokensValueObject } from '../value-objects';
 import { UserCacheService } from '../../../cache/user/user-cache.service';

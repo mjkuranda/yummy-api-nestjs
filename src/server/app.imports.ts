@@ -17,14 +17,14 @@ import { DynamicModule, Type } from '@nestjs/common';
 export const globalModules: Type[] = [
     LoggerModule,
     JwtManagerModule,
-    CacheModule
+    CacheModule,
+    IngredientModule
 ];
 
 export const domainModules: Type[] = [
     DishModule,
     UserModule,
-    RecipeModule,
-    IngredientModule
+    RecipeModule
 ];
 
 export const systemModules: Type[] = [

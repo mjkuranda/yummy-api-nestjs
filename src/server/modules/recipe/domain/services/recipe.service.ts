@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Language } from '../../../../common/types';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
-import { ProviderRegistryService } from '../../../provider/provider-registry.service';
+import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { DishRecipeCacheService } from '../../../cache/dish-recipe/dish-recipe-cache.service';
 import { DishNotFoundError, NotDishAuthorError, DishRecipeExistsError, DishRecipeNotFoundError } from '../../../../errors/domain';
 import { GetRecipeResult } from '../../application/recipe-application.types';

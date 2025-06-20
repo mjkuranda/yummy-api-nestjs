@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProviderRegistryService } from '../../../provider/provider-registry.service';
+import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { UserRepository } from '../repositories';
 import { CapabilityType } from '../../user.types';
 import { NoSuchCapabilityError, SuchCapabilityGrantedError, UserWithLoginNotFoundError } from '../../../../errors/domain';

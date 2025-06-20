@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProviderRegistryService } from '../../../provider/provider-registry.service';
+import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { CreateDishDataType } from '../../dish.types';
 import { DishCacheService } from '../../../cache/dish/dish-cache.service';
 import { DishEditDto } from '../../dish.dto';

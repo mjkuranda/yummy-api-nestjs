@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ProviderRegistryService } from '../../../provider/provider-registry.service';
+import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { UserActionRepository, UserRepository } from '../repositories';
-import { PasswordManagerService } from '../../../password-manager/password-manager.service';
+import { PasswordManagerService } from './password-manager.service';
 import { MailManagerService } from '../../../mail-manager/mail-manager.service';
 import { UserEntity } from '../entities';
 import { UserAlreadyExistsError } from '../../../../errors/domain';

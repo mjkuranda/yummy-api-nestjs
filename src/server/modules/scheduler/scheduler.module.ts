@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { SyncDishCronService } from './sync-dish-cron.service';
-import { ProviderModule } from '../provider/provider.module';
+import { ProviderRegistryModule } from '../provider-registry/provider-registry.module';
 
 @Module({
-    imports: [ProviderModule],
+    imports: [ProviderRegistryModule],
     providers: [SyncDishCronService]
 })
 export class SchedulerModule {}

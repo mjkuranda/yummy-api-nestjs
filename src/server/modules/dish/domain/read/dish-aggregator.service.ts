@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProviderRegistryService } from '../../../provider/provider-registry.service';
+import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { getFulfilledPromiseResults } from '../../../../utils';
 import { MealType } from '../../../../common/enums';
 import { filterByMealType, filterGreaterThanZeroRelevance, sortDescendingRelevance } from '../../rated-dish.helpers';

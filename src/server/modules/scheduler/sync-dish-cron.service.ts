@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { DishCacheService } from '../cache/dish/dish-cache.service';
 import { LoggerService } from '../logger/logger.service';
 import { ContextString } from '../../common/types';
-import { ProviderRegistryService } from '../provider/provider-registry.service';
+import { ProviderRegistryService } from '../provider-registry/provider-registry.service';
 
 @Injectable()
 export class SyncDishCronService {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '../../../../exceptions';
 import { UserRepository } from '../repositories';
-import { ProviderRegistryService } from '../../../provider/provider-registry.service';
+import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { UserProfileValueObject } from '../value-objects';
 import { DishRepository } from '../../../dish/domain/dish.repository';
 
