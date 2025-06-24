@@ -5,14 +5,14 @@ import {
     DishRecipeExistsError,
     NotDishAuthorError,
     DishRecipeNotFoundError
-} from '../../../../errors/domain';
+} from '../../../dish/domain/errors';
 import { NotFoundException, ForbiddenException, BadRequestException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
 import { CreateRecipeDto } from '../dtos';
-import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 
 export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishIdValueObject, CreateRecipeDto, UserAccessTokenPayload], void> {
 

@@ -2,9 +2,9 @@ import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { NotFoundException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
-import { UserWithLoginNotFoundError } from '../../../../errors/domain';
-import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { UserWithLoginNotFoundError } from '../../domain/errors';
 import { UserManagementService } from '../../domain/services/user-management.service';
+import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 
 export class ChangePasswordUseCase extends AbstractUseCase<[string, string], void> {
 

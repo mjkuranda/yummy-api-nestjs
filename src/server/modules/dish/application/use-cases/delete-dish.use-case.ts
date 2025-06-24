@@ -1,7 +1,7 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../domain/write/dish-write.service';
-import { DishNotFoundError, InvalidDishIdError, DishDeletionFailedError } from '../../../../errors/domain';
+import { DishNotFoundError, InvalidDishIdError, DishDeletionFailedError } from '../../domain/errors';
 import { NotFoundException, BadRequestException, InternalServerException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';

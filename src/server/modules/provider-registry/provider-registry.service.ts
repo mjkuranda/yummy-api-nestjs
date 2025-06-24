@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { Provider } from '../../common/enums';
 import { Providable } from '../../common/interfaces';
 import { ProviderMap } from '../../common/types';
-import { ProviderNotRegisteredError } from '../../errors/domain';
 import { SpoonacularApiService } from '../../../integrations/spoonacular-api/spoonacular-api.service';
 import { ProvidableApiService } from './internal-apis/providable-api/providable-api.service';
 import { DishDataManageable, RecipeDataManageable, UserDataManageable } from './data-manageable.interface';
 import { DishApiService, RecipeApiService, UserApiService } from './internal-apis/manageable-api/services';
+import { ProviderNotRegisteredError } from '../user/domain/errors';
 
 @Injectable()
 export class ProviderRegistryService {

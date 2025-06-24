@@ -7,7 +7,7 @@ import {
 import { UserActionEntity } from '../../domain/entities';
 import { userActionModel } from '../../../../common/definitions/mongoose-model.definitions';
 import { InjectModel } from '@nestjs/mongoose';
-import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 
 export class MongodbUserActionRepository implements UserActionRepository {
 

@@ -2,11 +2,11 @@ import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { BadRequestException } from '../../../../exceptions';
 import { CreatedUserDto, CreateUserDto } from '../dtos';
-import { UserManagementService } from '../../domain/services/user-management.service';
+import { UserManagementService } from '../../domain/services';
 import { LoggerService } from '../../../logger/logger.service';
 import { UserDtoMapper } from '../mappers';
-import { UserAlreadyExistsError } from '../../../../errors/domain';
-import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { UserAlreadyExistsError } from '../../domain/errors';
+import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 
 export class CreateUserUseCase extends AbstractUseCase<[CreateUserDto], CreatedUserDto> {
     constructor(

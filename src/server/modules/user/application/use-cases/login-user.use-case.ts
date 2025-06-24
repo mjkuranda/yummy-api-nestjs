@@ -3,11 +3,11 @@ import { ContextString } from '../../../../common/types';
 import { Response } from 'express';
 import { BadRequestException, NotFoundException, UnauthorizedException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
-import { AuthenticationService } from '../../domain/services/authentication.service';
+import { AuthenticationService } from '../../domain/services';
 import { UserLoginDto, UserTokensDto } from '../dtos';
 import { UserDtoMapper } from '../mappers';
-import { InactiveUserError, IncorrectUserCredentialsError, UserWithLoginNotFoundError } from '../../../../errors/domain';
-import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { InactiveUserError, IncorrectUserCredentialsError, UserWithLoginNotFoundError } from '../../domain/errors';
+import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 
 export class LoginUserUseCase extends AbstractUseCase<[UserLoginDto, Response], UserTokensDto> {
 

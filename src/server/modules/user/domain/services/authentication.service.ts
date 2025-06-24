@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { JwtManagerService } from '../../../jwt-manager/jwt-manager.service';
 import { PasswordManagerService } from './password-manager.service';
-import { InactiveUserError, IncorrectUserCredentialsError, MismatchedUserTokensError, UserWithLoginNotFoundError } from '../../../../errors/domain';
+import { InactiveUserError, IncorrectUserCredentialsError, MismatchedUserTokensError, UserWithLoginNotFoundError, ExpiredRefreshTokenError } from '../errors';
 import { UserTokensValueObject } from '../value-objects';
 import { UserCacheService } from '../../../cache/user/user-cache.service';
-import { ExpiredRefreshTokenError } from '../../../../errors/domain/expired-refresh-token.error';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 

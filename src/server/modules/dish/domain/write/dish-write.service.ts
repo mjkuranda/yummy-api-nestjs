@@ -4,14 +4,6 @@ import { CreateDishDataType } from '../../dish.types';
 import { DishCacheService } from '../../../cache/dish/dish-cache.service';
 import { DishEditDto } from '../../dish.dto';
 import { DishIngredient } from '../../../ingredient/ingredient.types';
-import {
-    DishDeletionFailedError,
-    DishNotAcceptedError,
-    DishNotFoundError,
-    DishSoftDeletedError,
-    EmptyDishIngredientListError,
-    MissingDishAuthorError
-} from '../../../../errors/domain';
 import { IngredientService } from '../../../ingredient/ingredient.service';
 import { Provider } from '../../../../common/enums';
 import {
@@ -24,6 +16,12 @@ import { DishEntity } from '../common/entities';
 import { EncodedDishIdValueObject } from '../common/value-objects';
 import { DishDetailsValueObject } from '../read/value-objects';
 import { DishDataManageable, UserDataManageable } from '../../../provider-registry/data-manageable.interface';
+import {
+    DishDeletionFailedError, DishNotAcceptedError,
+    DishNotFoundError, DishSoftDeletedError,
+    EmptyDishIngredientListError,
+    MissingDishAuthorError
+} from '../errors';
 
 @Injectable()
 export class DishWriteService {

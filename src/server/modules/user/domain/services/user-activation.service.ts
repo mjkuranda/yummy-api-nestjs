@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
-import { AlreadyActivatedUserError, InactiveUserNotFoundError, UserNotFoundError, UserActionNotFoundError } from '../../../../errors/domain';
+import { AlreadyActivatedUserError, InactiveUserNotFoundError, UserNotFoundError, UserActionNotFoundError } from '../errors';
 import { UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()

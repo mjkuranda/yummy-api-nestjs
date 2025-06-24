@@ -2,9 +2,9 @@ import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { BadRequestException, NotFoundException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
-import { UserActivationService } from '../../domain/services/user-activation.service';
-import { AlreadyActivatedUserError, InactiveUserNotFoundError, UserActionNotFoundError } from '../../../../errors/domain';
-import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { UserActivationService } from '../../domain/services';
+import { AlreadyActivatedUserError, InactiveUserNotFoundError, UserActionNotFoundError } from '../../domain/errors';
+import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 
 export class ActivateUserUseCase extends AbstractUseCase<[string], void> {
 

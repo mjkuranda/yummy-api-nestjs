@@ -3,12 +3,12 @@ import { ContextString } from '../../../../common/types';
 import { Response } from 'express';
 import { BadRequestException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
-import { AuthenticationService } from '../../domain/services/authentication.service';
-import { MismatchedUserTokensError, UserWithLoginNotFoundError } from '../../../../errors/domain';
-import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { AuthenticationService } from '../../domain/services';
+import { MismatchedUserTokensError, UserWithLoginNotFoundError } from '../../domain/errors';
 import { UserTokensDto } from '../dtos';
 import { UserDtoMapper } from '../mappers';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
+import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 
 export class RefreshTokensUseCase extends AbstractUseCase<[UserAccessTokenPayload, string, Response], UserTokensDto> {
 

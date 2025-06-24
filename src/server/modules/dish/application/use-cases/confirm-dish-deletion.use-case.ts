@@ -4,7 +4,7 @@ import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../domain/write/dish-write.service';
 import { Injectable } from '@nestjs/common';
 import { BadRequestException, NotFoundException } from '../../../../exceptions';
-import { InvalidDishIdError, DishNotFoundError } from '../../../../errors/domain';
+import { InvalidDishIdError, DishNotFoundError } from '../../domain/errors';
 import { ContextString } from '../../../../common/types';
 import { ConfirmedDeletingDto } from '../dtos';
 import { EncodedDishIdValueObject } from '../../domain/common/value-objects';

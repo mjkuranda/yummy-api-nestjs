@@ -2,10 +2,11 @@ import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../domain/write/dish-write.service';
-import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../../../../errors/domain';
+import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../../domain/errors';
 import { NotFoundException, ForbiddenException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { DishCommentDto } from '../dtos';
 
 @Injectable()
 export class AddDishCommentUseCase extends AbstractUseCase<[EncodedDishIdValueObject, string, string], void> {

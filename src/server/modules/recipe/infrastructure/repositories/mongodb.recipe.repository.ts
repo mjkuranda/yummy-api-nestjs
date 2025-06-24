@@ -6,7 +6,7 @@ import { isValidObjectId, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { DishRecipeDocument } from '../../../../../infrastructure/databases/mongodb/documents';
 import { dishRecipeModel } from '../../../../common/definitions/mongoose-model.definitions';
-import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../common/errors';
 import { Injectable } from '@nestjs/common';
 import { CreateRecipeDto } from '../../application/dtos';
 

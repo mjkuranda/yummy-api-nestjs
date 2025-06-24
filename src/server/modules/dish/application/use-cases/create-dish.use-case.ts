@@ -7,7 +7,7 @@ import { IngredientService } from '../../../ingredient/ingredient.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
-import { EmptyDishIngredientListError, MissingDishAuthorError } from '../../../../errors/domain';
+import { EmptyDishIngredientListError, MissingDishAuthorError } from '../../domain/errors';
 import { ContextString } from '../../../../common/types';
 import { CreatedDishDto } from '../dtos';
 

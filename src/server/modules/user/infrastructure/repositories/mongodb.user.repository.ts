@@ -4,7 +4,7 @@ import { UserDocument } from '../../../../../infrastructure/databases/mongodb/do
 import { UserEntity } from '../../domain/entities';
 import { userModel } from '../../../../common/definitions/mongoose-model.definitions';
 import { InjectModel } from '@nestjs/mongoose';
-import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 import { CreateUserValueObject } from '../../domain/value-objects';
 import { UserCapabilitiesValueObject } from '../../domain/value-objects';
 import { UserCacheService } from '../../../cache/user/user-cache.service';

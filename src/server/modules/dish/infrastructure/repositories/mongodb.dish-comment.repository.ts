@@ -6,7 +6,7 @@ import { DishId } from '../../dish.types';
 import { DishCommentEntity } from '../../domain/common/entities';
 import { DishCommentFactory } from '../../domain/common/factories';
 import { DishCommentRepository } from '../../domain/common/repositories';
-import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../common/errors';
 
 export class MongodbDishCommentRepository implements DishCommentRepository {
 

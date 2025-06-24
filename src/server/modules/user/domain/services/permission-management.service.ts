@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { CapabilityType } from '../../user.types';
-import { NoSuchCapabilityError, SuchCapabilityGrantedError, UserWithLoginNotFoundError } from '../../../../errors/domain';
+import { NoSuchCapabilityError, SuchCapabilityGrantedError, UserWithLoginNotFoundError } from '../errors';
 import { UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()

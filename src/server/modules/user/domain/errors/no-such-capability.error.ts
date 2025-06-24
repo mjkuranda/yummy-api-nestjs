@@ -1,4 +1,4 @@
-import { CapabilityType } from '../../modules/user/user.types';
+import { CapabilityType } from '../../user.types';
 
 export class NoSuchCapabilityError extends Error {
 

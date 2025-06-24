@@ -3,7 +3,7 @@ import { ProviderRegistryService } from '../../../provider-registry/provider-reg
 import { PasswordManagerService } from './password-manager.service';
 import { MailManagerService } from '../../../mail-manager/mail-manager.service';
 import { UserEntity } from '../entities';
-import { UserAlreadyExistsError } from '../../../../errors/domain';
+import { UserAlreadyExistsError } from '../errors';
 import { CreateUserValueObject } from '../value-objects';
 import { UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 

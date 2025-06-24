@@ -1,4 +1,4 @@
-import { Provider } from '../../common/enums';
+import { Provider } from '../../../../common/enums';
 
 export class ProviderNotRegisteredError extends Error {
     constructor(provider: Provider) {

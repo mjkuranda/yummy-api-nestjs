@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateDishDataType, DishId } from '../../dish.types';
 import { DishEntity } from '../../domain/common/entities';
 import { DishFactory } from '../../domain/common/factories';
-import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../common/errors';
 import { DishIngredient } from '../../../ingredient/ingredient.types';
 import { MealType, Provider } from '../../../../common/enums';
 import { DishEditDto } from '../../dish.dto';

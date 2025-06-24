@@ -3,9 +3,9 @@ import { ContextString } from '../../../../common/types';
 import { BadRequestException, ForbiddenException, NotFoundException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
 import { CapabilityType } from '../../user.types';
-import { PermissionManagementService } from '../../domain/services/permission-management.service';
-import { NoSuchCapabilityError, SuchCapabilityGrantedError, UserWithLoginNotFoundError } from '../../../../errors/domain';
-import { InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
+import { PermissionManagementService } from '../../domain/services';
+import { NoSuchCapabilityError, SuchCapabilityGrantedError, UserWithLoginNotFoundError } from '../../domain/errors';
+import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 
 export class GrantPermissionUseCase extends AbstractUseCase<[string, string, CapabilityType], void> {
     constructor(

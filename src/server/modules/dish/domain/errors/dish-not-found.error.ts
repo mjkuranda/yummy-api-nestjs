@@ -1,4 +1,4 @@
-import { EncodedDishIdValueObject } from '../../modules/dish/domain/common/value-objects';
+import { EncodedDishIdValueObject } from '../common/value-objects';
 
 export class DishNotFoundError extends Error {
 
