@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
-import { UserRepository } from '../repositories';
 import { CapabilityType } from '../../user.types';
 import { NoSuchCapabilityError, SuchCapabilityGrantedError, UserWithLoginNotFoundError } from '../../../../errors/domain';
+import { UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()
 export class PermissionManagementService {
 
-    private readonly userRepository: UserRepository;
+    private readonly userApiService: UserDataManageable;
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService
     ) {
-        this.userRepository = this.providerRegistryService.getUserRepository();
+        this.userApiService = this.providerRegistryService.getUserApiService();
     }
 
     /**
@@ -22,8 +22,8 @@ export class PermissionManagementService {
      * @param capability capability to give
      */
     async grantPermission(grantorLogin: string, granteeLogin: string, capability: CapabilityType): Promise<void> {
-        const grantorEntity = await this.userRepository.findByLogin(grantorLogin);
-        const granteeEntity = await this.userRepository.findByLogin(granteeLogin);
+        const grantorEntity = await this.userApiService.findUserByLogin(grantorLogin);
+        const granteeEntity = await this.userApiService.findUserByLogin(granteeLogin);
 
         if (!grantorEntity) {
             throw new UserWithLoginNotFoundError(grantorLogin);
@@ -37,7 +37,7 @@ export class PermissionManagementService {
             throw new SuchCapabilityGrantedError(granteeLogin);
         }
 
-        await this.userRepository.grantPermission(granteeEntity, capability);
+        await this.userApiService.grantPermissionForUser(granteeEntity, capability);
     }
 
     /**
@@ -47,8 +47,8 @@ export class PermissionManagementService {
      * @param capability capability to take
      */
     async denyPermission(denierLogin: string, targetLogin: string, capability: CapabilityType): Promise<void> {
-        const denierUser = await this.userRepository.findByLogin(denierLogin);
-        const targetUser = await this.userRepository.findByLogin(targetLogin);
+        const denierUser = await this.userApiService.findUserByLogin(denierLogin);
+        const targetUser = await this.userApiService.findUserByLogin(targetLogin);
 
         if (!denierUser) {
             throw new UserWithLoginNotFoundError(denierLogin);
@@ -62,6 +62,6 @@ export class PermissionManagementService {
             throw new NoSuchCapabilityError(targetLogin, capability);
         }
 
-        await this.userRepository.denyPermission(targetUser, capability);
+        await this.userApiService.denyPermissionForUser(targetUser, capability);
     }
 }

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from '../repositories';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { JwtManagerService } from '../../../jwt-manager/jwt-manager.service';
 import { PasswordManagerService } from './password-manager.service';
@@ -8,11 +7,12 @@ import { UserTokensValueObject } from '../value-objects';
 import { UserCacheService } from '../../../cache/user/user-cache.service';
 import { ExpiredRefreshTokenError } from '../../../../errors/domain/expired-refresh-token.error';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
+import { UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()
 export class AuthenticationService {
 
-    private readonly userRepository: UserRepository;
+    private readonly userApiService: UserDataManageable;
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService,
@@ -20,7 +20,7 @@ export class AuthenticationService {
         private readonly userCacheService: UserCacheService,
         private readonly passwordManagerService: PasswordManagerService
     ) {
-        this.userRepository = this.providerRegistryService.getUserRepository();
+        this.userApiService = this.providerRegistryService.getUserApiService();
     }
 
     /**
@@ -30,7 +30,7 @@ export class AuthenticationService {
      * @return user tokens
      */
     async login(login: string, password: string): Promise<UserTokensValueObject> {
-        const user = await this.userRepository.findByLogin(login);
+        const user = await this.userApiService.findUserByLogin(login);
 
         if (!user) {
             throw new UserWithLoginNotFoundError(login);

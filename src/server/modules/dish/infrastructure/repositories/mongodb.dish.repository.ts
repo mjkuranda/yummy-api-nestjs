@@ -22,7 +22,7 @@ export class MongodbDishRepository implements DishRepository {
         @InjectModel(dishModel.name) private readonly model: Model<DishDocument>
     ) {}
 
-    async findById(id: DishId): Promise<DishEntity | null> {
+    async findByDishId(id: DishId): Promise<DishEntity | null> {
         if (typeof id !== 'string') {
             throw new InvalidMongooseIdTypeError(id);
         }
@@ -40,7 +40,7 @@ export class MongodbDishRepository implements DishRepository {
         return DishFactory.fromDocument(document);
     }
 
-    async create(data: CreateDishDataType, author?: string, ingredients?: DishIngredient[]): Promise<DishEntity> {
+    async createNewDish(data: CreateDishDataType, author?: string, ingredients?: DishIngredient[]): Promise<DishEntity> {
         const doc = await this.model.create({
             ...data,
             ingredients,
@@ -71,7 +71,7 @@ export class MongodbDishRepository implements DishRepository {
         return DishFactory.fromDocuments(docs);
     }
 
-    async findOneAvailable(id: DishId): Promise<DishEntity | null> {
+    async findOneAvailableDish(id: DishId): Promise<DishEntity | null> {
         const doc = await this.model.findOne({
             _id: id,
             softAdded: { $exists: false },
@@ -85,7 +85,7 @@ export class MongodbDishRepository implements DishRepository {
         return DishFactory.fromDocument(doc);
     }
 
-    async unsetSoftAdded(id: DishId): Promise<void> {
+    async unsetSoftAddedForDish(id: DishId): Promise<void> {
         await this.model.updateOne({ _id: id }, {
             $unset: {
                 softAdded: true
@@ -93,7 +93,7 @@ export class MongodbDishRepository implements DishRepository {
         });
     }
 
-    async insertEdition(id: DishId, dishEditDto: DishEditDto<DishIngredient>): Promise<void> {
+    async insertEditionForDish(id: DishId, dishEditDto: DishEditDto<DishIngredient>): Promise<void> {
         await this.model.updateOne({ _id: id }, {
             $set: {
                 softEdited: dishEditDto
@@ -101,14 +101,14 @@ export class MongodbDishRepository implements DishRepository {
         });
     }
 
-    async confirmEdition(id: DishId, dishSoftEdited?: DishEntity): Promise<void> {
+    async confirmDishEdition(id: DishId, dishSoftEdited?: DishEntity): Promise<void> {
         await this.model.updateOne({ _id: id }, {
             $unset: { softEdited: {}},
             $set: { ...dishSoftEdited }
         });
     }
 
-    async setSoftDeleted(id: string): Promise<void> {
+    async setSoftDeletedForDish(id: string): Promise<void> {
         await this.model.updateOne({ _id: id }, {
             $set: {
                 softDeleted: true
@@ -116,7 +116,7 @@ export class MongodbDishRepository implements DishRepository {
         });
     }
 
-    async delete(id: string): Promise<void> {
+    async deleteDish(id: string): Promise<void> {
         await this.model.deleteOne({ _id: id });
     }
 
@@ -124,7 +124,7 @@ export class MongodbDishRepository implements DishRepository {
         return Provider.INT_DMT_USER;
     }
 
-    async findByIngredientsAndType(ingredients: string[], mealType?: MealType): Promise<DishResultValueObject[]> {
+    async findDishesByIngredientsAndType(ingredients: string[], mealType?: MealType): Promise<DishResultValueObject[]> {
         const dishes = await this.findAll({
             'ingredients.name': { $in: ingredients },
             $or: [
@@ -145,7 +145,7 @@ export class MongodbDishRepository implements DishRepository {
         });
     }
 
-    async findByAuthor(userLogin: string): Promise<DishOverviewValueObject[]> {
+    async findDishesByAuthor(userLogin: string): Promise<DishOverviewValueObject[]> {
         const dishes = await this.model.find({ author: userLogin });
 
         return DishOverviewValueObject.fromDocuments(dishes);

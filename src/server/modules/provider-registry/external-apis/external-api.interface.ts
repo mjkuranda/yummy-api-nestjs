@@ -1,5 +1,5 @@
-import { DishId } from '../dish/dish.types';
-import { DishType, MealType } from '../../common/enums';
+import { DishId } from '../../dish/dish.types';
+import { DishType, MealType } from '../../../common/enums';
 
 export interface ExternalApiConstantProvidable {
     getApiKey: () => string;

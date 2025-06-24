@@ -1,21 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '../../../../exceptions';
-import { UserRepository } from '../repositories';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { UserProfileValueObject } from '../value-objects';
-import { DishRepository } from '../../../dish/domain/dish.repository';
+import { DishDataManageable, UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()
 export class ProfileManagementService {
 
-    private readonly userRepository: UserRepository;
-    private readonly dishRepository: DishRepository;
+    private readonly userApiService: UserDataManageable;
+    private readonly dishApiService: DishDataManageable;
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService
     ) {
-        this.userRepository = this.providerRegistryService.getUserRepository();
-        this.dishRepository = this.providerRegistryService.getDishRepository();
+        this.userApiService = this.providerRegistryService.getUserApiService();
+        this.dishApiService = this.providerRegistryService.getDishApiService();
     }
 
     /**
@@ -24,14 +23,14 @@ export class ProfileManagementService {
      * @returns general user info and dish list
      */
     async getProfile(login: string): Promise<UserProfileValueObject> {
-        const user = await this.userRepository.findByLogin(login);
+        const user = await this.userApiService.findUserByLogin(login);
 
         if (!user) {
             throw new NotFoundException('ProfileManagementService/getProfile', `User with "${login}" login has not been found.`);
         }
 
         // TODO: Should be included as a seperate endpoint from users!
-        const dishes = await this.dishRepository.findByAuthor(login);
+        const dishes = await this.dishApiService.findDishesByAuthor(login);
 
         return UserProfileValueObject.fromEntity(user, dishes);
     }

@@ -2,4 +2,4 @@ import { InjectionToken } from '@nestjs/common/interfaces/modules/injection-toke
 
 export const PROVIDERS: InjectionToken = 'PROVIDERS';
 
-export const REPOSITORIES: InjectionToken = 'REPOSITORIES';
+export const REPOSITORIES_TOKEN: InjectionToken = 'REPOSITORIES';

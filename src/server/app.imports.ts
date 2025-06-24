@@ -13,12 +13,20 @@ import { getMongooseUri } from './utils';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { DynamicModule, Type } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 
-export const globalModules: Type[] = [
+const GlobalHttpModule: DynamicModule = HttpModule.register({
+    global: true,
+    timeout: 5000,
+    maxRedirects: 5,
+});
+
+export const globalModules: (Type | DynamicModule)[] = [
     LoggerModule,
     JwtManagerModule,
     CacheModule,
-    IngredientModule
+    IngredientModule,
+    GlobalHttpModule
 ];
 
 export const domainModules: Type[] = [

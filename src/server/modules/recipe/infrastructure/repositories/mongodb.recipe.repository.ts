@@ -18,7 +18,7 @@ export class MongodbRecipeRepository implements RecipeRepository {
         private readonly model: Model<DishRecipeDocument>
     ) {}
 
-    async create(createRecipeDto: CreateRecipeDto): Promise<RecipeEntity> {
+    async createRecipe(createRecipeDto: CreateRecipeDto): Promise<RecipeEntity> {
         const { language, dishId, sections } = createRecipeDto;
 
         await this.model.create();
@@ -26,7 +26,7 @@ export class MongodbRecipeRepository implements RecipeRepository {
         return new RecipeEntity(language, dishId, sections);
     }
 
-    async findByDishId(dishId: DishId, language: Language = 'pl'): Promise<RecipeEntity | never> {
+    async findRecipeByDishId(dishId: DishId, language: Language = 'pl'): Promise<RecipeEntity | never> {
         if (typeof dishId !== 'string') {
             throw new InvalidMongooseIdTypeError(dishId);
         }

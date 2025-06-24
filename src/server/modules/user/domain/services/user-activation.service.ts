@@ -1,19 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { UserActionRepository, UserRepository } from '../repositories';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { AlreadyActivatedUserError, InactiveUserNotFoundError, UserNotFoundError, UserActionNotFoundError } from '../../../../errors/domain';
+import { UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()
 export class UserActivationService {
 
-    private readonly userRepository: UserRepository;
-    private readonly userActionRepository: UserActionRepository;
+    private readonly userApiService: UserDataManageable;
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService
     ) {
-        this.userRepository = this.providerRegistryService.getUserRepository();
-        this.userActionRepository = this.providerRegistryService.getUserActionRepository();
+        this.userApiService = this.providerRegistryService.getUserApiService();
     }
 
     /**
@@ -21,14 +19,14 @@ export class UserActivationService {
      * @param userActionId id od user action
      */
     async activate(userActionId: string): Promise<void> {
-        const userAction = await this.userActionRepository.findById(userActionId);
+        const userAction = await this.userApiService.findActionById(userActionId);
 
         if (!userAction) {
             throw new UserActionNotFoundError(userActionId);
         }
 
         const userId = userAction.getUserId();
-        const user = await this.userRepository.findById(userId);
+        const user = await this.userApiService.findUserById(userId);
 
         if (!user) {
             throw new InactiveUserNotFoundError(userId, userActionId);
@@ -38,8 +36,8 @@ export class UserActivationService {
             throw new AlreadyActivatedUserError(userId);
         }
 
-        await this.userActionRepository.delete(userActionId);
-        await this.userRepository.markAsActivated(userId);
+        await this.userApiService.deleteAction(userActionId);
+        await this.userApiService.markAsActivatedUser(userId);
     }
 
     /**
@@ -47,13 +45,13 @@ export class UserActivationService {
      * @param id user ID
      */
     async activateViaId(id: string): Promise<void> {
-        const userAction = await this.userActionRepository.findByUserId(id);
+        const userAction = await this.userApiService.findActionByUserId(id);
 
         if (!userAction) {
             throw new UserActionNotFoundError(id);
         }
 
-        const user = await this.userRepository.findById(id);
+        const user = await this.userApiService.findUserById(id);
 
         if (!user) {
             throw new UserNotFoundError(id);
@@ -65,7 +63,7 @@ export class UserActivationService {
 
         const userActionId = userAction.getId();
 
-        await this.userActionRepository.delete(id);
-        await this.userRepository.markAsActivated(userActionId);
+        await this.userApiService.deleteAction(id);
+        await this.userApiService.markAsActivatedUser(userActionId);
     }
 }

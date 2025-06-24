@@ -8,23 +8,22 @@ import { GetRecipeResult } from '../../application/recipe-application.types';
 import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
 import { RecipeEntity } from '../entities';
 import { TranslationService } from '../../../translation/translation.service';
-import { DishRepository } from '../../../dish/domain/dish.repository';
-import { RecipeRepository } from '../recipe.repository';
 import { CreateRecipeDto } from '../../application/dtos';
+import { DishDataManageable, RecipeDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()
 export class RecipeService {
 
-    private readonly dishRepository: DishRepository;
-    private readonly recipeRepository: RecipeRepository;
+    private readonly dishApiService: DishDataManageable;
+    private readonly recipeApiService: RecipeDataManageable;
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService,
         private readonly dishRecipeCacheService: DishRecipeCacheService,
         private readonly translationService: TranslationService
     ) {
-        this.dishRepository = this.providerRegistryService.getDishRepository();
-        this.recipeRepository = this.providerRegistryService.getRecipeRepository();
+        this.dishApiService = this.providerRegistryService.getDishApiService();
+        this.recipeApiService = this.providerRegistryService.getRecipeApiService();
     }
 
     /**
@@ -37,7 +36,7 @@ export class RecipeService {
         const dishId = encodedDishId.getDishId();
 
         // NOTE: This dish can be unconfirmed because you add dish and recipe at once.
-        const dish = await this.dishRepository.findById(dishId);
+        const dish = await this.dishApiService.findByDishId(dishId);
 
         if (!dish) {
             throw new DishNotFoundError(encodedDishId);
@@ -47,13 +46,13 @@ export class RecipeService {
             throw new NotDishAuthorError();
         }
 
-        const recipe = await this.recipeRepository.findByDishId(dishId);
+        const recipe = await this.recipeApiService.findRecipeByDishId(dishId);
 
         if (recipe) {
             throw new DishRecipeExistsError(encodedDishId);
         }
 
-        const createdRecipe = await this.recipeRepository.create(createRecipeDto);
+        const createdRecipe = await this.recipeApiService.createRecipe(createRecipeDto);
 
         const newRecipe = new RecipeEntity(
             createdRecipe.language,

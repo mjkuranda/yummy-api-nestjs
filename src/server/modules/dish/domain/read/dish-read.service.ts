@@ -12,27 +12,22 @@ import {
     DishResultsWithCacheValueObject, MergedSearchQueriesValueObject
 } from './value-objects';
 import { DishEntity } from '../common/entities';
-import { DishRepository } from '../dish.repository';
 import { EncodedDishIdValueObject } from '../common/value-objects';
-import { DishCommentRepository, DishRatingRepository, UserSearchQueryRepository } from '../common/repositories';
+import { DishDataManageable, UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()
 export class DishReadService {
 
-    private readonly dishRepository: DishRepository;
-    private readonly dishCommentRepository: DishCommentRepository;
-    private readonly dishRatingRepository: DishRatingRepository;
-    private readonly userSearchQueryRepository: UserSearchQueryRepository;
+    private readonly dishApiService: DishDataManageable;
+    private readonly userApiService: UserDataManageable;
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService,
         private readonly dishCacheService: DishCacheService,
         private readonly dishAggregatorService: DishAggregatorService,
     ) {
-        this.dishRepository = this.providerRegistryService.getDishRepository();
-        this.dishCommentRepository = this.providerRegistryService.getDishCommentRepository();
-        this.dishRatingRepository = this.providerRegistryService.getDishRatingRepository();
-        this.userSearchQueryRepository = this.providerRegistryService.getUserSearchQueryRepository();
+        this.dishApiService = this.providerRegistryService.getDishApiService();
+        this.userApiService = this.providerRegistryService.getUserApiService();
     }
 
     /**
@@ -93,7 +88,7 @@ export class DishReadService {
      */
     async getDishProposals(userLogin: string): Promise<DishProposalValueObject[]> {
         // TODO: Consider creating CRON to create recommendation for a particular user
-        const userSearchQueryEntities = await this.userSearchQueryRepository.findAllRecentQueries(userLogin);
+        const userSearchQueryEntities = await this.userApiService.findAllRecentQueries(userLogin);
         const mergedSearchQueries = MergedSearchQueriesValueObject.fromEntities(userSearchQueryEntities);
         const ingredients = mergedSearchQueries.getIngredients();
 
@@ -108,7 +103,7 @@ export class DishReadService {
      * @returns dish entities which are soft-added
      */
     async getDishesWithSoftAdded(): Promise<DishEntity[]> {
-        return await this.dishRepository.getDishesWithSoftAdded();
+        return await this.dishApiService.getDishesWithSoftAdded();
     }
 
     /**
@@ -116,7 +111,7 @@ export class DishReadService {
      * @returns dish entities which are edited
      */
     async getDishesWithSoftEdited(): Promise<DishEntity[]> {
-        return await this.dishRepository.getDishesWithSoftEdited();
+        return await this.dishApiService.getDishesWithSoftEdited();
     }
 
     /**
@@ -124,7 +119,7 @@ export class DishReadService {
      * @returns dish entities which are soft-deleted
      */
     async getDishesWithSoftDeleted(): Promise<DishEntity[]> {
-        return await this.dishRepository.getDishesWithSoftDeleted();
+        return await this.dishApiService.getDishesWithSoftDeleted();
     }
 
     /**
@@ -135,13 +130,13 @@ export class DishReadService {
     async getDishComments(encodedDishId: EncodedDishIdValueObject): Promise<DishCommentValueObject[]> {
         const dishId = encodedDishId.getDishId();
 
-        const dish = await this.dishRepository.findById(dishId);
+        const dish = await this.dishApiService.findByDishId(dishId);
 
         if (!dish) {
             throw new DishNotFoundError(encodedDishId);
         }
 
-        const comments = await this.dishCommentRepository.getAll(dishId);
+        const comments = await this.dishApiService.getAllComments(dishId);
 
         return DishCommentValueObject.fromEntities(dish, comments);
     }
@@ -153,13 +148,13 @@ export class DishReadService {
      */
     async getDishRating(encodedDishId: EncodedDishIdValueObject): Promise<DishRatingValueObject> {
         const dishId = encodedDishId.getDishId();
-        const dish = await this.dishRepository.findById(dishId);
+        const dish = await this.dishApiService.findByDishId(dishId);
 
         if (!dish) {
             throw new DishNotFoundError(encodedDishId);
         }
 
-        const dishRating = await this.dishRatingRepository.getAverageRatingForDish(dishId);
+        const dishRating = await this.dishApiService.getAverageRatingForDish(dishId);
 
         return new DishRatingValueObject(
             dish,

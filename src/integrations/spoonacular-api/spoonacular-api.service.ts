@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ExternalApiService } from '../../server/modules/external-api/external-api.service';
+import { ExternalApiService } from '../../server/modules/provider-registry/external-apis/external-api.service';
 import { DishId } from '../../server/modules/dish/dish.types';
 import { DishType, MealType, Provider } from '../../server/common/enums';
 import { EncodedDishIdValueObject } from '../../server/modules/dish/domain/common/value-objects';
 import { Language } from '../../server/common/types';
-import { getCompactUrl } from '../../server/modules/external-api/external-api.helper';
+import { getCompactUrl } from '../../server/modules/provider-registry/external-apis/external-api.helper';
 import {
     SpoonacularIngredient,
     SpoonacularRecipe,
@@ -14,20 +14,19 @@ import {
 import { HttpService } from '@nestjs/axios';
 import { DishCacheService } from '../../server/modules/cache/dish/dish-cache.service';
 import { LoggerService } from '../../server/modules/logger/logger.service';
-import { EXTERNAL_API_DATA_ADAPTABLE_TOKEN } from '../interfaces';
-import { SpoonacularApiAdapter } from './spoonacular-api.adapter';
+import { EXTERNAL_API_ADAPTER_TOKEN, ExternalApiDataAdaptable } from '../interfaces';
 
 @Injectable()
 export class SpoonacularApiService extends ExternalApiService<SpoonacularRecipe, SpoonacularRecipeDetails, SpoonacularRecipeSections, SpoonacularIngredient> {
 
     constructor(
+        @Inject(EXTERNAL_API_ADAPTER_TOKEN)
+        protected readonly externalApiAdapter: ExternalApiDataAdaptable<SpoonacularRecipe, SpoonacularRecipeDetails, SpoonacularRecipeSections, SpoonacularIngredient>,
         protected readonly httpService: HttpService,
         protected readonly dishCacheService: DishCacheService,
-        protected readonly loggerService: LoggerService,
-        @Inject(EXTERNAL_API_DATA_ADAPTABLE_TOKEN)
-        protected readonly externalApiAdapter: SpoonacularApiAdapter
+        protected readonly loggerService: LoggerService
     ) {
-        super(httpService, dishCacheService, loggerService, externalApiAdapter);
+        super(externalApiAdapter, httpService, dishCacheService, loggerService);
     }
 
     getApiKey(): string {

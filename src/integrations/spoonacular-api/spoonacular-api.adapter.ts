@@ -18,6 +18,9 @@ import {
 import { IngredientUnitConverters, Provider } from '../../server/common/enums';
 import { DishIngredient } from '../../server/modules/ingredient/ingredient.types';
 import { EncodedDishIdValueObject } from '../../server/modules/dish/domain/common/value-objects';
+import { InjectionToken } from '@nestjs/common/interfaces/modules/injection-token.interface';
+
+export const SPOONACULAR_API_ADAPTER_TOKEN: InjectionToken = 'SPOONACULAR_API_ADAPTER_TOKEN';
 
 @Injectable()
 export class SpoonacularApiAdapter implements ExternalApiDataAdaptable<SpoonacularRecipe, SpoonacularRecipeDetails, SpoonacularRecipeSections, SpoonacularIngredient> {

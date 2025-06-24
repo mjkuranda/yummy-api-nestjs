@@ -1,4 +1,4 @@
-import { DishRatingDocument } from '../../../../../infrastructure/databases/mongodb/documents/dish-rating.document';
+import { DishRatingDocument } from '../../../../../infrastructure/databases/mongodb/documents';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage } from 'mongoose';
 import { DishRatingRepository } from '../../domain/common/repositories';
@@ -53,7 +53,7 @@ export class MongodbDishRatingRepository implements DishRatingRepository {
         );
     }
 
-    async deleteAll(dishId: DishId): Promise<void> {
+    async deleteAllRatings(dishId: DishId): Promise<void> {
         await this.model.deleteMany({ dishId });
     }
 

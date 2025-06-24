@@ -1,27 +1,27 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { LoggerService } from '../logger/logger.service';
-import { DishCacheService } from '../cache/dish/dish-cache.service';
-import { Providable } from '../../common/interfaces';
-import { EncodedDishIdValueObject } from '../dish/domain/common/value-objects';
-import { DishDetailsValueObject, DishResultValueObject } from '../dish/domain/read/value-objects';
-import { ContextString, Language } from '../../common/types';
-import { RecipeEntity } from '../recipe/domain/entities';
-import { DishType, MealType, Provider } from '../../common/enums';
-import { ExternalApiDataAdaptable, EXTERNAL_API_DATA_ADAPTABLE_TOKEN } from '../../../integrations/interfaces';
+import { LoggerService } from '../../logger/logger.service';
+import { DishCacheService } from '../../cache/dish/dish-cache.service';
+import { Providable } from '../../../common/interfaces';
+import { EncodedDishIdValueObject } from '../../dish/domain/common/value-objects';
+import { DishDetailsValueObject, DishResultValueObject } from '../../dish/domain/read/value-objects';
+import { ContextString, Language } from '../../../common/types';
+import { RecipeEntity } from '../../recipe/domain/entities';
+import { DishType, MealType, Provider } from '../../../common/enums';
+import { ExternalApiDataAdaptable, EXTERNAL_API_ADAPTER_TOKEN } from '../../../../integrations/interfaces';
 import { AxiosResponse } from 'axios';
 import { ExternalApiConstantProvidable } from './external-api.interface';
-import { DishId } from '../dish/dish.types';
+import { DishId } from '../../dish/dish.types';
 
 @Injectable()
 export abstract class ExternalApiService<ExternalApiDishResult, ExternalApiDishDetails, ExternalApiDishInstruction, ExternalApiDishIngredient> implements Providable, ExternalApiConstantProvidable {
 
-    constructor(
+    protected constructor(
+        @Inject(EXTERNAL_API_ADAPTER_TOKEN)
+        protected readonly externalApiAdapter: ExternalApiDataAdaptable<ExternalApiDishResult, ExternalApiDishDetails, ExternalApiDishInstruction, ExternalApiDishIngredient>,
         protected readonly httpService: HttpService,
         protected readonly dishCacheService: DishCacheService,
-        protected readonly loggerService: LoggerService,
-        @Inject(EXTERNAL_API_DATA_ADAPTABLE_TOKEN)
-        protected readonly externalApiAdapter: ExternalApiDataAdaptable<ExternalApiDishResult, ExternalApiDishDetails, ExternalApiDishInstruction, ExternalApiDishIngredient>
+        protected readonly loggerService: LoggerService
     ) {}
 
     async getDishDetails(encodedDishId: EncodedDishIdValueObject): Promise<DishDetailsValueObject> {

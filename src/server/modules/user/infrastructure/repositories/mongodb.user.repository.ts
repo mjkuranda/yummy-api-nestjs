@@ -16,7 +16,7 @@ export class MongodbUserRepository implements UserRepository {
         private readonly userCacheService: UserCacheService
     ) {}
 
-    async findById(id: string): Promise<UserEntity | null> {
+    async findUserById(id: string): Promise<UserEntity | null> {
         if (!isValidObjectId(id)) {
             throw new InvalidMongooseObjectIdError(id);
         }
@@ -29,7 +29,7 @@ export class MongodbUserRepository implements UserRepository {
         return this.toEntity(doc);
     }
 
-    async findByLogin(login: string): Promise<UserEntity | null> {
+    async findUserByLogin(login: string): Promise<UserEntity | null> {
         const doc = await this.model.findOne({ login });
 
         if (!doc) {
@@ -39,7 +39,7 @@ export class MongodbUserRepository implements UserRepository {
         return this.toEntity(doc);
     }
 
-    async findByEmail(email: string): Promise<UserEntity | null> {
+    async findUserByEmail(email: string): Promise<UserEntity | null> {
         const doc = await this.model.findOne({ email });
 
         if (!doc) {
@@ -49,7 +49,7 @@ export class MongodbUserRepository implements UserRepository {
         return this.toEntity(doc);
     }
 
-    async create(createUserVo: CreateUserValueObject): Promise<UserEntity> {
+    async createNewUser(createUserVo: CreateUserValueObject): Promise<UserEntity> {
         const doc = await this.model.create({
             login: createUserVo.login,
             email: createUserVo.email,
@@ -63,7 +63,7 @@ export class MongodbUserRepository implements UserRepository {
         return this.toEntity(doc);
     }
 
-    async update(user: UserEntity): Promise<UserEntity> {
+    async updateUser(user: UserEntity): Promise<UserEntity> {
         if (!user.getId()) {
             throw new Error('Cannot update user without ID');
         }
@@ -89,7 +89,7 @@ export class MongodbUserRepository implements UserRepository {
         return this.toEntity(doc);
     }
 
-    async delete(id: string): Promise<void> {
+    async deleteUser(id: string): Promise<void> {
         if (!isValidObjectId(id)) {
             throw new InvalidMongooseObjectIdError(id);
         }
@@ -97,19 +97,19 @@ export class MongodbUserRepository implements UserRepository {
         await this.model.deleteOne({ _id: id });
     }
 
-    async getAll(): Promise<UserEntity[]> {
+    async getAllUsers(): Promise<UserEntity[]> {
         const docs = await this.model.find();
 
         return docs.map(doc => this.toEntity(doc));
     }
 
-    async getAllNotActivated(): Promise<UserEntity[]> {
+    async getAllNotActivatedUsers(): Promise<UserEntity[]> {
         const docs = await this.model.find({ activated: -1 });
 
         return docs.map(doc => this.toEntity(doc));
     }
 
-    async markAsActivated(id: string): Promise<void> {
+    async markAsActivatedUser(id: string): Promise<void> {
         if (!isValidObjectId(id)) {
             throw new InvalidMongooseObjectIdError(id);
         }
@@ -120,33 +120,33 @@ export class MongodbUserRepository implements UserRepository {
         );
     }
 
-    async changePassword(login: string, password: string, salt: string): Promise<void> {
+    async changeUserPassword(login: string, password: string, salt: string): Promise<void> {
         await this.model.updateOne(
             { login },
             { password, salt }
         );
     }
 
-    async grantPermission(user: UserEntity, capability: string): Promise<void> {
+    async grantPermissionForUser(user: UserEntity, capability: string): Promise<void> {
         if (!user.getId()) {
             throw new Error('Cannot update user without ID');
         }
 
         const updatedUser = user.grantCapability(capability);
-        await this.update(updatedUser);
+        await this.updateUser(updatedUser);
     }
 
-    async denyPermission(user: UserEntity, capability: string): Promise<void> {
+    async denyPermissionForUser(user: UserEntity, capability: string): Promise<void> {
         if (!user.getId()) {
             throw new Error('Cannot update user without ID');
         }
 
         const updatedUser = user.denyCapability(capability);
-        await this.update(updatedUser);
+        await this.updateUser(updatedUser);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async deleteTokens(login: string, accessToken: string, refreshToken: string): Promise<void> {
+    async deleteSessionTokens(login: string, accessToken: string, refreshToken: string): Promise<void> {
         // Delete both tokens from Redis
         await this.userCacheService.setUserToken(login, 'access', null);
         await this.userCacheService.setUserToken(login, 'access', null);
@@ -156,7 +156,7 @@ export class MongodbUserRepository implements UserRepository {
         return await this.userCacheService.getUserToken(login, 'refresh');
     }
 
-    async setTokens(login: string, accessToken: string, refreshToken: string | null): Promise<void> {
+    async setSessionTokens(login: string, accessToken: string, refreshToken: string | null): Promise<void> {
         await this.userCacheService.setUserToken(login, 'access', accessToken);
         await this.userCacheService.setUserToken(login, 'refresh', refreshToken);
     }

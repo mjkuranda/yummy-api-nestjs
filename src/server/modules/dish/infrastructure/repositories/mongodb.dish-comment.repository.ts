@@ -1,11 +1,12 @@
-import { DishCommentDocument } from '../../../../../infrastructure/databases/mongodb/documents/dish-comment.document';
+import { DishCommentDocument } from '../../../../../infrastructure/databases/mongodb/documents';
 import { InjectModel } from '@nestjs/mongoose';
 import { dishCommentModel } from '../../../../common/definitions/mongoose-model.definitions';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { DishId } from '../../dish.types';
 import { DishCommentEntity } from '../../domain/common/entities';
 import { DishCommentFactory } from '../../domain/common/factories';
 import { DishCommentRepository } from '../../domain/common/repositories';
+import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../errors/infrastructure';
 
 export class MongodbDishCommentRepository implements DishCommentRepository {
 
@@ -13,7 +14,15 @@ export class MongodbDishCommentRepository implements DishCommentRepository {
         @InjectModel(dishCommentModel.name) private readonly model: Model<DishCommentDocument>
     ) {}
 
-    async post(userLogin: string, text: string, dishId: DishId): Promise<void> {
+    async postNewComment(userLogin: string, text: string, dishId: DishId): Promise<void> {
+        if (typeof dishId !== 'string') {
+            throw new InvalidMongooseIdTypeError(dishId);
+        }
+
+        if (!isValidObjectId(dishId)) {
+            throw new InvalidMongooseObjectIdError(dishId);
+        }
+
         await this.model.create({
             dishId,
             text,
@@ -22,13 +31,29 @@ export class MongodbDishCommentRepository implements DishCommentRepository {
         });
     }
 
-    async getAll(dishId: DishId, limit?: number): Promise<DishCommentEntity[]> {
+    async getAllComments(dishId: DishId, limit?: number): Promise<DishCommentEntity[]> {
+        if (typeof dishId !== 'string') {
+            throw new InvalidMongooseIdTypeError(dishId);
+        }
+
+        if (!isValidObjectId(dishId)) {
+            throw new InvalidMongooseObjectIdError(dishId);
+        }
+
         const docs = await this.model.find({ dishId }).limit(limit ?? 1000);
 
         return DishCommentFactory.fromDocuments(docs);
     }
 
-    async deleteAll(dishId: string): Promise<void> {
+    async deleteAllComments(dishId: DishId): Promise<void> {
+        if (typeof dishId !== 'string') {
+            throw new InvalidMongooseIdTypeError(dishId);
+        }
+
+        if (!isValidObjectId(dishId)) {
+            throw new InvalidMongooseObjectIdError(dishId);
+        }
+
         await this.model.deleteMany({ dishId });
     }
 }

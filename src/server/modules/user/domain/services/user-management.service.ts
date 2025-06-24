@@ -1,25 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
-import { UserActionRepository, UserRepository } from '../repositories';
 import { PasswordManagerService } from './password-manager.service';
 import { MailManagerService } from '../../../mail-manager/mail-manager.service';
 import { UserEntity } from '../entities';
 import { UserAlreadyExistsError } from '../../../../errors/domain';
 import { CreateUserValueObject } from '../value-objects';
+import { UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()
 export class UserManagementService {
 
-    private readonly userRepository: UserRepository;
-    private readonly userActionRepository: UserActionRepository;
+    private readonly userApiService: UserDataManageable;
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService,
         private readonly passwordManagerService: PasswordManagerService,
         private readonly mailManagerService: MailManagerService
     ) {
-        this.userRepository = this.providerRegistryService.getUserRepository();
-        this.userActionRepository = this.providerRegistryService.getUserActionRepository();
+        this.userApiService = this.providerRegistryService.getUserApiService();
     }
 
     /**
@@ -30,7 +28,7 @@ export class UserManagementService {
      * @returns new user entity
      */
     async createUser(login: string, email: string, password: string): Promise<UserEntity> {
-        const user = await this.userRepository.findByLogin(login);
+        const user = await this.userApiService.findUserByLogin(login);
 
         if (user) {
             throw new UserAlreadyExistsError(login);
@@ -44,8 +42,8 @@ export class UserManagementService {
         });
 
         const createUserVo = new CreateUserValueObject(login, email, hashedPassword);
-        const savedUser = await this.userRepository.create(createUserVo);
-        const userActionRecord = await this.userActionRepository.create(savedUser.getId(), 'activate');
+        const savedUser = await this.userApiService.createNewUser(createUserVo);
+        const userActionRecord = await this.userApiService.createAction(savedUser.getId(), 'activate');
 
         await this.mailManagerService.sendActivationMail(
             savedUser.getEmail(),
@@ -60,14 +58,14 @@ export class UserManagementService {
      * @description returns all users
      */
     async getAllUsers(): Promise<UserEntity[]> {
-        return await this.userRepository.getAll();
+        return await this.userApiService.getAllUsers();
     }
 
     /**
      * @description returns all inactivated users
      */
     async getNotActivatedUsers(): Promise<UserEntity[]> {
-        return await this.userRepository.getAllNotActivated();
+        return await this.userApiService.getAllNotActivatedUsers();
     }
 
     /**
@@ -83,6 +81,6 @@ export class UserManagementService {
             pepper: process.env.PASSWORD_PEPPER
         });
 
-        await this.userRepository.changePassword(login, hashedPassword, salt);
+        await this.userApiService.changeUserPassword(login, hashedPassword, salt);
     }
 }

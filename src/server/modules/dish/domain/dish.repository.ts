@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { DishEntity } from './common/entities';
 import { CreateDishDataType, DishId } from '../dish.types';
 import { DishIngredient } from '../../ingredient/ingredient.types';
@@ -7,19 +6,18 @@ import { MealType } from '../../../common/enums';
 import { DishResultValueObject } from './read/value-objects';
 import { DishOverviewValueObject } from '../../user/domain/value-objects';
 
-@Injectable()
-export class DishRepository {
-    create: (data: CreateDishDataType, author?: string, ingredients?: DishIngredient[]) => Promise<DishEntity>;
-    findById: (id: DishId) => Promise<DishEntity | null>;
+export interface DishRepository {
+    createNewDish: (data: CreateDishDataType, author?: string, ingredients?: DishIngredient[]) => Promise<DishEntity>;
+    findByDishId: (id: DishId) => Promise<DishEntity | null>;
     getDishesWithSoftAdded: () => Promise<DishEntity[]>;
     getDishesWithSoftEdited: () => Promise<DishEntity[]>;
     getDishesWithSoftDeleted: () => Promise<DishEntity[]>;
-    findOneAvailable: (id: DishId) => Promise<DishEntity | null>;
-    unsetSoftAdded: (id: DishId) => Promise<void>;
-    insertEdition: (id: DishId, dishEditDto: DishEditDto<DishIngredient>) => Promise<void>;
-    confirmEdition: (id: DishId, dishSoftEdited?: DishEntity) => Promise<void>;
-    setSoftDeleted: (id: DishId) => Promise<void>;
-    delete: (id: DishId) => Promise<void>;
-    findByIngredientsAndType: (ingredients: string[], mealType?: MealType) => Promise<DishResultValueObject[]>;
-    findByAuthor: (userLogin: string) => Promise<DishOverviewValueObject[]>;
+    findOneAvailableDish: (id: DishId) => Promise<DishEntity | null>;
+    unsetSoftAddedForDish: (id: DishId) => Promise<void>;
+    insertEditionForDish: (id: DishId, dishEditDto: DishEditDto<DishIngredient>) => Promise<void>;
+    confirmDishEdition: (id: DishId, dishSoftEdited?: DishEntity) => Promise<void>;
+    setSoftDeletedForDish: (id: DishId) => Promise<void>;
+    deleteDish: (id: DishId) => Promise<void>;
+    findDishesByIngredientsAndType: (ingredients: string[], mealType?: MealType) => Promise<DishResultValueObject[]>;
+    findDishesByAuthor: (userLogin: string) => Promise<DishOverviewValueObject[]>;
 }

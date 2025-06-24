@@ -10,4 +10,4 @@ export interface ExternalApiDataAdaptable<ExternalApiDishResult, ExternalApiDish
     toDishIngredients: (ingredients: ExternalApiDishIngredient[]) => DishIngredient[];
 }
 
-export const EXTERNAL_API_DATA_ADAPTABLE_TOKEN: InjectionToken = 'EXTERNAL_API_DATA_ADAPTABLE_TOKEN';
+export const EXTERNAL_API_ADAPTER_TOKEN: InjectionToken = 'EXTERNAL_API_ADAPTER_TOKEN';

@@ -3,7 +3,7 @@ import { isValidObjectId, Model } from 'mongoose';
 import {
     UserActionDocument,
     UserActionType
-} from '../../../../../infrastructure/databases/mongodb/documents/user-action.document';
+} from '../../../../../infrastructure/databases/mongodb/documents';
 import { UserActionEntity } from '../../domain/entities';
 import { userActionModel } from '../../../../common/definitions/mongoose-model.definitions';
 import { InjectModel } from '@nestjs/mongoose';
@@ -15,7 +15,7 @@ export class MongodbUserActionRepository implements UserActionRepository {
         @InjectModel(userActionModel.name) private readonly model: Model<UserActionDocument>
     ) {}
 
-    async create(userId: string, type: UserActionType): Promise<UserActionEntity> {
+    async createAction(userId: string, type: UserActionType): Promise<UserActionEntity> {
         if (!isValidObjectId(userId)) {
             throw new InvalidMongooseObjectIdError(userId);
         }
@@ -29,7 +29,7 @@ export class MongodbUserActionRepository implements UserActionRepository {
         return UserActionEntity.fromDocument(doc);
     }
 
-    async delete(id: string): Promise<void> {
+    async deleteAction(id: string): Promise<void> {
         if (!isValidObjectId(id)) {
             throw new InvalidMongooseObjectIdError(id);
         }
@@ -37,7 +37,7 @@ export class MongodbUserActionRepository implements UserActionRepository {
         await this.model.deleteOne({ _id: id });
     }
 
-    async findById(id: string): Promise<UserActionEntity | null> {
+    async findActionById(id: string): Promise<UserActionEntity | null> {
         if (!isValidObjectId(id)) {
             throw new InvalidMongooseObjectIdError(id);
         }
@@ -51,7 +51,17 @@ export class MongodbUserActionRepository implements UserActionRepository {
         return UserActionEntity.fromDocument(doc);
     }
 
-    async findByUserId(query: any): Promise<UserActionEntity | null> {
-        return Promise.resolve(undefined);
+    async findActionByUserId(userId: string): Promise<UserActionEntity | null> {
+        if (!isValidObjectId(userId)) {
+            throw new InvalidMongooseObjectIdError(userId);
+        }
+
+        const doc = await this.model.findOne({ userId });
+
+        if (!doc) {
+            return null;
+        }
+
+        return UserActionEntity.fromDocument(doc);
     }
 }
