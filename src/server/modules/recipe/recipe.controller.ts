@@ -14,11 +14,11 @@ export class RecipeController {
         private readonly recipeFacade: RecipeFacade
     ) {}
 
-    @Post(':encoded-id')
+    @Post(':encoded-dish-id')
     @HttpCode(201)
     @UseGuards(AuthenticationGuard)
     public async createRecipe(
-        @Param('encoded-id', ParseEncodedDishIdPipe) encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id', ParseEncodedDishIdPipe) encodedDishId: EncodedDishIdValueObject,
         @Body() createRecipeDto: TransformedBody<CreateRecipeDto>
     ): Promise<void> {
         const { data, authenticatedUser } = createRecipeDto;
@@ -26,10 +26,10 @@ export class RecipeController {
         return await this.recipeFacade.addRecipe(encodedDishId, data, authenticatedUser);
     }
 
-    @Get(':encoded-id')
+    @Get(':encoded-dish-id')
     @HttpCode(200)
     public async getRecipe(
-        @Param('encoded-id', ParseEncodedDishIdPipe) encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id', ParseEncodedDishIdPipe) encodedDishId: EncodedDishIdValueObject,
         @Headers('accept-language') lang: Language = 'pl'
     ): Promise<GetRecipeDto> {
         return await this.recipeFacade.getRecipe(encodedDishId, lang);

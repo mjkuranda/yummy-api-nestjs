@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { LoggerService } from '../../logger/logger.service';
-import { DishCacheService } from '../../cache/dish/dish-cache.service';
+import { DishCacheService } from '../../cache/domains/dish/dish-cache.service';
 import { Providable } from '../../../common/interfaces';
 import { EncodedDishIdValueObject } from '../../dish/domain/common/value-objects';
 import { DishDetailsValueObject, DishResultValueObject } from '../../dish/domain/read/value-objects';

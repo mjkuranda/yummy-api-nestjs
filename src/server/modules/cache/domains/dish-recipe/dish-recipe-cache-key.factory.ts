@@ -1,6 +1,6 @@
 import { DishRecipeKey } from './dish-recipe-cache.types';
-import { Language } from '../../../common/types';
-import { EncodedDishIdValueObject } from '../../dish/domain/common/value-objects';
+import { Language } from '../../../../common/types';
+import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
 
 export class DishRecipeCacheKeyFactory {
 

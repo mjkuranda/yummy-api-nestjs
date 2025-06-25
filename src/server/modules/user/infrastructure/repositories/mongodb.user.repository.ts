@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 import { CreateUserValueObject } from '../../domain/value-objects';
 import { UserCapabilitiesValueObject } from '../../domain/value-objects';
-import { UserCacheService } from '../../../cache/user/user-cache.service';
+import { UserCacheService } from '../../../cache/domains/user/user-cache.service';
 
 export class MongodbUserRepository implements UserRepository {
 

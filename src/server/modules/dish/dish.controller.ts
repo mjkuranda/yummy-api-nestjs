@@ -64,10 +64,10 @@ export class DishController {
         return await this.dishQueryFacade.getDishes(<IngredientName[]>ingredients, <MealType>type);
     }
 
-    @Get('/:encoded-id/details')
+    @Get('/:encoded-dish-id/details')
     @HttpCode(200)
     public async getDishDetails(
-        @Param('encoded-id') encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
         @Headers('accept-language') language: Language = 'pl'
     ): Promise<GetDishDetailsDto> {
         return await this.dishQueryFacade.getDishDetails(encodedDishId, language);
@@ -84,11 +84,11 @@ export class DishController {
         return await this.dishCommandFacade.createDish(data, authenticatedUser);
     }
 
-    @Put('/:encoded-id')
+    @Put('/:encoded-dish-id')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard)
     public async updateDish(
-        @Param('encoded-id') encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
         @Body() body: EditDishBodyDto
     ): Promise<void> {
         const { data } = body;
@@ -97,20 +97,20 @@ export class DishController {
         return await this.dishCommandFacade.editDish(encodedDishId, dataWithImages);
     }
 
-    @Delete('/:encoded-id')
+    @Delete('/:encoded-dish-id')
     @HttpCode(204)
     @UseGuards(AuthenticationGuard)
     public async deleteDish(
-        @Param('encoded-id') encodedDishId: EncodedDishIdValueObject
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject
     ): Promise<boolean> {
         return await this.dishCommandFacade.deleteDish(encodedDishId);
     }
 
-    @Post('/:encoded-id/create')
+    @Post('/:encoded-dish-id/create')
     @HttpCode(204)
     @UseGuards(AuthenticationGuard, CreationGuard)
     public async confirmCreatingDish(
-        @Param('encoded-id') encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
         @Body() body
     ): Promise<void> {
         const { authenticatedUser } = body;
@@ -118,11 +118,11 @@ export class DishController {
         return await this.dishCommandFacade.confirmCreating(encodedDishId, authenticatedUser);
     }
 
-    @Post('/:encoded-id/edit')
+    @Post('/:encoded-dish-id/edit')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, EditionGuard)
     public async confirmEditingDish(
-        @Param('encoded-id') encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
         @Body() body
     ): Promise<ConfirmedEditingDto> {
         const { authenticatedUser } = body;
@@ -130,11 +130,11 @@ export class DishController {
         return await this.dishCommandFacade.confirmEditing(encodedDishId, authenticatedUser);
     }
 
-    @Post('/:encoded-id/delete')
+    @Post('/:encoded-dish-id/delete')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, DeletionGuard)
     public async confirmDeletingDish(
-        @Param('encoded-id') encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
         @Body() body
     ): Promise<ConfirmedDeletingDto> {
         const { authenticatedUser } = body;
@@ -142,19 +142,19 @@ export class DishController {
         return await this.dishCommandFacade.confirmDeleting(encodedDishId, authenticatedUser);
     }
 
-    @Get('/:encoded-id/comments')
+    @Get('/:encoded-dish-id/comments')
     @HttpCode(200)
     public async getComments(
-        @Param('encoded-id') encodedDishId: EncodedDishIdValueObject
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject
     ): Promise<GetDishCommentsDto> {
         return await this.dishQueryFacade.getDishComments(encodedDishId);
     }
 
-    @Post('/:encoded-id/comment')
+    @Post('/:encoded-dish-id/comment')
     @HttpCode(201)
     @UseGuards(AuthenticationGuard)
     public async addDishComment(
-        @Param('encoded-id') encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
         @Body() body: TransformedBody<CreateDishCommentBody>
     ): Promise<void> {
         const { data, authenticatedUser } = body;
@@ -162,19 +162,19 @@ export class DishController {
         return await this.dishCommandFacade.addDishComment(encodedDishId, authenticatedUser.login, data.text);
     }
 
-    @Get('/:encoded-id/rating')
+    @Get('/:encoded-dish-id/rating')
     @HttpCode(200)
     public async getRating(
-        @Param('encoded-id') encodedDishId: EncodedDishIdValueObject
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject
     ): Promise<GetDishRatingDto> {
         return await this.dishQueryFacade.getDishRating(encodedDishId);
     }
 
-    @Post('/:encoded-id/rating')
+    @Post('/:encoded-dish-id/rating')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard)
     public async addRating(
-        @Param('encoded-id') encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
         @Body() body: TransformedBody<CreateDishRatingBody>
     ): Promise<AddedDishRatingDto> {
         const { data, authenticatedUser } = body;

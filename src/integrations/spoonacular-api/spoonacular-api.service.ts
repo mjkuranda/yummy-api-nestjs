@@ -12,7 +12,7 @@ import {
     SpoonacularRecipeSections
 } from './spoonacular-api.types';
 import { HttpService } from '@nestjs/axios';
-import { DishCacheService } from '../../server/modules/cache/dish/dish-cache.service';
+import { DishCacheService } from '../../server/modules/cache/domains/dish/dish-cache.service';
 import { LoggerService } from '../../server/modules/logger/logger.service';
 import { EXTERNAL_API_ADAPTER_TOKEN, ExternalApiDataAdaptable } from '../interfaces';
 

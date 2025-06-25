@@ -1,18 +1,11 @@
 import { CACHE_PROVIDER } from './cache.constant';
-import { createClient } from '@redis/client';
 import { Provider } from '@nestjs/common';
+import { CacheClient } from './interfaces/cache-client.interface';
+import { LoggerService } from '../logger/logger.service';
+import { RedisClientFactory } from '../../../infrastructure/cache/redis/redis-client.factory';
 
 export const CacheProvider: Provider = {
     provide: CACHE_PROVIDER,
-    useFactory: async () => {
-        const redisHostname = process.env.REDIS_HOSTNAME || 'localhost';
-        const redisPort = process.env.REDIS_PORT || 6379;
-        const options = {
-            url: `redis://${redisHostname}:${redisPort}`
-        };
-        const client = createClient(options);
-        await client.connect();
-
-        return client;
-    }
+    useFactory: async (loggerService: LoggerService): Promise<CacheClient> => RedisClientFactory.create(loggerService),
+    inject: [LoggerService]
 };

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Language } from '../../../../common/types';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
-import { DishRecipeCacheService } from '../../../cache/dish-recipe/dish-recipe-cache.service';
+import { DishRecipeCacheService } from '../../../cache/domains/dish-recipe/dish-recipe-cache.service';
 import { DishNotFoundError, NotDishAuthorError, DishRecipeExistsError, DishRecipeNotFoundError } from '../../../dish/domain/errors';
 import { GetRecipeResult } from '../../application/recipe-application.types';
 import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';

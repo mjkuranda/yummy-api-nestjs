@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 // import { Cron } from '@nestjs/schedule';
-import { DishCacheService } from '../cache/dish/dish-cache.service';
+import { DishCacheService } from '../cache/domains/dish/dish-cache.service';
 import { LoggerService } from '../logger/logger.service';
 import { ContextString } from '../../common/types';
 import { ProviderRegistryService } from '../provider-registry/provider-registry.service';

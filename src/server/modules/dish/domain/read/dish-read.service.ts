@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DishCacheService } from '../../../cache/dish/dish-cache.service';
+import { DishCacheService } from '../../../cache/domains/dish/dish-cache.service';
 import { DishAggregatorService } from './dish-aggregator.service';
 import { MealType } from '../../../../common/enums';
 import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../errors';

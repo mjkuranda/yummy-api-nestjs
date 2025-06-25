@@ -1,4 +1,4 @@
-import { Provider } from '../../../common/enums';
+import { Provider } from '../../../../common/enums';
 
 export type DishSearchResultKey = `dish:results:ingredients:${string}`;
 export type DishSearchResultPerProviderKey = `dish:results:provider:${Provider}`;

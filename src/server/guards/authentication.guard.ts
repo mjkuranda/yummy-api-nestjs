@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { UnauthorizedException } from '../exceptions';
 import { JwtManagerService } from '../modules/jwt-manager/jwt-manager.service';
 import { TransformedBody } from '../common/interfaces';
-import { UserCacheService } from '../modules/cache/user/user-cache.service';
+import { UserCacheService } from '../modules/cache/domains/user/user-cache.service';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {

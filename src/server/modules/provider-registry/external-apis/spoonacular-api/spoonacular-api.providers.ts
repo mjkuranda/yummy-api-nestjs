@@ -11,7 +11,7 @@ import {
     SpoonacularRecipeDetails, SpoonacularRecipeSections
 } from '../../../../../integrations/spoonacular-api/spoonacular-api.types';
 import { HttpService } from '@nestjs/axios';
-import { DishCacheService } from '../../../cache/dish/dish-cache.service';
+import { DishCacheService } from '../../../cache/domains/dish/dish-cache.service';
 import { LoggerService } from '../../../logger/logger.service';
 
 export const spoonacularApiProviders: Provider[] = [

@@ -4,7 +4,7 @@ import { JwtManagerService } from '../../../jwt-manager/jwt-manager.service';
 import { PasswordManagerService } from './password-manager.service';
 import { InactiveUserError, IncorrectUserCredentialsError, MismatchedUserTokensError, UserWithLoginNotFoundError, ExpiredRefreshTokenError } from '../errors';
 import { UserTokensValueObject } from '../value-objects';
-import { UserCacheService } from '../../../cache/user/user-cache.service';
+import { UserCacheService } from '../../../cache/domains/user/user-cache.service';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 

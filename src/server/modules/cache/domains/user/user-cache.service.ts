@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CACHE_PROVIDER } from '../cache.constant';
-import { Redis } from 'ioredis';
-import { MINUTE } from '../../../constants/times.constant';
+import { CACHE_PROVIDER } from '../../cache.constant';
+import { MINUTE } from '../../../../constants/times.constant';
 import { UserCacheKeyFactory } from './user-cache-key.factory';
 import { TokenType, UserTokenKey } from './user-cache.types';
+import { CacheClient } from '../../interfaces';
 
 @Injectable()
 export class UserCacheService {
 
     constructor(
-        @Inject(CACHE_PROVIDER) private readonly redisClient: Redis
+        @Inject(CACHE_PROVIDER) private readonly cacheClient: CacheClient
     ) {}
 
     /**
@@ -19,7 +19,7 @@ export class UserCacheService {
      */
     async getUserToken(userLogin: string, tokenType: TokenType): Promise<string | null> {
         const key: UserTokenKey = UserCacheKeyFactory.createUserTokenKey(userLogin, tokenType);
-        const value = await this.redisClient.get(key);
+        const value = await this.cacheClient.get(key);
 
         if (!value) {
             return null;
@@ -42,8 +42,8 @@ export class UserCacheService {
             ? 15 * MINUTE
             : 60 * MINUTE;
 
-        await this.redisClient.set(key, value);
-        await this.redisClient.expire(key, ttl);
+        await this.cacheClient.set(key, value);
+        await this.cacheClient.expire(key, ttl);
     }
 
     /**
@@ -54,7 +54,7 @@ export class UserCacheService {
         const key0: UserTokenKey = UserCacheKeyFactory.createUserTokenKey(userLogin, 'access');
         const key1: UserTokenKey = UserCacheKeyFactory.createUserTokenKey(userLogin, 'access');
 
-        await this.redisClient.del(key0, key1);
+        await this.cacheClient.del(key0, key1);
     }
 
 }
