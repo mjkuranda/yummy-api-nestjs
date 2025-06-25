@@ -1,14 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { getMongooseUri } from '../../utils';
-import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
+import { MongoDatabaseModule } from '../database/mongo/mongo-database.module';
 import { MongoSyncService } from './mongo-sync.service';
-import {
-    dishCommentModel,
-    dishModel,
-    dishRatingModel,
-    dishRecipeModel, userActionModel, userModel, userSearchQueryModel
-} from '../../common/definitions/mongoose-model.definitions';
 import { LoggerModule } from '../logger/logger.module';
 
 @Module({
@@ -17,22 +10,7 @@ import { LoggerModule } from '../logger/logger.module';
         ConfigModule.forRoot({
             envFilePath: ['.env'],
         }),
-        MongooseModule.forRootAsync({
-            imports: [ConfigModule],
-            useFactory: async () => ({
-                uri: getMongooseUri()
-            }),
-            inject: [ConfigService],
-        }),
-        MongooseModule.forFeature([
-            dishModel,
-            dishCommentModel,
-            dishRatingModel,
-            dishRecipeModel,
-            userModel,
-            userActionModel,
-            userSearchQueryModel
-        ]),
+        MongoDatabaseModule
     ],
     providers: [MongoSyncService],
 })

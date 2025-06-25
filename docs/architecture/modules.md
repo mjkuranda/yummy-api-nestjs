@@ -25,7 +25,15 @@ graph TD
     DishReadModule --> ProviderRegistryModule
 
 %% ProviderRegistryModule
-    ProviderRegistryModule --> HttpModule
+    ProviderRegistryModule --> InternalApiModule
+    ProviderRegistryModule --> ExternalApiModule
+
+%% InternalApiModule
+    InternalApiModule --> ManageableApiModule
+    InternalApiModule --> ProvidableApiModule
+
+%% ExternalApiModule
+    ExternalApiModule --> SpoonacularApiModule
 
 %% IngredientModule
 
@@ -57,3 +65,4 @@ The following modules are global and are not presented in the above graph:
 - `JwtManagerModule`
 - `CacheModule`
 - `IngredientModule`
+- `HttpModule`

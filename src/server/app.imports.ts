@@ -7,13 +7,12 @@ import { DishModule } from './modules/dish/dish.module';
 import { UserModule } from './modules/user/user.module';
 import { HealthcheckModule } from './modules/healthcheck/healthcheck.module';
 import { NotificationModule } from './modules/notification/notification.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
-import { getMongooseUri } from './utils';
+import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { DynamicModule, Type } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
+import { MongoDatabaseModule } from './modules/database/mongo/mongo-database.module';
 
 const GlobalHttpModule: DynamicModule = HttpModule.register({
     global: true,
@@ -40,17 +39,11 @@ export const systemModules: Type[] = [
     NotificationModule
 ];
 
-export const configModules: DynamicModule[] = [
+export const configModules = [
     ConfigModule.forRoot({
         envFilePath: ['.env'],
     }),
-    MongooseModule.forRootAsync({
-        imports: [ConfigModule],
-        useFactory: async () => ({
-            uri: getMongooseUri()
-        }),
-        inject: [ConfigService],
-    }),
+    MongoDatabaseModule,
     ServeStaticModule.forRoot(
         {
             rootPath: join(__dirname, '..', 'data/images/dishes'),
