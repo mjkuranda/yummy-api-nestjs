@@ -5,10 +5,7 @@ import { InternalApiModule } from './internal-apis/internal-api.module';
 import { PROVIDABLE_SERVICES } from './providable.providers';
 
 @Module({
-    imports: [
-        ExternalApiModule,
-        InternalApiModule
-    ],
+    imports: [ExternalApiModule, InternalApiModule],
     providers: [ProviderRegistryService, ...PROVIDABLE_SERVICES],
     exports: [ProviderRegistryService]
 })

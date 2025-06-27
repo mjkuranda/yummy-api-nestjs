@@ -4,9 +4,7 @@ import { REPOSITORIES_PROVIDERS } from '../internal-api.providers';
 import { ProvidableApiService } from './providable-api.service';
 
 @Module({
-    imports: [
-        MongoDatabaseModule
-    ],
+    imports: [MongoDatabaseModule],
     providers: [...REPOSITORIES_PROVIDERS, ProvidableApiService],
     exports: [...REPOSITORIES_PROVIDERS, ProvidableApiService]
 })
