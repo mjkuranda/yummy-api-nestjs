@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDishDto, DishEditDto } from '../dish.dto';
-import { UserDto } from '../../user/user.dto';
 import { DishIngredient, DishIngredientWithoutImage } from '../../ingredient/ingredient.types';
 import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
 import { CreateDishUseCase, EditDishUseCase, DeleteDishUseCase, ConfirmDishCreationUseCase, ConfirmDishEditionUseCase, ConfirmDishDeletionUseCase, AddDishProposalsUseCase, AddDishCommentUseCase, AddDishRatingUseCase } from './use-cases';
@@ -51,27 +50,27 @@ export class DishCommandFacade {
     /**
      * @description Confirms creating a new dish
      * @param encodedDishId encoded dish ID and its provider name
-     * @param user user DTO data // TODO: Should be simplified to have less information
+     * @param user data from accessToken to define user
      */
-    async confirmCreating(encodedDishId: EncodedDishIdValueObject, user: UserDto): Promise<void> {
+    async confirmCreating(encodedDishId: EncodedDishIdValueObject, user: UserAccessTokenPayload): Promise<void> {
         await this.confirmDishCreationUseCase.execute(encodedDishId, user);
     }
 
     /**
      * @description Confirms edition of existing dish
      * @param encodedDishId encoded dish ID and its provider
-     * @param user user DTO
+     * @param user data from accessToken to define user
      */
-    async confirmEditing(encodedDishId: EncodedDishIdValueObject, user: UserDto): Promise<ConfirmedEditingDto> {
+    async confirmEditing(encodedDishId: EncodedDishIdValueObject, user: UserAccessTokenPayload): Promise<ConfirmedEditingDto> {
         return this.confirmDishEditionUseCase.execute(encodedDishId, user);
     }
 
     /**
      * @description Confirms deletion of existing dish
      * @param encodedDishId encoded dish ID and its provider name
-     * @param user user DTO
+     * @param user data from accessToken to define user
      */
-    async confirmDeleting(encodedDishId: EncodedDishIdValueObject, user: UserDto): Promise<ConfirmedDeletingDto> {
+    async confirmDeleting(encodedDishId: EncodedDishIdValueObject, user: UserAccessTokenPayload): Promise<ConfirmedDeletingDto> {
         return this.confirmDishDeletionUseCase.execute(encodedDishId, user);
     }
 

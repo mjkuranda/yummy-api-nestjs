@@ -111,7 +111,7 @@ export class DishController {
     @UseGuards(AuthenticationGuard, CreationGuard)
     public async confirmCreatingDish(
         @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
-        @Body() body
+        @Body() body: TransformedBody<null>
     ): Promise<void> {
         const { authenticatedUser } = body;
 
@@ -123,7 +123,7 @@ export class DishController {
     @UseGuards(AuthenticationGuard, EditionGuard)
     public async confirmEditingDish(
         @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
-        @Body() body
+        @Body() body: TransformedBody<null>
     ): Promise<ConfirmedEditingDto> {
         const { authenticatedUser } = body;
 
@@ -135,7 +135,7 @@ export class DishController {
     @UseGuards(AuthenticationGuard, DeletionGuard)
     public async confirmDeletingDish(
         @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
-        @Body() body
+        @Body() body: TransformedBody<null>
     ): Promise<ConfirmedDeletingDto> {
         const { authenticatedUser } = body;
 

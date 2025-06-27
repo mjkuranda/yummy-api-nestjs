@@ -4,7 +4,7 @@ import { ForbiddenException, NotFoundException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
 import { PermissionManagementService } from '../../domain/services';
 import { NoSuchCapabilityError, UserWithLoginNotFoundError } from '../../domain/errors';
-import { CapabilityType } from '../../user.types';
+import { CapabilityType } from '../../domain/types';
 import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 
 export class DenyPermissionUseCase extends AbstractUseCase<[string, string, CapabilityType], void> {

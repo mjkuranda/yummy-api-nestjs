@@ -1,4 +1,4 @@
-export * from './change-password.dto';
+export * from './change-user-password.dto';
 export * from './create-user.dto';
 export * from './created-user.dto';
 export * from './dish-overview.dto';

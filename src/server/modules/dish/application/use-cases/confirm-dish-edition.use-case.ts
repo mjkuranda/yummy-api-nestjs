@@ -1,5 +1,4 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
-import { UserDto } from '../../../user/user.dto';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../domain/write/dish-write.service';
 import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
@@ -8,9 +7,10 @@ import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';
 import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
 import { ConfirmedEditingDto } from '../dtos';
+import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 
 @Injectable()
-export class ConfirmDishEditionUseCase extends AbstractUseCase<[EncodedDishIdValueObject, UserDto], ConfirmedEditingDto> {
+export class ConfirmDishEditionUseCase extends AbstractUseCase<[EncodedDishIdValueObject, UserAccessTokenPayload], ConfirmedEditingDto> {
 
     constructor(
         private readonly loggerService: LoggerService,
@@ -19,7 +19,7 @@ export class ConfirmDishEditionUseCase extends AbstractUseCase<[EncodedDishIdVal
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject, userDto: UserDto): Promise<ConfirmedEditingDto> {
+    protected async run(encodedDishId: EncodedDishIdValueObject, userDto: UserAccessTokenPayload): Promise<ConfirmedEditingDto> {
         const result = await this.dishWrite.confirmEditing(encodedDishId);
         const title = result.getTitle();
 

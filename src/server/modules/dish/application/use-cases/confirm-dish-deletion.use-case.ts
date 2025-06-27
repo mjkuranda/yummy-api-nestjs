@@ -1,5 +1,4 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
-import { UserDto } from '../../../user/user.dto';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../domain/write/dish-write.service';
 import { Injectable } from '@nestjs/common';
@@ -8,9 +7,10 @@ import { InvalidDishIdError, DishNotFoundError } from '../../domain/errors';
 import { ContextString } from '../../../../common/types';
 import { ConfirmedDeletingDto } from '../dtos';
 import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 
 @Injectable()
-export class ConfirmDishDeletionUseCase extends AbstractUseCase<[EncodedDishIdValueObject, UserDto], ConfirmedDeletingDto> {
+export class ConfirmDishDeletionUseCase extends AbstractUseCase<[EncodedDishIdValueObject, UserAccessTokenPayload], ConfirmedDeletingDto> {
 
     constructor(
         private readonly loggerService: LoggerService,
@@ -19,7 +19,7 @@ export class ConfirmDishDeletionUseCase extends AbstractUseCase<[EncodedDishIdVa
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject, user: UserDto): Promise<ConfirmedDeletingDto> {
+    protected async run(encodedDishId: EncodedDishIdValueObject, user: UserAccessTokenPayload): Promise<ConfirmedDeletingDto> {
         const valueObject = await this.dishWriteService.confirmDeleting(encodedDishId);
         const dishTitle = valueObject.getDishTitle();
         const wasDeleted = valueObject.wasDishDeleted();

@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Headers, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
-import { AuthenticationGuard } from '../../guards/authentication.guard';
-import { CreateRecipeDto, GetRecipeDto } from './application/dtos';
-import { TransformedBody } from '../../common/interfaces';
-import { Language } from '../../common/types';
-import { RecipeFacade } from './application/recipe.facade';
-import { ParseEncodedDishIdPipe } from '../../pipes/parse-encoded-dish-id.pipe';
-import { EncodedDishIdValueObject } from '../dish/domain/common/value-objects';
+import { AuthenticationGuard } from '../../../../guards/authentication.guard';
+import { CreateRecipeDto, GetRecipeDto } from '../../application/dtos';
+import { TransformedBody } from '../../../../common/interfaces';
+import { Language } from '../../../../common/types';
+import { RecipeFacade } from '../../application/recipe.facade';
+import { ParseEncodedDishIdPipe } from '../../../../pipes/parse-encoded-dish-id.pipe';
+import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
 
 @Controller('recipes')
 export class RecipeController {

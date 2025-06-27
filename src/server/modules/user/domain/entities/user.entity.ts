@@ -1,5 +1,5 @@
 import { UserCapabilitiesValueObject } from '../value-objects';
-import { CapabilityType } from '../../user.types';
+import { CapabilityType } from '../types';
 
 export class UserEntity {
     constructor(

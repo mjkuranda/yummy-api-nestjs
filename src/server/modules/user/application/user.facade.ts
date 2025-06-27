@@ -13,7 +13,7 @@ import {
 import { CreatedUserDto, CreateUserDto, GetUserProfileDto, GetUsersDto, UserLoginDto, UserTokensDto } from './dtos';
 import { Response } from 'express';
 import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
-import { CapabilityType } from '../user.types';
+import { CapabilityType } from '../domain/types';
 
 @Injectable()
 export class UserFacade {

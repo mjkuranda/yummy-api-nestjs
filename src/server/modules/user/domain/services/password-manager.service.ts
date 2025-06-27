@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PasswordStructType } from '../../password-manager.types';
+import { PasswordStructType } from '../types';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()

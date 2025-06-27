@@ -1,4 +1,4 @@
-import { CapabilityType } from '../../user.types';
+import { CapabilityType } from '../../domain/types';
 
 export class UserDto {
 

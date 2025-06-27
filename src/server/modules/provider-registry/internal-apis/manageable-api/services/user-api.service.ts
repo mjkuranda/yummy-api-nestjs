@@ -9,7 +9,7 @@ import { UserSearchQueryEntity } from '../../../../dish/domain/common/entities';
 import { UserActionType } from '../../../../../../infrastructure/databases/mongodb/documents';
 import { UserActionEntity, UserEntity } from '../../../../user/domain/entities';
 import { CreateUserValueObject } from '../../../../user/domain/value-objects';
-import { CapabilityType } from '../../../../user/user.types';
+import { CapabilityType } from '../../../../user/domain/types';
 
 @Injectable()
 export class UserApiService implements UserDataManageable {

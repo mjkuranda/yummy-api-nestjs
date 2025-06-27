@@ -2,7 +2,7 @@ import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { BadRequestException, ForbiddenException, NotFoundException } from '../../../../exceptions';
 import { LoggerService } from '../../../logger/logger.service';
-import { CapabilityType } from '../../user.types';
+import { CapabilityType } from '../../domain/types';
 import { PermissionManagementService } from '../../domain/services';
 import { NoSuchCapabilityError, SuchCapabilityGrantedError, UserWithLoginNotFoundError } from '../../domain/errors';
 import { InvalidMongooseObjectIdError } from '../../../../common/errors';

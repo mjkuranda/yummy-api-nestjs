@@ -1,6 +1,6 @@
 import { IsNotEmpty, MinLength, Matches } from 'class-validator';
 
-export class ChangePasswordDto {
+export class ChangeUserPasswordDto {
     @IsNotEmpty({ message: 'Old password is required' })
     readonly oldPassword: string;
 

@@ -1,6 +1,6 @@
 import { UserEntity } from '../entities';
 import { CreateUserValueObject } from '../value-objects';
-import { CapabilityType } from '../../user.types';
+import { CapabilityType } from '../types';
 
 export interface UserRepository {
     findUserById(id: string): Promise<UserEntity | null>;
