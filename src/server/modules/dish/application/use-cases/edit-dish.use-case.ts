@@ -1,6 +1,6 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
-import { DishEditDto } from '../../dish.dto';
+import { EditDishDto } from '../dtos';
 import { DishIngredient } from '../../../ingredient/ingredient.types';
 import { DishWriteService } from '../../domain/write/dish-write.service';
 import { LoggerService } from '../../../logger/logger.service';
@@ -10,7 +10,7 @@ import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
 
 @Injectable()
-export class EditDishUseCase extends AbstractUseCase<[EncodedDishIdValueObject, DishEditDto<DishIngredient>], void> {
+export class EditDishUseCase extends AbstractUseCase<[EncodedDishIdValueObject, EditDishDto<DishIngredient>], void> {
 
     constructor(
         private readonly loggerService: LoggerService,
@@ -19,8 +19,8 @@ export class EditDishUseCase extends AbstractUseCase<[EncodedDishIdValueObject, 
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject, dishEditDto: DishEditDto<DishIngredient>): Promise<void> {
-        const result = await this.dishWriteService.editDish(encodedDishId, dishEditDto);
+    protected async run(encodedDishId: EncodedDishIdValueObject, editDishDto: EditDishDto<DishIngredient>): Promise<void> {
+        const result = await this.dishWriteService.editDish(encodedDishId, editDishDto);
         this.loggerService.info(this.context, `Dish with id "${encodedDishId}" (titled: "${result.dishTitle}") has been edited.`);
     }
 

@@ -13,7 +13,7 @@ import { DishCommentEntity, DishEntity, DishRatingEntity } from '../../../../dis
 import { DishIngredient } from '../../../../ingredient/ingredient.types';
 import { DishOverviewValueObject } from '../../../../user/domain/value-objects';
 import { DishResultValueObject } from '../../../../dish/domain/read/value-objects';
-import { DishEditDto } from '../../../../dish/dish.dto';
+import { EditDishDto } from '../../../../dish/application/dtos';
 
 @Injectable()
 export class DishApiService implements DishDataManageable {
@@ -91,8 +91,8 @@ export class DishApiService implements DishDataManageable {
         return await this.dishRepository.getDishesWithSoftEdited();
     }
 
-    async insertEditionForDish(id: DishId, dishEditDto: DishEditDto<DishIngredient>): Promise<void> {
-        return await this.dishRepository.insertEditionForDish(id, dishEditDto);
+    async insertEditionForDish(id: DishId, editDishDto: EditDishDto<DishIngredient>): Promise<void> {
+        return await this.dishRepository.insertEditionForDish(id, editDishDto);
     }
 
     async insertNewRating(userLogin: string, dishId: DishId, rating: number): Promise<void> {

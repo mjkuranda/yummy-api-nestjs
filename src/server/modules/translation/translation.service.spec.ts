@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TranslationService } from './translation.service';
 import translate from '@iamtraction/google-translate';
-import { DetailedDish } from '../dish/dish.types';
 import { Provider, DishType, MealType } from '../../common/enums';
-import { DishRecipe } from '../recipe/application/recipe-application.types';
+import { RecipeEntity } from '../recipe/domain/entities';
+import { DishDetailsValueObject } from '../dish/domain/read/value-objects';
+import { DishId } from '../dish/dish.types';
 
 jest.mock('@iamtraction/google-translate', () =>
     jest.fn((text, opts) => {
@@ -36,16 +37,10 @@ describe('TranslationService', () => {
         });
 
         it('should translate a detailed dish', async () => {
-            const mockDetailedDish: DetailedDish = {
-                type: DishType.ANY,
-                mealType: MealType.ANY,
-                title: 'Untitled',
-                description: 'Lorem ipsum dolor sit amet.',
-                language: 'en',
-                provider: Provider.EXT_API_SPOONACULAR,
-                readyInMinutes: 75,
-                sourceOrAuthor: 'unknown',
-                ingredients: [
+            const mockDetailedDish: DishDetailsValueObject = new DishDetailsValueObject(
+                'Untitled',
+                'Lorem ipsum dolor sit amet.',
+                [
                     {
                         name: 'carrot',
                         unit: 'sticks',
@@ -58,21 +53,29 @@ describe('TranslationService', () => {
                         amount: 200,
                         imageUrl: '2.jpg'
                     }
-                ]
-            };
+                ],
+                75,
+                'unknown',
+                'en',
+                Provider.EXT_API_SPOONACULAR,
+                DishType.ANY,
+                MealType.ANY,
+                false,
+                false
+            );
 
-            const { description, ingredients } = await translationService.translateDish(mockDetailedDish, 'pl');
+            const { description, translatedIngredients } = await translationService.translateDish(mockDetailedDish, 'pl');
 
             // NOTE: Only description contains `mocked translation of` regarding concatenating all string into one.
             // NOTE: Hence, ingredients does not contain that fragment.
 
             expect(description).toEqual(`mocked translation of ${mockDetailedDish.description}`);
-            expect(ingredients.length).toEqual(mockDetailedDish.ingredients.length);
+            expect(translatedIngredients.length).toEqual(mockDetailedDish.ingredients.length);
             expect(translate).toHaveBeenCalledTimes(1);
-            expect(ingredients[0].text).toEqual('3 sticks of carrot');
-            expect(ingredients[0].imageUrl).toEqual('1.jpg');
-            expect(ingredients[1].text).toEqual('200 grams of butter');
-            expect(ingredients[1].imageUrl).toEqual('2.jpg');
+            expect(translatedIngredients[0].text).toEqual('3 sticks of carrot');
+            expect(translatedIngredients[0].imageUrl).toEqual('1.jpg');
+            expect(translatedIngredients[1].text).toEqual('200 grams of butter');
+            expect(translatedIngredients[1].imageUrl).toEqual('2.jpg');
         });
     });
 
@@ -82,10 +85,10 @@ describe('TranslationService', () => {
         });
 
         it('should return correct translation', async () => {
-            const mockRecipe: DishRecipe = {
-                dishId: '123',
-                language: 'en',
-                sections: [
+            const mockRecipeEntity: RecipeEntity = new RecipeEntity(
+                'en',
+                '123' as unknown as DishId,
+                [
                     {
                         name: '',
                         steps: ['A', 'B', 'C']
@@ -99,10 +102,10 @@ describe('TranslationService', () => {
                         steps: ['Z', 'X', 'C', 'V']
                     }
                 ]
-            };
+            );
             const expectedStartWith = 'mocked translation of ';
 
-            const { translated: translatedRecipe } = await translationService.translateRecipe(mockRecipe, 'pl');
+            const { translated: translatedRecipe } = await translationService.translateRecipe(mockRecipeEntity, 'pl');
 
             expect(translatedRecipe.sections[0].name).toEqual('');
             expect(translatedRecipe.sections[0].steps.length).toEqual(3);

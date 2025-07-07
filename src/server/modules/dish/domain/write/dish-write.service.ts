@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import { CreateDishDataType } from '../../dish.types';
 import { DishCacheService } from '../../../cache/domains/dish/dish-cache.service';
-import { DishEditDto } from '../../dish.dto';
+import { EditDishDto } from '../../application/dtos';
 import { DishIngredient } from '../../../ingredient/ingredient.types';
 import { IngredientService } from '../../../ingredient/ingredient.service';
 import { Provider } from '../../../../common/enums';
@@ -60,10 +60,10 @@ export class DishWriteService {
     /**
      * @description inserts edited data to the dish
      * @param encodedDishId encoded dish ID with its provider
-     * @param dishEditDto dish edit data
+     * @param editDishDto dish edit data
      * @returns dish edition status that indicates the dish that was edited
      */
-    async editDish(encodedDishId: EncodedDishIdValueObject, dishEditDto: DishEditDto<DishIngredient>): Promise<DishEditionStatusValueObject> {
+    async editDish(encodedDishId: EncodedDishIdValueObject, editDishDto: EditDishDto<DishIngredient>): Promise<DishEditionStatusValueObject> {
         const dishId = encodedDishId.getDishId();
 
         const dish = await this.dishApiService.findByDishId(dishId);
@@ -72,7 +72,7 @@ export class DishWriteService {
             throw new DishNotFoundError(encodedDishId);
         }
 
-        await this.dishApiService.insertEditionForDish(dishId, dishEditDto);
+        await this.dishApiService.insertEditionForDish(dishId, editDishDto);
 
         const editedDish = await this.dishApiService.findByDishId(dishId);
         const dishTitle = editedDish.getTitle();

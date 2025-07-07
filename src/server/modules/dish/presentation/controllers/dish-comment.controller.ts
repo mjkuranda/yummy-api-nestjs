@@ -4,7 +4,7 @@ import { DishCommandFacade } from '../../application/dish-command.facade';
 import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
 import { GetDishCommentsDto } from '../../application/dtos';
 import { AuthenticationGuard } from '../../../../guards/authentication.guard';
-import { CreateDishCommentBody } from '../../dish.dto';
+import { CreateDishCommentDto } from '../../application/dtos';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { User } from '../../../../decorators';
 
@@ -30,7 +30,7 @@ export class DishCommentController {
     public async addDishComment(
         @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
         @User() user: UserAccessTokenPayload,
-        @Body() body: CreateDishCommentBody
+        @Body() body: CreateDishCommentDto
     ): Promise<void> {
         return await this.dishCommandFacade.addDishComment(encodedDishId, user.login, body.text);
     }

@@ -16,9 +16,9 @@ import { DishQueryFacade } from '../../application/dish-query.facade';
 import { DishCommandFacade } from '../../application/dish-command.facade';
 import { IngredientService } from '../../../ingredient/ingredient.service';
 import { DishQueryValidationPipe } from '../../../../pipes/dish-query-validation.pipe';
-import { GetDishDetailsDto, GetDishResultsDto } from '../../application/dtos';
+import { EditDishDto, GetDishDetailsDto, GetDishResultsDto } from '../../application/dtos';
 import { AuthenticationGuard } from '../../../../guards/authentication.guard';
-import { CreateDishDto, EditDishBodyDto } from '../../dish.dto';
+import { CreateDishDto } from '../../application/dtos';
 import { DishIngredientWithoutImage } from '../../../ingredient/ingredient.types';
 import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
 import { Language } from '../../../../common/types';
@@ -72,10 +72,9 @@ export class DishController {
     @UseGuards(AuthenticationGuard)
     public async updateDish(
         @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
-        @Body() body: EditDishBodyDto
+        @Body() body: EditDishDto<DishIngredientWithoutImage>
     ): Promise<void> {
-        const { data } = body;
-        const dataWithImages = this.ingredientService.applyWithImages(data);
+        const dataWithImages = this.ingredientService.applyWithImages(body);
 
         return await this.dishCommandFacade.editDish(encodedDishId, dataWithImages);
     }

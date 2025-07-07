@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDishDto, DishEditDto } from '../dish.dto';
+import { EditDishDto } from './dtos';
 import { DishIngredient, DishIngredientWithoutImage } from '../../ingredient/ingredient.types';
 import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
 import { CreateDishUseCase, EditDishUseCase, DeleteDishUseCase, ConfirmDishCreationUseCase, ConfirmDishEditionUseCase, ConfirmDishDeletionUseCase, AddDishProposalsUseCase, AddDishCommentUseCase, AddDishRatingUseCase } from './use-cases';
-import { CreatedDishDto, ConfirmedEditingDto, ConfirmedDeletingDto, AddedDishRatingDto } from './dtos';
+import { CreatedDishDto, ConfirmedEditingDto, ConfirmedDeletingDto, AddedDishRatingDto, CreateDishDto } from './dtos';
 import { EncodedDishIdValueObject } from '../domain/common/value-objects';
 
 @Injectable()
@@ -33,10 +33,10 @@ export class DishCommandFacade {
     /**
      * @description Inserts a modification of the dish to the database
      * @param encodedDishId encoded dish ID with its provider name
-     * @param dishEditDto dish edited data
+     * @param editDishDto dish edited data
      */
-    async editDish(encodedDishId: EncodedDishIdValueObject, dishEditDto: DishEditDto<DishIngredient>): Promise<void> {
-        await this.editDishUseCase.execute(encodedDishId, dishEditDto);
+    async editDish(encodedDishId: EncodedDishIdValueObject, editDishDto: EditDishDto<DishIngredient>): Promise<void> {
+        await this.editDishUseCase.execute(encodedDishId, editDishDto);
     }
 
     /**

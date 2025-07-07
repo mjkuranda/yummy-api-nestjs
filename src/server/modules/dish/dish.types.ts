@@ -1,7 +1,5 @@
-import { DishIngredient, DishIngredientWithoutImage } from '../ingredient/ingredient.types';
-import { Language } from '../../common/types';
-import { MealType, DishType, Provider } from '../../common/enums';
-import { CreateDishWithAuthorDto } from './dish.dto';
+import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
+import { CreateDishWithAuthorDto } from './application/dtos';
 
 export type DishId = string | number;
 
@@ -11,27 +9,6 @@ export type DishRecipeSection = {
 };
 
 export type DishRecipeSections = DishRecipeSection[];
-
-// FIXME: Deprecated
-export interface DetailedDish {
-    imgUrl?: string;
-    ingredients: DishIngredient[];
-    language: Language;
-    title: string;
-    description: string;
-    readyInMinutes: number;
-    sourceOrAuthor: string;
-    properties?: {
-        vegetarian?: boolean;
-        vegan?: boolean;
-        glutenFree?: boolean;
-        dairyFree?: boolean;
-        veryHealthy?: boolean;
-    };
-    provider: Provider;
-    type: DishType;
-    mealType: MealType;
-}
 
 export type CreateDishDataType = Omit<CreateDishWithAuthorDto<DishIngredientWithoutImage>, 'author'>;
 

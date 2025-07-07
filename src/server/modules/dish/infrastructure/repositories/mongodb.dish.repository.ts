@@ -9,7 +9,7 @@ import { DishFactory } from '../../domain/common/factories';
 import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../common/errors';
 import { DishIngredient } from '../../../ingredient/ingredient.types';
 import { MealType, Provider } from '../../../../common/enums';
-import { DishEditDto } from '../../dish.dto';
+import { EditDishDto } from '../../application/dtos';
 import { calculateMissing, calculateRelevance } from '../../../../common/helpers';
 import { DishResultValueObject } from '../../domain/read/value-objects';
 import { Injectable } from '@nestjs/common';
@@ -93,10 +93,10 @@ export class MongodbDishRepository implements DishRepository {
         });
     }
 
-    async insertEditionForDish(id: DishId, dishEditDto: DishEditDto<DishIngredient>): Promise<void> {
+    async insertEditionForDish(id: DishId, editDishDto: EditDishDto<DishIngredient>): Promise<void> {
         await this.model.updateOne({ _id: id }, {
             $set: {
-                softEdited: dishEditDto
+                softEdited: editDishDto
             }
         });
     }

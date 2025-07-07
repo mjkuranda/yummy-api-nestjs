@@ -9,7 +9,7 @@ import {
 import { HttpService } from '@nestjs/axios';
 import { ContextString } from '../../common/types';
 import { AxiosResponse } from 'axios';
-import { DishEditDto } from '../dish/dish.dto';
+import { EditDishDto } from '../dish/application/dtos';
 import { loadDataFile, saveDataFile } from '../../common/utils';
 import { SpoonacularIngredient } from '../../../integrations/spoonacular-api/spoonacular-api.types';
 
@@ -120,9 +120,9 @@ export class IngredientService {
         }));
     }
 
-    applyWithImages(data: DishEditDto<DishIngredientWithoutImage>): DishEditDto<DishIngredient> {
+    applyWithImages(data: EditDishDto<DishIngredientWithoutImage>): EditDishDto<DishIngredient> {
         if (!data.ingredients || data.ingredients.length === 0) {
-            return data as unknown as DishEditDto<DishIngredient>;
+            return data as unknown as EditDishDto<DishIngredient>;
         }
 
         return {

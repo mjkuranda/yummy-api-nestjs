@@ -1,5 +1,5 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
-import { CreateDishDto } from '../../dish.dto';
+import { CreateDishDto, CreatedDishDto } from '../dtos';
 import { DishIngredientWithoutImage } from '../../../ingredient/ingredient.types';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { DishWriteService } from '../../domain/write/dish-write.service';
@@ -9,7 +9,6 @@ import { BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { EmptyDishIngredientListError, MissingDishAuthorError } from '../../domain/errors';
 import { ContextString } from '../../../../common/types';
-import { CreatedDishDto } from '../dtos';
 
 @Injectable()
 export class CreateDishUseCase extends AbstractUseCase<[CreateDishDto<DishIngredientWithoutImage>, UserAccessTokenPayload], CreatedDishDto> {
