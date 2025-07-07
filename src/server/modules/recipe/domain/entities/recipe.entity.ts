@@ -1,15 +1,20 @@
 import { Language } from '../../../../common/types';
-import { DishId, DishRecipeSections } from '../../../dish/dish.types';
+import { DishId, DishRecipeSection } from '../../../dish/dish.types';
+import {
+    MissingDefinedLanguageForRecipeError,
+    MissingDishAssociationForRecipeError,
+    NoDefinedRecipeSectionError
+} from '../errors';
 
 export class RecipeEntity {
     private readonly _language: Language;
     private readonly _dishId: DishId;
-    private readonly _sections: DishRecipeSections;
+    private readonly _sections: DishRecipeSection[];
 
     constructor(
         language: Language,
         dishId: DishId,
-        sections: DishRecipeSections
+        sections: DishRecipeSection[]
     ) {
         this.validateLanguage(language);
         this.validateDishId(dishId);
@@ -28,26 +33,26 @@ export class RecipeEntity {
         return this._dishId;
     }
 
-    get sections(): DishRecipeSections {
+    get sections(): DishRecipeSection[] {
         return this._sections;
     }
 
     // Domain validation methods
     private validateLanguage(language: Language): void {
         if (!language) {
-            throw new Error('Recipe language cannot be empty');
+            throw new MissingDefinedLanguageForRecipeError();
         }
     }
 
     private validateDishId(dishId: DishId): void {
         if (!dishId) {
-            throw new Error('Recipe must be associated with a dish');
+            throw new MissingDishAssociationForRecipeError();
         }
     }
 
-    private validateSections(sections: DishRecipeSections): void {
+    private validateSections(sections: DishRecipeSection[]): void {
         if (!sections || Object.keys(sections).length === 0) {
-            throw new Error('Recipe must have at least one section');
+            throw new NoDefinedRecipeSectionError();
         }
     }
 
@@ -64,7 +69,7 @@ export class RecipeEntity {
     public toSnapshot(): Readonly<{
         language: Language;
         dishId: DishId;
-        sections: DishRecipeSections;
+        sections: DishRecipeSection[];
     }> {
         return {
             language: this._language,

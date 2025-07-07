@@ -1,10 +1,19 @@
 import { DishEntity } from '../../domain/common/entities';
-import { GetDishDto, GetDishesDto, GetDishDetailsDto } from '../dtos';
+import { GetDishDto, GetDishesDto, GetDishDetailsDto, CreatedDishDto } from '../dtos';
 import { DishDetailsValueObject } from '../../domain/read/value-objects';
 import { Language } from '../../../../common/types';
 import { TranslatedDishValueObject } from '../../domain/read/value-objects';
 
 export class DishDtoMapper {
+
+    static toCreatedDishDto(entity: DishEntity): CreatedDishDto {
+        return new CreatedDishDto(
+            entity.getEncodedDishId(),
+            entity.getTitle(),
+            entity.getAuthor()
+        );
+    }
+
     static toGetDishDto(entity: DishEntity): GetDishDto {
         return new GetDishDto(
             entity.getEncodedDishId(),

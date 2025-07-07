@@ -9,6 +9,8 @@ import { BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { EmptyDishIngredientListError, MissingDishAuthorError } from '../../domain/errors';
 import { ContextString } from '../../../../common/types';
+import { CreateDishValueObject } from '../../domain/write/value-objects';
+import { DishDtoMapper } from '../mappers';
 
 @Injectable()
 export class CreateDishUseCase extends AbstractUseCase<[CreateDishDto<DishIngredientWithoutImage>, UserAccessTokenPayload], CreatedDishDto> {
@@ -24,14 +26,15 @@ export class CreateDishUseCase extends AbstractUseCase<[CreateDishDto<DishIngred
     protected async run(createDishDto: CreateDishDto<DishIngredientWithoutImage>, user: UserAccessTokenPayload): Promise<CreatedDishDto> {
         const { ingredients, title, imageUrl, ingredientCount } = createDishDto;
         const imageUrlDescription = imageUrl ? `"${imageUrl}" image url` : 'no image';
+        const createDishVo = CreateDishValueObject.fromCreateDishDto(createDishDto);
 
         const ingredientList = await this.ingredientService.wrapIngredientsWithImages(ingredients);
-        const createdDish = await this.dishWriteService.saveNewDish(createDishDto, user.login, ingredientList);
+        const createdDish = await this.dishWriteService.saveNewDish(createDishVo, user.login, ingredientList);
         const message = `New dish "${title}", having ${ingredientCount} ingredients and with ${imageUrlDescription} has been created by ${user.login}.`;
 
         this.loggerService.info(this.context, message);
 
-        return createdDish;
+        return DishDtoMapper.toCreatedDishDto(createdDish);
     }
 
     protected handleError(error: unknown, context: ContextString): never {

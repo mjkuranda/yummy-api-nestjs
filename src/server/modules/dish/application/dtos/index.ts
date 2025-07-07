@@ -4,7 +4,6 @@ export * from './confirmed-editing.dto';
 export * from './create-dish.dto';
 export * from './create-dish-comment.dto';
 export * from './create-dish-rating.dto';
-export * from './create-dish-with-author.dto';
 export * from './created-dish.dto';
 export * from './dish-comment.dto';
 export * from './edit-dish.dto';

@@ -1,19 +1,8 @@
-import { DishIngredientWithoutImage } from '../ingredient/ingredient.types';
-import { CreateDishWithAuthorDto } from './application/dtos';
-
+// TODO: Common across API?
 export type DishId = string | number;
 
+// TODO: Common across API?
 export type DishRecipeSection = {
     name?: string,
     steps: string[]
 };
-
-export type DishRecipeSections = DishRecipeSection[];
-
-export type CreateDishDataType = Omit<CreateDishWithAuthorDto<DishIngredientWithoutImage>, 'author'>;
-
-export type GetDishesQueryType = Record<GetDishesQueryKeyTypes, string>;
-
-type GetDishesQueryKeyTypes = 'ings' | 'type' | 'dish';
-
-export type MergedSearchQueries = Record<string, number>;

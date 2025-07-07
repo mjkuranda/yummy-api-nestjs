@@ -8,6 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EditDishValueObject } from '../../domain/write/value-objects';
 
 @Injectable()
 export class EditDishUseCase extends AbstractUseCase<[EncodedDishIdValueObject, EditDishDto<DishIngredient>], void> {
@@ -20,7 +21,9 @@ export class EditDishUseCase extends AbstractUseCase<[EncodedDishIdValueObject, 
     }
 
     protected async run(encodedDishId: EncodedDishIdValueObject, editDishDto: EditDishDto<DishIngredient>): Promise<void> {
-        const result = await this.dishWriteService.editDish(encodedDishId, editDishDto);
+        const editDishVo = EditDishValueObject.fromEditDishDto(editDishDto);
+        const result = await this.dishWriteService.editDish(encodedDishId, editDishVo);
+
         this.loggerService.info(this.context, `Dish with id "${encodedDishId}" (titled: "${result.dishTitle}") has been edited.`);
     }
 

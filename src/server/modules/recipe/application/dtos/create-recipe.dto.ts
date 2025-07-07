@@ -1,5 +1,5 @@
 import { IsIn, IsNotEmpty } from 'class-validator';
-import { DishRecipeSections } from '../../../dish/dish.types';
+import { DishRecipeSection } from '../../../dish/dish.types';
 import { Language } from '../../../../common/types';
 import { supportedLanguages } from '../../../../constants/language.constant';
 
@@ -12,5 +12,5 @@ export class CreateRecipeDto {
     readonly dishId: string;
 
     @IsNotEmpty({ message: 'Recipe should have at least one section' })
-    readonly sections: DishRecipeSections;
+    readonly sections: DishRecipeSection[];
 }

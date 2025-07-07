@@ -8,12 +8,12 @@ import {
 import { REPOSITORIES_TOKEN } from '../../../../../constants/nestjs.contant';
 import { RepositoryMap } from '../../../../../common/types';
 import { MealType, Repository } from '../../../../../common/enums';
-import { CreateDishDataType, DishId } from '../../../../dish/dish.types';
+import { DishId } from '../../../../dish/dish.types';
 import { DishCommentEntity, DishEntity, DishRatingEntity } from '../../../../dish/domain/common/entities';
 import { DishIngredient } from '../../../../ingredient/ingredient.types';
 import { DishOverviewValueObject } from '../../../../user/domain/value-objects';
 import { DishResultValueObject } from '../../../../dish/domain/read/value-objects';
-import { EditDishDto } from '../../../../dish/application/dtos';
+import { CreateDishValueObject, EditDishValueObject } from '../../../../dish/domain/write/value-objects';
 
 @Injectable()
 export class DishApiService implements DishDataManageable {
@@ -35,7 +35,7 @@ export class DishApiService implements DishDataManageable {
         return await this.dishRepository.confirmDishEdition(id, dishSoftEdited);
     }
 
-    async createNewDish(data: CreateDishDataType, author?: string, ingredients?: DishIngredient[]): Promise<DishEntity> {
+    async createNewDish(data: CreateDishValueObject, author?: string, ingredients?: DishIngredient[]): Promise<DishEntity> {
         return await this.dishRepository.createNewDish(data, author, ingredients);
     }
 
@@ -91,8 +91,8 @@ export class DishApiService implements DishDataManageable {
         return await this.dishRepository.getDishesWithSoftEdited();
     }
 
-    async insertEditionForDish(id: DishId, editDishDto: EditDishDto<DishIngredient>): Promise<void> {
-        return await this.dishRepository.insertEditionForDish(id, editDishDto);
+    async insertEditionForDish(id: DishId, editDishVo: EditDishValueObject): Promise<void> {
+        return await this.dishRepository.insertEditionForDish(id, editDishVo);
     }
 
     async insertNewRating(userLogin: string, dishId: DishId, rating: number): Promise<void> {

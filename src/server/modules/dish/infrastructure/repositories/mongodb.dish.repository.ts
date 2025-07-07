@@ -3,7 +3,7 @@ import { FilterQuery, isValidObjectId, Model } from 'mongoose';
 import { DishDocument } from '../../../../../infrastructure/databases/mongodb/documents';
 import { dishModel } from '../../../../common/definitions/mongoose-model.definitions';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateDishDataType, DishId } from '../../dish.types';
+import { DishId } from '../../dish.types';
 import { DishEntity } from '../../domain/common/entities';
 import { DishFactory } from '../../domain/common/factories';
 import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../common/errors';
@@ -14,6 +14,7 @@ import { calculateMissing, calculateRelevance } from '../../../../common/helpers
 import { DishResultValueObject } from '../../domain/read/value-objects';
 import { Injectable } from '@nestjs/common';
 import { DishOverviewValueObject } from 'src/server/modules/user/domain/value-objects';
+import { CreateDishValueObject } from '../../domain/write/value-objects';
 
 @Injectable()
 export class MongodbDishRepository implements DishRepository {
@@ -40,7 +41,7 @@ export class MongodbDishRepository implements DishRepository {
         return DishFactory.fromDocument(document);
     }
 
-    async createNewDish(data: CreateDishDataType, author?: string, ingredients?: DishIngredient[]): Promise<DishEntity> {
+    async createNewDish(data: CreateDishValueObject, author?: string, ingredients?: DishIngredient[]): Promise<DishEntity> {
         const doc = await this.model.create({
             ...data,
             ingredients,

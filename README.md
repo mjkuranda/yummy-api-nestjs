@@ -79,7 +79,7 @@ Technologies:
     ],
     "imageUrl": "https://some.domain/path/to/resource/image.ext",
     "readyInMinutes": 50,
-    "type": "soup",
+    "dishType": "soup",
     "mealType": "launch"
 }
 ```

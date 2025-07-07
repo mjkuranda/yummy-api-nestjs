@@ -7,7 +7,7 @@ import {
     SpoonacularRecipeSections
 } from './spoonacular-api.types';
 import { DishDetailsValueObject, DishResultValueObject } from '../../server/modules/dish/domain/read/value-objects';
-import { DishRecipeSections } from '../../server/modules/dish/dish.types';
+import { DishRecipeSection } from '../../server/modules/dish/dish.types';
 import {
     calculateCheckingAgain,
     discardDecimalPoint,
@@ -85,7 +85,7 @@ export class SpoonacularApiAdapter implements ExternalApiDataAdaptable<Spoonacul
         );
     }
 
-    toDishRecipeSections(instructionData: SpoonacularRecipeSections): DishRecipeSections {
+    toDishRecipeSections(instructionData: SpoonacularRecipeSections): DishRecipeSection[] {
         return instructionData.map(section => ({
             name: section.name,
             steps: section.steps.map(step => step.step)

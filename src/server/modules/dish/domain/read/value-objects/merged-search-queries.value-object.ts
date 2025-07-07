@@ -1,5 +1,6 @@
-import { MergedSearchQueries } from '../../../dish.types';
 import { UserSearchQueryEntity } from '../../common/entities';
+
+type MergedSearchQueries = Record<string, number>;
 
 export class MergedSearchQueriesValueObject {
 

@@ -1,13 +1,13 @@
 import { DishType, MealType } from '../../../../common/enums';
-import { DishRecipeSections } from '../../dish.types';
+import { DishRecipeSection } from '../../dish.types';
 
 export class EditDishDto<Ingredient> {
     readonly title?: string;
     readonly description?: string;
-    readonly type?: DishType;
     readonly mealType?: MealType;
+    readonly dishType?: DishType;
     readonly ingredients?: Ingredient[];
     readonly readyInMinutes?: number;
-    readonly recipeSections?: DishRecipeSections;
+    readonly recipeSections?: DishRecipeSection[];
     readonly imageUrl?: string;
 }
