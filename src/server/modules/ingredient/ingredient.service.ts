@@ -135,6 +135,7 @@ export class IngredientService {
     }
 
     public async fetchAllImages() {
+        const context: ContextString = 'IngredientService/fetchAllImages';
         const categories: IngredientCategory[] = ['breads', 'cereal-products', 'dairy-and-eggs', 'fish-and-seafood', 'fruits', 'meats', 'mushrooms', 'oils-and-fats', 'pasta', 'seeds-and-nuts', 'spices', 'vegetables'];
 
         for (const category of categories) {
@@ -157,15 +158,13 @@ export class IngredientService {
                         const { data } = await this.httpService.axiosRef.get<SpoonacularIngredient>(`https://api.spoonacular.com/food/ingredients/${json[key].id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`);
                         json[key].imageUrl = data.image;
                     } catch (err) {
-                        // FIXME: Logger error
-                        console.error('Error:', err.message);
+                        this.loggerService.error(context, err.message);
                     }
                 }
             }
 
             await saveDataFile(`ingredients/${category}`, json);
-            // FIXME: Logger info
-            console.log(`Category ${category} updated.`);
+            this.loggerService.info(context, `Category ${category} updated.`);
         }
     }
 }
