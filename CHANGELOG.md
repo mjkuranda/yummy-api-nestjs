@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Marek Kurańda](https://github.com/mjkuranda): `@nestjs/axios` package.
 - [Marek Kurańda](https://github.com/mjkuranda): Error directory for each domain module and two common errors.
 - [Marek Kurańda](https://github.com/mjkuranda): Cache and database abstract level.
+- [Marek Kurańda](https://github.com/mjkuranda): Dish new controllers.
+- [Marek Kurańda](https://github.com/mjkuranda): New decorator - `@User`.
 
 ### Removed
 - [Marek Kurańda](https://github.com/mjkuranda): `dish.service.spec.ts` and `dish.controller.spec.ts` test files.

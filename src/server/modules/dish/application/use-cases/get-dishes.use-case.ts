@@ -1,6 +1,4 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
-import { IngredientType } from '../../../ingredient/ingredient.types';
-import { MealType } from '../../../../common/enums';
 import { IngredientService } from '../../../ingredient/ingredient.service';
 import { DishReadService } from '../../domain/read/dish-read.service';
 import { LoggerService } from '../../../logger/logger.service';
@@ -9,9 +7,10 @@ import { ContextString } from '../../../../common/types';
 import { BadRequestException } from '../../../../exceptions';
 import { GetDishResultsDto } from '../dtos';
 import { DishResultsDtoMapper } from '../mappers';
+import { GetDishesQueryDto } from '../dtos/get-dishes-query.dto';
 
 @Injectable()
-export class GetDishesUseCase extends AbstractUseCase<[IngredientType[], MealType], GetDishResultsDto> {
+export class GetDishesUseCase extends AbstractUseCase<[GetDishesQueryDto], GetDishResultsDto> {
 
     constructor(
         private readonly ingredientService: IngredientService,
@@ -21,7 +20,8 @@ export class GetDishesUseCase extends AbstractUseCase<[IngredientType[], MealTyp
         super();
     }
 
-    protected async run(ings: IngredientType[], mealType: MealType): Promise<GetDishResultsDto> {
+    protected async run(getDishesQueryDto: GetDishesQueryDto): Promise<GetDishResultsDto> {
+        const { ings, mealType } = getDishesQueryDto;
         const filteredIngredients = this.ingredientService.filterIngredients(ings);
         const allIngredients = [...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()];
 

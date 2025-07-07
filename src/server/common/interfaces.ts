@@ -1,17 +1,8 @@
-import { UserAccessTokenPayload } from '../modules/jwt-manager/jwt-manager.types';
 import { MealType, Provider } from './enums';
 import { Language } from './types';
 import { RecipeEntity } from '../modules/recipe/domain/entities';
 import { EncodedDishIdValueObject } from '../modules/dish/domain/common/value-objects';
 import { DishDetailsValueObject, DishResultValueObject } from '../modules/dish/domain/read/value-objects';
-
-/**
- * @description Transformed endpoint body
- */
-export interface TransformedBody<TData> {
-    data: TData;
-    authenticatedUser: UserAccessTokenPayload;
-}
 
 export interface Providable extends DishProvidable, RecipeProvidable {
     /**

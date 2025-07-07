@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { Language } from '../../../common/types';
-import { IngredientType } from '../../ingredient/ingredient.types';
-import { MealType } from '../../../common/enums';
 import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
 import { GetDishDetailsUseCase, GetDishesUseCase, GetDishProposalsUseCase, GetDishesWithSoftAddedUseCase, GetDishesWithSoftEditedUseCase, GetDishesWithSoftDeletedUseCase, GetDishCommentsUseCase, GetDishRatingUseCase } from './use-cases';
 import { EncodedDishIdValueObject } from '../domain/common/value-objects';
@@ -13,6 +11,7 @@ import {
     GetDishResultsDto,
     GetDishProposalsDto
 } from './dtos';
+import { GetDishesQueryDto } from './dtos/get-dishes-query.dto';
 
 @Injectable()
 export class DishQueryFacade {
@@ -30,11 +29,10 @@ export class DishQueryFacade {
 
     /**
      * @description Returns dishes from all providers
-     * @param ings listed ingredients, provided by user
-     * @param mealType filter dishes by meal type, e.g. breakfast, launch, beverage, etc...
+     * @param queryDto listed ingredients, provided by user filters: meal type and dish type
      */
-    async getDishes(ings: IngredientType[], mealType: MealType): Promise<GetDishResultsDto> {
-        return await this.getDishesUseCase.execute(ings, mealType);
+    async getDishes(queryDto: GetDishesQueryDto): Promise<GetDishResultsDto> {
+        return await this.getDishesUseCase.execute(queryDto);
     }
 
     /**

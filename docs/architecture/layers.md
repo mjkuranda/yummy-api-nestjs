@@ -10,7 +10,13 @@ graph TD
     subgraph Presentation Layer
         HealthcheckController
         DishController
+        DishCommentController
+        DishModerationController
+        DishRatingController
+        DishRecommendationController
         UserController
+        UserAuthController
+        UserProfileController
         RecipeController
         ImageController
     end
@@ -60,6 +66,13 @@ graph TD
 %% Presentation → Application / Domain
     DishController --> DishQueryFacade
     DishController --> DishCommandFacade
+    DishCommentController --> DishQueryFacade
+    DishCommentController --> DishCommandFacade
+    DishModerationController --> DishQueryFacade
+    DishModerationController --> DishCommandFacade
+    DishRatingController --> DishQueryFacade
+    DishRatingController --> DishCommandFacade
+    DishRecommendationController --> DishQueryFacade
     UserController --> UserFacade
     RecipeController --> RecipeFacade
     ImageController --> ImageService

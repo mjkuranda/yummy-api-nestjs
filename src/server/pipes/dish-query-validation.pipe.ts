@@ -19,17 +19,8 @@ export class DishQueryValidationPipe implements PipeTransform {
             throw new BadRequestException(context, message);
         }
 
-        if (!value.ings) {
-            const message = 'No provided ingredients in query.';
-            this.loggerService.error(context, message);
-
-            throw new BadRequestException(context, message);
-        }
-
-        const ings = value.ings.split(',').filter(ing => ing.length > 0);
-
-        if (ings.length === 0) {
-            const message = 'Provided 0 ingredients in query.';
+        if (typeof value.ings !== 'string') {
+            const message = '`ings` query param must be a comma-separated string.';
             this.loggerService.error(context, message);
 
             throw new BadRequestException(context, message);

@@ -4,9 +4,9 @@ import { ChangeUserPasswordDto, CreatedUserDto, CreateUserDto, GetUsersDto } fro
 import { AuthenticationGuard } from '../../../../guards/authentication.guard';
 import { AdminGuard } from '../../../../guards/admin.guard';
 import { CapabilityGuard } from '../../../../guards/capability.guard';
-import { TransformedBody } from '../../../../common/interfaces';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { CapabilityType } from '../../domain/types';
+import { User } from '../../../../decorators';
 
 @Controller('users')
 export class UserController {
@@ -41,11 +41,10 @@ export class UserController {
     @HttpCode(204)
     @UseGuards(AuthenticationGuard)
     public async changePassword(
-        @Body() body: TransformedBody<ChangeUserPasswordDto>
+        @User() user: UserAccessTokenPayload,
+        @Body() body: ChangeUserPasswordDto
     ): Promise<void> {
-        const { authenticatedUser, data } = body;
-
-        return await this.userFacade.changePassword(authenticatedUser.login, data.newPassword);
+        return await this.userFacade.changePassword(user.login, body.newPassword);
     }
 
     @Patch('/activate/:userActionId')
@@ -69,26 +68,22 @@ export class UserController {
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, CapabilityGuard)
     public async grantPermission(
-        @Body() body: TransformedBody<UserAccessTokenPayload>,
         @Param('login') login: string,
-        @Param('capability') capability: CapabilityType
+        @Param('capability') capability: CapabilityType,
+        @Body() body: UserAccessTokenPayload
     ): Promise<void> {
-        const { authenticatedUser } = body;
-
-        return await this.userFacade.grantPermission(authenticatedUser, login, capability);
+        return await this.userFacade.grantPermission(body, login, capability);
     }
 
     @Delete('/:login/capability/:capability')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard, CapabilityGuard)
     public async revokePermission(
-        @Body() body: TransformedBody<UserAccessTokenPayload>,
         @Param('login') login: string,
-        @Param('capability') capability: CapabilityType
+        @Param('capability') capability: CapabilityType,
+        @Body() body: UserAccessTokenPayload
     ): Promise<void> {
-        const { authenticatedUser } = body;
-
-        return await this.userFacade.denyPermission(authenticatedUser, login, capability);
+        return await this.userFacade.denyPermission(body, login, capability);
     }
 
 }
