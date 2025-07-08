@@ -1,8 +1,8 @@
 import { DishEntity } from '../../domain/common/entities';
 import { GetDishDto, GetDishesDto, GetDishDetailsDto, CreatedDishDto } from '../dtos';
-import { DishDetailsValueObject } from '../../domain/read/value-objects';
+import { DishDetailsVo } from '../../domain/read/vos';
 import { Language } from '../../../../common/types';
-import { TranslatedDishValueObject } from '../../domain/read/value-objects';
+import { TranslatedDishVo } from '../../domain/read/vos';
 
 export class DishDtoMapper {
 
@@ -28,7 +28,7 @@ export class DishDtoMapper {
         return new GetDishesDto(dishDtos);
     }
 
-    static toGetDishDetailsDto(originalDish: DishDetailsValueObject, translatedDish: TranslatedDishValueObject, language: Language): GetDishDetailsDto {
+    static toGetDishDetailsDto(originalDish: DishDetailsVo, translatedDish: TranslatedDishVo, language: Language): GetDishDetailsDto {
         return new GetDishDetailsDto(
             originalDish.title,
             translatedDish.description,

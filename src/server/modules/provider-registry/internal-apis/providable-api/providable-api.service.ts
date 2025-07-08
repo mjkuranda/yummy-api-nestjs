@@ -5,8 +5,8 @@ import { MealType, Provider, Repository } from '../../../../common/enums';
 import { RecipeEntity } from '../../../recipe/domain/entities';
 import { DishRepository } from '../../../dish/domain/dish.repository';
 import { RecipeRepository } from '../../../recipe/domain/recipe.repository';
-import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
-import { DishDetailsValueObject, DishResultValueObject } from '../../../dish/domain/read/value-objects';
+import { EncodedDishIdVo } from '../../../dish/domain/common/vos';
+import { DishDetailsVo, DishResultVo } from '../../../dish/domain/read/vos';
 import { REPOSITORIES_TOKEN } from '../../../../constants/nestjs.contant';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class ProvidableApiService implements Providable {
         this.recipeRepository = this.repositoryMap[Repository.RECIPE_REPOSITORY];
     }
 
-    async getDishDetails(encodedDishId: EncodedDishIdValueObject): Promise<DishDetailsValueObject | null> {
+    async getDishDetails(encodedDishId: EncodedDishIdVo): Promise<DishDetailsVo | null> {
         const dishId = encodedDishId.getDishId();
         const dish = await this.dishRepository.findByDishId(dishId);
 
@@ -31,22 +31,22 @@ export class ProvidableApiService implements Providable {
             return null;
         }
 
-        return DishDetailsValueObject.fromEntity(dish);
+        return DishDetailsVo.fromEntity(dish);
     }
 
-    async getDishRecipe(encodedDishId: EncodedDishIdValueObject, language?: Language): Promise<RecipeEntity | null> {
+    async getDishRecipe(encodedDishId: EncodedDishIdVo, language?: Language): Promise<RecipeEntity | null> {
         const dishId = encodedDishId.getDishId();
 
         return await this.recipeRepository.findRecipeByDishId(dishId, language);
     }
 
-    async getDishes(providedIngredients: string[], mealType?: MealType): Promise<DishResultValueObject[]> {
+    async getDishes(providedIngredients: string[], mealType?: MealType): Promise<DishResultVo[]> {
         return await this.dishRepository.findDishesByIngredientsAndType(providedIngredients, mealType);
     }
 
     // TODO: Specific language. Getting dish and returning its language
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getLanguage(encodedDishId: EncodedDishIdValueObject): Language {
+    getLanguage(encodedDishId: EncodedDishIdVo): Language {
         return 'pl';
     }
 

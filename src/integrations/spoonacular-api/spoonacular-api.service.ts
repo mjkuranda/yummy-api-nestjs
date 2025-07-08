@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ExternalApiService } from '../../server/modules/provider-registry/external-apis/external-api.service';
 import { DishId } from '../../server/modules/dish/dish.types';
 import { DishType, MealType, Provider } from '../../server/common/enums';
-import { EncodedDishIdValueObject } from '../../server/modules/dish/domain/common/value-objects';
+import { EncodedDishIdVo } from '../../server/modules/dish/domain/common/vos';
 import { Language } from '../../server/common/types';
 import { getCompactUrl } from '../../server/modules/provider-registry/external-apis/external-api.helper';
 import {
@@ -75,7 +75,7 @@ export class SpoonacularApiService extends ExternalApiService<SpoonacularRecipe,
 
     // TODO: Getting dish and returning its language
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getLanguage(encodedDishId: EncodedDishIdValueObject): Language {
+    getLanguage(encodedDishId: EncodedDishIdVo): Language {
         return 'en';
     }
 

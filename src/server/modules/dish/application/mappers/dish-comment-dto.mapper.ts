@@ -1,17 +1,17 @@
-import { DishCommentValueObject } from '../../domain/read/value-objects';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { DishCommentVo } from '../../domain/read/vos';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 import { DishCommentDto, GetDishCommentsDto } from '../dtos';
 
 export class DishCommentDtoMapper {
 
     constructor(
-        public readonly encodedDishIdVo: EncodedDishIdValueObject,
+        public readonly encodedDishIdVo: EncodedDishIdVo,
         public readonly author: string,
         public readonly content: string,
         public readonly posted: number
     ) {}
 
-    static toGetDishCommentsDto(dishCommentVos: DishCommentValueObject[]): GetDishCommentsDto {
+    static toGetDishCommentsDto(dishCommentVos: DishCommentVo[]): GetDishCommentsDto {
         const dishCommentDtos = dishCommentVos.map(dishCommentVo => this.toDishCommentDto(dishCommentVo));
 
         return new GetDishCommentsDto(
@@ -20,7 +20,7 @@ export class DishCommentDtoMapper {
         );
     }
 
-    static toDishCommentDto(dishCommentVo: DishCommentValueObject): DishCommentDto {
+    static toDishCommentDto(dishCommentVo: DishCommentVo): DishCommentDto {
         return new DishCommentDto(
             dishCommentVo.encodedDishIdVo.getValue(),
             dishCommentVo.author,

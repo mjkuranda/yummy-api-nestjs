@@ -5,7 +5,7 @@ import { DishId } from '../../dish.types';
 // TODO: Secret salt!!!!
 const hashids = new Hashids('your-secret-salt', 8);
 
-export class EncodedDishIdValueObject {
+export class EncodedDishIdVo {
 
     private constructor(
         private readonly _value: string,
@@ -13,15 +13,15 @@ export class EncodedDishIdValueObject {
         private readonly _dishId: DishId
     ) {}
 
-    static fromParts(provider: Provider, dishId: string | number): EncodedDishIdValueObject {
+    static fromParts(provider: Provider, dishId: string | number): EncodedDishIdVo {
         const input = `${provider}:${dishId}`;
         const charCodes = Array.from(input).map(char => char.charCodeAt(0));
         const encoded = hashids.encode(charCodes);
 
-        return new EncodedDishIdValueObject(encoded, provider, dishId);
+        return new EncodedDishIdVo(encoded, provider, dishId);
     }
 
-    static fromEncodedString(encoded: string): EncodedDishIdValueObject | null {
+    static fromEncodedString(encoded: string): EncodedDishIdVo | null {
         const charCodes = hashids.decode(encoded) as number[];
 
         if (!charCodes?.length) {
@@ -40,14 +40,14 @@ export class EncodedDishIdValueObject {
             return null;
         }
 
-        return new EncodedDishIdValueObject(encoded, provider, dishId);
+        return new EncodedDishIdVo(encoded, provider, dishId);
     }
 
     toString(): string {
         return this._value;
     }
 
-    equals(other: EncodedDishIdValueObject): boolean {
+    equals(other: EncodedDishIdVo): boolean {
         return this._value === other._value;
     }
 

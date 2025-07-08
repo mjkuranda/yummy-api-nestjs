@@ -3,8 +3,8 @@ import { HttpService } from '@nestjs/axios';
 import { LoggerService } from '../../logger/logger.service';
 import { DishCacheService } from '../../cache/domains/dish/dish-cache.service';
 import { Providable } from '../../../common/interfaces';
-import { EncodedDishIdValueObject } from '../../dish/domain/common/value-objects';
-import { DishDetailsValueObject, DishResultValueObject } from '../../dish/domain/read/value-objects';
+import { EncodedDishIdVo } from '../../dish/domain/common/vos';
+import { DishDetailsVo, DishResultVo } from '../../dish/domain/read/vos';
 import { ContextString, Language } from '../../../common/types';
 import { RecipeEntity } from '../../recipe/domain/entities';
 import { DishType, MealType, Provider } from '../../../common/enums';
@@ -24,7 +24,7 @@ export abstract class ExternalApiService<ExternalApiDishResult, ExternalApiDishD
         protected readonly loggerService: LoggerService
     ) {}
 
-    async getDishDetails(encodedDishId: EncodedDishIdValueObject): Promise<DishDetailsValueObject> {
+    async getDishDetails(encodedDishId: EncodedDishIdVo): Promise<DishDetailsVo> {
         const dishId = encodedDishId.getDishId();
         const url = this.getDishDetailsEndpointUrl(dishId);
         const context: ContextString = 'AbstractApiService/getDishDetails';
@@ -49,7 +49,7 @@ export abstract class ExternalApiService<ExternalApiDishResult, ExternalApiDishD
         }
     }
 
-    async getDishRecipe(encodedDishId: EncodedDishIdValueObject, language: Language): Promise<RecipeEntity | null> {
+    async getDishRecipe(encodedDishId: EncodedDishIdVo, language: Language): Promise<RecipeEntity | null> {
         const dishId = encodedDishId.getDishId();
         const instructionUrl = this.getDishInstructionEndpointUrl(dishId);
         const context: ContextString = 'AbstractApiService/getDishRecipe';
@@ -74,7 +74,7 @@ export abstract class ExternalApiService<ExternalApiDishResult, ExternalApiDishD
         }
     }
 
-    async getDishes(ingredients: string[], mealType?: MealType): Promise<DishResultValueObject[]> {
+    async getDishes(ingredients: string[], mealType?: MealType): Promise<DishResultVo[]> {
         const cachedResult = await this.dishCacheService.getDishes(ingredients); // TODO: Meal type...
         const context: ContextString = 'AbstractApiService/getDishes';
 
@@ -95,7 +95,7 @@ export abstract class ExternalApiService<ExternalApiDishResult, ExternalApiDishD
                 return [];
             }
 
-            const dishes: DishResultValueObject[] = this.externalApiAdapter.toDishes(result.data, ingredients);
+            const dishes: DishResultVo[] = this.externalApiAdapter.toDishes(result.data, ingredients);
             await this.dishCacheService.setDishes(ingredients, dishes);
             this.loggerService.info(context, `Received ${dishes.length} dishes. Query has been cached from "${this.getExternalApiName()}" API.`);
 
@@ -107,7 +107,7 @@ export abstract class ExternalApiService<ExternalApiDishResult, ExternalApiDishD
         }
     }
 
-    abstract getLanguage(encodedDishId: EncodedDishIdValueObject): Language;
+    abstract getLanguage(encodedDishId: EncodedDishIdVo): Language;
 
     abstract getProvider(): Provider;
 

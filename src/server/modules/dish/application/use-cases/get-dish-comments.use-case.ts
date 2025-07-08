@@ -5,12 +5,12 @@ import { LoggerService } from '../../../logger/logger.service';
 import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 import { GetDishCommentsDto } from '../dtos';
 import { DishCommentDtoMapper } from '../mappers';
 
 @Injectable()
-export class GetDishCommentsUseCase extends AbstractUseCase<[EncodedDishIdValueObject], GetDishCommentsDto> {
+export class GetDishCommentsUseCase extends AbstractUseCase<[EncodedDishIdVo], GetDishCommentsDto> {
 
     constructor(
         private readonly loggerService: LoggerService,
@@ -19,7 +19,7 @@ export class GetDishCommentsUseCase extends AbstractUseCase<[EncodedDishIdValueO
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject): Promise<GetDishCommentsDto> {
+    protected async run(encodedDishId: EncodedDishIdVo): Promise<GetDishCommentsDto> {
         const comments = await this.dishReadService.getDishComments(encodedDishId);
         this.loggerService.info(this.context, `Successfully retrieved ${comments.length} comments for dish "${encodedDishId}".`);
 

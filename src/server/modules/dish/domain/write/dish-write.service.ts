@@ -5,14 +5,14 @@ import { DishIngredient } from '../../../ingredient/ingredient.types';
 import { IngredientService } from '../../../ingredient/ingredient.service';
 import { Provider } from '../../../../common/enums';
 import {
-    AddDishRatingStatusValueObject, CreateDishValueObject,
-    DishDeletionConfirmationStatusValueObject,
-    DishDeletionStatusValueObject,
-    DishEditionStatusValueObject, EditDishValueObject
-} from './value-objects';
+    AddDishRatingStatusVo, CreateDishVo,
+    DishDeletionConfirmationStatusVo,
+    DishDeletionStatusVo,
+    DishEditionStatusVo, EditDishVo
+} from './vos';
 import { DishEntity } from '../common/entities';
-import { EncodedDishIdValueObject } from '../common/value-objects';
-import { DishDetailsValueObject } from '../read/value-objects';
+import { EncodedDishIdVo } from '../common/vos';
+import { DishDetailsVo } from '../read/vos';
 import { DishDataManageable, UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 import {
     DishDeletionFailedError, DishNotAcceptedError,
@@ -43,7 +43,7 @@ export class DishWriteService {
      * @param ingredients list of dish ingredients
      * @returns dish domain entity
      */
-    async saveNewDish(createData: CreateDishValueObject, author: string, ingredients: DishIngredient[]): Promise<DishEntity> {
+    async saveNewDish(createData: CreateDishVo, author: string, ingredients: DishIngredient[]): Promise<DishEntity> {
         if (!author) {
             throw new MissingDishAuthorError();
         }
@@ -61,7 +61,7 @@ export class DishWriteService {
      * @param editDishVo dish edit data
      * @returns dish edition status that indicates the dish that was edited
      */
-    async editDish(encodedDishId: EncodedDishIdValueObject, editDishVo: EditDishValueObject): Promise<DishEditionStatusValueObject> {
+    async editDish(encodedDishId: EncodedDishIdVo, editDishVo: EditDishVo): Promise<DishEditionStatusVo> {
         const dishId = encodedDishId.getDishId();
 
         const dish = await this.dishApiService.findByDishId(dishId);
@@ -75,7 +75,7 @@ export class DishWriteService {
         const editedDish = await this.dishApiService.findByDishId(dishId);
         const dishTitle = editedDish.getTitle();
 
-        return new DishEditionStatusValueObject(dishTitle);
+        return new DishEditionStatusVo(dishTitle);
     }
 
     /**
@@ -83,7 +83,7 @@ export class DishWriteService {
      * @param encodedDishId encoded dish ID and its provider name
      * @returns dish deletion status that indicates dish soft-deleting along with its title
      */
-    async deleteDish(encodedDishId: EncodedDishIdValueObject): Promise<DishDeletionStatusValueObject> {
+    async deleteDish(encodedDishId: EncodedDishIdVo): Promise<DishDeletionStatusVo> {
         const dishId = encodedDishId.getDishId();
         const dish = await this.dishApiService.findByDishId(dishId);
 
@@ -100,7 +100,7 @@ export class DishWriteService {
             throw new DishDeletionFailedError(encodedDishId);
         }
 
-        return new DishDeletionStatusValueObject(
+        return new DishDeletionStatusVo(
             deletedDish.getTitle(),
             deletedDish.isSoftDeleted()
         );
@@ -111,7 +111,7 @@ export class DishWriteService {
      * @param encodedDishId encoded dish id with its provider name
      * @returns domain dish entity
      */
-    async confirmCreating(encodedDishId: EncodedDishIdValueObject): Promise<DishEntity> {
+    async confirmCreating(encodedDishId: EncodedDishIdVo): Promise<DishEntity> {
         const id = encodedDishId.getDishId();
         const dish = await this.dishApiService.findByDishId(id);
 
@@ -122,7 +122,7 @@ export class DishWriteService {
         await this.dishApiService.unsetSoftAddedForDish(id);
 
         const addedDish = await this.dishApiService.findByDishId(id);
-        const dishDetails = DishDetailsValueObject.fromEntity(addedDish);
+        const dishDetails = DishDetailsVo.fromEntity(addedDish);
 
         await this.dishCacheService.setDishDetails(encodedDishId, dishDetails);
 
@@ -134,7 +134,7 @@ export class DishWriteService {
      * @param encodedDishId encoded dish ID and its provider name
      * @returns domain dish entity
      */
-    async confirmEditing(encodedDishId: EncodedDishIdValueObject): Promise<DishEntity> {
+    async confirmEditing(encodedDishId: EncodedDishIdVo): Promise<DishEntity> {
         const dishId = encodedDishId.getDishId();
         const dish = await this.dishApiService.findByDishId(dishId);
 
@@ -147,7 +147,7 @@ export class DishWriteService {
         await this.dishApiService.confirmDishEdition(dishId, softEdited);
 
         const updatedDish = await this.dishApiService.findByDishId(dishId);
-        const dishDetails = DishDetailsValueObject.fromEntity(updatedDish);
+        const dishDetails = DishDetailsVo.fromEntity(updatedDish);
 
         await this.dishCacheService.setDishDetails(encodedDishId, dishDetails);
 
@@ -159,7 +159,7 @@ export class DishWriteService {
      * @param encodedDishId encoded dish ID and its provider name
      * @returns dish deletion confirmation status along with success information
      */
-    async confirmDeleting(encodedDishId: EncodedDishIdValueObject): Promise<DishDeletionConfirmationStatusValueObject> {
+    async confirmDeleting(encodedDishId: EncodedDishIdVo): Promise<DishDeletionConfirmationStatusVo> {
         const dishId = encodedDishId.getDishId();
         const dish = await this.dishApiService.findByDishId(dishId);
 
@@ -175,7 +175,7 @@ export class DishWriteService {
         const deletedDish = await this.dishApiService.findByDishId(dishId);
         const dishTitle = dish.getTitle();
 
-        return new DishDeletionConfirmationStatusValueObject(
+        return new DishDeletionConfirmationStatusVo(
             dishTitle,
             deletedDish !== null
         );
@@ -200,7 +200,7 @@ export class DishWriteService {
      * @param content comment text to post
      * @returns void
      */
-    async addDishComment(encodedDishId: EncodedDishIdValueObject, userLogin: string, content: string): Promise<void> {
+    async addDishComment(encodedDishId: EncodedDishIdVo, userLogin: string, content: string): Promise<void> {
         const providable = this.providerRegistryService.getProvider(Provider.INT_DMT_USER);
         const dishDetailsVo = await providable.getDishDetails(encodedDishId);
 
@@ -228,7 +228,7 @@ export class DishWriteService {
      * @param rating integer value between 0-10
      * @returns add dish rating status if is new rating or not
      */
-    async addDishRating(encodedDishId: EncodedDishIdValueObject, userLogin: string, rating: number): Promise<AddDishRatingStatusValueObject> {
+    async addDishRating(encodedDishId: EncodedDishIdVo, userLogin: string, rating: number): Promise<AddDishRatingStatusVo> {
         const providable = this.providerRegistryService.getProvider(Provider.INT_DMT_USER);
         const dishDetailsVo = await providable.getDishDetails(encodedDishId);
 
@@ -243,11 +243,11 @@ export class DishWriteService {
         if (ratingEntity) {
             await this.dishApiService.updateRating(userLogin, dishId, rating);
 
-            return new AddDishRatingStatusValueObject(false);
+            return new AddDishRatingStatusVo(false);
         }
 
         await this.dishApiService.insertNewRating(userLogin, dishId, rating);
 
-        return new AddDishRatingStatusValueObject(true);
+        return new AddDishRatingStatusVo(true);
     }
 }

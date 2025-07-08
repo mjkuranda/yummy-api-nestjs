@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
 import { DishQueryFacade } from '../../application/dish-query.facade';
 import { DishCommandFacade } from '../../application/dish-command.facade';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 import { GetDishCommentsDto } from '../../application/dtos';
 import { AuthenticationGuard } from '../../../../guards/authentication.guard';
 import { CreateDishCommentDto } from '../../application/dtos';
@@ -19,7 +19,7 @@ export class DishCommentController {
     @Get('/:encoded-dish-id/comments')
     @HttpCode(200)
     public async getDishComments(
-        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdVo
     ): Promise<GetDishCommentsDto> {
         return await this.dishQueryFacade.getDishComments(encodedDishId);
     }
@@ -28,7 +28,7 @@ export class DishCommentController {
     @HttpCode(201)
     @UseGuards(AuthenticationGuard)
     public async addDishComment(
-        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdVo,
         @User() user: UserAccessTokenPayload,
         @Body() body: CreateDishCommentDto
     ): Promise<void> {

@@ -6,7 +6,7 @@ import { DishRecipeKey } from './dish-recipe-cache.types';
 import { DishRecipeCacheKeyFactory } from './dish-recipe-cache-key.factory';
 import { DishRecipe } from '../../../recipe/application/recipe-application.types';
 import { RecipeEntity } from '../../../recipe/domain/entities';
-import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
+import { EncodedDishIdVo } from '../../../dish/domain/common/vos';
 import { CacheClient } from '../../interfaces';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class DishRecipeCacheService {
      * @param encodedDishId encoded dish ID and its provider name
      * @param language recipe language
      */
-    async getDishRecipe(encodedDishId: EncodedDishIdValueObject, language: Language): Promise<RecipeEntity | null> {
+    async getDishRecipe(encodedDishId: EncodedDishIdVo, language: Language): Promise<RecipeEntity | null> {
         const key: DishRecipeKey = DishRecipeCacheKeyFactory.createDishRecipeKey(encodedDishId, language);
         const value = await this.cacheClient.get(key);
 
@@ -37,7 +37,7 @@ export class DishRecipeCacheService {
      * @param encodedDishId encoded dish ID and its provider name
      * @param recipe object representing recipe
      */
-    async setDishRecipe(encodedDishId: EncodedDishIdValueObject, recipe: DishRecipe | RecipeEntity): Promise<void> {
+    async setDishRecipe(encodedDishId: EncodedDishIdVo, recipe: DishRecipe | RecipeEntity): Promise<void> {
         const key: DishRecipeKey = DishRecipeCacheKeyFactory.createDishRecipeKey(encodedDishId, recipe.language);
         const value = JSON.stringify(recipe);
 

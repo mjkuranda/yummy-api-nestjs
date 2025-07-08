@@ -5,12 +5,12 @@ import { LoggerService } from '../../../logger/logger.service';
 import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 import { GetDishRatingDto } from '../dtos';
 import { DishRatingDtoMapper } from '../mappers';
 
 @Injectable()
-export class GetDishRatingUseCase extends AbstractUseCase<[EncodedDishIdValueObject], GetDishRatingDto> {
+export class GetDishRatingUseCase extends AbstractUseCase<[EncodedDishIdVo], GetDishRatingDto> {
 
     constructor(
         private readonly loggerService: LoggerService,
@@ -19,7 +19,7 @@ export class GetDishRatingUseCase extends AbstractUseCase<[EncodedDishIdValueObj
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject): Promise<GetDishRatingDto> {
+    protected async run(encodedDishId: EncodedDishIdVo): Promise<GetDishRatingDto> {
         const rating = await this.dishReadService.getDishRating(encodedDishId);
         this.loggerService.info(this.context, `Calculated rating for dish "${encodedDishId}" on ${rating.ratingNumber}.`);
 

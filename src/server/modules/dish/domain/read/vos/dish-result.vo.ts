@@ -1,12 +1,12 @@
-import { EncodedDishIdValueObject } from '../../common/value-objects';
+import { EncodedDishIdVo } from '../../common/vos';
 import { Language } from '../../../../../common/types';
 import { DishType, MealType, Provider } from '../../../../../common/enums';
 import { DishEntity } from '../../common/entities';
 
-export class DishResultValueObject {
+export class DishResultVo {
 
     constructor(
-        public readonly encodedDishId: EncodedDishIdValueObject,
+        public readonly encodedDishId: EncodedDishIdVo,
         public readonly title: string,
         public readonly ingredients: string[],
         public readonly language: Language,
@@ -18,12 +18,12 @@ export class DishResultValueObject {
         public readonly imgUrl?: string
     ) {}
 
-    static fromDishEntity(entity: DishEntity, relevance: number, missingIngredientCount: number): DishResultValueObject {
+    static fromDishEntity(entity: DishEntity, relevance: number, missingIngredientCount: number): DishResultVo {
         const ingredients = entity
             .getIngredients()
             .map(ingredient => ingredient.name);
 
-        return new DishResultValueObject(
+        return new DishResultVo(
             entity.getEncodedDishId(),
             entity.getTitle(),
             ingredients,

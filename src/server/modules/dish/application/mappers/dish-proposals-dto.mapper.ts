@@ -1,9 +1,9 @@
 import { DishProposalDto, GetDishProposalsDto } from '../dtos';
-import { DishProposalValueObject } from '../../domain/read/value-objects';
+import { DishProposalVo } from '../../domain/read/vos';
 
 export class DishProposalsDtoMapper {
 
-    static toGetDishProposalsDto(dishProposalVos: DishProposalValueObject[]): GetDishProposalsDto {
+    static toGetDishProposalsDto(dishProposalVos: DishProposalVo[]): GetDishProposalsDto {
         const proposals = dishProposalVos.map(vo =>
             new DishProposalDto(
                 vo.encodedDishIdVo.getValue(),

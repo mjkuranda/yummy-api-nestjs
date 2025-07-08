@@ -1,16 +1,16 @@
-import { EncodedDishIdValueObject } from '../../common/value-objects';
+import { EncodedDishIdVo } from '../../common/vos';
 import { DishCommentEntity, DishEntity } from '../../common/entities';
 
-export class DishCommentValueObject {
+export class DishCommentVo {
 
     constructor(
-        public readonly encodedDishIdVo: EncodedDishIdValueObject,
+        public readonly encodedDishIdVo: EncodedDishIdVo,
         public readonly author: string,
         public readonly content: string,
         public readonly posted: number
     ) {}
 
-    static fromEntities(dish: DishEntity, comments: DishCommentEntity[]): DishCommentValueObject[] {
+    static fromEntities(dish: DishEntity, comments: DishCommentEntity[]): DishCommentVo[] {
         const encodedDishIdVo = dish.getEncodedDishId();
         const author = dish.getAuthor();
 

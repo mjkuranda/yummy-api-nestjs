@@ -9,7 +9,7 @@ import { BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { EmptyDishIngredientListError, MissingDishAuthorError } from '../../domain/errors';
 import { ContextString } from '../../../../common/types';
-import { CreateDishValueObject } from '../../domain/write/value-objects';
+import { CreateDishVo } from '../../domain/write/vos';
 import { DishDtoMapper } from '../mappers';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class CreateDishUseCase extends AbstractUseCase<[CreateDishDto<DishIngred
     protected async run(createDishDto: CreateDishDto<DishIngredientWithoutImage>, user: UserAccessTokenPayload): Promise<CreatedDishDto> {
         const { ingredients, title, imageUrl, ingredientCount } = createDishDto;
         const imageUrlDescription = imageUrl ? `"${imageUrl}" image url` : 'no image';
-        const createDishVo = CreateDishValueObject.fromCreateDishDto(createDishDto);
+        const createDishVo = CreateDishVo.fromCreateDishDto(createDishDto);
 
         const ingredientList = await this.ingredientService.wrapIngredientsWithImages(ingredients);
         const createdDish = await this.dishWriteService.saveNewDish(createDishVo, user.login, ingredientList);

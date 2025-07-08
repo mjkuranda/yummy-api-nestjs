@@ -11,10 +11,10 @@ import { DishIngredient } from '../../../ingredient/ingredient.types';
 import { MealType, Provider } from '../../../../common/enums';
 import { EditDishDto } from '../../application/dtos';
 import { calculateMissing, calculateRelevance } from '../../../../common/helpers';
-import { DishResultValueObject } from '../../domain/read/value-objects';
+import { DishResultVo } from '../../domain/read/vos';
 import { Injectable } from '@nestjs/common';
-import { DishOverviewValueObject } from 'src/server/modules/user/domain/value-objects';
-import { CreateDishValueObject } from '../../domain/write/value-objects';
+import { DishOverviewVo } from 'src/server/modules/user/domain/vos';
+import { CreateDishVo } from '../../domain/write/vos';
 
 @Injectable()
 export class MongodbDishRepository implements DishRepository {
@@ -41,7 +41,7 @@ export class MongodbDishRepository implements DishRepository {
         return DishFactory.fromDocument(document);
     }
 
-    async createNewDish(data: CreateDishValueObject, author?: string, ingredients?: DishIngredient[]): Promise<DishEntity> {
+    async createNewDish(data: CreateDishVo, author?: string, ingredients?: DishIngredient[]): Promise<DishEntity> {
         const doc = await this.model.create({
             ...data,
             ingredients,
@@ -125,7 +125,7 @@ export class MongodbDishRepository implements DishRepository {
         return Provider.INT_DMT_USER;
     }
 
-    async findDishesByIngredientsAndType(ingredients: string[], mealType?: MealType): Promise<DishResultValueObject[]> {
+    async findDishesByIngredientsAndType(ingredients: string[], mealType?: MealType): Promise<DishResultVo[]> {
         const dishes = await this.findAll({
             'ingredients.name': { $in: ingredients },
             $or: [
@@ -142,14 +142,14 @@ export class MongodbDishRepository implements DishRepository {
             const relevance = calculateRelevance(ingredients, finalDishIngredients);
             const missingCount = calculateMissing(ingredients, finalDishIngredients);
 
-            return DishResultValueObject.fromDishEntity(dishEntity, relevance, missingCount);
+            return DishResultVo.fromDishEntity(dishEntity, relevance, missingCount);
         });
     }
 
-    async findDishesByAuthor(userLogin: string): Promise<DishOverviewValueObject[]> {
+    async findDishesByAuthor(userLogin: string): Promise<DishOverviewVo[]> {
         const dishes = await this.model.find({ author: userLogin });
 
-        return DishOverviewValueObject.fromDocuments(dishes);
+        return DishOverviewVo.fromDocuments(dishes);
     }
 
     private async findAll(filterQuery: FilterQuery<DishDocument>, limit?: number): Promise<DishDocument[] | null> {

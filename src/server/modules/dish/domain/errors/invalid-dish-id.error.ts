@@ -1,8 +1,8 @@
-import { EncodedDishIdValueObject } from '../common/value-objects';
+import { EncodedDishIdVo } from '../common/vos';
 
 export class InvalidDishIdError extends Error {
 
-    constructor(encodedDishId: EncodedDishIdValueObject) {
+    constructor(encodedDishId: EncodedDishIdVo) {
         super(`Invalid "${encodedDishId}" encoded dish id.`);
     }
 

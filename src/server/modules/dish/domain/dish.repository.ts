@@ -3,12 +3,12 @@ import { DishId } from '../dish.types';
 import { DishIngredient } from '../../ingredient/ingredient.types';
 import { EditDishDto } from '../application/dtos';
 import { MealType } from '../../../common/enums';
-import { DishResultValueObject } from './read/value-objects';
-import { DishOverviewValueObject } from '../../user/domain/value-objects';
-import { CreateDishValueObject } from './write/value-objects';
+import { DishResultVo } from './read/vos';
+import { DishOverviewVo } from '../../user/domain/vos';
+import { CreateDishVo } from './write/vos';
 
 export interface DishRepository {
-    createNewDish: (data: CreateDishValueObject, author?: string, ingredients?: DishIngredient[]) => Promise<DishEntity>;
+    createNewDish: (data: CreateDishVo, author?: string, ingredients?: DishIngredient[]) => Promise<DishEntity>;
     findByDishId: (id: DishId) => Promise<DishEntity | null>;
     getDishesWithSoftAdded: () => Promise<DishEntity[]>;
     getDishesWithSoftEdited: () => Promise<DishEntity[]>;
@@ -19,6 +19,6 @@ export interface DishRepository {
     confirmDishEdition: (id: DishId, dishSoftEdited?: DishEntity) => Promise<void>;
     setSoftDeletedForDish: (id: DishId) => Promise<void>;
     deleteDish: (id: DishId) => Promise<void>;
-    findDishesByIngredientsAndType: (ingredients: string[], mealType?: MealType) => Promise<DishResultValueObject[]>;
-    findDishesByAuthor: (userLogin: string) => Promise<DishOverviewValueObject[]>;
+    findDishesByIngredientsAndType: (ingredients: string[], mealType?: MealType) => Promise<DishResultVo[]>;
+    findDishesByAuthor: (userLogin: string) => Promise<DishOverviewVo[]>;
 }

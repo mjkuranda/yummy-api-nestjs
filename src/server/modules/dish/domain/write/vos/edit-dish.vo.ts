@@ -3,7 +3,7 @@ import { DishIngredient } from '../../../../ingredient/ingredient.types';
 import { DishType, MealType } from '../../../../../common/enums';
 import { DishRecipeSection } from '../../../dish.types';
 
-export class EditDishValueObject {
+export class EditDishVo {
 
     private constructor(
         public readonly title?: string,
@@ -16,8 +16,8 @@ export class EditDishValueObject {
         public readonly imageUrl?: string
     ) {}
 
-    static fromEditDishDto(editDishDto: EditDishDto<DishIngredient>): EditDishValueObject {
-        return new EditDishValueObject(
+    static fromEditDishDto(editDishDto: EditDishDto<DishIngredient>): EditDishVo {
+        return new EditDishVo(
             editDishDto.title,
             editDishDto.description,
             editDishDto.mealType,

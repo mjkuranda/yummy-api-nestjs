@@ -2,24 +2,24 @@ import { UserEntity } from '../entities';
 
 export type CapabilityType = string;
 
-export class UserCapabilitiesValueObject {
+export class UserCapabilitiesVo {
     constructor(
         public readonly capabilities: Map<CapabilityType, boolean> = new Map(),
         public readonly isAdmin?: boolean
     ) {}
 
-    grant(capability: CapabilityType): UserCapabilitiesValueObject {
+    grant(capability: CapabilityType): UserCapabilitiesVo {
         const newCapabilities = new Map(this.capabilities);
         newCapabilities.set(capability, true);
 
-        return new UserCapabilitiesValueObject(newCapabilities);
+        return new UserCapabilitiesVo(newCapabilities);
     }
 
-    deny(capability: CapabilityType): UserCapabilitiesValueObject {
+    deny(capability: CapabilityType): UserCapabilitiesVo {
         const newCapabilities = new Map(this.capabilities);
         newCapabilities.set(capability, false);
 
-        return new UserCapabilitiesValueObject(newCapabilities);
+        return new UserCapabilitiesVo(newCapabilities);
     }
 
     has(capability: CapabilityType): boolean {
@@ -35,26 +35,26 @@ export class UserCapabilitiesValueObject {
         return result;
     }
 
-    static fromObject(obj: Record<CapabilityType, boolean>, isAdmin?: boolean): UserCapabilitiesValueObject {
+    static fromObject(obj: Record<CapabilityType, boolean>, isAdmin?: boolean): UserCapabilitiesVo {
         const capabilities = new Map<CapabilityType, boolean>();
         Object.entries(obj).forEach(([key, value]) => {
             capabilities.set(key, value);
         });
 
-        return new UserCapabilitiesValueObject(
+        return new UserCapabilitiesVo(
             capabilities,
             isAdmin ?? false
         );
     }
 
-    static fromEntity(entity: UserEntity): UserCapabilitiesValueObject {
-        return new UserCapabilitiesValueObject(
+    static fromEntity(entity: UserEntity): UserCapabilitiesVo {
+        return new UserCapabilitiesVo(
             entity.getCapabilities().capabilities,
             entity.isAdmin()
         );
     }
 
-    copy(): UserCapabilitiesValueObject {
-        return new UserCapabilitiesValueObject(new Map(this.capabilities), this.isAdmin);
+    copy(): UserCapabilitiesVo {
+        return new UserCapabilitiesVo(new Map(this.capabilities), this.isAdmin);
     }
 }

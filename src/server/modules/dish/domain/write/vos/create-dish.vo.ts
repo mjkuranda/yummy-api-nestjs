@@ -3,7 +3,7 @@ import { DishIngredientWithoutImage } from '../../../../ingredient/ingredient.ty
 import { Language } from '../../../../../common/types';
 import { DishType, MealType } from '../../../../../common/enums';
 
-export class CreateDishValueObject {
+export class CreateDishVo {
 
     private constructor(
         public readonly description: string,
@@ -16,8 +16,8 @@ export class CreateDishValueObject {
         public readonly mealType: MealType
     ) {}
 
-    static fromCreateDishDto(dto: CreateDishDto<DishIngredientWithoutImage>): CreateDishValueObject {
-        return new CreateDishValueObject(
+    static fromCreateDishDto(dto: CreateDishDto<DishIngredientWithoutImage>): CreateDishVo {
+        return new CreateDishVo(
             dto.description,
             dto.imageUrl,
             dto.ingredients,

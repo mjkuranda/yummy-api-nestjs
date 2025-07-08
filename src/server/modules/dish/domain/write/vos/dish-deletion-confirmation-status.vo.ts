@@ -1,4 +1,4 @@
-export class DishDeletionConfirmationStatusValueObject {
+export class DishDeletionConfirmationStatusVo {
 
     constructor(
         private readonly dishTitle: string,

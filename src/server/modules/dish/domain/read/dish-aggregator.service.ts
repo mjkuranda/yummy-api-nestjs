@@ -3,7 +3,7 @@ import { ProviderRegistryService } from '../../../provider-registry/provider-reg
 import { getFulfilledPromiseResults } from '../../../../utils';
 import { MealType } from '../../../../common/enums';
 import { filterByMealType, filterGreaterThanZeroRelevance, sortDescendingRelevance } from './dish-result.helpers';
-import { DishResultValueObject } from './value-objects';
+import { DishResultVo } from './vos';
 
 @Injectable()
 export class DishAggregatorService {
@@ -15,7 +15,7 @@ export class DishAggregatorService {
      * @param ingredients ingredients provided by user
      * @param mealType filter dishes by meal type
      */
-    async aggregateDishResults(ingredients: string[], mealType?: MealType): Promise<DishResultValueObject[]> {
+    async aggregateDishResults(ingredients: string[], mealType?: MealType): Promise<DishResultVo[]> {
         const providers = this.providerRegistryService.getAllProviders();
         const promises = providers.map(provider => provider.getDishes(ingredients));
         const datasets = await this.getDatasets(...promises);

@@ -1,4 +1,4 @@
-import { DishResultValueObject } from './value-objects';
+import { DishResultVo } from './vos';
 import { MealType } from '../../../../common/enums';
 
 /**
@@ -7,7 +7,7 @@ import { MealType } from '../../../../common/enums';
  * @param [mealType] a filter defined as a meal type
  * @returns filtered dishes
  */
-export function filterByMealType(dish: DishResultValueObject, mealType?: MealType): boolean {
+export function filterByMealType(dish: DishResultVo, mealType?: MealType): boolean {
     if (!mealType) {
         return true;
     }
@@ -20,7 +20,7 @@ export function filterByMealType(dish: DishResultValueObject, mealType?: MealTyp
  * @param dish dish to check
  * @returns dish that at least one ingredient is matched
  */
-export function filterGreaterThanZeroRelevance(dish: DishResultValueObject): boolean {
+export function filterGreaterThanZeroRelevance(dish: DishResultVo): boolean {
     return dish.relevance > 0;
 }
 
@@ -30,6 +30,6 @@ export function filterGreaterThanZeroRelevance(dish: DishResultValueObject): boo
  * @param dish1 second dish to compare
  * @returns sort value defining order
  */
-export function sortDescendingRelevance(dish0: DishResultValueObject, dish1: DishResultValueObject): number {
+export function sortDescendingRelevance(dish0: DishResultVo, dish1: DishResultVo): number {
     return dish1.relevance - dish0.relevance;
 }

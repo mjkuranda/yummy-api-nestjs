@@ -5,7 +5,7 @@ import { ProviderRegistryService } from '../../../provider-registry/provider-reg
 import { DishRecipeCacheService } from '../../../cache/domains/dish-recipe/dish-recipe-cache.service';
 import { DishNotFoundError, NotDishAuthorError, DishRecipeExistsError, DishRecipeNotFoundError } from '../../../dish/domain/errors';
 import { GetRecipeResult } from '../../application/recipe-application.types';
-import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
+import { EncodedDishIdVo } from '../../../dish/domain/common/vos';
 import { RecipeEntity } from '../entities';
 import { TranslationService } from '../../../translation/translation.service';
 import { CreateRecipeDto } from '../../application/dtos';
@@ -32,7 +32,7 @@ export class RecipeService {
      * @param createRecipeDto data containing recipe information
      * @param user user data extracted from access token
      */
-    async create(encodedDishId: EncodedDishIdValueObject, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<RecipeEntity> {
+    async create(encodedDishId: EncodedDishIdVo, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<RecipeEntity> {
         const dishId = encodedDishId.getDishId();
 
         // NOTE: This dish can be unconfirmed because you add dish and recipe at once.
@@ -70,7 +70,7 @@ export class RecipeService {
      * @param encodedDishId encoded dish ID and its provider name
      * @param language dish recipe language
      */
-    async getTranslatedRecipe(encodedDishId: EncodedDishIdValueObject, language?: Language): Promise<GetRecipeResult> {
+    async getTranslatedRecipe(encodedDishId: EncodedDishIdVo, language?: Language): Promise<GetRecipeResult> {
         const provider = encodedDishId.getProvider();
         const providable = this.providerRegistryService.getProvider(provider);
 

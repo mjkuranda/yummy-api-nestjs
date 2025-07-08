@@ -6,10 +6,10 @@ import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { AddedDishRatingDto } from '../dtos';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 
 @Injectable()
-export class AddDishRatingUseCase extends AbstractUseCase<[EncodedDishIdValueObject, string, number], AddedDishRatingDto> {
+export class AddDishRatingUseCase extends AbstractUseCase<[EncodedDishIdVo, string, number], AddedDishRatingDto> {
 
     constructor(
         private readonly dishWriteService: DishWriteService,
@@ -18,17 +18,17 @@ export class AddDishRatingUseCase extends AbstractUseCase<[EncodedDishIdValueObj
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject, userLogin: string, rating: number): Promise<AddedDishRatingDto> {
-        const addDishRatingStatusValueObject = await this.dishWriteService.addDishRating(encodedDishId, userLogin, rating);
+    protected async run(encodedDishId: EncodedDishIdVo, userLogin: string, rating: number): Promise<AddedDishRatingDto> {
+        const addDishRatingStatusVo = await this.dishWriteService.addDishRating(encodedDishId, userLogin, rating);
 
-        if (!addDishRatingStatusValueObject.isNewRating()) {
+        if (!addDishRatingStatusVo.isNewRating()) {
             this.loggerService.info(this.context, `Successfully changed a rating for dish "${encodedDishId.getValue()}" by "${userLogin}" user.`);
         } else {
             this.loggerService.info(this.context, `Successfully added a new rating for dish "${encodedDishId.getValue()}" by "${userLogin}" user.`);
         }
 
         return new AddedDishRatingDto(
-            addDishRatingStatusValueObject.isNewRating()
+            addDishRatingStatusVo.isNewRating()
         );
     }
 

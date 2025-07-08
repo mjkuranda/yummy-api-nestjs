@@ -1,10 +1,10 @@
 import { GetRecipeDto } from './dtos';
 import { RecipeEntity } from '../domain/entities';
-import { EncodedDishIdValueObject } from '../../dish/domain/common/value-objects';
+import { EncodedDishIdVo } from '../../dish/domain/common/vos';
 
 export class RecipeDtoMapper {
 
-    static toGetRecipeDto(encodedDishIdVo: EncodedDishIdValueObject, entity: RecipeEntity): GetRecipeDto {
+    static toGetRecipeDto(encodedDishIdVo: EncodedDishIdVo, entity: RecipeEntity): GetRecipeDto {
         return new GetRecipeDto(
             encodedDishIdVo.getValue(),
             entity.language,

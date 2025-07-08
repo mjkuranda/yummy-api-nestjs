@@ -1,6 +1,6 @@
 import { DishEntity } from '../../common/entities';
 
-export class DishRatingValueObject {
+export class DishRatingVo {
 
     constructor(
         private readonly dishEntity: DishEntity,

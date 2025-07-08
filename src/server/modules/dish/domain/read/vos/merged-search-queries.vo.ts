@@ -2,13 +2,13 @@ import { UserSearchQueryEntity } from '../../common/entities';
 
 type MergedSearchQueries = Record<string, number>;
 
-export class MergedSearchQueriesValueObject {
+export class MergedSearchQueriesVo {
 
     constructor(
         private readonly queries: MergedSearchQueries
     ) {}
 
-    static fromEntities(searchQueryEntities: UserSearchQueryEntity[]): MergedSearchQueriesValueObject {
+    static fromEntities(searchQueryEntities: UserSearchQueryEntity[]): MergedSearchQueriesVo {
         const merged: MergedSearchQueries = {};
 
         for (const query of searchQueryEntities) {
@@ -23,7 +23,7 @@ export class MergedSearchQueriesValueObject {
             }
         }
 
-        return new MergedSearchQueriesValueObject(merged);
+        return new MergedSearchQueriesVo(merged);
     }
 
     getIngredients(): string[] {

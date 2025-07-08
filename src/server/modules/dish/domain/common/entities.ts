@@ -3,7 +3,7 @@ import { DishId } from '../../dish.types';
 import { DishIngredient } from '../../../ingredient/ingredient.types';
 import { Language } from '../../../../common/types';
 import { DishType, MealType, Provider } from '../../../../common/enums';
-import { EncodedDishIdValueObject } from './value-objects';
+import { EncodedDishIdVo } from './vos';
 import {
     UserSearchQueryDocument
 } from '../../../../../infrastructure/databases/mongodb/documents';
@@ -12,8 +12,8 @@ export class DishEntity {
 
     constructor(private readonly props: DishEntityProps) {}
 
-    getEncodedDishId(): EncodedDishIdValueObject {
-        return EncodedDishIdValueObject.fromParts(
+    getEncodedDishId(): EncodedDishIdVo {
+        return EncodedDishIdVo.fromParts(
             this.props.provider,
             this.props.id
         );

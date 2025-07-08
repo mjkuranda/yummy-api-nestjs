@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '../../../../exceptions';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
-import { UserProfileValueObject } from '../value-objects';
+import { UserProfileVo } from '../vos';
 import { DishDataManageable, UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class ProfileManagementService {
      * @param login user login
      * @returns general user info and dish list
      */
-    async getProfile(login: string): Promise<UserProfileValueObject> {
+    async getProfile(login: string): Promise<UserProfileVo> {
         const user = await this.userApiService.findUserByLogin(login);
 
         if (!user) {
@@ -32,6 +32,6 @@ export class ProfileManagementService {
         // TODO: Should be included as a seperate endpoint from users!
         const dishes = await this.dishApiService.findDishesByAuthor(login);
 
-        return UserProfileValueObject.fromEntity(user, dishes);
+        return UserProfileVo.fromEntity(user, dishes);
     }
 }

@@ -8,7 +8,7 @@ import { Repository } from '../../../../../common/enums';
 import { UserSearchQueryEntity } from '../../../../dish/domain/common/entities';
 import { UserActionType } from '../../../../../../infrastructure/databases/mongodb/documents';
 import { UserActionEntity, UserEntity } from '../../../../user/domain/entities';
-import { CreateUserValueObject } from '../../../../user/domain/value-objects';
+import { CreateUserVo } from '../../../../user/domain/vos';
 import { CapabilityType } from '../../../../user/domain/types';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class UserApiService implements UserDataManageable {
         return await this.userActionRepository.createAction(userId, type);
     }
 
-    async createNewUser(createUserVo: CreateUserValueObject): Promise<UserEntity> {
+    async createNewUser(createUserVo: CreateUserVo): Promise<UserEntity> {
         return await this.userRepository.createNewUser(createUserVo);
     }
 

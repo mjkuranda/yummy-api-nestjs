@@ -5,11 +5,11 @@ import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 
 @Injectable()
-export class ConfirmDishCreationUseCase extends AbstractUseCase<[EncodedDishIdValueObject, UserAccessTokenPayload], void> {
+export class ConfirmDishCreationUseCase extends AbstractUseCase<[EncodedDishIdVo, UserAccessTokenPayload], void> {
 
     constructor(
         private readonly dishWriteService: DishWriteService,
@@ -18,7 +18,7 @@ export class ConfirmDishCreationUseCase extends AbstractUseCase<[EncodedDishIdVa
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject, user: UserAccessTokenPayload): Promise<void> {
+    protected async run(encodedDishId: EncodedDishIdVo, user: UserAccessTokenPayload): Promise<void> {
         const dishDetails = await this.dishWriteService.confirmCreating(encodedDishId);
         const title = dishDetails.getTitle();
 

@@ -1,8 +1,8 @@
 import { MealType, Provider } from './enums';
 import { Language } from './types';
 import { RecipeEntity } from '../modules/recipe/domain/entities';
-import { EncodedDishIdValueObject } from '../modules/dish/domain/common/value-objects';
-import { DishDetailsValueObject, DishResultValueObject } from '../modules/dish/domain/read/value-objects';
+import { EncodedDishIdVo } from '../modules/dish/domain/common/vos';
+import { DishDetailsVo, DishResultVo } from '../modules/dish/domain/read/vos';
 
 export interface Providable extends DishProvidable, RecipeProvidable {
     /**
@@ -20,13 +20,13 @@ export interface DishProvidable {
      * @param providedIngredients list of ingredients
      * @param mealType filter dishes only with this meal type
      */
-    getDishes(providedIngredients: string[], mealType?: MealType): Promise<DishResultValueObject[]>;
+    getDishes(providedIngredients: string[], mealType?: MealType): Promise<DishResultVo[]>;
 
     /**
      * @description Returns detailed dish
      * @param encodedDishId encoded dish ID and its provider name
      */
-    getDishDetails(encodedDishId: EncodedDishIdValueObject): Promise<DishDetailsValueObject | null>;
+    getDishDetails(encodedDishId: EncodedDishIdVo): Promise<DishDetailsVo | null>;
 }
 
 /**
@@ -38,13 +38,13 @@ export interface RecipeProvidable {
      * @param encodedDishId encoded dish ID and its provider name
      * @param language recipe language
      */
-    getDishRecipe(encodedDishId: EncodedDishIdValueObject, language?: Language): Promise<RecipeEntity | null>;
+    getDishRecipe(encodedDishId: EncodedDishIdVo, language?: Language): Promise<RecipeEntity | null>;
 
     /**
      * @description returns list of language-prepared recipes
      * @param encodedDishId encoded dish ID and its provider name
      */
-    getLanguage(encodedDishId: EncodedDishIdValueObject): Language;
+    getLanguage(encodedDishId: EncodedDishIdVo): Language;
 }
 
 /**

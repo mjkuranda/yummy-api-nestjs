@@ -3,8 +3,8 @@ import { CACHE_PROVIDER } from '../../cache.constant';
 import { Providable } from '../../../../common/interfaces';
 import { DishCacheKeyFactory } from './dish-cache-key.factory';
 import { DAY, HOUR } from '../../../../constants/times.constant';
-import { EncodedDishIdValueObject } from '../../../dish/domain/common/value-objects';
-import { DishDetailsValueObject, DishResultValueObject } from '../../../dish/domain/read/value-objects';
+import { EncodedDishIdVo } from '../../../dish/domain/common/vos';
+import { DishDetailsVo, DishResultVo } from '../../../dish/domain/read/vos';
 import { CacheClient } from '../../interfaces';
 
 @Injectable()
@@ -18,11 +18,11 @@ export class DishCacheService {
      * @description Returns all cached dishes per search query
      * @param providedIngredients list of provided ingredients by user
      */
-    async getDishes(providedIngredients: string[]): Promise<DishResultValueObject[]> {
+    async getDishes(providedIngredients: string[]): Promise<DishResultVo[]> {
         const key = DishCacheKeyFactory.createDishSearchResultKey(providedIngredients);
         const val = await this.cacheClient.get(key);
 
-        return val ? <DishResultValueObject[]>JSON.parse(val) : [];
+        return val ? <DishResultVo[]>JSON.parse(val) : [];
     }
 
     /**
@@ -30,7 +30,7 @@ export class DishCacheService {
      * @param providedIngredients list of provided ingredients by user
      * @param dishResults received results from query
      */
-    async setDishes(providedIngredients: string[], dishResults: DishResultValueObject[]): Promise<void> {
+    async setDishes(providedIngredients: string[], dishResults: DishResultVo[]): Promise<void> {
         const key = DishCacheKeyFactory.createDishSearchResultKey(providedIngredients);
         const val = JSON.stringify(dishResults);
 
@@ -43,7 +43,7 @@ export class DishCacheService {
      * @param provider defined provider of the dishes
      * @param ingredients list of ingredients to merge results
      */
-    async getDishesPerIngredient(provider: Providable, ingredients: string[]): Promise<DishResultValueObject[]> {
+    async getDishesPerIngredient(provider: Providable, ingredients: string[]): Promise<DishResultVo[]> {
         if (ingredients.length === 0) {
             return [];
         }
@@ -63,7 +63,7 @@ export class DishCacheService {
             }
 
             try {
-                return JSON.parse(val) as DishResultValueObject[];
+                return JSON.parse(val) as DishResultVo[];
             } catch {
                 return [];
             }
@@ -76,7 +76,7 @@ export class DishCacheService {
      * @param ingredient
      * @param dishes
      */
-    async setDishesPerIngredient(provider: Providable, ingredient: string, dishes: DishResultValueObject[]): Promise<void> {
+    async setDishesPerIngredient(provider: Providable, ingredient: string, dishes: DishResultVo[]): Promise<void> {
         const key = DishCacheKeyFactory.createDishSearchResultPerProviderKey(provider);
 
         await this.cacheClient.hset(key, ingredient, JSON.stringify(dishes));
@@ -87,11 +87,11 @@ export class DishCacheService {
      * @description Gets detailed dish from cache
      * @param encodedDishId dish ID
      */
-    async getDishDetails(encodedDishId: EncodedDishIdValueObject): Promise<DishDetailsValueObject | null> {
+    async getDishDetails(encodedDishId: EncodedDishIdVo): Promise<DishDetailsVo | null> {
         const key = DishCacheKeyFactory.createDishDetailedResultKey(encodedDishId);
         const val = await this.cacheClient.get(key);
 
-        return val ? <DishDetailsValueObject>JSON.parse(val) : null;
+        return val ? <DishDetailsVo>JSON.parse(val) : null;
     }
 
     /**
@@ -100,7 +100,7 @@ export class DishCacheService {
      * @param dishDetails dish to cache
      * @returns void
      */
-    async setDishDetails(encodedDishId: EncodedDishIdValueObject, dishDetails: DishDetailsValueObject): Promise<void> {
+    async setDishDetails(encodedDishId: EncodedDishIdVo, dishDetails: DishDetailsVo): Promise<void> {
         const key = DishCacheKeyFactory.createDishDetailedResultKey(encodedDishId);
 
         await this.cacheClient.set(key, JSON.stringify(dishDetails));
@@ -111,7 +111,7 @@ export class DishCacheService {
      * @description Returns true if dish with a particular encoded ID is cached
      * @param encodedDishId encoded dish ID and its provider name
      */
-    async hasDish(encodedDishId: EncodedDishIdValueObject): Promise<boolean> {
+    async hasDish(encodedDishId: EncodedDishIdVo): Promise<boolean> {
         const key = DishCacheKeyFactory.createDishDetailedResultKey(encodedDishId);
         const val = await this.cacheClient.get(key);
 
@@ -122,7 +122,7 @@ export class DishCacheService {
      * @description Deletes dish row from cache
      * @param encodedDishId encoded dish ID and its provider name
      */
-    async deleteDish(encodedDishId: EncodedDishIdValueObject): Promise<void> {
+    async deleteDish(encodedDishId: EncodedDishIdVo): Promise<void> {
         const key = DishCacheKeyFactory.createDishDetailedResultKey(encodedDishId);
 
         await this.cacheClient.del(key);

@@ -1,12 +1,12 @@
 import { UserEntity } from '../entities';
-import { CreateUserValueObject } from '../value-objects';
+import { CreateUserVo } from '../vos';
 import { CapabilityType } from '../types';
 
 export interface UserRepository {
     findUserById(id: string): Promise<UserEntity | null>;
     findUserByLogin(login: string): Promise<UserEntity | null>;
     findUserByEmail(email: string): Promise<UserEntity | null>;
-    createNewUser(createUserVo: CreateUserValueObject): Promise<UserEntity>;
+    createNewUser(createUserVo: CreateUserVo): Promise<UserEntity>;
     updateUser(user: UserEntity): Promise<UserEntity>;
     deleteUser(id: string): Promise<void>;
     getAllUsers(): Promise<UserEntity[]>;

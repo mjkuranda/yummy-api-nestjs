@@ -1,4 +1,4 @@
-export class CreateUserValueObject {
+export class CreateUserVo {
 
     constructor(
         public readonly login: string,

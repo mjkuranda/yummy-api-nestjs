@@ -5,14 +5,14 @@ import { MealType } from '../../../../common/enums';
 import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../errors';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
 import {
-    DishCommentValueObject,
-    DishDetailsWithCacheValueObject,
-    DishProposalsValueObject, DishProposalValueObject,
-    DishRatingValueObject,
-    DishResultsWithCacheValueObject, MergedSearchQueriesValueObject
-} from './value-objects';
+    DishCommentVo,
+    DishDetailsWithCacheVo,
+    DishProposalsVo, DishProposalVo,
+    DishRatingVo,
+    DishResultsWithCacheVo, MergedSearchQueriesVo
+} from './vos';
 import { DishEntity } from '../common/entities';
-import { EncodedDishIdValueObject } from '../common/value-objects';
+import { EncodedDishIdVo } from '../common/vos';
 import { DishDataManageable, UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()
@@ -36,31 +36,31 @@ export class DishReadService {
      * @param mergedIngredients ingredients provided by user and from pantry
      * @param mealType filter dishes by meal type
      */
-    async getDishes(providedIngredients: string[], mergedIngredients: string[], mealType?: MealType): Promise<DishResultsWithCacheValueObject> {
+    async getDishes(providedIngredients: string[], mergedIngredients: string[], mealType?: MealType): Promise<DishResultsWithCacheVo> {
         const cachedResult = await this.dishCacheService.getDishes(providedIngredients);
 
         if (cachedResult) {
-            return new DishResultsWithCacheValueObject(cachedResult, true);
+            return new DishResultsWithCacheVo(cachedResult, true);
         }
 
         const dishes = await this.dishAggregatorService.aggregateDishResults(mergedIngredients, mealType);
         await this.dishCacheService.setDishes(providedIngredients, dishes);
 
-        return new DishResultsWithCacheValueObject(dishes, false);
+        return new DishResultsWithCacheVo(dishes, false);
     }
 
     /**
      * @description Returns detailed dish
      * @param encodedDishId encoded dish ID and its provider name
      */
-    async getDishDetails(encodedDishId: EncodedDishIdValueObject): Promise<DishDetailsWithCacheValueObject> {
+    async getDishDetails(encodedDishId: EncodedDishIdVo): Promise<DishDetailsWithCacheVo> {
         const provider = encodedDishId.getProvider();
 
         const providable = this.providerRegistryService.getProvider(provider);
         const cachedDish = await this.dishCacheService.getDishDetails(encodedDishId);
 
         if (cachedDish) {
-            return new DishDetailsWithCacheValueObject(cachedDish, true);
+            return new DishDetailsWithCacheVo(cachedDish, true);
         }
 
         const dishDetails = await providable.getDishDetails(encodedDishId);
@@ -79,21 +79,21 @@ export class DishReadService {
 
         await this.dishCacheService.setDishDetails(encodedDishId, dishDetails);
 
-        return new DishDetailsWithCacheValueObject(dishDetails, false);
+        return new DishDetailsWithCacheVo(dishDetails, false);
     }
 
     /**
      * @description Returns dish proposals for a particular user
      * @param userLogin user login
      */
-    async getDishProposals(userLogin: string): Promise<DishProposalValueObject[]> {
+    async getDishProposals(userLogin: string): Promise<DishProposalVo[]> {
         // TODO: Consider creating CRON to create recommendation for a particular user
         const userSearchQueryEntities = await this.userApiService.findAllRecentQueries(userLogin);
-        const mergedSearchQueries = MergedSearchQueriesValueObject.fromEntities(userSearchQueryEntities);
+        const mergedSearchQueries = MergedSearchQueriesVo.fromEntities(userSearchQueryEntities);
         const ingredients = mergedSearchQueries.getIngredients();
 
         const dishes = await this.dishAggregatorService.aggregateDishResults(ingredients);
-        const proposal = DishProposalsValueObject.fromDishResultVos(dishes, mergedSearchQueries);
+        const proposal = DishProposalsVo.fromDishResultVos(dishes, mergedSearchQueries);
 
         return proposal.getTopTenProposals();
     }
@@ -127,7 +127,7 @@ export class DishReadService {
      * @param encodedDishId encoded dish ID and its provider name
      * @returns dish entity and list of all comments
      */
-    async getDishComments(encodedDishId: EncodedDishIdValueObject): Promise<DishCommentValueObject[]> {
+    async getDishComments(encodedDishId: EncodedDishIdVo): Promise<DishCommentVo[]> {
         const dishId = encodedDishId.getDishId();
 
         const dish = await this.dishApiService.findByDishId(dishId);
@@ -138,7 +138,7 @@ export class DishReadService {
 
         const comments = await this.dishApiService.getAllComments(dishId);
 
-        return DishCommentValueObject.fromEntities(dish, comments);
+        return DishCommentVo.fromEntities(dish, comments);
     }
 
     /**
@@ -146,7 +146,7 @@ export class DishReadService {
      * @param encodedDishId encoded dish ID and its provider name
      * @returns dish entity and information about rating and how many user rated
      */
-    async getDishRating(encodedDishId: EncodedDishIdValueObject): Promise<DishRatingValueObject> {
+    async getDishRating(encodedDishId: EncodedDishIdVo): Promise<DishRatingVo> {
         const dishId = encodedDishId.getDishId();
         const dish = await this.dishApiService.findByDishId(dishId);
 
@@ -156,7 +156,7 @@ export class DishReadService {
 
         const dishRating = await this.dishApiService.getAverageRatingForDish(dishId);
 
-        return new DishRatingValueObject(
+        return new DishRatingVo(
             dish,
             dishRating.getAverageRating(),
             dishRating.getRatingCount()
@@ -168,7 +168,7 @@ export class DishReadService {
      * @param encodedDishId encoded dish id and its provider name
      * @deprecated
      */
-    async hasDish(encodedDishId: EncodedDishIdValueObject): Promise<boolean> {
+    async hasDish(encodedDishId: EncodedDishIdVo): Promise<boolean> {
         const isCached = await this.dishCacheService.hasDish(encodedDishId);
 
         if (isCached) {

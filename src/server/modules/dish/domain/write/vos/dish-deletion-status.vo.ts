@@ -1,4 +1,4 @@
-export class DishDeletionStatusValueObject {
+export class DishDeletionStatusVo {
 
     constructor(
         public readonly dishTitle: string,

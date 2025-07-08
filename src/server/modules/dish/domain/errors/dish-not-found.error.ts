@@ -1,8 +1,8 @@
-import { EncodedDishIdValueObject } from '../common/value-objects';
+import { EncodedDishIdVo } from '../common/vos';
 
 export class DishNotFoundError extends Error {
 
-    constructor(encodedDishId: EncodedDishIdValueObject) {
+    constructor(encodedDishId: EncodedDishIdVo) {
         super(`Not found dish with ${encodedDishId.getValue()} id.`);
     }
 }

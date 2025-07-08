@@ -4,7 +4,7 @@ import { DishIngredient, DishIngredientWithoutImage } from '../../ingredient/ing
 import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
 import { CreateDishUseCase, EditDishUseCase, DeleteDishUseCase, ConfirmDishCreationUseCase, ConfirmDishEditionUseCase, ConfirmDishDeletionUseCase, AddDishProposalsUseCase, AddDishCommentUseCase, AddDishRatingUseCase } from './use-cases';
 import { CreatedDishDto, ConfirmedEditingDto, ConfirmedDeletingDto, AddedDishRatingDto, CreateDishDto } from './dtos';
-import { EncodedDishIdValueObject } from '../domain/common/value-objects';
+import { EncodedDishIdVo } from '../domain/common/vos';
 
 @Injectable()
 export class DishCommandFacade {
@@ -35,7 +35,7 @@ export class DishCommandFacade {
      * @param encodedDishId encoded dish ID with its provider name
      * @param editDishDto dish edited data
      */
-    async editDish(encodedDishId: EncodedDishIdValueObject, editDishDto: EditDishDto<DishIngredient>): Promise<void> {
+    async editDish(encodedDishId: EncodedDishIdVo, editDishDto: EditDishDto<DishIngredient>): Promise<void> {
         await this.editDishUseCase.execute(encodedDishId, editDishDto);
     }
 
@@ -43,7 +43,7 @@ export class DishCommandFacade {
      * @description Marks dish as soft-deleted which causes not providing further
      * @param encodedDishId encoded dish ID and its provider name
      */
-    async deleteDish(encodedDishId: EncodedDishIdValueObject): Promise<boolean> {
+    async deleteDish(encodedDishId: EncodedDishIdVo): Promise<boolean> {
         return this.deleteDishUseCase.execute(encodedDishId);
     }
 
@@ -52,7 +52,7 @@ export class DishCommandFacade {
      * @param encodedDishId encoded dish ID and its provider name
      * @param user data from accessToken to define user
      */
-    async confirmCreating(encodedDishId: EncodedDishIdValueObject, user: UserAccessTokenPayload): Promise<void> {
+    async confirmCreating(encodedDishId: EncodedDishIdVo, user: UserAccessTokenPayload): Promise<void> {
         await this.confirmDishCreationUseCase.execute(encodedDishId, user);
     }
 
@@ -61,7 +61,7 @@ export class DishCommandFacade {
      * @param encodedDishId encoded dish ID and its provider
      * @param user data from accessToken to define user
      */
-    async confirmEditing(encodedDishId: EncodedDishIdValueObject, user: UserAccessTokenPayload): Promise<ConfirmedEditingDto> {
+    async confirmEditing(encodedDishId: EncodedDishIdVo, user: UserAccessTokenPayload): Promise<ConfirmedEditingDto> {
         return this.confirmDishEditionUseCase.execute(encodedDishId, user);
     }
 
@@ -70,7 +70,7 @@ export class DishCommandFacade {
      * @param encodedDishId encoded dish ID and its provider name
      * @param user data from accessToken to define user
      */
-    async confirmDeleting(encodedDishId: EncodedDishIdValueObject, user: UserAccessTokenPayload): Promise<ConfirmedDeletingDto> {
+    async confirmDeleting(encodedDishId: EncodedDishIdVo, user: UserAccessTokenPayload): Promise<ConfirmedDeletingDto> {
         return this.confirmDishDeletionUseCase.execute(encodedDishId, user);
     }
 
@@ -89,7 +89,7 @@ export class DishCommandFacade {
      * @param userLogin user login
      * @param content comment text to post
      */
-    async addDishComment(encodedDishId: EncodedDishIdValueObject, userLogin: string, content: string): Promise<void> {
+    async addDishComment(encodedDishId: EncodedDishIdVo, userLogin: string, content: string): Promise<void> {
         return this.addDishCommentUseCase.execute(encodedDishId, userLogin, content);
     }
 
@@ -99,7 +99,7 @@ export class DishCommandFacade {
      * @param userLogin user login
      * @param rating integer value between 0 and 10
      */
-    async addDishRating(encodedDishId: EncodedDishIdValueObject, userLogin: string, rating: number): Promise<AddedDishRatingDto> {
+    async addDishRating(encodedDishId: EncodedDishIdVo, userLogin: string, rating: number): Promise<AddedDishRatingDto> {
         return this.addDishRatingUseCase.execute(encodedDishId, userLogin, rating);
     }
 }

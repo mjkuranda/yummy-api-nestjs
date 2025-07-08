@@ -1,19 +1,19 @@
-import { CapabilityType } from './user-capabilities.value-object';
+import { CapabilityType } from './user-capabilities.vo';
 import { UserEntity } from '../entities';
-import { DishOverviewValueObject } from './dish-overview.value-object';
+import { DishOverviewVo } from './dish-overview.vo';
 
-export class UserProfileValueObject {
+export class UserProfileVo {
 
     constructor(
         public readonly login: string,
         public readonly activated: number,
         public readonly isAdmin: boolean,
         public readonly capabilities: Record<CapabilityType, boolean>,
-        public readonly dishList: DishOverviewValueObject[]
+        public readonly dishList: DishOverviewVo[]
     ) {}
 
-    static fromEntity(entity: UserEntity, dishes: DishOverviewValueObject[]): UserProfileValueObject {
-        return new UserProfileValueObject(
+    static fromEntity(entity: UserEntity, dishes: DishOverviewVo[]): UserProfileVo {
+        return new UserProfileVo(
             entity.getLogin(),
             entity.getActivationTime(),
             entity.isAdmin(),

@@ -6,7 +6,7 @@ import {
     SpoonacularRecipeDetails,
     SpoonacularRecipeSections
 } from './spoonacular-api.types';
-import { DishDetailsValueObject, DishResultValueObject } from '../../server/modules/dish/domain/read/value-objects';
+import { DishDetailsVo, DishResultVo } from '../../server/modules/dish/domain/read/vos';
 import { DishRecipeSection } from '../../server/modules/dish/dish.types';
 import {
     calculateCheckingAgain,
@@ -17,7 +17,7 @@ import {
 } from '../../server/common/helpers';
 import { IngredientUnitConverters, Provider } from '../../server/common/enums';
 import { DishIngredient } from '../../server/modules/ingredient/ingredient.types';
-import { EncodedDishIdValueObject } from '../../server/modules/dish/domain/common/value-objects';
+import { EncodedDishIdVo } from '../../server/modules/dish/domain/common/vos';
 import { InjectionToken } from '@nestjs/common/interfaces/modules/injection-token.interface';
 
 export const SPOONACULAR_API_ADAPTER_TOKEN: InjectionToken = 'SPOONACULAR_API_ADAPTER_TOKEN';
@@ -25,11 +25,11 @@ export const SPOONACULAR_API_ADAPTER_TOKEN: InjectionToken = 'SPOONACULAR_API_AD
 @Injectable()
 export class SpoonacularApiAdapter implements ExternalApiDataAdaptable<SpoonacularRecipe, SpoonacularRecipeDetails, SpoonacularRecipeSections, SpoonacularIngredient> {
 
-    toDishes(data: SpoonacularRecipe[], providedIngredients: string[]): DishResultValueObject[] {
+    toDishes(data: SpoonacularRecipe[], providedIngredients: string[]): DishResultVo[] {
         return data.map(recipe => {
             const { relevance, missingCount } = calculateCheckingAgain(providedIngredients, recipe.usedIngredients, recipe.missedIngredients);
             const provider = Provider.EXT_API_SPOONACULAR;
-            const encodedDishId = EncodedDishIdValueObject.fromParts(provider, recipe.id);
+            const encodedDishId = EncodedDishIdVo.fromParts(provider, recipe.id);
             const ingredients = [
                 ...recipe.usedIngredients.map(ingredient => ingredient.name),
                 ...recipe.missedIngredients.map(ingredient => ingredient.name)
@@ -37,7 +37,7 @@ export class SpoonacularApiAdapter implements ExternalApiDataAdaptable<Spoonacul
             const dishType = inferDishType(recipe.title);
             const mealType = inferMealType(dishType);
 
-            return new DishResultValueObject(
+            return new DishResultVo(
                 encodedDishId,
                 recipe.title,
                 ingredients,
@@ -52,7 +52,7 @@ export class SpoonacularApiAdapter implements ExternalApiDataAdaptable<Spoonacul
         });
     }
 
-    toDishDetails(data: SpoonacularRecipeDetails): DishDetailsValueObject {
+    toDishDetails(data: SpoonacularRecipeDetails): DishDetailsVo {
         const {
             image, title, extendedIngredients, summary,
             vegetarian, vegan, glutenFree, dairyFree, veryHealthy,
@@ -62,7 +62,7 @@ export class SpoonacularApiAdapter implements ExternalApiDataAdaptable<Spoonacul
         const dishType = inferDishType(title);
         const mealType = inferMealType(dishType);
 
-        return new DishDetailsValueObject(
+        return new DishDetailsVo(
             title,
             summary,
             ingredients,

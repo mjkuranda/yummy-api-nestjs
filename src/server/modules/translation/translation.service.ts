@@ -5,18 +5,18 @@ import { compoundTextToTranslate, convertAmountToText, normalizeName, normalizeU
 import translate from '@iamtraction/google-translate';
 import { DishIngredient } from '../ingredient/ingredient.types';
 import { RecipeEntity } from '../recipe/domain/entities';
-import { DishDetailsValueObject, TranslatedDishValueObject } from '../dish/domain/read/value-objects';
+import { DishDetailsVo, TranslatedDishVo } from '../dish/domain/read/vos';
 
 @Injectable()
 export class TranslationService {
 
-    async translateDish(dish: DishDetailsValueObject, targetLanguage: Language): Promise<TranslatedDishValueObject> {
+    async translateDish(dish: DishDetailsVo, targetLanguage: Language): Promise<TranslatedDishVo> {
         const { description, ingredients, language } = dish;
 
         if (language === targetLanguage) {
             const translatedIngredients = await this.translateIngredients(ingredients, { originalLanguage: dish.language, targetLanguage });
 
-            return new TranslatedDishValueObject(description, translatedIngredients);
+            return new TranslatedDishVo(description, translatedIngredients);
         }
 
         const ingredientImages: string[] = [];
@@ -43,7 +43,7 @@ export class TranslationService {
 
         const ingredientList: TranslatedIngredient[] = translatedIngredients.map((ingredient, idx) => ({ text: ingredient, imageUrl: ingredientImages[idx] }));
 
-        return new TranslatedDishValueObject(
+        return new TranslatedDishVo(
             this._proceedTagsSpaces(translatedDescription),
             ingredientList
         );

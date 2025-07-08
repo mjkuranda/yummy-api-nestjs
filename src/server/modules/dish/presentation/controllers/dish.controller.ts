@@ -20,7 +20,7 @@ import { EditDishDto, GetDishDetailsDto, GetDishResultsDto } from '../../applica
 import { AuthenticationGuard } from '../../../../guards/authentication.guard';
 import { CreateDishDto } from '../../application/dtos';
 import { DishIngredientWithoutImage } from '../../../ingredient/ingredient.types';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 import { Language } from '../../../../common/types';
 import { AddUserQueryInterceptor } from '../interceptors';
 import { GetDishesQueryDto } from '../../application/dtos/get-dishes-query.dto';
@@ -61,7 +61,7 @@ export class DishController {
     @Get('/:encoded-dish-id/details')
     @HttpCode(200)
     public async getDishDetails(
-        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdVo,
         @Headers('accept-language') language: Language = 'pl'
     ): Promise<GetDishDetailsDto> {
         return await this.dishQueryFacade.getDishDetails(encodedDishId, language);
@@ -71,7 +71,7 @@ export class DishController {
     @HttpCode(200)
     @UseGuards(AuthenticationGuard)
     public async updateDish(
-        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdVo,
         @Body() body: EditDishDto<DishIngredientWithoutImage>
     ): Promise<void> {
         const dataWithImages = this.ingredientService.applyWithImages(body);
@@ -83,7 +83,7 @@ export class DishController {
     @HttpCode(204)
     @UseGuards(AuthenticationGuard)
     public async deleteDish(
-        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdVo
     ): Promise<boolean> {
         return await this.dishCommandFacade.deleteDish(encodedDishId);
     }

@@ -11,9 +11,9 @@ import { MealType, Repository } from '../../../../../common/enums';
 import { DishId } from '../../../../dish/dish.types';
 import { DishCommentEntity, DishEntity, DishRatingEntity } from '../../../../dish/domain/common/entities';
 import { DishIngredient } from '../../../../ingredient/ingredient.types';
-import { DishOverviewValueObject } from '../../../../user/domain/value-objects';
-import { DishResultValueObject } from '../../../../dish/domain/read/value-objects';
-import { CreateDishValueObject, EditDishValueObject } from '../../../../dish/domain/write/value-objects';
+import { DishOverviewVo } from '../../../../user/domain/vos';
+import { DishResultVo } from '../../../../dish/domain/read/vos';
+import { CreateDishVo, EditDishVo } from '../../../../dish/domain/write/vos';
 
 @Injectable()
 export class DishApiService implements DishDataManageable {
@@ -35,7 +35,7 @@ export class DishApiService implements DishDataManageable {
         return await this.dishRepository.confirmDishEdition(id, dishSoftEdited);
     }
 
-    async createNewDish(data: CreateDishValueObject, author?: string, ingredients?: DishIngredient[]): Promise<DishEntity> {
+    async createNewDish(data: CreateDishVo, author?: string, ingredients?: DishIngredient[]): Promise<DishEntity> {
         return await this.dishRepository.createNewDish(data, author, ingredients);
     }
 
@@ -55,11 +55,11 @@ export class DishApiService implements DishDataManageable {
         return await this.dishRepository.findByDishId(id);
     }
 
-    async findDishesByAuthor(userLogin: string): Promise<DishOverviewValueObject[]> {
+    async findDishesByAuthor(userLogin: string): Promise<DishOverviewVo[]> {
         return await this.dishRepository.findDishesByAuthor(userLogin);
     }
 
-    async findDishesByIngredientsAndType(ingredients: string[], mealType?: MealType): Promise<DishResultValueObject[]> {
+    async findDishesByIngredientsAndType(ingredients: string[], mealType?: MealType): Promise<DishResultVo[]> {
         return await this.dishRepository.findDishesByIngredientsAndType(ingredients, mealType);
     }
 
@@ -91,7 +91,7 @@ export class DishApiService implements DishDataManageable {
         return await this.dishRepository.getDishesWithSoftEdited();
     }
 
-    async insertEditionForDish(id: DishId, editDishVo: EditDishValueObject): Promise<void> {
+    async insertEditionForDish(id: DishId, editDishVo: EditDishVo): Promise<void> {
         return await this.dishRepository.insertEditionForDish(id, editDishVo);
     }
 

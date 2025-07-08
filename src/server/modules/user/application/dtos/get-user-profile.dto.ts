@@ -1,4 +1,4 @@
-import { CapabilityType } from '../../domain/value-objects';
+import { CapabilityType } from '../../domain/vos';
 import { DishOverviewDto } from './dish-overview.dto';
 
 export class GetUserProfileDto {

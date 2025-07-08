@@ -6,11 +6,11 @@ import { BadRequestException, NotFoundException } from '../../../../exceptions';
 import { InvalidDishIdError, DishNotFoundError } from '../../domain/errors';
 import { ContextString } from '../../../../common/types';
 import { ConfirmedDeletingDto } from '../dtos';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 
 @Injectable()
-export class ConfirmDishDeletionUseCase extends AbstractUseCase<[EncodedDishIdValueObject, UserAccessTokenPayload], ConfirmedDeletingDto> {
+export class ConfirmDishDeletionUseCase extends AbstractUseCase<[EncodedDishIdVo, UserAccessTokenPayload], ConfirmedDeletingDto> {
 
     constructor(
         private readonly loggerService: LoggerService,
@@ -19,10 +19,10 @@ export class ConfirmDishDeletionUseCase extends AbstractUseCase<[EncodedDishIdVa
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject, user: UserAccessTokenPayload): Promise<ConfirmedDeletingDto> {
-        const valueObject = await this.dishWriteService.confirmDeleting(encodedDishId);
-        const dishTitle = valueObject.getDishTitle();
-        const wasDeleted = valueObject.wasDishDeleted();
+    protected async run(encodedDishId: EncodedDishIdVo, user: UserAccessTokenPayload): Promise<ConfirmedDeletingDto> {
+        const Vo = await this.dishWriteService.confirmDeleting(encodedDishId);
+        const dishTitle = Vo.getDishTitle();
+        const wasDeleted = Vo.wasDishDeleted();
 
         this.loggerService.info(this.context, `Confirmed dish deletion with id "${encodedDishId}" (titled: "${dishTitle}") by "${user.login}" user.`);
 

@@ -3,7 +3,7 @@ import { ProviderRegistryService } from '../../../provider-registry/provider-reg
 import { JwtManagerService } from '../../../jwt-manager/jwt-manager.service';
 import { PasswordManagerService } from './password-manager.service';
 import { InactiveUserError, IncorrectUserCredentialsError, MismatchedUserTokensError, UserWithLoginNotFoundError, ExpiredRefreshTokenError } from '../errors';
-import { UserTokensValueObject } from '../value-objects';
+import { UserTokensVo } from '../vos';
 import { UserCacheService } from '../../../cache/domains/user/user-cache.service';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { UserDataManageable } from '../../../provider-registry/data-manageable.interface';
@@ -28,7 +28,7 @@ export class AuthenticationService {
      * @param password user password
      * @return user tokens
      */
-    async login(login: string, password: string): Promise<UserTokensValueObject> {
+    async login(login: string, password: string): Promise<UserTokensVo> {
         const user = await this.userApiService.findUserByLogin(login);
 
         if (!user) {
@@ -59,7 +59,7 @@ export class AuthenticationService {
         await this.userCacheService.setUserToken(login, 'access', accessToken);
         await this.userCacheService.setUserToken(login, 'refresh', refreshToken);
 
-        return new UserTokensValueObject(accessToken, refreshToken);
+        return new UserTokensVo(accessToken, refreshToken);
     }
 
     /**
@@ -85,7 +85,7 @@ export class AuthenticationService {
      * @param accessToken user access token
      * @returns new user tokens
      */
-    async refreshTokens(userPayload: UserAccessTokenPayload, accessToken: string): Promise<UserTokensValueObject> {
+    async refreshTokens(userPayload: UserAccessTokenPayload, accessToken: string): Promise<UserTokensVo> {
         const cachedRefreshToken = await this.userCacheService.getUserToken(userPayload.login, 'refresh');
 
         if (!cachedRefreshToken) {
@@ -110,7 +110,7 @@ export class AuthenticationService {
         await this.userCacheService.setUserToken(userPayload.login, 'access', newAccessToken);
         await this.userCacheService.setUserToken(userPayload.login, 'refresh', newRefreshToken);
 
-        return new UserTokensValueObject(newAccessToken, newRefreshToken);
+        return new UserTokensVo(newAccessToken, newRefreshToken);
     }
 
     private isTooShortToExpireRefreshToken(payload: any): boolean {

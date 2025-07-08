@@ -3,7 +3,7 @@ import { Language } from '../../../../../common/types';
 import { DishType, MealType, Provider } from '../../../../../common/enums';
 import { DishEntity } from '../../common/entities';
 
-export class DishDetailsValueObject {
+export class DishDetailsVo {
 
     constructor(
         public readonly title: string,
@@ -27,8 +27,8 @@ export class DishDetailsValueObject {
         }
     ) {}
 
-    static fromEntity(entity: DishEntity): DishDetailsValueObject {
-        return new DishDetailsValueObject(
+    static fromEntity(entity: DishEntity): DishDetailsVo {
+        return new DishDetailsVo(
             entity.getTitle(),
             entity.getDescription(),
             entity.getIngredients(),

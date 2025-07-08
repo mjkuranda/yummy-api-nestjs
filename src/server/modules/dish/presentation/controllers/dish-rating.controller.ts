@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
 import { DishQueryFacade } from '../../application/dish-query.facade';
 import { DishCommandFacade } from '../../application/dish-command.facade';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 import { AddedDishRatingDto, CreateDishRatingDto, GetDishRatingDto } from '../../application/dtos';
 import { AuthenticationGuard } from '../../../../guards/authentication.guard';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
@@ -18,7 +18,7 @@ export class DishRatingController {
     @Get('/:encoded-dish-id/rating')
     @HttpCode(200)
     public async getDishRating(
-        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdVo
     ): Promise<GetDishRatingDto> {
         return await this.dishQueryFacade.getDishRating(encodedDishId);
     }
@@ -27,7 +27,7 @@ export class DishRatingController {
     @HttpCode(200)
     @UseGuards(AuthenticationGuard)
     public async addDishRating(
-        @Param('encoded-dish-id') encodedDishId: EncodedDishIdValueObject,
+        @Param('encoded-dish-id') encodedDishId: EncodedDishIdVo,
         @User() user: UserAccessTokenPayload,
         @Body() body: CreateDishRatingDto
     ): Promise<AddedDishRatingDto> {

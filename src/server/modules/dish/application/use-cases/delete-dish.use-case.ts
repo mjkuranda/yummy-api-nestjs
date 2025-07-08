@@ -5,10 +5,10 @@ import { DishNotFoundError, InvalidDishIdError, DishDeletionFailedError } from '
 import { NotFoundException, BadRequestException, InternalServerException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 
 @Injectable()
-export class DeleteDishUseCase extends AbstractUseCase<[EncodedDishIdValueObject], boolean> {
+export class DeleteDishUseCase extends AbstractUseCase<[EncodedDishIdVo], boolean> {
 
     constructor(
         private readonly loggerService: LoggerService,
@@ -17,7 +17,7 @@ export class DeleteDishUseCase extends AbstractUseCase<[EncodedDishIdValueObject
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject): Promise<boolean> {
+    protected async run(encodedDishId: EncodedDishIdVo): Promise<boolean> {
         const result = await this.dishWriteService.deleteDish(encodedDishId);
 
         if (result.isSoftDeleted) {

@@ -1,4 +1,4 @@
-export class DishEditionStatusValueObject {
+export class DishEditionStatusVo {
 
     constructor(
         public readonly dishTitle: string

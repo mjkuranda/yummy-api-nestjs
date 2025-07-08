@@ -3,7 +3,7 @@ import { TranslationService } from './translation.service';
 import translate from '@iamtraction/google-translate';
 import { Provider, DishType, MealType } from '../../common/enums';
 import { RecipeEntity } from '../recipe/domain/entities';
-import { DishDetailsValueObject } from '../dish/domain/read/value-objects';
+import { DishDetailsVo } from '../dish/domain/read/vos';
 import { DishId } from '../dish/dish.types';
 
 jest.mock('@iamtraction/google-translate', () =>
@@ -37,7 +37,7 @@ describe('TranslationService', () => {
         });
 
         it('should translate a detailed dish', async () => {
-            const mockDetailedDish: DishDetailsValueObject = new DishDetailsValueObject(
+            const mockDetailedDish: DishDetailsVo = new DishDetailsVo(
                 'Untitled',
                 'Lorem ipsum dolor sit amet.',
                 [

@@ -1,4 +1,4 @@
-export class AddDishRatingStatusValueObject {
+export class AddDishRatingStatusVo {
 
     constructor(private readonly isNew: boolean) {}
 

@@ -5,8 +5,8 @@ import { UserEntity } from '../../domain/entities';
 import { userModel } from '../../../../common/definitions/mongoose-model.definitions';
 import { InjectModel } from '@nestjs/mongoose';
 import { InvalidMongooseObjectIdError } from '../../../../common/errors';
-import { CreateUserValueObject } from '../../domain/value-objects';
-import { UserCapabilitiesValueObject } from '../../domain/value-objects';
+import { CreateUserVo } from '../../domain/vos';
+import { UserCapabilitiesVo } from '../../domain/vos';
 import { UserCacheService } from '../../../cache/domains/user/user-cache.service';
 
 export class MongodbUserRepository implements UserRepository {
@@ -49,7 +49,7 @@ export class MongodbUserRepository implements UserRepository {
         return this.toEntity(doc);
     }
 
-    async createNewUser(createUserVo: CreateUserValueObject): Promise<UserEntity> {
+    async createNewUser(createUserVo: CreateUserVo): Promise<UserEntity> {
         const doc = await this.model.create({
             login: createUserVo.login,
             email: createUserVo.email,
@@ -170,7 +170,7 @@ export class MongodbUserRepository implements UserRepository {
             doc.salt,
             doc.activated,
             doc.isAdmin,
-            UserCapabilitiesValueObject.fromObject(doc.capabilities || {})
+            UserCapabilitiesVo.fromObject(doc.capabilities || {})
         );
     }
 }

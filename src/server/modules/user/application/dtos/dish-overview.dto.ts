@@ -1,4 +1,4 @@
-import { DishOverviewValueObject } from '../../domain/value-objects';
+import { DishOverviewVo } from '../../domain/vos';
 
 export class DishOverviewDto {
 
@@ -6,7 +6,7 @@ export class DishOverviewDto {
         public readonly title: string
     ) {}
 
-    static fromDishOverviewVo(dishOverviewVo: DishOverviewValueObject): DishOverviewDto {
+    static fromDishOverviewVo(dishOverviewVo: DishOverviewVo): DishOverviewDto {
         return new DishOverviewDto(dishOverviewVo.title);
     }
 }

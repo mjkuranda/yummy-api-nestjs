@@ -1,4 +1,4 @@
-import { UserCapabilitiesValueObject } from '../value-objects';
+import { UserCapabilitiesVo } from '../vos';
 import { CapabilityType } from '../types';
 
 export class UserEntity {
@@ -10,7 +10,7 @@ export class UserEntity {
         private readonly _salt: string,
         private readonly _activated: number = -1,
         private readonly _isAdmin: boolean = false,
-        private readonly _capabilities: UserCapabilitiesValueObject = new UserCapabilitiesValueObject()
+        private readonly _capabilities: UserCapabilitiesVo = new UserCapabilitiesVo()
     ) {}
 
     getId(): string | null {
@@ -49,7 +49,7 @@ export class UserEntity {
         return this._capabilities.capabilities.has(capability);
     }
 
-    getCapabilities(): UserCapabilitiesValueObject {
+    getCapabilities(): UserCapabilitiesVo {
         return this._capabilities;
     }
 

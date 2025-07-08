@@ -5,12 +5,12 @@ import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 import { ConfirmedEditingDto } from '../dtos';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 
 @Injectable()
-export class ConfirmDishEditionUseCase extends AbstractUseCase<[EncodedDishIdValueObject, UserAccessTokenPayload], ConfirmedEditingDto> {
+export class ConfirmDishEditionUseCase extends AbstractUseCase<[EncodedDishIdVo, UserAccessTokenPayload], ConfirmedEditingDto> {
 
     constructor(
         private readonly loggerService: LoggerService,
@@ -19,7 +19,7 @@ export class ConfirmDishEditionUseCase extends AbstractUseCase<[EncodedDishIdVal
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject, userDto: UserAccessTokenPayload): Promise<ConfirmedEditingDto> {
+    protected async run(encodedDishId: EncodedDishIdVo, userDto: UserAccessTokenPayload): Promise<ConfirmedEditingDto> {
         const result = await this.dishWrite.confirmEditing(encodedDishId);
         const title = result.getTitle();
 

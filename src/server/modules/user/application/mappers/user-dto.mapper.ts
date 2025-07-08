@@ -1,6 +1,6 @@
 import { UserEntity } from '../../domain/entities';
 import { CreatedUserDto, DishOverviewDto, GetUserProfileDto, GetUsersDto, UserDto, UserTokensDto } from '../dtos';
-import { UserProfileValueObject, UserTokensValueObject } from '../../domain/value-objects';
+import { UserProfileVo, UserTokensVo } from '../../domain/vos';
 
 export class UserDtoMapper {
 
@@ -21,14 +21,14 @@ export class UserDtoMapper {
         return new GetUsersDto(userDtos);
     }
 
-    static toUserTokensDto(userTokensVo: UserTokensValueObject): UserTokensDto {
+    static toUserTokensDto(userTokensVo: UserTokensVo): UserTokensDto {
         return new UserTokensDto(
             userTokensVo.accessToken,
             userTokensVo.refreshToken
         );
     }
 
-    static toGetUserProfileDto(userProfileVo: UserProfileValueObject): GetUserProfileDto {
+    static toGetUserProfileDto(userProfileVo: UserProfileVo): GetUserProfileDto {
         const dishDtos = userProfileVo.dishList
             .map(dish =>
                 DishOverviewDto.fromDishOverviewVo(dish)

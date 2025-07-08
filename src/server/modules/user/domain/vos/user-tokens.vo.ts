@@ -1,4 +1,4 @@
-export class UserTokensValueObject {
+export class UserTokensVo {
 
     constructor(
         public readonly accessToken: string,

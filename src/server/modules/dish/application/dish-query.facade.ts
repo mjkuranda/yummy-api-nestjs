@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Language } from '../../../common/types';
 import { UserAccessTokenPayload } from '../../jwt-manager/jwt-manager.types';
 import { GetDishDetailsUseCase, GetDishesUseCase, GetDishProposalsUseCase, GetDishesWithSoftAddedUseCase, GetDishesWithSoftEditedUseCase, GetDishesWithSoftDeletedUseCase, GetDishCommentsUseCase, GetDishRatingUseCase } from './use-cases';
-import { EncodedDishIdValueObject } from '../domain/common/value-objects';
+import { EncodedDishIdVo } from '../domain/common/vos';
 import {
     GetDishesDto,
     GetDishDetailsDto,
@@ -40,7 +40,7 @@ export class DishQueryFacade {
      * @param encodedDishId dish ID
      * @param language requested language to translate the dish
      */
-    async getDishDetails(encodedDishId: EncodedDishIdValueObject, language: Language): Promise<GetDishDetailsDto> {
+    async getDishDetails(encodedDishId: EncodedDishIdVo, language: Language): Promise<GetDishDetailsDto> {
         return await this.getDishDetailsUseCase.execute(encodedDishId, language);
     }
 
@@ -77,7 +77,7 @@ export class DishQueryFacade {
      * @description Returns all comments for a particular dish
      * @param encodedDishId encoded dish ID and its provider name
      */
-    async getDishComments(encodedDishId: EncodedDishIdValueObject): Promise<GetDishCommentsDto> {
+    async getDishComments(encodedDishId: EncodedDishIdVo): Promise<GetDishCommentsDto> {
         return this.getDishCommentsUseCase.execute(encodedDishId);
     }
 
@@ -85,7 +85,7 @@ export class DishQueryFacade {
      * @description calculates a rating for a particular dish
      * @param encodedDishId encoded dish ID and its provider name
      */
-    async getDishRating(encodedDishId: EncodedDishIdValueObject): Promise<GetDishRatingDto> {
+    async getDishRating(encodedDishId: EncodedDishIdVo): Promise<GetDishRatingDto> {
         return this.getDishRatingUseCase.execute(encodedDishId);
     }
 }

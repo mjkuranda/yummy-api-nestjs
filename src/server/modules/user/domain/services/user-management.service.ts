@@ -4,7 +4,7 @@ import { PasswordManagerService } from './password-manager.service';
 import { MailManagerService } from '../../../mail-manager/mail-manager.service';
 import { UserEntity } from '../entities';
 import { UserAlreadyExistsError } from '../errors';
-import { CreateUserValueObject } from '../value-objects';
+import { CreateUserVo } from '../vos';
 import { UserDataManageable } from '../../../provider-registry/data-manageable.interface';
 
 @Injectable()
@@ -41,7 +41,7 @@ export class UserManagementService {
             pepper: process.env.PASSWORD_PEPPER
         });
 
-        const createUserVo = new CreateUserValueObject(login, email, hashedPassword);
+        const createUserVo = new CreateUserVo(login, email, hashedPassword);
         const savedUser = await this.userApiService.createNewUser(createUserVo);
         const userActionRecord = await this.userApiService.createAction(savedUser.getId(), 'activate');
 

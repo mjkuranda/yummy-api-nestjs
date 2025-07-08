@@ -1,6 +1,6 @@
 import { TranslatedIngredient } from '../../../../translation/translation.types';
 
-export class TranslatedDishValueObject {
+export class TranslatedDishVo {
 
     constructor(
         public readonly description: string,

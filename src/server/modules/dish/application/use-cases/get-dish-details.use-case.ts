@@ -6,12 +6,12 @@ import { LoggerService } from '../../../logger/logger.service';
 import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
-import { EncodedDishIdValueObject } from '../../domain/common/value-objects';
+import { EncodedDishIdVo } from '../../domain/common/vos';
 import { GetDishDetailsDto } from '../dtos';
 import { DishDtoMapper } from '../mappers';
 
 @Injectable()
-export class GetDishDetailsUseCase extends AbstractUseCase<[EncodedDishIdValueObject, Language], GetDishDetailsDto> {
+export class GetDishDetailsUseCase extends AbstractUseCase<[EncodedDishIdVo, Language], GetDishDetailsDto> {
 
     constructor(
         private readonly dishReadService: DishReadService,
@@ -21,7 +21,7 @@ export class GetDishDetailsUseCase extends AbstractUseCase<[EncodedDishIdValueOb
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdValueObject, language: Language): Promise<GetDishDetailsDto> {
+    protected async run(encodedDishId: EncodedDishIdVo, language: Language): Promise<GetDishDetailsDto> {
         const { dishDetailsVo, fromCache } = await this.dishReadService.getDishDetails(encodedDishId);
         // TODO: Translation should be done within the service
         const translated = await this.translationService.translateDish(dishDetailsVo, language);
