@@ -214,6 +214,8 @@ Provide `PASSWORD_PEPPER` to protect all user account passwords.
 Provide `FRONTEND_WEB`, `FRONTEND_MOBILE` URLs to enable CORS for themselves, e.g. `http://localhost:3000`.
 Also, you can add `FRONTEND_OTHERS` URLs providing a string, concatenated with `,` character, i.e. `http://localhost:3000,http://localhost:3001`.
 
+Provide `DISH_ID_SECRET_SALT` to hid real different dish IDs and generate cross-provider dish ID aka `EncodedDishId`. Default value is `secret-hasher-salt`
+
 ## Development
 You need to change version in `package.json` and add a record to the `CHANGELOG.md`.
 Before creating a pull request, you need to execute following commands, with success result:

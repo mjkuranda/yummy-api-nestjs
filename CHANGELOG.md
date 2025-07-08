@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [4.0.0] - 2025-05-26
 ### Added
 - [Marek Kurańda](https://github.com/mjkuranda): `CacheModule` and `DishCacheService` to dish cache management.
-- [Marek Kurańda](https://github.com/mjkuranda): `DishIdObfuscator` helper and `hashids` library to encode and decode dish IDs.
+- [Marek Kurańda](https://github.com/mjkuranda): `EncodedDishIdVo` value object and `hashids` library to encode and decode dish IDs.
+- [Marek Kurańda](https://github.com/mjkuranda): `DISH_ID_SECRET_SALT` environmental variable to define salt for hashing dish IDs.
 - [Marek Kurańda](https://github.com/mjkuranda): New four-layer architecture: presentation, application, domain and information layer.
 - [Marek Kurańda](https://github.com/mjkuranda): `DishProvidable` interface to extract get methods.
 - [Marek Kurańda](https://github.com/mjkuranda): `POST /dishes/encoded-id/confirm` returns `204` status code.

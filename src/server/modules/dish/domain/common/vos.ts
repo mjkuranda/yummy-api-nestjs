@@ -2,8 +2,7 @@ import Hashids from 'hashids';
 import { Provider } from '../../../../common/enums';
 import { DishId } from '../../../../common/types';
 
-// TODO: Secret salt!!!!
-const hashids = new Hashids('your-secret-salt', 8);
+const hashids = new Hashids(process.env.DISH_ID_SECRET_SALT ?? 'secret-hasher-salt', 8);
 
 export class EncodedDishIdVo {
 
