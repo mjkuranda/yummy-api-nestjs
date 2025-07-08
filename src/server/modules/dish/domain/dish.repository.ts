@@ -1,5 +1,5 @@
 import { DishEntity } from './common/entities';
-import { DishId } from '../dish.types';
+import { DishId } from '../../../common/types';
 import { DishIngredient } from '../../ingredient/ingredient.types';
 import { EditDishDto } from '../application/dtos';
 import { MealType } from '../../../common/enums';

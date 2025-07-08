@@ -29,7 +29,7 @@ export class ProfileManagementService {
             throw new NotFoundException('ProfileManagementService/getProfile', `User with "${login}" login has not been found.`);
         }
 
-        // TODO: Should be included as a seperate endpoint from users!
+        // TODO: Should be included as a separate endpoint from users!
         const dishes = await this.dishApiService.findDishesByAuthor(login);
 
         return UserProfileVo.fromEntity(user, dishes);

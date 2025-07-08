@@ -1,4 +1,4 @@
-import { DishId } from '../../modules/dish/dish.types';
+import { DishId } from '../types';
 
 export class InvalidMongooseIdTypeError extends Error {
 

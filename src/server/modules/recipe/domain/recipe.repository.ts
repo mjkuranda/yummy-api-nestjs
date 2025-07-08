@@ -1,4 +1,4 @@
-import { DishId } from '../../dish/dish.types';
+import { DishId } from '../../../common/types';
 import { Language } from '../../../common/types';
 import { RecipeEntity } from './entities';
 import { CreateRecipeDto } from '../application/dtos';

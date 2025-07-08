@@ -6,7 +6,7 @@ import { Language, RepositoryMap } from '../../../../../common/types';
 import { Repository } from '../../../../../common/enums';
 import { CreateRecipeDto } from '../../../../recipe/application/dtos';
 import { RecipeEntity } from '../../../../recipe/domain/entities';
-import { DishId } from '../../../../dish/dish.types';
+import { DishId } from '../../../../../common/types';
 
 @Injectable()
 export class RecipeApiService implements RecipeDataManageable {

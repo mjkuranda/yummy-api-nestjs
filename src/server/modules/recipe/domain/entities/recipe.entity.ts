@@ -1,5 +1,5 @@
 import { Language } from '../../../../common/types';
-import { DishId, DishRecipeSection } from '../../../dish/dish.types';
+import { DishId, DishRecipeSection } from '../../../../common/types';
 import {
     MissingDefinedLanguageForRecipeError,
     MissingDishAssociationForRecipeError,

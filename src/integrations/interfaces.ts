@@ -1,5 +1,5 @@
 import { DishDetailsVo, DishResultVo } from '../server/modules/dish/domain/read/vos';
-import { DishRecipeSection } from '../server/modules/dish/dish.types';
+import { DishRecipeSection } from '../server/common/types';
 import { DishIngredient } from '../server/modules/ingredient/ingredient.types';
 import { InjectionToken } from '@nestjs/common/interfaces/modules/injection-token.interface';
 

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ExternalApiService } from '../../server/modules/provider-registry/external-apis/external-api.service';
-import { DishId } from '../../server/modules/dish/dish.types';
+import { DishId } from '../../server/common/types';
 import { DishType, MealType, Provider } from '../../server/common/enums';
 import { EncodedDishIdVo } from '../../server/modules/dish/domain/common/vos';
 import { Language } from '../../server/common/types';

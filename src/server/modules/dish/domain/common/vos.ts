@@ -1,6 +1,6 @@
 import Hashids from 'hashids';
 import { Provider } from '../../../../common/enums';
-import { DishId } from '../../dish.types';
+import { DishId } from '../../../../common/types';
 
 // TODO: Secret salt!!!!
 const hashids = new Hashids('your-secret-salt', 8);

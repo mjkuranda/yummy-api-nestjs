@@ -11,7 +11,7 @@ import { DishType, MealType, Provider } from '../../../common/enums';
 import { ExternalApiDataAdaptable, EXTERNAL_API_ADAPTER_TOKEN } from '../../../../integrations/interfaces';
 import { AxiosResponse } from 'axios';
 import { ExternalApiConstantProvidable } from './external-api.interface';
-import { DishId } from '../../dish/dish.types';
+import { DishId } from '../../../common/types';
 
 @Injectable()
 export abstract class ExternalApiService<ExternalApiDishResult, ExternalApiDishDetails, ExternalApiDishInstruction, ExternalApiDishIngredient> implements Providable, ExternalApiConstantProvidable {

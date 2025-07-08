@@ -11,20 +11,22 @@ import {
 import { UserActionRepository, UserRepository } from '../modules/user/domain/repositories';
 
 /**
- * @description Equals to {}
- */
-export type EmptyDocument = Record<string, unknown>;
-
-// FIXME: Deprecated. Use HttpStatus or HttpCode
-/**
- * @description HTTP status codes.
- */
-export type StatusCodes = 200 | 201 | 204 | 205 | 400 | 403 | 404 | 500;
-
-/**
  * @description Context string format: ClassName/MethodName
  */
 export type ContextString = `${string}/${string}`;
+
+/**
+ * @description Dish ID type
+ */
+export type DishId = string | number;
+
+/**
+ * @description Dish recipe section type
+ */
+export type DishRecipeSection = {
+    name?: string,
+    steps: string[]
+};
 
 /**
  * @descritpion Ingredient type

@@ -8,7 +8,7 @@ import {
 import { REPOSITORIES_TOKEN } from '../../../../../constants/nestjs.contant';
 import { RepositoryMap } from '../../../../../common/types';
 import { MealType, Repository } from '../../../../../common/enums';
-import { DishId } from '../../../../dish/dish.types';
+import { DishId } from '../../../../../common/types';
 import { DishCommentEntity, DishEntity, DishRatingEntity } from '../../../../dish/domain/common/entities';
 import { DishIngredient } from '../../../../ingredient/ingredient.types';
 import { DishOverviewVo } from '../../../../user/domain/vos';

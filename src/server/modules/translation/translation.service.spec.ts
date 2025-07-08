@@ -4,7 +4,7 @@ import translate from '@iamtraction/google-translate';
 import { Provider, DishType, MealType } from '../../common/enums';
 import { RecipeEntity } from '../recipe/domain/entities';
 import { DishDetailsVo } from '../dish/domain/read/vos';
-import { DishId } from '../dish/dish.types';
+import { DishId } from '../../common/types';
 
 jest.mock('@iamtraction/google-translate', () =>
     jest.fn((text, opts) => {

@@ -1,5 +1,5 @@
 import { DishEntityProps } from './types';
-import { DishId } from '../../dish.types';
+import { DishId } from '../../../../common/types';
 import { DishIngredient } from '../../../ingredient/ingredient.types';
 import { Language } from '../../../../common/types';
 import { DishType, MealType, Provider } from '../../../../common/enums';

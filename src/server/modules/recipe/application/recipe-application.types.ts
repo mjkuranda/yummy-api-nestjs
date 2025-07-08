@@ -1,6 +1,6 @@
 import { Language } from '../../../common/types';
 import { RecipeEntity } from '../domain/entities';
-import { DishRecipeSection } from '../../dish/dish.types';
+import { DishRecipeSection } from '../../../common/types';
 
 export interface GetRecipeResult {
     recipe: RecipeEntity;

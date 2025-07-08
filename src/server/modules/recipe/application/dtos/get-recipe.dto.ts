@@ -1,5 +1,5 @@
 import { Language } from '../../../../common/types';
-import { DishRecipeSection } from '../../../dish/dish.types';
+import { DishRecipeSection } from '../../../../common/types';
 
 export class GetRecipeDto {
 

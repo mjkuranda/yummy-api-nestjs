@@ -7,7 +7,7 @@ import request from 'supertest';
 import { JwtManagerService } from '../src/modules/jwt-manager/jwt-manager.service';
 import { RedisService } from '../src/modules/redis/redis.service';
 import { DishRepository } from '../src/mongodb/repositories/dish.repository';
-import { DetailedDish, DetailedDishWithTranslations, DishRating, RatedDish } from '../src/modules/dish/dish.types';
+import { DetailedDish, DetailedDishWithTranslations, DishRating, RatedDish } from '../src/modules/dish/types';
 import { UserSearchQueryRepository } from '../src/mongodb/repositories/user-search-query.repository';
 import { DishCommentRepository } from '../src/mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../src/mongodb/repositories/dish-rating.repository';

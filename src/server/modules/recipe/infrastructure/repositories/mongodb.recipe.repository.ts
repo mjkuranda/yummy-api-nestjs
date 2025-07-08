@@ -1,5 +1,5 @@
 import { RecipeRepository } from '../../domain/recipe.repository';
-import { DishId } from '../../../dish/dish.types';
+import { DishId } from '../../../../common/types';
 import { Language } from '../../../../common/types';
 import { RecipeEntity } from '../../domain/entities';
 import { isValidObjectId, Model } from 'mongoose';

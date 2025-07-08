@@ -1,4 +1,4 @@
-import { DishId } from '../../dish/dish.types';
+import { DishId } from '../../../common/types';
 import { DishType, MealType } from '../../../common/enums';
 
 export interface ExternalApiConstantProvidable {

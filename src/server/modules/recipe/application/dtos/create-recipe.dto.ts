@@ -1,5 +1,5 @@
 import { IsIn, IsNotEmpty } from 'class-validator';
-import { DishRecipeSection } from '../../../dish/dish.types';
+import { DishRecipeSection } from '../../../../common/types';
 import { Language } from '../../../../common/types';
 import { supportedLanguages } from '../../../../constants/language.constant';
 

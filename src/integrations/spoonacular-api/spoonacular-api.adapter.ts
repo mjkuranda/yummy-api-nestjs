@@ -7,7 +7,7 @@ import {
     SpoonacularRecipeSections
 } from './spoonacular-api.types';
 import { DishDetailsVo, DishResultVo } from '../../server/modules/dish/domain/read/vos';
-import { DishRecipeSection } from '../../server/modules/dish/dish.types';
+import { DishRecipeSection } from '../../server/common/types';
 import {
     calculateCheckingAgain,
     discardDecimalPoint,

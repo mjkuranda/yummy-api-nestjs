@@ -1,5 +1,5 @@
 import { DishCommentEntity, DishRatingEntity, UserSearchQueryEntity } from './entities';
-import { DishId } from '../../dish.types';
+import { DishId } from '../../../../common/types';
 
 export interface UserSearchQueryRepository {
     insertNewQuery: (userLogin: string, ingredients: string[]) => Promise<void>;

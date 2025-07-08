@@ -3,7 +3,7 @@ import { FilterQuery, isValidObjectId, Model } from 'mongoose';
 import { DishDocument } from '../../../../../infrastructure/databases/mongodb/documents';
 import { dishModel } from '../../../../common/definitions/mongoose-model.definitions';
 import { InjectModel } from '@nestjs/mongoose';
-import { DishId } from '../../dish.types';
+import { DishId } from '../../../../common/types';
 import { DishEntity } from '../../domain/common/entities';
 import { DishFactory } from '../../domain/common/factories';
 import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../common/errors';

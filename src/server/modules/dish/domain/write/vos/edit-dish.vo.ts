@@ -1,7 +1,7 @@
 import { EditDishDto } from '../../../application/dtos';
 import { DishIngredient } from '../../../../ingredient/ingredient.types';
 import { DishType, MealType } from '../../../../../common/enums';
-import { DishRecipeSection } from '../../../dish.types';
+import { DishRecipeSection } from '../../../../../common/types';
 
 export class EditDishVo {
 

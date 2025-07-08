@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage } from 'mongoose';
 import { DishRatingRepository } from '../../domain/common/repositories';
 import { dishRatingModel } from '../../../../common/definitions/mongoose-model.definitions';
-import { DishId } from '../../dish.types';
+import { DishId } from '../../../../common/types';
 import { DishRatingEntity } from '../../domain/common/entities';
 
 export class MongodbDishRatingRepository implements DishRatingRepository {

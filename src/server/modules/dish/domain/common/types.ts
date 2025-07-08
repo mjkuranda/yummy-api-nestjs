@@ -2,7 +2,7 @@ import { DishIngredient } from '../../../ingredient/ingredient.types';
 import { Language } from '../../../../common/types';
 import { DishType, MealType, Provider } from '../../../../common/enums';
 import { DishEntity } from './entities';
-import { DishId } from '../../dish.types';
+import { DishId } from '../../../../common/types';
 
 export interface DishEntityProps {
     id: DishId;
