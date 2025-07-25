@@ -1,13 +1,12 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { IngredientService } from '../../../ingredient/ingredient.service';
-import { DishReadService } from '../../domain/read/dish-read.service';
+import { DishReadService } from '../../domain/read/services';
 import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';
 import { BadRequestException } from '../../../../exceptions';
-import { GetDishResultsDto } from '../dtos';
+import { GetDishesQueryDto, GetDishResultsDto } from '../dtos';
 import { DishResultsDtoMapper } from '../mappers';
-import { GetDishesQueryDto } from '../dtos/get-dishes-query.dto';
 
 @Injectable()
 export class GetDishesUseCase extends AbstractUseCase<[GetDishesQueryDto], GetDishResultsDto> {

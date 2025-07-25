@@ -5,22 +5,24 @@ import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';
-import { EncodedDishIdVo } from '../../domain/common/vos';
 import { ConfirmedEditingDto } from '../dtos';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
+import { DishTokenService } from '../../domain/common/services';
 
 @Injectable()
-export class ConfirmDishEditionUseCase extends AbstractUseCase<[EncodedDishIdVo, UserAccessTokenPayload], ConfirmedEditingDto> {
+export class ConfirmDishEditionUseCase extends AbstractUseCase<[string, UserAccessTokenPayload], ConfirmedEditingDto> {
 
     constructor(
+        private readonly dishTokenService: DishTokenService,
         private readonly loggerService: LoggerService,
         private readonly dishWrite: DishWriteService
     ) {
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdVo, userDto: UserAccessTokenPayload): Promise<ConfirmedEditingDto> {
-        const result = await this.dishWrite.confirmEditing(encodedDishId);
+    protected async run(encodedDishId: string, userDto: UserAccessTokenPayload): Promise<ConfirmedEditingDto> {
+        const encodedDishIdVo = this.dishTokenService.decode(encodedDishId);
+        const result = await this.dishWrite.confirmEditing(encodedDishIdVo);
         const title = result.getTitle();
 
         this.loggerService.info(this.context, `Dish edition for "${encodedDishId}" (titled: "${title}") has been confirmed by "${userDto.login}" user.`);

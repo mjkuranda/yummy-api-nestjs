@@ -1,11 +1,13 @@
 import { DishResultVo } from './dish-result.vo';
 import { MergedSearchQueriesVo } from './merged-search-queries.vo';
-import { EncodedDishIdVo } from '../../common/vos';
+import { DishId } from '../../../../../common/types';
+import { Provider } from '../../../../../common/enums';
 
 export class DishProposalVo {
 
     constructor(
-        public readonly encodedDishIdVo: EncodedDishIdVo,
+        public readonly dishId: DishId,
+        public readonly provider: Provider,
         public readonly title: string,
         public readonly recommendationPoints: number,
         public readonly imgUrl?: string
@@ -19,7 +21,8 @@ export class DishProposalVo {
         }, 0);
 
         return new DishProposalVo(
-            dishResultVo.encodedDishId,
+            dishResultVo.dishId,
+            dishResultVo.provider,
             dishResultVo.title,
             recommendationPoints,
             dishResultVo.imgUrl

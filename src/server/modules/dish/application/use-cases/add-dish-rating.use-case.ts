@@ -6,25 +6,27 @@ import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { AddedDishRatingDto } from '../dtos';
-import { EncodedDishIdVo } from '../../domain/common/vos';
+import { DishTokenService } from '../../domain/common/services';
 
 @Injectable()
-export class AddDishRatingUseCase extends AbstractUseCase<[EncodedDishIdVo, string, number], AddedDishRatingDto> {
+export class AddDishRatingUseCase extends AbstractUseCase<[string, string, number], AddedDishRatingDto> {
 
     constructor(
+        private readonly dishTokenService: DishTokenService,
         private readonly dishWriteService: DishWriteService,
         private readonly loggerService: LoggerService
     ) {
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdVo, userLogin: string, rating: number): Promise<AddedDishRatingDto> {
-        const addDishRatingStatusVo = await this.dishWriteService.addDishRating(encodedDishId, userLogin, rating);
+    protected async run(encodedDishId: string, userLogin: string, rating: number): Promise<AddedDishRatingDto> {
+        const encodedDishIdVo = this.dishTokenService.decode(encodedDishId);
+        const addDishRatingStatusVo = await this.dishWriteService.addDishRating(encodedDishIdVo, userLogin, rating);
 
         if (!addDishRatingStatusVo.isNewRating()) {
-            this.loggerService.info(this.context, `Successfully changed a rating for dish "${encodedDishId.getValue()}" by "${userLogin}" user.`);
+            this.loggerService.info(this.context, `Successfully changed a rating for dish "${encodedDishId}" by "${userLogin}" user.`);
         } else {
-            this.loggerService.info(this.context, `Successfully added a new rating for dish "${encodedDishId.getValue()}" by "${userLogin}" user.`);
+            this.loggerService.info(this.context, `Successfully added a new rating for dish "${encodedDishId}" by "${userLogin}" user.`);
         }
 
         return new AddedDishRatingDto(

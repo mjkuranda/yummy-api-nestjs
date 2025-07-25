@@ -5,26 +5,28 @@ import { RecipeService } from '../../domain/services/recipe.service';
 import { DishNotFoundError, DishRecipeNotFoundError, InvalidDishIdError } from '../../../dish/domain/errors';
 import { BadRequestException, NotFoundException } from '../../../../exceptions';
 import { LanguageName } from '../../../../common/enums';
-import { EncodedDishIdVo } from '../../../dish/domain/common/vos';
 import { GetRecipeDto } from '../dtos';
 import { RecipeDtoMapper } from '../recipe-dto.mapper';
+import { DishTokenService } from '../../../dish/domain/common/services';
 
-export class GetRecipeUseCase extends AbstractUseCase<[EncodedDishIdVo, Language], GetRecipeDto> {
+export class GetRecipeUseCase extends AbstractUseCase<[string, Language], GetRecipeDto> {
 
     constructor(
+        private readonly dishTokenService: DishTokenService,
         private readonly loggerService: LoggerService,
         private readonly recipeService: RecipeService
     ) {
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdVo, language: Language): Promise<GetRecipeDto> {
-        const { recipe, fromCache } = await this.recipeService.getTranslatedRecipe(encodedDishId, language);
+    protected async run(encodedDishId: string, language: Language): Promise<GetRecipeDto> {
+        const encodedDishIdVo = this.dishTokenService.decode(encodedDishId);
+        const { recipe, fromCache } = await this.recipeService.getTranslatedRecipe(encodedDishIdVo, language);
         const languageName = LanguageName[language];
 
-        this.loggerService.info(this.context, `Retrieved dish recipe "${encodedDishId.getValue()}" in ${languageName} language ${fromCache ? 'from cache' : 'and cached'}.`);
+        this.loggerService.info(this.context, `Retrieved dish recipe "${encodedDishId}" in ${languageName} language ${fromCache ? 'from cache' : 'and cached'}.`);
 
-        return RecipeDtoMapper.toGetRecipeDto(encodedDishId, recipe);
+        return RecipeDtoMapper.toGetRecipeDto(encodedDishIdVo, recipe);
     }
 
     protected handleError(error: unknown, context: ContextString): never {

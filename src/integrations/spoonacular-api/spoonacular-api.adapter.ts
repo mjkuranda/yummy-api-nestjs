@@ -17,7 +17,6 @@ import {
 } from '../../server/common/helpers';
 import { IngredientUnitConverters, Provider } from '../../server/common/enums';
 import { DishIngredient } from '../../server/modules/ingredient/ingredient.types';
-import { EncodedDishIdVo } from '../../server/modules/dish/domain/common/vos';
 import { InjectionToken } from '@nestjs/common/interfaces/modules/injection-token.interface';
 
 export const SPOONACULAR_API_ADAPTER_TOKEN: InjectionToken = 'SPOONACULAR_API_ADAPTER_TOKEN';
@@ -29,7 +28,6 @@ export class SpoonacularApiAdapter implements ExternalApiDataAdaptable<Spoonacul
         return data.map(recipe => {
             const { relevance, missingCount } = calculateCheckingAgain(providedIngredients, recipe.usedIngredients, recipe.missedIngredients);
             const provider = Provider.EXT_API_SPOONACULAR;
-            const encodedDishId = EncodedDishIdVo.fromParts(provider, recipe.id);
             const ingredients = [
                 ...recipe.usedIngredients.map(ingredient => ingredient.name),
                 ...recipe.missedIngredients.map(ingredient => ingredient.name)
@@ -38,7 +36,7 @@ export class SpoonacularApiAdapter implements ExternalApiDataAdaptable<Spoonacul
             const mealType = inferMealType(dishType);
 
             return new DishResultVo(
-                encodedDishId,
+                recipe.id,
                 recipe.title,
                 ingredients,
                 'en',

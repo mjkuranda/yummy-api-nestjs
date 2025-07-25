@@ -1,17 +1,19 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
-import { DishReadService } from '../../domain/read/dish-read.service';
+import { DishReadService } from '../../domain/read/services';
 import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';
 import { BadRequestException } from '../../../../exceptions';
 import { GetDishProposalsDto } from '../dtos';
 import { DishProposalsDtoMapper } from '../mappers';
+import { DishTokenService } from '../../domain/common/services';
 
 @Injectable()
 export class GetDishProposalsUseCase extends AbstractUseCase<[UserAccessTokenPayload], GetDishProposalsDto> {
 
     constructor(
+        private readonly dishTokenService: DishTokenService,
         private readonly dishReadService: DishReadService,
         private readonly loggerService: LoggerService
     ) {
@@ -23,7 +25,9 @@ export class GetDishProposalsUseCase extends AbstractUseCase<[UserAccessTokenPay
 
         this.loggerService.info(this.context, `Generated ${dishProposals.length} dish proposal${dishProposals.length > 1 || dishProposals.length === 0 ? 's' : ''}.`);
 
-        return DishProposalsDtoMapper.toGetDishProposalsDto(dishProposals);
+        const encodedDishIds = dishProposals.map(proposal => this.dishTokenService.encode(proposal.provider, proposal.dishId));
+
+        return DishProposalsDtoMapper.toGetDishProposalsDto(encodedDishIds, dishProposals);
     }
 
     protected handleError(error: unknown, context: ContextString): never {

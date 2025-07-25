@@ -28,12 +28,13 @@ export class RecipeService {
 
     /**
      * @description creates a new dish recipe
-     * @param encodedDishId encoded dish ID and its provider name
+     * @param encodedDishIdVo encoded dish ID and its provider name
      * @param createRecipeDto data containing recipe information
      * @param user user data extracted from access token
      */
-    async create(encodedDishId: EncodedDishIdVo, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<RecipeEntity> {
-        const dishId = encodedDishId.getDishId();
+    async create(encodedDishIdVo: EncodedDishIdVo, createRecipeDto: CreateRecipeDto, user: UserAccessTokenPayload): Promise<RecipeEntity> {
+        const encodedDishId = encodedDishIdVo.getValue();
+        const dishId = encodedDishIdVo.getDishId();
 
         // NOTE: This dish can be unconfirmed because you add dish and recipe at once.
         const dish = await this.dishApiService.findByDishId(dishId);
@@ -60,7 +61,7 @@ export class RecipeService {
             createdRecipe.sections
         );
 
-        await this.dishRecipeCacheService.setDishRecipe(encodedDishId, recipe);
+        await this.dishRecipeCacheService.setDishRecipe(encodedDishIdVo, recipe);
 
         return newRecipe;
     }

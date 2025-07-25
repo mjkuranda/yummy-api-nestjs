@@ -1,6 +1,5 @@
 import { DishCommentEntity, DishEntity } from './entities';
-import { DishDocument } from '../../../../../infrastructure/databases/mongodb/documents/dish.document';
-import { DishCommentDocument } from '../../../../../infrastructure/databases/mongodb/documents/dish-comment.document';
+import { DishDocument, DishCommentDocument } from '../../../../../infrastructure/databases/mongodb/documents';
 import { Provider } from '../../../../common/enums';
 
 export class DishFactory {

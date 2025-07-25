@@ -11,11 +11,13 @@ import { EmptyDishIngredientListError, MissingDishAuthorError } from '../../doma
 import { ContextString } from '../../../../common/types';
 import { CreateDishVo } from '../../domain/write/vos';
 import { DishDtoMapper } from '../mappers';
+import { DishTokenService } from '../../domain/common/services';
 
 @Injectable()
 export class CreateDishUseCase extends AbstractUseCase<[CreateDishDto<DishIngredientWithoutImage>, UserAccessTokenPayload], CreatedDishDto> {
 
     constructor(
+        private readonly dishTokenService: DishTokenService,
         private readonly dishWriteService: DishWriteService,
         private readonly ingredientService: IngredientService,
         private readonly loggerService: LoggerService
@@ -34,7 +36,12 @@ export class CreateDishUseCase extends AbstractUseCase<[CreateDishDto<DishIngred
 
         this.loggerService.info(this.context, message);
 
-        return DishDtoMapper.toCreatedDishDto(createdDish);
+        const encodedDishId = this.dishTokenService.encode(
+            createdDish.getProvider(),
+            createdDish.getDishId()
+        );
+
+        return DishDtoMapper.toCreatedDishDto(encodedDishId, createdDish);
     }
 
     protected handleError(error: unknown, context: ContextString): never {

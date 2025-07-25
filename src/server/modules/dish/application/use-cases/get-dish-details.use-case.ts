@@ -1,19 +1,20 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString, Language } from '../../../../common/types';
-import { DishReadService } from '../../domain/read/dish-read.service';
+import { DishReadService } from '../../domain/read/services';
 import { TranslationService } from '../../../translation/translation.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
-import { EncodedDishIdVo } from '../../domain/common/vos';
 import { GetDishDetailsDto } from '../dtos';
 import { DishDtoMapper } from '../mappers';
+import { DishTokenService } from '../../domain/common/services';
 
 @Injectable()
-export class GetDishDetailsUseCase extends AbstractUseCase<[EncodedDishIdVo, Language], GetDishDetailsDto> {
+export class GetDishDetailsUseCase extends AbstractUseCase<[string, Language], GetDishDetailsDto> {
 
     constructor(
+        private readonly dishTokenService: DishTokenService,
         private readonly dishReadService: DishReadService,
         private readonly translationService: TranslationService,
         private readonly loggerService: LoggerService
@@ -21,8 +22,9 @@ export class GetDishDetailsUseCase extends AbstractUseCase<[EncodedDishIdVo, Lan
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdVo, language: Language): Promise<GetDishDetailsDto> {
-        const { dishDetailsVo, fromCache } = await this.dishReadService.getDishDetails(encodedDishId);
+    protected async run(encodedDishId: string, language: Language): Promise<GetDishDetailsDto> {
+        const encodedDishIdVo = this.dishTokenService.decode(encodedDishId);
+        const { dishDetailsVo, fromCache } = await this.dishReadService.getDishDetails(encodedDishIdVo);
         // TODO: Translation should be done within the service
         const translated = await this.translationService.translateDish(dishDetailsVo, language);
 

@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { DishCacheService } from '../../../cache/domains/dish/dish-cache.service';
+import { DishCacheService } from '../../../../cache/domains/dish/dish-cache.service';
 import { DishAggregatorService } from './dish-aggregator.service';
-import { MealType } from '../../../../common/enums';
-import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../errors';
-import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
+import { MealType } from '../../../../../common/enums';
+import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../../errors';
+import { ProviderRegistryService } from '../../../../provider-registry/provider-registry.service';
 import {
     DishCommentVo,
     DishDetailsWithCacheVo,
     DishProposalsVo, DishProposalVo,
     DishRatingVo,
     DishResultsWithCacheVo, MergedSearchQueriesVo
-} from './vos';
-import { DishEntity } from '../common/entities';
-import { EncodedDishIdVo } from '../common/vos';
-import { DishDataManageable, UserDataManageable } from '../../../provider-registry/data-manageable.interface';
+} from '../vos';
+import { DishEntity } from '../../common/entities';
+import { DishDataManageable, UserDataManageable } from '../../../../provider-registry/data-manageable.interface';
+import { EncodedDishIdVo } from '../../common/vos';
 
 @Injectable()
 export class DishReadService {
@@ -51,19 +51,20 @@ export class DishReadService {
 
     /**
      * @description Returns detailed dish
-     * @param encodedDishId encoded dish ID and its provider name
+     * @param encodedDishIdVo encoded dish ID and its provider name
      */
-    async getDishDetails(encodedDishId: EncodedDishIdVo): Promise<DishDetailsWithCacheVo> {
-        const provider = encodedDishId.getProvider();
+    async getDishDetails(encodedDishIdVo: EncodedDishIdVo): Promise<DishDetailsWithCacheVo> {
+        const provider = encodedDishIdVo.getProvider();
 
         const providable = this.providerRegistryService.getProvider(provider);
-        const cachedDish = await this.dishCacheService.getDishDetails(encodedDishId);
+        const cachedDish = await this.dishCacheService.getDishDetails(encodedDishIdVo);
 
         if (cachedDish) {
             return new DishDetailsWithCacheVo(cachedDish, true);
         }
 
-        const dishDetails = await providable.getDishDetails(encodedDishId);
+        const dishDetails = await providable.getDishDetails(encodedDishIdVo);
+        const encodedDishId = encodedDishIdVo.getValue();
 
         if (!dishDetails) {
             throw new DishNotFoundError(encodedDishId);
@@ -77,7 +78,7 @@ export class DishReadService {
             throw new DishSoftDeletedError(encodedDishId);
         }
 
-        await this.dishCacheService.setDishDetails(encodedDishId, dishDetails);
+        await this.dishCacheService.setDishDetails(encodedDishIdVo, dishDetails);
 
         return new DishDetailsWithCacheVo(dishDetails, false);
     }
@@ -124,11 +125,12 @@ export class DishReadService {
 
     /**
      * @description Returns all comments for a particular dish
-     * @param encodedDishId encoded dish ID and its provider name
+     * @param encodedDishIdVo encoded dish ID and its provider name
      * @returns dish entity and list of all comments
      */
-    async getDishComments(encodedDishId: EncodedDishIdVo): Promise<DishCommentVo[]> {
-        const dishId = encodedDishId.getDishId();
+    async getDishComments(encodedDishIdVo: EncodedDishIdVo): Promise<DishCommentVo[]> {
+        const encodedDishId = encodedDishIdVo.getValue();
+        const dishId = encodedDishIdVo.getDishId();
 
         const dish = await this.dishApiService.findByDishId(dishId);
 
@@ -138,16 +140,17 @@ export class DishReadService {
 
         const comments = await this.dishApiService.getAllComments(dishId);
 
-        return DishCommentVo.fromEntities(dish, comments);
+        return DishCommentVo.fromEntities(encodedDishId, dish, comments);
     }
 
     /**
      * @description Returns dish rating
-     * @param encodedDishId encoded dish ID and its provider name
+     * @param encodedDishIdVo encoded dish ID and its provider name
      * @returns dish entity and information about rating and how many user rated
      */
-    async getDishRating(encodedDishId: EncodedDishIdVo): Promise<DishRatingVo> {
-        const dishId = encodedDishId.getDishId();
+    async getDishRating(encodedDishIdVo: EncodedDishIdVo): Promise<DishRatingVo> {
+        const encodedDishId = encodedDishIdVo.getValue();
+        const dishId = encodedDishIdVo.getDishId();
         const dish = await this.dishApiService.findByDishId(dishId);
 
         if (!dish) {
@@ -165,23 +168,23 @@ export class DishReadService {
 
     /**
      * @description Returns true if exists a dish with a particular encoded ID
-     * @param encodedDishId encoded dish id and its provider name
+     * @param encodedDishIdVo encoded dish id and its provider name
      * @deprecated
      */
-    async hasDish(encodedDishId: EncodedDishIdVo): Promise<boolean> {
-        const isCached = await this.dishCacheService.hasDish(encodedDishId);
+    async hasDish(encodedDishIdVo: EncodedDishIdVo): Promise<boolean> {
+        const isCached = await this.dishCacheService.hasDish(encodedDishIdVo);
 
         if (isCached) {
             return true;
         }
 
-        const provider = encodedDishId.getProvider();
+        const provider = encodedDishIdVo.getProvider();
 
         const providable = this.providerRegistryService.getProvider(provider);
-        const dishDetails = await providable.getDishDetails(encodedDishId);
+        const dishDetails = await providable.getDishDetails(encodedDishIdVo);
 
         if (dishDetails) {
-            await this.dishCacheService.setDishDetails(encodedDishId, dishDetails);
+            await this.dishCacheService.setDishDetails(encodedDishIdVo, dishDetails);
 
             return true;
         }

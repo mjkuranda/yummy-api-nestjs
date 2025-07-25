@@ -3,10 +3,9 @@ import { AuthenticationGuard } from '../../../../guards/authentication.guard';
 import { CreateRecipeDto, GetRecipeDto } from '../../application/dtos';
 import { Language } from '../../../../common/types';
 import { RecipeFacade } from '../../application/recipe.facade';
-import { ParseEncodedDishIdPipe } from '../../../../pipes/parse-encoded-dish-id.pipe';
-import { EncodedDishIdVo } from '../../../dish/domain/common/vos';
 import { User } from '../../../../decorators';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
+import { EncodedDishIdValidationPipe } from '../../../../pipes';
 
 @Controller('recipes')
 export class RecipeController {
@@ -19,7 +18,7 @@ export class RecipeController {
     @HttpCode(201)
     @UseGuards(AuthenticationGuard)
     public async createRecipe(
-        @Param('encoded-dish-id', ParseEncodedDishIdPipe) encodedDishId: EncodedDishIdVo,
+        @Param('encoded-dish-id', EncodedDishIdValidationPipe) encodedDishId: string,
         @User() user: UserAccessTokenPayload,
         @Body() createRecipeDto: CreateRecipeDto
     ): Promise<void> {
@@ -29,7 +28,7 @@ export class RecipeController {
     @Get(':encoded-dish-id')
     @HttpCode(200)
     public async getRecipe(
-        @Param('encoded-dish-id', ParseEncodedDishIdPipe) encodedDishId: EncodedDishIdVo,
+        @Param('encoded-dish-id', EncodedDishIdValidationPipe) encodedDishId: string,
         @Headers('accept-language') lang: Language = 'pl'
     ): Promise<GetRecipeDto> {
         return await this.recipeFacade.getRecipe(encodedDishId, lang);

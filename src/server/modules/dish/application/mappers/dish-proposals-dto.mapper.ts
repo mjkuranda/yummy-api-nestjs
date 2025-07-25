@@ -3,10 +3,10 @@ import { DishProposalVo } from '../../domain/read/vos';
 
 export class DishProposalsDtoMapper {
 
-    static toGetDishProposalsDto(dishProposalVos: DishProposalVo[]): GetDishProposalsDto {
-        const proposals = dishProposalVos.map(vo =>
+    static toGetDishProposalsDto(encodedDishIds: string[], dishProposalVos: DishProposalVo[]): GetDishProposalsDto {
+        const proposals = dishProposalVos.map((vo, idx) =>
             new DishProposalDto(
-                vo.encodedDishIdVo.getValue(),
+                encodedDishIds[idx],
                 vo.title,
                 vo.recommendationPoints,
                 vo.imgUrl

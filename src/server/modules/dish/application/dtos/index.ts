@@ -16,3 +16,4 @@ export * from './get-dish-proposals.dto';
 export * from './get-dish-rating.dto';
 export * from './get-dish-results.dto';
 export * from './get-dishes.dto';
+export * from './get-dishes-query.dto';

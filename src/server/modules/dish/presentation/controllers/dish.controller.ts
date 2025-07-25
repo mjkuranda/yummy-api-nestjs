@@ -15,15 +15,12 @@ import {
 import { DishQueryFacade } from '../../application/dish-query.facade';
 import { DishCommandFacade } from '../../application/dish-command.facade';
 import { IngredientService } from '../../../ingredient/ingredient.service';
-import { DishQueryValidationPipe } from '../../../../pipes/dish-query-validation.pipe';
-import { EditDishDto, GetDishDetailsDto, GetDishResultsDto } from '../../application/dtos';
+import { DishQueryValidationPipe, EncodedDishIdValidationPipe } from '../../../../pipes';
+import { CreateDishDto, EditDishDto, GetDishDetailsDto, GetDishResultsDto, GetDishesQueryDto } from '../../application/dtos';
 import { AuthenticationGuard } from '../../../../guards/authentication.guard';
-import { CreateDishDto } from '../../application/dtos';
 import { DishIngredientWithoutImage } from '../../../ingredient/ingredient.types';
-import { EncodedDishIdVo } from '../../domain/common/vos';
 import { Language } from '../../../../common/types';
 import { AddUserQueryInterceptor } from '../interceptors';
-import { GetDishesQueryDto } from '../../application/dtos/get-dishes-query.dto';
 import { OptionalAuthGuard } from '../guards/optional-auth.guard';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { User } from '../../../../decorators';
@@ -61,7 +58,7 @@ export class DishController {
     @Get('/:encoded-dish-id/details')
     @HttpCode(200)
     public async getDishDetails(
-        @Param('encoded-dish-id') encodedDishId: EncodedDishIdVo,
+        @Param('encoded-dish-id', EncodedDishIdValidationPipe) encodedDishId: string,
         @Headers('accept-language') language: Language = 'pl'
     ): Promise<GetDishDetailsDto> {
         return await this.dishQueryFacade.getDishDetails(encodedDishId, language);
@@ -71,7 +68,7 @@ export class DishController {
     @HttpCode(200)
     @UseGuards(AuthenticationGuard)
     public async updateDish(
-        @Param('encoded-dish-id') encodedDishId: EncodedDishIdVo,
+        @Param('encoded-dish-id', EncodedDishIdValidationPipe) encodedDishId: string,
         @Body() body: EditDishDto<DishIngredientWithoutImage>
     ): Promise<void> {
         const dataWithImages = this.ingredientService.applyWithImages(body);
@@ -83,7 +80,7 @@ export class DishController {
     @HttpCode(204)
     @UseGuards(AuthenticationGuard)
     public async deleteDish(
-        @Param('encoded-dish-id') encodedDishId: EncodedDishIdVo
+        @Param('encoded-dish-id', EncodedDishIdValidationPipe) encodedDishId: string
     ): Promise<boolean> {
         return await this.dishCommandFacade.deleteDish(encodedDishId);
     }

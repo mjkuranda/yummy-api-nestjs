@@ -6,21 +6,23 @@ import { BadRequestException, NotFoundException } from '../../../../exceptions';
 import { InvalidDishIdError, DishNotFoundError } from '../../domain/errors';
 import { ContextString } from '../../../../common/types';
 import { ConfirmedDeletingDto } from '../dtos';
-import { EncodedDishIdVo } from '../../domain/common/vos';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
+import { DishTokenService } from '../../domain/common/services';
 
 @Injectable()
-export class ConfirmDishDeletionUseCase extends AbstractUseCase<[EncodedDishIdVo, UserAccessTokenPayload], ConfirmedDeletingDto> {
+export class ConfirmDishDeletionUseCase extends AbstractUseCase<[string, UserAccessTokenPayload], ConfirmedDeletingDto> {
 
     constructor(
+        private readonly dishTokenService: DishTokenService,
         private readonly loggerService: LoggerService,
         private readonly dishWriteService: DishWriteService
     ) {
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdVo, user: UserAccessTokenPayload): Promise<ConfirmedDeletingDto> {
-        const Vo = await this.dishWriteService.confirmDeleting(encodedDishId);
+    protected async run(encodedDishId: string, user: UserAccessTokenPayload): Promise<ConfirmedDeletingDto> {
+        const encodedDishIdVo = this.dishTokenService.decode(encodedDishId);
+        const Vo = await this.dishWriteService.confirmDeleting(encodedDishIdVo);
         const dishTitle = Vo.getDishTitle();
         const wasDeleted = Vo.wasDishDeleted();
 

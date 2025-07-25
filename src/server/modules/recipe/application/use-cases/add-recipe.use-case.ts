@@ -10,23 +10,26 @@ import { NotFoundException, ForbiddenException, BadRequestException } from '../.
 import { LoggerService } from '../../../logger/logger.service';
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
-import { EncodedDishIdVo } from '../../../dish/domain/common/vos';
 import { CreateRecipeDto } from '../dtos';
 import { InvalidMongooseObjectIdError } from '../../../../common/errors';
+import { DishTokenService } from '../../../dish/domain/common/services';
 
-export class AddRecipeUseCase extends AbstractUseCase<[EncodedDishIdVo, CreateRecipeDto, UserAccessTokenPayload], void> {
+export class AddRecipeUseCase extends AbstractUseCase<[string, CreateRecipeDto, UserAccessTokenPayload], void> {
 
     constructor(
+        private readonly dishTokenService: DishTokenService,
         private readonly recipeService: RecipeService,
         private readonly loggerService: LoggerService
     ) {
         super();
     }
 
-    async run(encodedDishId: EncodedDishIdVo, createRecipeDto: CreateRecipeDto, userDto: UserAccessTokenPayload): Promise<void> {
-        await this.recipeService.create(encodedDishId, createRecipeDto, userDto);
+    async run(encodedDishId: string, createRecipeDto: CreateRecipeDto, userDto: UserAccessTokenPayload): Promise<void> {
+        const encodedDishIdVo = this.dishTokenService.decode(encodedDishId);
 
-        this.loggerService.info(this.context, `New recipe has been created for dish "${encodedDishId.getValue()}"`);
+        await this.recipeService.create(encodedDishIdVo, createRecipeDto, userDto);
+
+        this.loggerService.info(this.context, `New recipe has been created for dish "${encodedDishId}"`);
     }
 
     protected handleError(error: unknown, context: ContextString): never {

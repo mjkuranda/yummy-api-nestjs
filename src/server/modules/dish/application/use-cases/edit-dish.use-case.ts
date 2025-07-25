@@ -7,22 +7,24 @@ import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
 import { NotFoundException, BadRequestException } from '../../../../exceptions';
-import { EncodedDishIdVo } from '../../domain/common/vos';
 import { EditDishVo } from '../../domain/write/vos';
+import { DishTokenService } from '../../domain/common/services';
 
 @Injectable()
-export class EditDishUseCase extends AbstractUseCase<[EncodedDishIdVo, EditDishDto<DishIngredient>], void> {
+export class EditDishUseCase extends AbstractUseCase<[string, EditDishDto<DishIngredient>], void> {
 
     constructor(
+        private readonly dishTokenService: DishTokenService,
         private readonly loggerService: LoggerService,
         private readonly dishWriteService: DishWriteService
     ) {
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdVo, editDishDto: EditDishDto<DishIngredient>): Promise<void> {
+    protected async run(encodedDishId: string, editDishDto: EditDishDto<DishIngredient>): Promise<void> {
+        const encodedDishIdVo = this.dishTokenService.decode(encodedDishId);
         const editDishVo = EditDishVo.fromEditDishDto(editDishDto);
-        const result = await this.dishWriteService.editDish(encodedDishId, editDishVo);
+        const result = await this.dishWriteService.editDish(encodedDishIdVo, editDishVo);
 
         this.loggerService.info(this.context, `Dish with id "${encodedDishId}" (titled: "${result.dishTitle}") has been edited.`);
     }

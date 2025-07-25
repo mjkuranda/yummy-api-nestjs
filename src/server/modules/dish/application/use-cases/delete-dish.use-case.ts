@@ -5,20 +5,22 @@ import { DishNotFoundError, InvalidDishIdError, DishDeletionFailedError } from '
 import { NotFoundException, BadRequestException, InternalServerException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';
-import { EncodedDishIdVo } from '../../domain/common/vos';
+import { DishTokenService } from '../../domain/common/services';
 
 @Injectable()
-export class DeleteDishUseCase extends AbstractUseCase<[EncodedDishIdVo], boolean> {
+export class DeleteDishUseCase extends AbstractUseCase<[string], boolean> {
 
     constructor(
+        private readonly dishTokenService: DishTokenService,
         private readonly loggerService: LoggerService,
         private readonly dishWriteService: DishWriteService
     ) {
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdVo): Promise<boolean> {
-        const result = await this.dishWriteService.deleteDish(encodedDishId);
+    protected async run(encodedDishId: string): Promise<boolean> {
+        const encodedDishIdVo = this.dishTokenService.decode(encodedDishId);
+        const result = await this.dishWriteService.deleteDish(encodedDishIdVo);
 
         if (result.isSoftDeleted) {
             this.loggerService.info(this.context, `Dish with id "${encodedDishId}" (titled: "${result.dishTitle}") has been marked as soft-deleted.`);

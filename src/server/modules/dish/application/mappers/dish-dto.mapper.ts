@@ -6,24 +6,24 @@ import { TranslatedDishVo } from '../../domain/read/vos';
 
 export class DishDtoMapper {
 
-    static toCreatedDishDto(entity: DishEntity): CreatedDishDto {
+    static toCreatedDishDto(encodedDishId: string, entity: DishEntity): CreatedDishDto {
         return new CreatedDishDto(
-            entity.getEncodedDishId(),
+            encodedDishId,
             entity.getTitle(),
             entity.getAuthor()
         );
     }
 
-    static toGetDishDto(entity: DishEntity): GetDishDto {
+    static toGetDishDto(encodedDishId: string, entity: DishEntity): GetDishDto {
         return new GetDishDto(
-            entity.getEncodedDishId(),
+            encodedDishId,
             entity.getTitle(),
             entity.getAuthor()
         );
     }
 
-    static toGetDishesDto(entities: DishEntity[]): GetDishesDto {
-        const dishDtos = entities.map(this.toGetDishDto);
+    static toGetDishesDto(encodedDishIds: string[], entities: DishEntity[]): GetDishesDto {
+        const dishDtos = entities.map((entity, idx) => this.toGetDishDto(encodedDishIds[idx], entity));
 
         return new GetDishesDto(dishDtos);
     }

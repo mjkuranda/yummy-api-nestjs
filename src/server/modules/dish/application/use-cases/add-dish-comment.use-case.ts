@@ -5,22 +5,25 @@ import { DishWriteService } from '../../domain/write/dish-write.service';
 import { DishNotFoundError, DishNotAcceptedError, DishSoftDeletedError } from '../../domain/errors';
 import { NotFoundException, ForbiddenException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
-import { EncodedDishIdVo } from '../../domain/common/vos';
+import { DishTokenService } from '../../domain/common/services';
 
 @Injectable()
-export class AddDishCommentUseCase extends AbstractUseCase<[EncodedDishIdVo, string, string], void> {
+export class AddDishCommentUseCase extends AbstractUseCase<[string, string, string], void> {
 
     constructor(
+        private readonly dishTokenService: DishTokenService,
         private readonly loggerService: LoggerService,
         private readonly dishWriteService: DishWriteService
     ) {
         super();
     }
 
-    protected async run(encodedDishId: EncodedDishIdVo, userLogin: string, content: string): Promise<void> {
-        await this.dishWriteService.addDishComment(encodedDishId, userLogin, content);
+    protected async run(encodedDishId: string, userLogin: string, content: string): Promise<void> {
+        const encodedDishIdVo = this.dishTokenService.decode(encodedDishId);
 
-        this.loggerService.info(this.context, `Successfully added a new comment to dish "${encodedDishId.getValue()}" by "${userLogin}" user.`);
+        await this.dishWriteService.addDishComment(encodedDishIdVo, userLogin, content);
+
+        this.loggerService.info(this.context, `Successfully added a new comment to dish "${encodedDishId}" by "${userLogin}" user.`);
     }
 
     protected handleError(error: unknown, context: ContextString): never {
