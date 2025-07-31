@@ -55,15 +55,9 @@ export class RecipeService {
 
         const createdRecipe = await this.recipeApiService.createRecipe(createRecipeDto);
 
-        const newRecipe = new RecipeEntity(
-            createdRecipe.language,
-            createdRecipe.dishId,
-            createdRecipe.sections
-        );
+        await this.dishRecipeCacheService.setDishRecipe(encodedDishIdVo, createdRecipe);
 
-        await this.dishRecipeCacheService.setDishRecipe(encodedDishIdVo, recipe);
-
-        return newRecipe;
+        return createdRecipe;
     }
 
     /**
