@@ -1,18 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggerService } from '../../../logger/logger.service';
-import { RecipeService } from './recipe.service';
-import { DishRepository } from '../../../../mongodb/repositories/dish.repository';
-import { CreateRecipeDto } from '../../application/dtos/recipe.dto';
-import { NotFoundException, ForbiddenException, BadRequestException } from '../../../../exceptions';
-import { DishRecipeRepository } from '../../../../mongodb/repositories/dish-recipe.repository';
+import { LoggerService } from '../../../../logger/logger.service';
+import { RecipeService } from '../recipe.service';
+import { NotFoundException, ForbiddenException, BadRequestException } from '../../../../../exceptions';
 import mongoose from 'mongoose';
-import { ExternalApiService } from '../../../api/external-api.service';
-import { RedisService } from '../../../redis/redis.service';
+import { ExternalApiService } from '../../../../provider-registry/external-apis/external-api.service';
+import { DishRepository } from '../../../../dish/domain/dish.repository';
+import { RecipeRepository } from '../../recipe.repository';
 
 describe('RecipeService', () => {
-    let externalApiService: ExternalApiService;
+    let externalApiService: ExternalApiService<any, any, any, any>;
     let recipeService: RecipeService;
-    let recipeRepository: DishRecipeRepository;
+    let recipeRepository: RecipeRepository;
     let dishRepository: DishRepository;
     let redisService: RedisService;
 
@@ -47,7 +45,7 @@ describe('RecipeService', () => {
             providers: [
                 RecipeService,
                 { provide: ExternalApiService, useValue: mockExternalApiService },
-                { provide: DishRecipeRepository, useValue: mockRecipeRepository },
+                { provide: RecipeRepository, useValue: mockRecipeRepository },
                 { provide: DishRepository, useValue: mockDishRepository },
                 { provide: LoggerService, useValue: mockLoggerService },
                 { provide: RedisService, useValue: mockRedisService }
@@ -56,7 +54,7 @@ describe('RecipeService', () => {
 
         externalApiService = module.get(ExternalApiService);
         recipeService = module.get(RecipeService);
-        recipeRepository = module.get(DishRecipeRepository);
+        recipeRepository = module.get(RecipeRepository);
         dishRepository = module.get(DishRepository);
         redisService = module.get(RedisService);
     });

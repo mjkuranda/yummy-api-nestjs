@@ -68,15 +68,15 @@ export class RecipeService {
 
     /**
      * @description returns existing recipe
-     * @param encodedDishId encoded dish ID and its provider name
+     * @param encodedDishIdVo encoded dish ID and its provider name
      * @param language dish recipe language
      */
-    async getTranslatedRecipe(encodedDishId: EncodedDishIdVo, language?: Language): Promise<GetRecipeResult> {
-        const provider = encodedDishId.getProvider();
+    async getTranslatedRecipe(encodedDishIdVo: EncodedDishIdVo, language?: Language): Promise<GetRecipeResult> {
+        const provider = encodedDishIdVo.getProvider();
         const providable = this.providerRegistryService.getProvider(provider);
 
-        const recipeLanguage = language ?? providable.getLanguage(encodedDishId);
-        const cachedRecipe = await this.dishRecipeCacheService.getDishRecipe(encodedDishId, recipeLanguage);
+        const recipeLanguage = language ?? providable.getLanguage(encodedDishIdVo);
+        const cachedRecipe = await this.dishRecipeCacheService.getDishRecipe(encodedDishIdVo, recipeLanguage);
 
         if (cachedRecipe) {
             return {
@@ -85,9 +85,11 @@ export class RecipeService {
             };
         }
 
-        const dishRecipe = await providable.getDishRecipe(encodedDishId, language);
+        const dishRecipe = await providable.getDishRecipe(encodedDishIdVo, language);
 
         if (!dishRecipe) {
+            const encodedDishId = encodedDishIdVo.getValue();
+
             throw new DishRecipeNotFoundError(encodedDishId);
         }
 
@@ -95,8 +97,8 @@ export class RecipeService {
 
         const { translated: translatedRecipe } = await this.translationService.translateRecipe(recipe, language);
 
-        await this.dishRecipeCacheService.setDishRecipe(encodedDishId, recipe);
-        await this.dishRecipeCacheService.setDishRecipe(encodedDishId, translatedRecipe);
+        await this.dishRecipeCacheService.setDishRecipe(encodedDishIdVo, recipe);
+        await this.dishRecipeCacheService.setDishRecipe(encodedDishIdVo, translatedRecipe);
 
         return { recipe: translatedRecipe };
     }

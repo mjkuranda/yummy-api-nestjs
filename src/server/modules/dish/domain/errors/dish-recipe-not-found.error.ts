@@ -1,8 +1,6 @@
-import { EncodedDishIdVo } from '../common/vos';
-
 export class DishRecipeNotFoundError extends Error {
 
-    constructor(encodedDishId: EncodedDishIdVo) {
+    constructor(encodedDishId: string) {
         super(`Recipe for "${encodedDishId}" dish has not been found`);
     }
 }
