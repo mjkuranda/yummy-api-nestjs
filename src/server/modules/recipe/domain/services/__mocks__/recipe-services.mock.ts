@@ -16,13 +16,15 @@ export const mockRecipeApiService = createMock<RecipeApiService>({
 
 export const mockProvidable = createMock<Providable>({
     getLanguage: jest.fn(),
-    getDishRecipe: jest.fn()
+    getDishRecipe: jest.fn(),
+    getDishes: jest.fn()
 });
 
 export const mockProviderRegistryService = createMock<ProviderRegistryService>({
     getDishApiService: jest.fn(() => mockDishApiService),
     getRecipeApiService: jest.fn(() => mockRecipeApiService),
-    getProvider: jest.fn(() => mockProvidable)
+    getProvider: jest.fn(() => mockProvidable),
+    getAllProviders: jest.fn(() => [mockProvidable])
 });
 
 export const mockDishRecipeCacheService = createMock<DishRecipeCacheService>({
