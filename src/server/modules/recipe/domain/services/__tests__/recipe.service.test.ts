@@ -1,5 +1,3 @@
-jest.mock('../../../../../../integrations/spoonacular-api/spoonacular-api.service', () => jest.fn());
-
 import { RecipeService } from '../recipe.service';
 import { ProviderRegistryService } from '../../../../provider-registry/provider-registry.service';
 import { DishRecipeCacheService } from '../../../../cache/domains/dish-recipe/dish-recipe-cache.service';

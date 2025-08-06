@@ -8,7 +8,7 @@
     "testRegex": ".*\\.test\\.ts$",
     "transform": {
         "^.+\\.(t|j)s$": [
-            "ts-jest"
+            "@swc/jest"
         ]
     },
     "collectCoverage": true,
@@ -26,6 +26,11 @@
         "/dist/",
         "/__mocks__/",
         "/__fixtures__/"
+    ],
+    "collectCoverageFrom": [
+        "src/**/*.ts",
+        "!**/__tests__/**",
+        "!**/*.d.ts"
     ],
     "verbose": true,
     "testTimeout": 30000
