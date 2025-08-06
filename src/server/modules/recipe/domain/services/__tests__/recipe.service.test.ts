@@ -2,20 +2,24 @@ import { RecipeService } from '../recipe.service';
 import { ProviderRegistryService } from '../../../../provider-registry/provider-registry.service';
 import { DishRecipeCacheService } from '../../../../cache/domains/dish-recipe/dish-recipe-cache.service';
 import { TranslationService } from '../../../../translation/translation.service';
-import { DishNotFoundError, NotDishAuthorError, DishRecipeExistsError } from '../../../../dish/domain/errors';
+import {
+    DishNotFoundError,
+    NotDishAuthorError,
+    DishRecipeExistsError,
+    DishRecipeNotFoundError
+} from '../../../../dish/domain/errors';
 import { DishApiService, RecipeApiService } from '../../../../provider-registry/internal-apis/manageable-api/services';
-import { Providable } from '../../../../../common/interfaces';
 import {
     mockDishApiService,
-    mockDishRecipeCacheService,
+    mockDishRecipeCacheService, mockProvidable,
     mockProviderRegistryService,
     mockTranslationService
 } from '../__mocks__/recipe-services.mock';
 import {
-    anotherUserFixture, authorUserFixture,
+    anotherUserFixture, authorUserFixture, cachedRecipeEntityFixture,
     createRecipeDtoFixture,
     dishEntityWithAuthorFixture,
-    encodedDishIdVoFixture, recipeEntityFixture,
+    encodedDishIdVoFixture, recipeEntityFixture, translatedRecipeEntityFixture,
     userFixture
 } from '../__fixtures__/recipe.fixtures';
 import { Test } from '@nestjs/testing';
@@ -27,9 +31,8 @@ describe('RecipeService', () => {
     let translationService: jest.Mocked<TranslationService>;
     let dishApiService: jest.Mocked<DishApiService>;
     let recipeApiService: jest.Mocked<RecipeApiService>;
-    let providable: jest.Mocked<Providable>;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         const module = await Test.createTestingModule({
             providers: [
                 RecipeService,
@@ -62,6 +65,10 @@ describe('RecipeService', () => {
     });
 
     describe('create', () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
         it('should fail when dish has not been found', async () => {
             dishApiService.findByDishId.mockResolvedValueOnce(null);
 
@@ -94,40 +101,39 @@ describe('RecipeService', () => {
         });
     });
 
-    // describe('getTranslatedRecipe', () => {
-    //     const encodedDishIdVo = {
-    //         getProvider: () => 'provider',
-    //         getValue: () => 'dishId'
-    //     } as unknown as EncodedDishIdVo;
-    //     const language = 'en';
-    //
-    //     it('should return cached recipe if available', async () => {
-    //         const cachedRecipe = { language: 'en', dishId: 'dishId', sections: [{ name: '', steps: ['a', 'b'] }] };
-    //         dishRecipeCacheService.getDishRecipe.mockResolvedValueOnce(cachedRecipe as any);
-    //
-    //         const result = await service.getTranslatedRecipe(encodedDishIdVo, language);
-    //
-    //         expect(result.recipe).toBe(cachedRecipe);
-    //         expect(result.fromCache).toBe(true);
-    //     });
-    //
-    //     it('should throw DishRecipeNotFoundError if no recipe found', async () => {
-    //         dishRecipeCacheService.getDishRecipe.mockResolvedValueOnce(null);
-    //         providable.getDishRecipe.mockResolvedValueOnce(null);
-    //
-    //         await expect(service.getTranslatedRecipe(encodedDishIdVo, language)).rejects.toThrow(DishRecipeNotFoundError);
-    //     });
-    //
-    //     it('should translate and cache recipe if not cached', async () => {
-    //         const dishRecipe = { language: 'en', dishId: 'dishId', sections: [{ name: '', steps: ['a', 'b'] }] };
-    //         dishRecipeCacheService.getDishRecipe.mockResolvedValueOnce(null);
-    //         providable.getDishRecipe.mockResolvedValueOnce(dishRecipe as any);
-    //         translationService.translateRecipe.mockResolvedValue({ translated: dishRecipe } as any);
-    //
-    //         const result = await service.getTranslatedRecipe(encodedDishIdVo, language);
-    //
-    //         expect(result.recipe).toBe(dishRecipe);
-    //         expect(dishRecipeCacheService.setDishRecipe).toHaveBeenCalled();
-    //     });
-    // });
+    describe('getTranslatedRecipe', () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
+        it('should return cached recipe if available', async () => {
+            dishRecipeCacheService.getDishRecipe.mockResolvedValueOnce(cachedRecipeEntityFixture);
+
+            const result = await service.getTranslatedRecipe(encodedDishIdVoFixture, 'en');
+
+            expect(result.recipe).toBe(cachedRecipeEntityFixture);
+            expect(result.fromCache).toBe(true);
+        });
+
+        it('should throw DishRecipeNotFoundError if no recipe found', async () => {
+            dishRecipeCacheService.getDishRecipe.mockResolvedValueOnce(null);
+            mockProvidable.getDishRecipe.mockResolvedValueOnce(null);
+
+            await expect(service.getTranslatedRecipe(encodedDishIdVoFixture, 'en')).rejects.toThrow(DishRecipeNotFoundError);
+        });
+
+        it('should translate and cache recipe if not cached', async () => {
+            dishRecipeCacheService.getDishRecipe.mockResolvedValueOnce(null);
+            mockProvidable.getDishRecipe.mockResolvedValueOnce(recipeEntityFixture);
+            translationService.translateRecipe.mockResolvedValueOnce({ translated: translatedRecipeEntityFixture, original: recipeEntityFixture });
+
+            const result = await service.getTranslatedRecipe(encodedDishIdVoFixture, 'pl');
+
+            expect(result.recipe).toBe(translatedRecipeEntityFixture);
+            expect(dishRecipeCacheService.setDishRecipe).toHaveBeenCalled();
+            expect(dishRecipeCacheService.setDishRecipe).toHaveBeenCalledTimes(2);
+            expect(dishRecipeCacheService.setDishRecipe).nthCalledWith(1, encodedDishIdVoFixture, recipeEntityFixture);
+            expect(dishRecipeCacheService.setDishRecipe).nthCalledWith(2, encodedDishIdVoFixture, translatedRecipeEntityFixture);
+        });
+    });
 });

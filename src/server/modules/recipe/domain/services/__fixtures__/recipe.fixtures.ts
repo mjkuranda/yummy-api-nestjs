@@ -7,7 +7,8 @@ import { RecipeEntity } from '../../entities';
 
 export const encodedDishIdVoFixture = {
     getValue: () => 'encoded',
-    getDishId: () => 'dishId'
+    getDishId: () => 'dishId',
+    getProvider: () => Provider.INT_DMT_USER
 } as EncodedDishIdVo;
 
 export const createRecipeDtoFixture = {
@@ -48,4 +49,7 @@ export const authorUserFixture: UserAccessTokenPayload = {
     expirationTimestamp: Date.now() + 100000
 };
 
-export const recipeEntityFixture: RecipeEntity = new RecipeEntity('pl', '123', [{ name: '', steps: ['a', 'b'] }]);
+export const recipeEntityFixture: RecipeEntity = new RecipeEntity('en', '123', [{ name: '', steps: ['a', 'b'] }]);
+export const translatedRecipeEntityFixture: RecipeEntity = new RecipeEntity('pl', '123', [{ name: '', steps: ['a', 'b'] }]);
+
+export const cachedRecipeEntityFixture: RecipeEntity = new RecipeEntity('en', 'dishId', [{ name: '', steps: ['a', 'b'] }]);
