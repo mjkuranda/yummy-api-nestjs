@@ -44,7 +44,6 @@ describe('DishAggregatorService', () => {
             expect(resultDishesListFixture.length).toEqual(3);
             expect(providerRegistryService.getAllProviders).toHaveBeenCalled();
 
-            // Verify that the result contains the expected filtered data
             expect(result[0]).toBeDefined();
             expect(result[0].relevance).toBeGreaterThan(0);
             expect(result[0].mealType).toBe(mealTypeFixture);
