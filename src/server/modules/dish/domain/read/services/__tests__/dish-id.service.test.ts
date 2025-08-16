@@ -5,7 +5,6 @@ describe('TokenService', () => {
     let service: TokenService;
 
     beforeAll(async () => {
-        // Set up environment variables for testing
         process.env.AES_KEY_SECRET = 'test-aes-key-secret-for-testing-purposes';
         process.env.HASHIDS_SALT = 'test-hashids-salt';
 
@@ -17,7 +16,6 @@ describe('TokenService', () => {
     });
 
     afterAll(() => {
-        // Clean up environment variables
         delete process.env.AES_KEY_SECRET;
         delete process.env.HASHIDS_SALT;
     });

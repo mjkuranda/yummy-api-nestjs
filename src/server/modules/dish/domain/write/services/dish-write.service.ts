@@ -29,7 +29,6 @@ export class DishWriteService {
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService,
-        // private readonly dishCacheService: DishCacheService,
         private readonly ingredientService: IngredientService
     ) {
         this.dishApiService = this.providerRegistryService.getDishApiService();

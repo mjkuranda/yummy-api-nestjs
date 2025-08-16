@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Language } from '../../../../common/types';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
 import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
-import { DishRecipeCacheService } from '../../../cache/domains/dish-recipe/dish-recipe-cache.service';
 import { DishNotFoundError, NotDishAuthorError, DishRecipeExistsError, DishRecipeNotFoundError } from '../../../dish/domain/errors';
-import { GetRecipeResult } from '../../application/recipe-application.types';
 import { EncodedDishIdVo } from '../../../dish/domain/common/vos';
 import { RecipeEntity } from '../entities';
 import { TranslationService } from '../../../translation/translation.service';
@@ -68,7 +66,7 @@ export class RecipeService {
 
         const recipeLanguage = language ?? providable.getLanguage(encodedDishIdVo);
 
-        const dishRecipe = await providable.getDishRecipe(encodedDishIdVo, language);
+        const dishRecipe = await providable.getDishRecipe(encodedDishIdVo, recipeLanguage);
 
         if (!dishRecipe) {
             const encodedDishId = encodedDishIdVo.getValue();
@@ -78,7 +76,7 @@ export class RecipeService {
 
         const recipe = new RecipeEntity(dishRecipe.language, dishRecipe.dishId, dishRecipe.sections);
 
-        const { translated: translatedRecipe } = await this.translationService.translateRecipe(recipe, language);
+        const { translated: translatedRecipe } = await this.translationService.translateRecipe(recipe, recipeLanguage);
 
         return translatedRecipe;
     }
