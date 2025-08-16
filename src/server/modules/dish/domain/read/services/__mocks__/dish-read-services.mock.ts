@@ -17,7 +17,11 @@ export const mockDishApiService = createMock<DishDataManageable>({
     getAverageRatingForDish: jest.fn(),
     getDishesWithSoftAdded: jest.fn(),
     getDishesWithSoftEdited: jest.fn(),
-    getDishesWithSoftDeleted: jest.fn()
+    getDishesWithSoftDeleted: jest.fn(),
+    createNewDish: jest.fn(),
+    insertEditionForDish: jest.fn(),
+    deleteDish: jest.fn(),
+    setSoftDeletedForDish: jest.fn()
 });
 
 export const mockUserApiService = createMock<UserDataManageable>({

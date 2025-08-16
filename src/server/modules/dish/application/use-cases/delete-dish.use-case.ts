@@ -1,19 +1,21 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { LoggerService } from '../../../logger/logger.service';
-import { DishWriteService } from '../../domain/write/dish-write.service';
+import { DishWriteService } from '../../domain/write/services';
 import { DishNotFoundError, InvalidDishIdError, DishDeletionFailedError } from '../../domain/errors';
 import { NotFoundException, BadRequestException, InternalServerException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';
 import { DishTokenService } from '../../domain/common/services';
+import { DishCacheService } from '../../../cache/domains/dish/dish-cache.service';
 
 @Injectable()
 export class DeleteDishUseCase extends AbstractUseCase<[string], boolean> {
 
     constructor(
         private readonly dishTokenService: DishTokenService,
-        private readonly loggerService: LoggerService,
-        private readonly dishWriteService: DishWriteService
+        private readonly dishCacheService: DishCacheService,
+        private readonly dishWriteService: DishWriteService,
+        private readonly loggerService: LoggerService
     ) {
         super();
     }
@@ -21,6 +23,7 @@ export class DeleteDishUseCase extends AbstractUseCase<[string], boolean> {
     protected async run(encodedDishId: string): Promise<boolean> {
         const encodedDishIdVo = this.dishTokenService.decode(encodedDishId);
         const result = await this.dishWriteService.deleteDish(encodedDishIdVo);
+        await this.dishCacheService.deleteDish(encodedDishIdVo);
 
         if (result.isSoftDeleted) {
             this.loggerService.info(this.context, `Dish with id "${encodedDishId}" (titled: "${result.dishTitle}") has been marked as soft-deleted.`);

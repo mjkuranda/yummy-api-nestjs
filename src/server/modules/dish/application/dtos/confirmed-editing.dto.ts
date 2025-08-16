@@ -1,9 +1,9 @@
-import { DishEntity } from '../../domain/common/entities';
+import { DishDetailsVo } from '../../domain/read/vos';
 
 export class ConfirmedEditingDto {
 
     constructor(
-        public readonly editedDish: DishEntity
+        public readonly editedDish: DishDetailsVo
     ) {}
 
 }

@@ -1,3 +1,4 @@
+export * from './dish-already-soft-deleted.error';
 export * from './dish-deletion-failed.error';
 export * from './dish-not-accepted.error';
 export * from './dish-not-found.error';

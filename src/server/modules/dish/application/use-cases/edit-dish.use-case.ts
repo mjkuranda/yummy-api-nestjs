@@ -2,7 +2,7 @@ import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { ContextString } from '../../../../common/types';
 import { EditDishDto } from '../dtos';
 import { DishIngredient } from '../../../ingredient/ingredient.types';
-import { DishWriteService } from '../../domain/write/dish-write.service';
+import { DishWriteService } from '../../domain/write/services';
 import { LoggerService } from '../../../logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
@@ -15,8 +15,8 @@ export class EditDishUseCase extends AbstractUseCase<[string, EditDishDto<DishIn
 
     constructor(
         private readonly dishTokenService: DishTokenService,
-        private readonly loggerService: LoggerService,
-        private readonly dishWriteService: DishWriteService
+        private readonly dishWriteService: DishWriteService,
+        private readonly loggerService: LoggerService
     ) {
         super();
     }

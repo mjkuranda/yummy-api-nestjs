@@ -1,25 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { ProviderRegistryService } from '../../../provider-registry/provider-registry.service';
-import { DishCacheService } from '../../../cache/domains/dish/dish-cache.service';
-import { DishIngredient } from '../../../ingredient/ingredient.types';
-import { IngredientService } from '../../../ingredient/ingredient.service';
-import { Provider } from '../../../../common/enums';
+import { ProviderRegistryService } from '../../../../provider-registry/provider-registry.service';
+import { DishIngredient } from '../../../../ingredient/ingredient.types';
+import { IngredientService } from '../../../../ingredient/ingredient.service';
+import { Provider } from '../../../../../common/enums';
 import {
     AddDishRatingStatusVo, CreateDishVo,
     DishDeletionConfirmationStatusVo,
     DishDeletionStatusVo,
     DishEditionStatusVo, EditDishVo
-} from './vos';
-import { DishEntity } from '../common/entities';
-import { EncodedDishIdVo } from '../common/vos';
-import { DishDetailsVo } from '../read/vos';
-import { DishDataManageable, UserDataManageable } from '../../../provider-registry/data-manageable.interface';
+} from '../vos';
+import { DishEntity } from '../../common/entities';
+import { EncodedDishIdVo } from '../../common/vos';
+import { DishDetailsVo } from '../../read/vos';
+import { DishDataManageable, UserDataManageable } from '../../../../provider-registry/data-manageable.interface';
 import {
-    DishDeletionFailedError, DishNotAcceptedError,
+    DishAlreadySoftDeletedError,
+    DishNotAcceptedError,
     DishNotFoundError, DishSoftDeletedError,
     EmptyDishIngredientListError,
     MissingDishAuthorError
-} from '../errors';
+} from '../../errors';
 
 @Injectable()
 export class DishWriteService {
@@ -29,7 +29,7 @@ export class DishWriteService {
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService,
-        private readonly dishCacheService: DishCacheService,
+        // private readonly dishCacheService: DishCacheService,
         private readonly ingredientService: IngredientService
     ) {
         this.dishApiService = this.providerRegistryService.getDishApiService();
@@ -74,7 +74,8 @@ export class DishWriteService {
         await this.dishApiService.insertEditionForDish(dishId, editDishVo);
 
         const editedDish = await this.dishApiService.findByDishId(dishId);
-        const dishTitle = editedDish.getTitle();
+        const softEditedData = editedDish.getSoftEdited();
+        const dishTitle = softEditedData.getTitle();
 
         return new DishEditionStatusVo(dishTitle);
     }
@@ -93,14 +94,13 @@ export class DishWriteService {
             throw new DishNotFoundError(encodedDishId);
         }
 
-        await this.dishCacheService.deleteDish(encodedDishIdVo);
+        if (dish.isSoftDeleted()) {
+            throw new DishAlreadySoftDeletedError(encodedDishId);
+        }
+
         await this.dishApiService.setSoftDeletedForDish(dishId);
 
         const deletedDish = await this.dishApiService.findByDishId(dishId);
-
-        if (!deletedDish.isSoftDeleted()) {
-            throw new DishDeletionFailedError(encodedDishId);
-        }
 
         return new DishDeletionStatusVo(
             deletedDish.getTitle(),
@@ -113,7 +113,7 @@ export class DishWriteService {
      * @param encodedDishIdVo encoded dish id with its provider name
      * @returns domain dish entity
      */
-    async confirmCreating(encodedDishIdVo: EncodedDishIdVo): Promise<DishEntity> {
+    async confirmCreating(encodedDishIdVo: EncodedDishIdVo): Promise<DishDetailsVo> {
         const encodedDishId = encodedDishIdVo.getValue();
         const id = encodedDishIdVo.getDishId();
         const dish = await this.dishApiService.findByDishId(id);
@@ -125,11 +125,8 @@ export class DishWriteService {
         await this.dishApiService.unsetSoftAddedForDish(id);
 
         const addedDish = await this.dishApiService.findByDishId(id);
-        const dishDetails = DishDetailsVo.fromEntity(addedDish);
 
-        await this.dishCacheService.setDishDetails(encodedDishIdVo, dishDetails);
-
-        return addedDish;
+        return DishDetailsVo.fromEntity(addedDish);
     }
 
     /**
@@ -137,7 +134,7 @@ export class DishWriteService {
      * @param encodedDishIdVo encoded dish ID and its provider name
      * @returns domain dish entity
      */
-    async confirmEditing(encodedDishIdVo: EncodedDishIdVo): Promise<DishEntity> {
+    async confirmEditing(encodedDishIdVo: EncodedDishIdVo): Promise<DishDetailsVo> {
         const encodedDishId = encodedDishIdVo.getValue();
         const dishId = encodedDishIdVo.getDishId();
         const dish = await this.dishApiService.findByDishId(dishId);
@@ -151,11 +148,8 @@ export class DishWriteService {
         await this.dishApiService.confirmDishEdition(dishId, softEdited);
 
         const updatedDish = await this.dishApiService.findByDishId(dishId);
-        const dishDetails = DishDetailsVo.fromEntity(updatedDish);
 
-        await this.dishCacheService.setDishDetails(encodedDishIdVo, dishDetails);
-
-        return updatedDish;
+        return DishDetailsVo.fromEntity(updatedDish);
     }
 
     /**
@@ -172,7 +166,6 @@ export class DishWriteService {
             throw new DishNotFoundError(encodedDishId);
         }
 
-        await this.dishCacheService.deleteDish(encodedDishIdVo);
         await this.dishApiService.deleteAllComments(dishId);
         await this.dishApiService.deleteAllRatings(dishId);
         await this.dishApiService.deleteDish(dishId);

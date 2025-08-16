@@ -2,7 +2,7 @@ import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { CreateDishDto, CreatedDishDto } from '../dtos';
 import { DishIngredientWithoutImage } from '../../../ingredient/ingredient.types';
 import { UserAccessTokenPayload } from '../../../jwt-manager/jwt-manager.types';
-import { DishWriteService } from '../../domain/write/dish-write.service';
+import { DishWriteService } from '../../domain/write/services';
 import { IngredientService } from '../../../ingredient/ingredient.service';
 import { LoggerService } from '../../../logger/logger.service';
 import { BadRequestException } from '../../../../exceptions';
