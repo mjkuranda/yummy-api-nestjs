@@ -2,10 +2,8 @@ import { Test } from '@nestjs/testing';
 import { ProviderRegistryService } from '../../../../../provider-registry/provider-registry.service';
 import {
     mockDishAggregatorService, mockDishApiService,
-    mockDishCacheService,
     mockProviderRegistryService
 } from '../../../read/services/__mocks__/dish-read-services.mock';
-import { DishCacheService } from '../../../../../cache/domains/dish/dish-cache.service';
 import { IngredientService } from '../../../../../ingredient/ingredient.service';
 import { DishWriteService } from '../dish-write.service';
 import {
@@ -35,10 +33,6 @@ describe('DishWriteService', () => {
                 {
                     provide: ProviderRegistryService,
                     useValue: mockProviderRegistryService
-                },
-                {
-                    provide: DishCacheService,
-                    useValue: mockDishCacheService
                 },
                 {
                     provide: IngredientService,
@@ -84,11 +78,11 @@ describe('DishWriteService', () => {
 
         it('should successfully update and return new dish', async () => {
             const original = makeDishEntity({ id: dishIdFixture, title: 'old title' });
-            const edited = makeDishEntity({ id: dishIdFixture, title: 'new title' });
+            const edited = makeDishEntity({ id: dishIdFixture, title: 'old title', softEdited: makeDishEntity({ title: 'new title' }) });
 
             mockDishApiService.findByDishId
-                .mockResolvedValueOnce(original) // find current
-                .mockResolvedValueOnce(edited);  // after insertEditionForDish
+                .mockResolvedValueOnce(original)
+                .mockResolvedValueOnce(edited);
 
             const result = await service.editDish(encodedDishIdVoFixture, editDishVoFixture);
 
@@ -124,7 +118,6 @@ describe('DishWriteService', () => {
 
             const result = await service.deleteDish(encodedDishIdVoFixture);
 
-            expect(mockDishCacheService.deleteDish).toHaveBeenCalledWith(encodedDishIdVoFixture);
             expect(mockDishApiService.setSoftDeletedForDish).toHaveBeenCalledTimes(1);
             expect(result).toStrictEqual(new DishDeletionStatusVo('title', true));
         });

@@ -13,11 +13,13 @@ import { ContextString } from '../../../../common/types';
 import { CreateRecipeDto } from '../dtos';
 import { InvalidMongooseObjectIdError } from '../../../../common/errors';
 import { DishTokenService } from '../../../dish/domain/common/services';
+import { DishRecipeCacheService } from '../../../cache/domains/dish-recipe/dish-recipe-cache.service';
 
 export class AddRecipeUseCase extends AbstractUseCase<[string, CreateRecipeDto, UserAccessTokenPayload], void> {
 
     constructor(
         private readonly dishTokenService: DishTokenService,
+        private readonly dishRecipeCacheService: DishRecipeCacheService,
         private readonly recipeService: RecipeService,
         private readonly loggerService: LoggerService
     ) {
@@ -27,9 +29,11 @@ export class AddRecipeUseCase extends AbstractUseCase<[string, CreateRecipeDto, 
     async run(encodedDishId: string, createRecipeDto: CreateRecipeDto, userDto: UserAccessTokenPayload): Promise<void> {
         const encodedDishIdVo = this.dishTokenService.decode(encodedDishId);
 
-        await this.recipeService.create(encodedDishIdVo, createRecipeDto, userDto);
+        const createdRecipe = await this.recipeService.create(encodedDishIdVo, createRecipeDto, userDto);
 
-        this.loggerService.info(this.context, `New recipe has been created for dish "${encodedDishId}"`);
+        await this.dishRecipeCacheService.setDishRecipe(encodedDishIdVo, createdRecipe);
+
+        this.loggerService.info(this.context, `New recipe has been created for dish "${encodedDishId}" and cached.`);
     }
 
     protected handleError(error: unknown, context: ContextString): never {

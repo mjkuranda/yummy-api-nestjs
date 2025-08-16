@@ -19,7 +19,6 @@ export class RecipeService {
 
     constructor(
         private readonly providerRegistryService: ProviderRegistryService,
-        private readonly dishRecipeCacheService: DishRecipeCacheService,
         private readonly translationService: TranslationService
     ) {
         this.dishApiService = this.providerRegistryService.getDishApiService();
@@ -55,8 +54,6 @@ export class RecipeService {
 
         const createdRecipe = await this.recipeApiService.createRecipe(createRecipeDto);
 
-        await this.dishRecipeCacheService.setDishRecipe(encodedDishIdVo, createdRecipe);
-
         return createdRecipe;
     }
 
@@ -65,19 +62,11 @@ export class RecipeService {
      * @param encodedDishIdVo encoded dish ID and its provider name
      * @param language dish recipe language
      */
-    async getTranslatedRecipe(encodedDishIdVo: EncodedDishIdVo, language?: Language): Promise<GetRecipeResult> {
+    async getTranslatedRecipe(encodedDishIdVo: EncodedDishIdVo, language?: Language): Promise<RecipeEntity> {
         const provider = encodedDishIdVo.getProvider();
         const providable = this.providerRegistryService.getProvider(provider);
 
         const recipeLanguage = language ?? providable.getLanguage(encodedDishIdVo);
-        const cachedRecipe = await this.dishRecipeCacheService.getDishRecipe(encodedDishIdVo, recipeLanguage);
-
-        if (cachedRecipe) {
-            return {
-                recipe: cachedRecipe,
-                fromCache: true
-            };
-        }
 
         const dishRecipe = await providable.getDishRecipe(encodedDishIdVo, language);
 
@@ -91,10 +80,7 @@ export class RecipeService {
 
         const { translated: translatedRecipe } = await this.translationService.translateRecipe(recipe, language);
 
-        await this.dishRecipeCacheService.setDishRecipe(encodedDishIdVo, recipe);
-        await this.dishRecipeCacheService.setDishRecipe(encodedDishIdVo, translatedRecipe);
-
-        return { recipe: translatedRecipe };
+        return translatedRecipe;
     }
 
 }

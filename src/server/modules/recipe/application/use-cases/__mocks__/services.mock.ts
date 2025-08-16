@@ -7,5 +7,6 @@ export const mockDishTokenService = createMock<DishTokenService>({
 });
 
 export const mockRecipeService = createMock<RecipeService>({
-    create: jest.fn()
+    create: jest.fn(),
+    getTranslatedRecipe: jest.fn()
 });

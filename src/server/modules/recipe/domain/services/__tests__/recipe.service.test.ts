@@ -1,6 +1,5 @@
 import { RecipeService } from '../recipe.service';
 import { ProviderRegistryService } from '../../../../provider-registry/provider-registry.service';
-import { DishRecipeCacheService } from '../../../../cache/domains/dish-recipe/dish-recipe-cache.service';
 import { TranslationService } from '../../../../translation/translation.service';
 import {
     DishNotFoundError,
@@ -27,7 +26,6 @@ import { Test } from '@nestjs/testing';
 describe('RecipeService', () => {
     let service: RecipeService;
     let providerRegistryService: jest.Mocked<ProviderRegistryService>;
-    let dishRecipeCacheService: jest.Mocked<DishRecipeCacheService>;
     let translationService: jest.Mocked<TranslationService>;
     let dishApiService: jest.Mocked<DishApiService>;
     let recipeApiService: jest.Mocked<RecipeApiService>;
@@ -45,10 +43,6 @@ describe('RecipeService', () => {
                     useValue: mockProviderRegistryService
                 },
                 {
-                    provide: DishRecipeCacheService,
-                    useValue: mockDishRecipeCacheService
-                },
-                {
                     provide: TranslationService,
                     useValue: mockTranslationService
                 }
@@ -57,7 +51,6 @@ describe('RecipeService', () => {
 
         service = module.get(RecipeService);
         providerRegistryService = module.get(ProviderRegistryService);
-        dishRecipeCacheService = module.get(DishRecipeCacheService);
         translationService = module.get(TranslationService);
 
         dishApiService = providerRegistryService.getDishApiService() as jest.Mocked<DishApiService>;
@@ -96,8 +89,6 @@ describe('RecipeService', () => {
             const result = await service.create(encodedDishIdVoFixture, createRecipeDtoFixture, authorUserFixture);
 
             expect(result).toBe(recipeEntityFixture);
-            expect(dishRecipeCacheService.setDishRecipe).toHaveBeenCalledTimes(1);
-            expect(dishRecipeCacheService.setDishRecipe).toHaveBeenCalledWith(encodedDishIdVoFixture, recipeEntityFixture);
         });
     });
 
@@ -106,34 +97,19 @@ describe('RecipeService', () => {
             jest.clearAllMocks();
         });
 
-        it('should return cached recipe if available', async () => {
-            dishRecipeCacheService.getDishRecipe.mockResolvedValueOnce(cachedRecipeEntityFixture);
-
-            const result = await service.getTranslatedRecipe(encodedDishIdVoFixture, 'en');
-
-            expect(result.recipe).toBe(cachedRecipeEntityFixture);
-            expect(result.fromCache).toBe(true);
-        });
-
         it('should throw DishRecipeNotFoundError if no recipe found', async () => {
-            dishRecipeCacheService.getDishRecipe.mockResolvedValueOnce(null);
             mockProvidable.getDishRecipe.mockResolvedValueOnce(null);
 
             await expect(service.getTranslatedRecipe(encodedDishIdVoFixture, 'en')).rejects.toThrow(DishRecipeNotFoundError);
         });
 
-        it('should translate and cache recipe if not cached', async () => {
-            dishRecipeCacheService.getDishRecipe.mockResolvedValueOnce(null);
+        it('should translate recipe if not cached', async () => {
             mockProvidable.getDishRecipe.mockResolvedValueOnce(recipeEntityFixture);
             translationService.translateRecipe.mockResolvedValueOnce({ translated: translatedRecipeEntityFixture, original: recipeEntityFixture });
 
             const result = await service.getTranslatedRecipe(encodedDishIdVoFixture, 'pl');
 
-            expect(result.recipe).toBe(translatedRecipeEntityFixture);
-            expect(dishRecipeCacheService.setDishRecipe).toHaveBeenCalled();
-            expect(dishRecipeCacheService.setDishRecipe).toHaveBeenCalledTimes(2);
-            expect(dishRecipeCacheService.setDishRecipe).nthCalledWith(1, encodedDishIdVoFixture, recipeEntityFixture);
-            expect(dishRecipeCacheService.setDishRecipe).nthCalledWith(2, encodedDishIdVoFixture, translatedRecipeEntityFixture);
+            expect(result).toBe(translatedRecipeEntityFixture);
         });
     });
 });
