@@ -1,8 +1,8 @@
 import { AbstractUseCase } from '../../../../common/classes/abstract.use-case';
 import { LoggerService } from '../../../logger/logger.service';
 import { DishWriteService } from '../../domain/write/services';
-import { DishNotFoundError, InvalidDishIdError, DishDeletionFailedError } from '../../domain/errors';
-import { NotFoundException, BadRequestException, InternalServerException } from '../../../../exceptions';
+import { DishNotFoundError, InvalidDishIdError } from '../../domain/errors';
+import { NotFoundException, BadRequestException } from '../../../../exceptions';
 import { Injectable } from '@nestjs/common';
 import { ContextString } from '../../../../common/types';
 import { DishTokenService } from '../../domain/common/services';
@@ -41,10 +41,6 @@ export class DeleteDishUseCase extends AbstractUseCase<[string], boolean> {
 
         if (error instanceof InvalidDishIdError) {
             throw new BadRequestException(context, error.message);
-        }
-
-        if (error instanceof DishDeletionFailedError) {
-            throw new InternalServerException(context, error.message);
         }
 
         throw new BadRequestException(context, 'Unknown error occurred');
