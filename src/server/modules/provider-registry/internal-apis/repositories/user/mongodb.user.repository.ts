@@ -1,13 +1,13 @@
-import { UserRepository } from '../../domain/repositories';
+import { UserRepository } from '../../../../user/domain/repositories';
 import { isValidObjectId, Model } from 'mongoose';
-import { UserDocument } from '../../../../../infrastructure/databases/mongodb/documents';
-import { UserEntity } from '../../domain/entities';
-import { userModel } from '../../../../common/definitions/mongoose-model.definitions';
+import { UserDocument } from '../../../../../../infrastructure/databases/mongodb/documents';
+import { UserEntity } from '../../../../user/domain/entities';
+import { userModel } from '../../../../../common/definitions/mongoose-model.definitions';
 import { InjectModel } from '@nestjs/mongoose';
-import { InvalidMongooseObjectIdError } from '../../../../common/errors';
-import { CreateUserVo } from '../../domain/vos';
-import { UserCapabilitiesVo } from '../../domain/vos';
-import { UserCacheService } from '../../../cache/domains/user/user-cache.service';
+import { InvalidMongooseObjectIdError } from '../../../../../common/errors';
+import { CreateUserVo } from '../../../../user/domain/vos';
+import { UserCapabilitiesVo } from '../../../../user/domain/vos';
+import { UserCacheService } from '../../../../cache/domains/user/user-cache.service';
 
 export class MongodbUserRepository implements UserRepository {
 

@@ -3,10 +3,9 @@ import {
     MongodbDishCommentRepository,
     MongodbDishRatingRepository,
     MongodbDishRepository, MongodbUserSearchQueryRepository
-} from '../../dish/infrastructure/repositories';
-import { MongodbRecipeRepository } from '../../recipe/infrastructure/repositories/mongodb.recipe.repository';
-import { MongodbUserRepository } from '../../user/infrastructure/repositories/mongodb.user.repository';
-import { MongodbUserActionRepository } from '../../user/infrastructure/repositories/mongodb.user-action.repository';
+} from './repositories/dish';
+import { MongodbRecipeRepository } from './repositories/recipe';
+import { MongodbUserRepository, MongodbUserActionRepository } from './repositories/user';
 import { REPOSITORIES_TOKEN } from '../../../constants/nestjs.contant';
 import { DishRepository } from '../../dish/domain/dish.repository';
 import {

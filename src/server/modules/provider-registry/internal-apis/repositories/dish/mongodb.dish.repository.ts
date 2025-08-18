@@ -1,20 +1,20 @@
-import { DishRepository } from '../../domain/dish.repository';
+import { DishRepository } from '../../../../dish/domain/dish.repository';
 import { FilterQuery, isValidObjectId, Model } from 'mongoose';
-import { DishDocument } from '../../../../../infrastructure/databases/mongodb/documents';
-import { dishModel } from '../../../../common/definitions/mongoose-model.definitions';
+import { DishDocument } from '../../../../../../infrastructure/databases/mongodb/documents';
+import { dishModel } from '../../../../../common/definitions/mongoose-model.definitions';
 import { InjectModel } from '@nestjs/mongoose';
-import { DishId } from '../../../../common/types';
-import { DishEntity } from '../../domain/common/entities';
-import { DishFactory } from '../../domain/common/factories';
-import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../common/errors';
-import { DishIngredient } from '../../../ingredient/ingredient.types';
-import { MealType, Provider } from '../../../../common/enums';
-import { EditDishDto } from '../../application/dtos';
-import { calculateMissing, calculateRelevance } from '../../../../common/helpers';
-import { DishResultVo } from '../../domain/read/vos';
+import { DishId } from '../../../../../common/types';
+import { DishEntity } from '../../../../dish/domain/common/entities';
+import { DishFactory } from '../../../../dish/domain/common/factories';
+import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../../common/errors';
+import { DishIngredient } from '../../../../ingredient/ingredient.types';
+import { MealType, Provider } from '../../../../../common/enums';
+import { EditDishDto } from '../../../../dish/application/dtos';
+import { calculateMissing, calculateRelevance } from '../../../../../common/helpers';
+import { DishResultVo } from '../../../../dish/domain/read/vos';
 import { Injectable } from '@nestjs/common';
 import { DishOverviewVo } from 'src/server/modules/user/domain/vos';
-import { CreateDishVo } from '../../domain/write/vos';
+import { CreateDishVo } from '../../../../dish/domain/write/vos';
 
 @Injectable()
 export class MongodbDishRepository implements DishRepository {

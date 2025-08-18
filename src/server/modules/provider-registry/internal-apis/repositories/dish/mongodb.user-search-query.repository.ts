@@ -1,8 +1,8 @@
-import { UserSearchQueryRepository } from '../../domain/common/repositories';
-import { UserSearchQueryEntity } from '../../domain/common/entities';
+import { UserSearchQueryRepository } from '../../../../dish/domain/common/repositories';
+import { UserSearchQueryEntity } from '../../../../dish/domain/common/entities';
 import { InjectModel } from '@nestjs/mongoose';
-import { userSearchQueryModel } from '../../../../common/definitions/mongoose-model.definitions';
-import { UserSearchQueryDocument } from '../../../../../infrastructure/databases/mongodb/documents/user-search-query.document';
+import { userSearchQueryModel } from '../../../../../common/definitions/mongoose-model.definitions';
+import { UserSearchQueryDocument } from '../../../../../../infrastructure/databases/mongodb/documents';
 import { Model } from 'mongoose';
 
 export class MongodbUserSearchQueryRepository implements UserSearchQueryRepository {

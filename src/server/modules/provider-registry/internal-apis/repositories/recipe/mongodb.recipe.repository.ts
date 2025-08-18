@@ -1,14 +1,14 @@
-import { RecipeRepository } from '../../domain/recipe.repository';
-import { DishId } from '../../../../common/types';
-import { Language } from '../../../../common/types';
-import { RecipeEntity } from '../../domain/entities';
+import { RecipeRepository } from '../../../../recipe/domain/recipe.repository';
+import { DishId } from '../../../../../common/types';
+import { Language } from '../../../../../common/types';
+import { RecipeEntity } from '../../../../recipe/domain/entities';
 import { isValidObjectId, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { DishRecipeDocument } from '../../../../../infrastructure/databases/mongodb/documents';
-import { dishRecipeModel } from '../../../../common/definitions/mongoose-model.definitions';
-import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../common/errors';
+import { DishRecipeDocument } from '../../../../../../infrastructure/databases/mongodb/documents';
+import { dishRecipeModel } from '../../../../../common/definitions/mongoose-model.definitions';
+import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../../common/errors';
 import { Injectable } from '@nestjs/common';
-import { CreateRecipeDto } from '../../application/dtos';
+import { CreateRecipeDto } from '../../../../recipe/application/dtos';
 
 @Injectable()
 export class MongodbRecipeRepository implements RecipeRepository {

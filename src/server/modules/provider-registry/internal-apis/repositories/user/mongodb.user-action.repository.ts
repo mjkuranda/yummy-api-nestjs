@@ -1,13 +1,13 @@
-import { UserActionRepository } from '../../domain/repositories';
+import { UserActionRepository } from '../../../../user/domain/repositories';
 import { isValidObjectId, Model } from 'mongoose';
 import {
     UserActionDocument,
     UserActionType
-} from '../../../../../infrastructure/databases/mongodb/documents';
-import { UserActionEntity } from '../../domain/entities';
-import { userActionModel } from '../../../../common/definitions/mongoose-model.definitions';
+} from '../../../../../../infrastructure/databases/mongodb/documents';
+import { UserActionEntity } from '../../../../user/domain/entities';
+import { userActionModel } from '../../../../../common/definitions/mongoose-model.definitions';
 import { InjectModel } from '@nestjs/mongoose';
-import { InvalidMongooseObjectIdError } from '../../../../common/errors';
+import { InvalidMongooseObjectIdError } from '../../../../../common/errors';
 
 export class MongodbUserActionRepository implements UserActionRepository {
 

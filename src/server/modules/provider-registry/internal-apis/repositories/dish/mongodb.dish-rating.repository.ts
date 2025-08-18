@@ -1,10 +1,10 @@
-import { DishRatingDocument } from '../../../../../infrastructure/databases/mongodb/documents';
+import { DishRatingDocument } from '../../../../../../infrastructure/databases/mongodb/documents';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage } from 'mongoose';
-import { DishRatingRepository } from '../../domain/common/repositories';
-import { dishRatingModel } from '../../../../common/definitions/mongoose-model.definitions';
-import { DishId } from '../../../../common/types';
-import { DishRatingEntity } from '../../domain/common/entities';
+import { DishRatingRepository } from '../../../../dish/domain/common/repositories';
+import { dishRatingModel } from '../../../../../common/definitions/mongoose-model.definitions';
+import { DishId } from '../../../../../common/types';
+import { DishRatingEntity } from '../../../../dish/domain/common/entities';
 
 export class MongodbDishRatingRepository implements DishRatingRepository {
 

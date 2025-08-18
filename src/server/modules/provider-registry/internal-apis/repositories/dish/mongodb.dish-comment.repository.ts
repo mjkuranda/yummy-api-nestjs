@@ -1,12 +1,12 @@
-import { DishCommentDocument } from '../../../../../infrastructure/databases/mongodb/documents';
+import { DishCommentDocument } from '../../../../../../infrastructure/databases/mongodb/documents';
 import { InjectModel } from '@nestjs/mongoose';
-import { dishCommentModel } from '../../../../common/definitions/mongoose-model.definitions';
+import { dishCommentModel } from '../../../../../common/definitions/mongoose-model.definitions';
 import { isValidObjectId, Model } from 'mongoose';
-import { DishId } from '../../../../common/types';
-import { DishCommentEntity } from '../../domain/common/entities';
-import { DishCommentFactory } from '../../domain/common/factories';
-import { DishCommentRepository } from '../../domain/common/repositories';
-import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../common/errors';
+import { DishId } from '../../../../../common/types';
+import { DishCommentEntity } from '../../../../dish/domain/common/entities';
+import { DishCommentFactory } from '../../../../dish/domain/common/factories';
+import { DishCommentRepository } from '../../../../dish/domain/common/repositories';
+import { InvalidMongooseIdTypeError, InvalidMongooseObjectIdError } from '../../../../../common/errors';
 
 export class MongodbDishCommentRepository implements DishCommentRepository {
 
