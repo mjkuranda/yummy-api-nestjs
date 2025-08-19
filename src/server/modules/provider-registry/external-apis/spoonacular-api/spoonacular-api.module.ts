@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { spoonacularApiProviders } from './spoonacular-api.providers';
+import { spoonacularApiServiceProvider } from './spoonacular-api.service.provider';
 import { spoonacularApiExports } from './spoonacular-api.exports';
 
 @Module({
-    providers: [...spoonacularApiProviders],
-    exports: [...spoonacularApiExports, ...spoonacularApiProviders]
+    providers: [...spoonacularApiServiceProvider],
+    exports: [...spoonacularApiExports, ...spoonacularApiServiceProvider]
 })
 export class SpoonacularApiModule {}

@@ -14,7 +14,7 @@ import { HttpService } from '@nestjs/axios';
 import { DishCacheService } from '../../../cache/domains/dish/dish-cache.service';
 import { LoggerService } from '../../../logger/logger.service';
 
-export const spoonacularApiProviders: Provider[] = [
+export const spoonacularApiServiceProvider: Provider[] = [
     {
         provide: EXTERNAL_API_ADAPTER_TOKEN,
         useClass: SpoonacularApiAdapter
