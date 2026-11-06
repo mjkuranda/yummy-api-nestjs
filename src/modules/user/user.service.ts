@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto, UserDto, UserLoginDto } from './user.dto';
+import { CreateUserDto, UserDto, UserLoginDto, UserLoginResultDto } from './user.dto';
 import { UserDocument } from '../../mongodb/documents/user.document';
 import { isValidObjectId } from 'mongoose';
 import { JwtManagerService } from '../jwt-manager/jwt-manager.service';
@@ -17,6 +17,8 @@ import { Response } from 'express';
 import { isTooShortToExpireRefreshToken } from '../jwt-manager/jwt-manager.utils';
 import { UserAccessTokenPayload } from '../jwt-manager/jwt-manager.types';
 import { PasswordManagerService } from '../password-manager/password-manager.service';
+import { UserSessionService } from '@mkuranda/nestjs-security-sdk';
+import { JwtAuthService } from '@mkuranda/nestjs-security-sdk';
 
 @Injectable()
 export class UserService {
@@ -25,7 +27,9 @@ export class UserService {
         private readonly userRepository: UserRepository,
         private readonly userActionRepository: UserActionRepository,
         private readonly redisService: RedisService,
-        private readonly jwtManagerService: JwtManagerService,
+        // private readonly jwtManagerService: JwtManagerService,
+        private readonly userSessionService: UserSessionService,
+        private readonly jwtAuthService: JwtAuthService,
         private readonly loggerService: LoggerService,
         private readonly mailManagerService: MailManagerService,
         private readonly passwordManagerService: PasswordManagerService
@@ -35,7 +39,7 @@ export class UserService {
         return await this.userRepository.getAll();
     }
 
-    async loginUser(userLoginDto: UserLoginDto, res: Response): Promise<UserPermissions> {
+    async loginUser(userLoginDto: UserLoginDto, res: Response): Promise<UserLoginResultDto> {
         const { login, password } = userLoginDto;
         const context = 'UserService/loginUser';
         const user = await this.userRepository.findByLogin(login);
@@ -67,10 +71,13 @@ export class UserService {
             throw new BadRequestException(context, message);
         }
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const accessToken = await this.jwtManagerService.generateAccessToken({ login, isAdmin: user.isAdmin, capabilities: user.capabilities });
-        const refreshToken = await this.jwtManagerService.generateRefreshToken({ login });
+        const id = user.id;
+        const payload = { login, isAdmin: user.isAdmin, capabilities: user.capabilities, id, role: 'user', permission: 'can-delete' };
+        const metadata = { ip: '127.0.0.1', 'acceptLanguage': 'pl', platform: 'Web', userAgent: 'PC' };
+
+        const { accessToken, refreshToken } = await this.userSessionService.create(id, payload, metadata);
+        // const accessToken = await this.jwtManagerService.generateAccessToken({ login, isAdmin: user.isAdmin, capabilities: user.capabilities });
+        // const refreshToken = await this.jwtManagerService.generateRefreshToken({ login });
 
         await this.redisService.setTokens(login, accessToken, refreshToken);
         res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'none', secure: true });
@@ -80,8 +87,7 @@ export class UserService {
         this.loggerService.info(context, message);
 
         return {
-            ...(user.isAdmin !== undefined && { isAdmin: user.isAdmin }),
-            ...(user.capabilities !== undefined && { capabilities: user.capabilities })
+            accessToken, refreshToken,
         };
     }
 
@@ -106,14 +112,14 @@ export class UserService {
             throw new ForbiddenException(context, `User ${userPayload.login} doesn't have alive refresh token.`);
         }
 
-        const newAccessToken = await this.jwtManagerService.generateAccessToken(userPayload);
+        const newAccessToken = await this.jwtAuthService.signAccessToken(userPayload, {});
         res.cookie('accessToken', newAccessToken, { httpOnly: true, sameSite: 'none', secure: true });
         this.loggerService.info(context, `Access token was renewed for ${userPayload.login} user.`);
-        const refreshTokenPayload = await this.jwtManagerService.verifyRefreshToken(refreshToken);
+        const refreshTokenPayload = await this.jwtAuthService.verifyRefreshToken(refreshToken);
         let newRefreshToken = null;
 
         if (isTooShortToExpireRefreshToken(refreshTokenPayload)) {
-            newRefreshToken = await this.jwtManagerService.generateRefreshToken(refreshTokenPayload);
+            newRefreshToken = await this.jwtAuthService.signRefreshToken(refreshTokenPayload, {});
             res.cookie('refreshToken', newRefreshToken, { httpOnly: true, sameSite: 'none', secure: true });
             this.loggerService.info(context, `Refresh token was renewed for ${userPayload.login} user.`);
         }

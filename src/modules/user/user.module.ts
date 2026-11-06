@@ -21,6 +21,6 @@ import { PasswordManagerModule } from '../password-manager/password-manager.modu
     ],
     controllers: [UserController],
     providers: [UserService, UserRepository, UserActionRepository, RedisService],
-    exports: [UserService]
+    exports: [UserService, UserRepository]
 })
 export class UserModule {}

@@ -13,6 +13,7 @@ import { TranslationModule } from '../translation/translation.module';
 import { DishCommentRepository } from '../../mongodb/repositories/dish-comment.repository';
 import { DishRatingRepository } from '../../mongodb/repositories/dish-rating.repository';
 import { ExternalApiModule } from '../api/external-api.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { ExternalApiModule } from '../api/external-api.module';
         JwtManagerModule,
         IngredientModule,
         ExternalApiModule,
+        UserModule,
         TranslationModule
     ],
     controllers: [DishController],

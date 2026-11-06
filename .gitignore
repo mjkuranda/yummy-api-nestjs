@@ -39,3 +39,6 @@ data/images
 
 # The other files
 .env
+
+.yalc
+test/coverage

@@ -40,11 +40,11 @@ export abstract class AbstractRepository<T extends Document, CreateDataType> {
         return this.model.findOneAndUpdate(filterQuery, updateQuery, { new: true });
     }
 
-    async deleteOne(filterQuery: FilterQuery<T>) {
+    async deleteOne(filterQuery: FilterQuery<T>): Promise<any> {
         return this.model.deleteOne(filterQuery);
     }
 
-    async deleteMany(filterQuery: FilterQuery<T>) {
+    async deleteMany(filterQuery: FilterQuery<T>): Promise<any> {
         return this.model.deleteMany(filterQuery);
     }
 

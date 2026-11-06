@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, LogLevel, LoggerService as NestLoggerService } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { FileTransportInstance } from 'winston/lib/winston/transports';
@@ -7,7 +7,7 @@ import { ContextString } from '../../common/types';
 import { loggerFileFactory } from './logger.factory';
 
 @Injectable()
-export class LoggerService {
+export class LoggerService implements NestLoggerService {
 
     private loggerTransport: FileTransportInstance;
 
@@ -19,6 +19,26 @@ export class LoggerService {
     ) {
         this.updateFileTransport();
         this.info('LoggerService/constructor', 'LoggerService is ready and starts logging.');
+    }
+
+    public log(message: string, context?: ContextString) {
+        this.info(context, message);
+    }
+
+    public warn(message: string, context?: ContextString) {
+        if (this.shouldCreateNewFileTransport()) {
+            this.updateFileTransport();
+        }
+        
+        this.logger.warn(this.getLogMessage(context, message));
+    }
+    
+    public debug(message: string, context?: ContextString) {
+        if (this.shouldCreateNewFileTransport()) {
+            this.updateFileTransport();
+        }
+
+        this.logger.debug(this.getLogMessage(context, message));
     }
 
     public info(context: ContextString, message: string): void {

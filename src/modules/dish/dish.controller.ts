@@ -25,6 +25,9 @@ import { DishQueryValidationPipe } from '../../pipes/dish-query-validation.pipe'
 import { TranslationService } from '../translation/translation.service';
 import { Language, TransformedBody } from '../../common/types';
 import { IngredientService } from '../ingredient/ingredient.service';
+import { SecureTraffic } from '@mkuranda/nestjs-security-sdk/dist/http/decorators';
+import { OnlyOwner, Role, Permission, JwtAuth } from '@mkuranda/nestjs-security-sdk';
+import { Request as ExpressRequest } from 'express';
 
 @Controller('dishes')
 export class DishController {
@@ -33,6 +36,7 @@ export class DishController {
                 private readonly ingredientService: IngredientService) {}
 
     @Get()
+    @SecureTraffic({ limit: 60, ttl: 60 })
     @HttpCode(200)
     @UsePipes(DishQueryValidationPipe)
     public async getDishes(@Query() query: GetDishesQueryType) {
@@ -68,7 +72,10 @@ export class DishController {
 
     @Delete('/:id')
     @HttpCode(204)
-    @UseGuards(AuthenticationGuard)
+    @Role('user')
+    @Permission('can-delete')
+    @OnlyOwner(DishService, (req: ExpressRequest) => req.params.id)
+    @JwtAuth()
     public async deleteDish(@Param('id') id: string) {
         return await this.dishService.delete(id);
     }

@@ -32,9 +32,12 @@ import { ForbiddenException } from '../../exceptions/forbidden-exception';
 import { ExternalApiService } from '../api/external-api.service';
 import { getFulfilledPromiseResults } from '../../utils';
 import { loadDataFile } from '../../common/utils';
+import { IOwnable } from '@mkuranda/nestjs-security-sdk';
+import { UserService } from '../user/user.service';
+import { UserRepository } from 'src/mongodb/repositories/user.repository';
 
 @Injectable()
-export class DishService {
+export class DishService implements IOwnable {
 
     constructor(
         private dishRepository: DishRepository,
@@ -44,8 +47,16 @@ export class DishService {
         private redisService: RedisService,
         private loggerService: LoggerService,
         private ingredientService: IngredientService,
-        private externalApiService: ExternalApiService
+        private externalApiService: ExternalApiService,
+        private userRepository: UserRepository,
     ) {}
+
+    public async isOwner(userId: string, resourceId: string): Promise<boolean> {
+        const dish = await this.dishRepository.findById(resourceId);
+        const user = await this.userRepository.findById(userId);
+
+        return user.login === dish.author;
+    }
 
     async create(createDishDto: CreateDishDto<DishIngredientWithoutImage>, user: UserDto): Promise<DishDocument> {
         const ingredients = await this.ingredientService.wrapIngredientsWithImages(createDishDto.ingredients);
@@ -346,7 +357,7 @@ export class DishService {
 
         const ingredients = [...filteredIngredients, ...this.ingredientService.getAllPantryIngredients()];
 
-        const datasets = await this.getDatasets(this.dishRepository.getDishes(ingredients), ...this.externalApiService.getDishes(ingredients, type));
+        const datasets = await this.getDatasets(this.dishRepository.getDishes(ingredients));
 
         const dishes: RatedDish[] = datasets.flat().filter(dish => dish.relevance > 0).sort(sortDescendingRelevance);
         await this.redisService.saveDishResult('merged', query, dishes, 12 * HOUR);

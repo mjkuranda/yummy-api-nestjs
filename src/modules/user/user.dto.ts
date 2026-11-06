@@ -1,5 +1,5 @@
 import { CapabilityType } from './user.types';
-import { IsNotEmpty, IsOptional, Length, Matches, MinLength } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, Length, Matches, MinLength } from 'class-validator';
 import { PickType } from '@nestjs/mapped-types';
 import { Transform } from 'class-transformer';
 
@@ -12,9 +12,29 @@ export class UserDto {
     readonly capabilities?: Record<CapabilityType, boolean>;
 }
 
+// export class UserLoginDto {
+//     readonly login: string;
+//     readonly password: string;
+// }
+
 export class UserLoginDto {
+    @IsString()
+    @IsNotEmpty()
     readonly login: string;
+
+    @IsString()
+    @IsNotEmpty()
     readonly password: string;
+}
+
+export class UserLoginResultDto {
+    @IsString()
+    @IsNotEmpty()
+    readonly accessToken: string;
+
+    @IsString()
+    @IsNotEmpty()
+    readonly refreshToken: string;
 }
 
 export class CreateUserDto {
